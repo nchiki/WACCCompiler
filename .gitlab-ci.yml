@@ -1,4 +1,7 @@
 stages:
-    - build
+#    - build
     - test
-    - deploy
+#    - deploy
+test:
+  stage: test
+  script: 'mvn test'
