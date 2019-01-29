@@ -4,3 +4,9 @@ src/antlr
 
 #ignore Java class files
 *.class
+
+*.tex
+*.pdf
+
+.idea
+.DS_Store
