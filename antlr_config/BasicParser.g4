@@ -4,13 +4,13 @@ options {
   tokenVocab=BasicLexer;
 }
 
-binaryOper: PLUS | MINUS ;
+binaryOper: PLUS | MINUS | MOD | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
 unaryOper: LEN | ORD | CHR | EXCL | NEG ;
 
-strLiter: DBL_QUOTES (CHAR)* DBL_QUOTES ;
+strLiter: DBL_QUOTES (character)* DBL_QUOTES ;
 
-charLiter: QUOTE CHAR QUOTE ;
+charLiter: QUOTE character QUOTE ;
 
 argList: expr ( COMMA expr)* ;
 
@@ -20,7 +20,7 @@ param: type IDENT ;
 
 func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
-stat: skip
+stat: SKIP
 | type IDENT EQUAL assignRHS
 | assignLHS EQUAL assignRHS
 | READ assignLHS
@@ -55,20 +55,39 @@ type: baseType | arrayType | pairType ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-arrayType: type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET
+arrayType: type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
 
+pairELemType: baseType arrayType PAIR ;
+
+pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
 expr: expr binaryOper expr
-| INTEGER
+| intLiter
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
-| BOOL
+| boolean
 | charLiter
 | strLiter
-| pairElem
+| pairLiter
 | IDENT
 | arrayElem
 | unaryOper expr
 ;
+
+boolean: TRUE | FALSE ;
+
+intSign: PLUS | MINUS ;
+
+intLiter: intSign? INTEGER ;
+
+arrayLiter: OPENOPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
+
+character: ~(BACKSLASH|QUOTE|DBL_QUOTES) | BACKSLASH escChar ;
+
+escChar: ZERO | B | T | N | F | R | DBL_QUOTES | QUOTE | BACKSLASH ;
+
+pairLiter: NULL ;
+
+comment: HASH ~(EOL)* EOL;
 
 // EOF indicates that the program must consume to the end of the input.
 prog: (expr)*  EOF ;
