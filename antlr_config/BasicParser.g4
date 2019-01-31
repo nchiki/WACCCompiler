@@ -4,7 +4,7 @@ options {
   tokenVocab=BasicLexer;
 }
 
-binaryOper: PLUS | MINUS | PERCENTAGE | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+binaryOper: PLUS | MINUS | MOD | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
 unaryOper: LEN | ORD | CHR | EXCL | NEG ;
 
