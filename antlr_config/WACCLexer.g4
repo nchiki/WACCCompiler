@@ -1,7 +1,7 @@
 lexer grammar WACCLexer;
 
 DBL_QUOTES: '"' ;
-QUOTE: ''' ;
+QUOTE: ''';
 COMMA: ',' ;
 
 
@@ -26,6 +26,32 @@ ZERO: '0' ;
 B: 'b' ;
 T: 't' ;
 
+//commands
+SKIP: 'skip' ;
+BEGIN: 'begin' ;
+END: 'end' ;
+WHILE: 'while' ;
+DO: 'do' ;
+PRINT: 'print' ;
+READ: 'read' ;
+FREE: 'free' ;
+RETURN: 'return' ;
+EXIT: 'exit' ;
+PRINTLN: 'println' ;
+
+
+//if statement
+IF: 'if' ;
+ELSE: 'else' ;
+THEN: 'then' ;
+FI: 'fi';
+
+//types
+NEWPAIR: 'newpair' ;
+FST: 'fst' ;
+SND: 'snd' ;
+PAIR: 'pair' ;
+
 
 //unary operators
 LEN: 'len' ;
@@ -36,18 +62,16 @@ EXCL: '!' ;
 //brackets
 OPEN_PARENTHESES: '(' ;
 CLOSE_PARENTHESES: ')' ;
-
-UNDERSCORE: '_' ;
-
 OPEN_SQR_BRACKET: '[' ;
 CLOSE_SQR_BRACKET: ']' ;
 
+UNDERSCORE: '_' ;
+SEMICOLON: ';' ;
+
+
 BACKSLASH: '\"' ;
-
 HASH: '#' ;
-
 NULL: 'null' ;
-
 
 //base types
 INT: 'int' ;
@@ -56,7 +80,7 @@ CHAR: 'char' ;
 STRING: 'string' ;
 
 //letters
-fragment LETTER: 'a'..'Z' ;
+fragment LETTER: '_'|'a'..'z'|'A'..'Z' ;
 
 //bool literals
 TRUE: 'true' ;
@@ -66,5 +90,8 @@ FALSE: 'false' ;
 fragment DIGIT: '0'..'9' ; 
 
 INTEGER: DIGIT+ ;
+
+IDENT_TAIL: LETTER|DIGIT ;
+IDENT: LETTER IDENT_TAIL* ;
 
 WHITESPACE : ' ' -> skip ;
