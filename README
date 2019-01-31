@@ -8,7 +8,7 @@ Provided files/directories
 > antlr_config <
 
 The antlr_config directory contains simple example ANTLR lexer and parser 
-specification files BasicLexer.g4 and Basic.g4, along with a script antlrBuild 
+specification files .g4 and Basic.g4, along with a script antlrBuild
 that builds the corresponding Java class files using the ANTLR libraries (more 
 details below).
   
