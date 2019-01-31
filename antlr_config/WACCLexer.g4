@@ -1,4 +1,10 @@
-lexer grammar BasicLexer;
+lexer grammar WACCLexer;
+
+DBL_QUOTES: '"' ;
+QUOTE: ''' ;
+COMMA: ',' ;
+
+
 
 //binary operators
 PLUS: '+' ;
@@ -6,26 +12,48 @@ MINUS: '-' ;
 MULT: '*' ;
 DIVIDE: '/' ;
 MOD: '%' ;
-SMALLER_THAN: '<' ;
-SMALLER_EQUAL: '<=' ;
-GREATER_THAN: '>' ;
-GREATER_EQUAL: '>=' ;
-EQUAL: '==' ;
-NOT_EQUAL: '!=' ;
+LESS: '<' ;
+LESS_EQ: '<=' ;
+GREAT: '>' ;
+GREAT_EQ: '>=' ;
+EQ: '==' ;
+NOTEQ: '!=' ;
 AND: '&&' ;
 OR: '||' ;
+
+//escaped chars
+ZERO: '0' ;
+B: 'b' ;
+T: 't' ;
+
 
 //unary operators
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
-NOT: '!' ;
+EXCL: '!' ;
 
 //brackets
 OPEN_PARENTHESES: '(' ;
 CLOSE_PARENTHESES: ')' ;
 
 UNDERSCORE: '_' ;
+
+OPEN_SQR_BRACKET: '[' ;
+CLOSE_SQR_BRACKET: ']' ;
+
+BACKSLASH: '\"' ;
+
+HASH: '#' ;
+
+NULL: 'null' ;
+
+
+//base types
+INT: 'int' ;
+BOOL: 'bool' ;
+CHAR: 'char' ;
+STRING: 'string' ;
 
 //letters
 fragment LETTER: 'a'..'Z' ;
