@@ -51,13 +51,11 @@ arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 pairElem: FST expr | SND expr ;
 
-type: baseType | arrayType | pairType ;
+type:  type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | baseType | pairType ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-arrayType: type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
-
-pairELemType: baseType arrayType PAIR ;
+pairELemType: baseType type PAIR ;
 
 pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
