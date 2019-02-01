@@ -1,10 +1,10 @@
-parser grammar WACCParser;
+parser grammar BasicParser;
 
 options {
-  tokenVocab=WACCLexer;
+  tokenVocab=BasicLexer;
 }
 
-binaryOper: PLUS | MINUS | MOD | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
 unaryOper: LEN | ORD | CHR | EXCL | MINUS ;
 
@@ -51,20 +51,18 @@ arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 pairElem: FST expr | SND expr ;
 
-type: baseType | arrayType | pairType ;
+type:  type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | baseType | pairType ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-arrayType: type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
-
-pairELemType: baseType arrayType PAIR ;
+pairELemType: baseType type PAIR ;
 
 pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
 expr: expr binaryOper expr
 | intLiter
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
-| boolean
+| bool
 | charLiter
 | strLiter
 | pairLiter
@@ -73,7 +71,8 @@ expr: expr binaryOper expr
 | unaryOper expr
 ;
 
-boolean: TRUE | FALSE ;
+bool: TRUE | FALSE ;
+
 intSign: PLUS | MINUS ;
 
 intLiter: intSign? INTEGER ;
