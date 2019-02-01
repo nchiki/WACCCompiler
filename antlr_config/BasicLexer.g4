@@ -30,12 +30,14 @@ BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;
 DO: 'do' ;
+IS: 'is' ;
 PRINT: 'print' ;
 READ: 'read' ;
 FREE: 'free' ;
 RETURN: 'return' ;
 EXIT: 'exit' ;
 PRINTLN: 'println' ;
+CALL: 'call' ;
 
 
 //if statement

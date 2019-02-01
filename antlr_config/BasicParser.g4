@@ -1,10 +1,10 @@
-parser grammar WACCParser;
+parser grammar BasicParser;
 
 options {
-  tokenVocab=WACCLexer;
+  tokenVocab=BasicLexer;
 }
 
-binaryOper: PLUS | MINUS | MOD | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
 unaryOper: LEN | ORD | CHR | EXCL | MINUS ;
 
@@ -62,7 +62,7 @@ pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESE
 expr: expr binaryOper expr
 | intLiter
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
-| boolean
+| bool
 | charLiter
 | strLiter
 | pairLiter
@@ -71,7 +71,8 @@ expr: expr binaryOper expr
 | unaryOper expr
 ;
 
-boolean: TRUE | FALSE ;
+bool: TRUE | FALSE ;
+
 intSign: PLUS | MINUS ;
 
 intLiter: intSign? INTEGER ;
