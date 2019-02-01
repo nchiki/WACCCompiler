@@ -1,3 +1,6 @@
+
+
+
 fun main(args: Array<String>){
     WACC().run()
 }
@@ -5,7 +8,7 @@ fun main(args: Array<String>){
 class WACC {
 
     fun run() {
-        println("Hello kotlin");
+        java.lang.System.setIn(new FileInputSream());
     }
 
 }

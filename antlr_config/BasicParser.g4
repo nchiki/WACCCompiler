@@ -20,7 +20,7 @@ param: type IDENT ;
 
 func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
-stat: SKIP
+stat: SKIP_FUNC
 | type IDENT EQUAL assignRHS
 | assignLHS EQUAL assignRHS
 | READ assignLHS
@@ -60,6 +60,7 @@ pairELemType: baseType type PAIR ;
 pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
 expr: expr binaryOper expr
+| unaryOper expr
 | intLiter
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
 | bool
@@ -68,7 +69,6 @@ expr: expr binaryOper expr
 | pairLiter
 | IDENT
 | arrayElem
-| unaryOper expr
 ;
 
 bool: TRUE | FALSE ;

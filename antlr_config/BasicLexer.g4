@@ -8,7 +8,7 @@ COMMA: ',' ;
 PLUS: '+' ;
 MINUS: '-' ;
 MULT: '*' ;
-DIVIDE: '/' ;
+DIV: '/' ;
 MOD: '%' ;
 LESS: '<' ;
 LESS_EQ: '<=' ;
@@ -23,6 +23,9 @@ OR: '||' ;
 ZERO: '0' ;
 B: 'b' ;
 T: 't' ;
+N: 'n' ;
+F: 'f' ;
+R: 'r' ;
 
 //commands
 SKIP_FUNC: 'skip' ; 
@@ -30,6 +33,7 @@ BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;
 DO: 'do' ;
+DONE: 'done' ;
 IS: 'is' ;
 PRINT: 'print' ;
 READ: 'read' ;
@@ -67,6 +71,7 @@ CLOSE_SQR_BRACKET: ']' ;
 
 UNDERSCORE: '_' ;
 SEMICOLON: ';' ;
+EQUAL: '=' ;
 
 
 BACKSLASH: '\\' ;
@@ -95,3 +100,6 @@ IDENT_TAIL: LETTER|DIGIT ;
 IDENT: LETTER IDENT_TAIL* ;
 
 WHITESPACE : ' ' -> skip ;
+
+// EOL needs to be checked
+EOL: 'eol' ;
