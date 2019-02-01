@@ -25,6 +25,7 @@ B: 'b' ;
 T: 't' ;
 
 //commands
+SKIP_FUNC: 'skip' ; 
 BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;
