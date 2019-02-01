@@ -8,7 +8,7 @@ fun main(args: Array<String>){
 class WACC {
 
     fun run() {
-        java.lang.System.setIn(new FileInputSream());
+        println("HELLO.")
     }
 
 }
