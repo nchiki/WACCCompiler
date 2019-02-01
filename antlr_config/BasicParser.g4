@@ -3,14 +3,12 @@ parser grammar BasicParser;
 options {
   tokenVocab=BasicLexer;
 }
+prog: BEGIN func* stat END ;
 
 binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
-unaryOper: LEN | ORD | CHR | EXCL | MINUS ;
+unaryOper: NOT | MINUS | LEN | ORD | CHR ;
 
-strLiter: DBL_QUOTES (character)* DBL_QUOTES ;
-
-charLiter: QUOTE character QUOTE ;
 
 argList: expr ( COMMA expr)* ;
 
@@ -51,7 +49,7 @@ arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 pairElem: FST expr | SND expr ;
 
-type:  type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | baseType | pairType ;
+type:  baseType | pairType |type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
@@ -59,33 +57,21 @@ pairELemType: baseType type PAIR ;
 
 pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
-expr: expr binaryOper expr
-| unaryOper expr
-| intLiter
-| OPEN_PARENTHESES expr CLOSE_PARENTHESES
-| bool
-| charLiter
-| strLiter
-| pairLiter
+expr: INT_LIT
+| BOOL_LIT
+| CHAR_LIT
+| STR_LIT
+| PAIR_LIT
 | IDENT
 | arrayElem
+| unaryOper expr
+| expr binaryOper expr
+| OPEN_PARENTHESES expr CLOSE_PARENTHESES
 ;
 
-bool: TRUE | FALSE ;
-
-intSign: PLUS | MINUS ;
-
-intLiter: intSign? INTEGER ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
-character: ~(BACKSLASH|QUOTE|DBL_QUOTES) | BACKSLASH escChar ;
-
-escChar: ZERO | B | T | N | F | R | DBL_QUOTES | QUOTE | BACKSLASH ;
-
-pairLiter: NULL ;
-
-comment: HASH ~(EOL)* EOL;
 
 // EOF indicates that the program must consume to the end of the input.
-prog: (expr)*  EOF ;
+
