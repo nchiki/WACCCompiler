@@ -1,12 +1,12 @@
-parser grammar BasicParser;
+parser grammar WACCParser;
 
 options {
-  tokenVocab=BasicLexer;
+  tokenVocab=WACCLexer;
 }
 
 binaryOper: PLUS | MINUS | MOD | MULT | DIV | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
-unaryOper: LEN | ORD | CHR | EXCL | NEG ;
+unaryOper: LEN | ORD | CHR | EXCL | MINUS ;
 
 strLiter: DBL_QUOTES (character)* DBL_QUOTES ;
 
@@ -72,12 +72,11 @@ expr: expr binaryOper expr
 ;
 
 boolean: TRUE | FALSE ;
-
 intSign: PLUS | MINUS ;
 
 intLiter: intSign? INTEGER ;
 
-arrayLiter: OPENOPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
+arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
 character: ~(BACKSLASH|QUOTE|DBL_QUOTES) | BACKSLASH escChar ;
 
