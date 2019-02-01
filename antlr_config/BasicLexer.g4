@@ -1,10 +1,8 @@
-lexer grammar WACCLexer;
+lexer grammar BasicLexer;
 
 DBL_QUOTES: '"' ;
-QUOTE: ''';
+QUOTE: '\'';
 COMMA: ',' ;
-
-
 
 //binary operators
 PLUS: '+' ;
@@ -27,7 +25,7 @@ B: 'b' ;
 T: 't' ;
 
 //commands
-SKIP: 'skip' ;
+SKIP_FUNC: 'skip' ; 
 BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;
@@ -69,7 +67,7 @@ UNDERSCORE: '_' ;
 SEMICOLON: ';' ;
 
 
-BACKSLASH: '\"' ;
+BACKSLASH: '\\' ;
 HASH: '#' ;
 NULL: 'null' ;
 
