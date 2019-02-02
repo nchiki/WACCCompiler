@@ -33,6 +33,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
