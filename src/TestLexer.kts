@@ -6,12 +6,12 @@ import org.antlr.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 
 fun main() {
-    val input = ANTLRInputStream(System.`in`)
-    val lexer = BasicLexer(input)
 
-    val tokens = CommonTokenStream(lexer)
-
+    val input = ANTLRInputStream(System.`in`) // create a lexer that feeds off of input CharStream
+    val lexer = BasicLexer(input) // create a buffer of tokens pulled from the lexer
+    val tokens = CommonTokenStream(lexer) // create a parser that feeds off the tokens buffer
     val parser = BasicParser(tokens)
-    val parseTree = parser.prog()
-    print(parseTree.toStringTree(parser))
+    val tree = parser.prog() // begin parsing at init rule
+    System.out.println(tree.toStringTree(parser)) // print LISP-style tree
 }
+
