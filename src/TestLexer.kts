@@ -2,7 +2,7 @@ package wacc_25
 
 import antlr.BasicLexer
 import antlr.BasicParser
-import org.antlr.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 
 fun main() {
