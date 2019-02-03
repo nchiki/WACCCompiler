@@ -3,20 +3,15 @@ parser grammar BasicParser;
 options {
   tokenVocab=BasicLexer;
 }
-prog: BEGIN func* stat END ;
-
-binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
-
-unaryOper: NOT | MINUS | LEN | ORD | CHR ;
-
+prog: BEGIN func* stat END EOF ;
 
 argList: expr ( COMMA expr)* ;
+
+func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
 paramList: param (COMMA param)* ;
 
 param: type IDENT ;
-
-func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
 stat: SKIP_FUNC
 | type IDENT EQUAL assignRHS
@@ -53,11 +48,12 @@ type:  baseType | pairType |type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-pairELemType: baseType type PAIR ;
-
 pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
 
-expr: INT_LIT
+pairELemType: baseType type PAIR ;
+
+expr:
+INT_LIT
 | BOOL_LIT
 | CHAR_LIT
 | STR_LIT
@@ -69,6 +65,9 @@ expr: INT_LIT
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
 ;
 
+binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+
+unaryOper: NOT | MINUS | LEN | ORD | CHR ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 

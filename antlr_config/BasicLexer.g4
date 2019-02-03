@@ -2,6 +2,7 @@ lexer grammar BasicLexer;
 
 WHITESPACE : ' ' -> skip ;
 COMMENT: HASH ~([\r\n])* EOL -> skip;
+WS : [ \n\r\t]+ -> channel(HIDDEN) ;
 // EOL needs to be checked
 EOL: [\r\n] ;
 
@@ -109,7 +110,7 @@ IDENT_TAIL: LETTER|DIGIT ;
 IDENT: LETTER (IDENT_TAIL)* ;
 
 // literals
-INT_LIT: INT_SIGN? INTEGER ;
+INT_LIT: (INT_SIGN)? INTEGER ;
 STR_LIT: DBL_QUOTES (CHAR_LIT)* DBL_QUOTES ;
 CHAR_LIT: QUOTE CHARACTER QUOTE ;
 PAIR_LIT: NULL ;

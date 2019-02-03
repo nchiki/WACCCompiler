@@ -77,7 +77,7 @@
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/main</sourceDir>
                                 <sourceDir>${project.basedir}/gen</sourceDir>
-                                <sourceDir>${project.basedir}/antlr</sourceDir>
+                                <sourceDir>antlr_config</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
