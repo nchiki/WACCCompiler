@@ -48,9 +48,9 @@ type:  baseType | pairType |type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
+pairType: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
 
-pairELemType: baseType type PAIR ;
+pairElemType: baseType | type | PAIR ;
 
 expr:
 INT_LIT
