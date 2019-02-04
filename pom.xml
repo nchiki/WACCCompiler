@@ -50,11 +50,7 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>wacc_25</groupId>
-            <artifactId>wacc_25</artifactId>
-            <version>1.0</version>
-        </dependency>
+        
 
     </dependencies>
 
