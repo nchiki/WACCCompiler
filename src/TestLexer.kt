@@ -36,6 +36,7 @@ fun main(args: Array<String>){
         val tree = parser.prog()
         // begin parsing at init rule
         println(tree.toStringTree(parser))
+        visitor.visit(tree)
         // print LISP-style tree
 
 
