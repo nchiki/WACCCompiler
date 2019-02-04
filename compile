@@ -4,6 +4,7 @@
 # but do *not* change its name.
 
 # puts "TODO: setup this script to call your WACC compiler"
+<<<<<<< HEAD
 
 file = ARGV[0]
 if file == nil
@@ -11,3 +12,6 @@ if file == nil
  file = gets.chomp
 end
 puts file
+=======
+system ./grun antlr.Basic prog -gui $1
+>>>>>>> b6500f06a616e0d17c8ad1ce6286377d2e8d1e14

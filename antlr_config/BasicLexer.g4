@@ -1,10 +1,13 @@
 lexer grammar BasicLexer;
 
-WHITESPACE : ' ' -> skip ;
 COMMENT: HASH ~([\r\n])* EOL -> skip;
-WS : [ \n\r\t]+ -> channel(HIDDEN) ;
+//WHITESPACES
+WS : [ \n\r\t]+ -> skip ; //channel(HIDDEN) ;
 // EOL needs to be checked
 EOL: [\r\n] ;
+
+//WHITESPACE : ' ' -> skip ;
+
 
 //commands
 SKIP_FUNC: 'skip' ;

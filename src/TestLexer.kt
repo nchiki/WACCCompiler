@@ -3,6 +3,10 @@ package wacc_25
 import antlr.BasicLexer
 import antlr.BasicParser
 import org.antlr.v4.runtime.CharStreams
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6500f06a616e0d17c8ad1ce6286377d2e8d1e14
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
@@ -33,7 +37,7 @@ fun main(args: Array<String>){
         // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
         parser.removeErrorListeners()
-        parser.addErrorListener(listener)
+        parser.addErrorListener(WaccErrorListener())
         val tree = parser.prog()
         // begin parsing at init rule
         println(tree.toStringTree(parser))
