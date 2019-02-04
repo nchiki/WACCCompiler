@@ -10,6 +10,10 @@ import org.antlr.v4.runtime.tree.RuleNode
 import org.antlr.v4.runtime.tree.TerminalNode
 
 class WaccVisitor : BasicParserVisitor<Node> {
+    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun visitProg(ctx: BasicParser.ProgContext?) : Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -59,13 +63,9 @@ class WaccVisitor : BasicParserVisitor<Node> {
     }
 
     override fun visitPairType(@NotNull ctx: BasicParser.PairTypeContext) : PairNode{
-        val fst =  visit(ctx.pairELemType(0))
-        val snd = visit(ctx.pairELemType(1))
+        val fst =  visit(ctx.pairElemType(0))
+        val snd = visit(ctx.pairElemType(1))
         return PairNode(fst, snd)
-    }
-
-    override fun visitPairELemType(ctx: BasicParser.PairELemTypeContext?) : Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext?) : Node {

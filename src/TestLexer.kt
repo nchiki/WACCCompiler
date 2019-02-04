@@ -2,7 +2,7 @@ package wacc_25
 
 import antlr.BasicLexer
 import antlr.BasicParser
-import com.google.common.io.CharStreams
+import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
@@ -10,7 +10,8 @@ import java.io.FileInputStream
 fun main(args: Array<String>){
 
         if(args.size == 0) {
-                System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/basic/exit/exit-1.wacc"))
+                System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/pairs/createPair02" +
+                        ".wacc"))
         }
         val input = CharStreams.fromStream(java.lang.System.`in`)
         // create a lexer that feeds off of input CharStream
@@ -36,7 +37,7 @@ fun main(args: Array<String>){
         val tree = parser.prog()
         // begin parsing at init rule
         println(tree.toStringTree(parser))
-        visitor.visit(tree)
+        //visitor.visit(tree)
         // print LISP-style tree
 
 

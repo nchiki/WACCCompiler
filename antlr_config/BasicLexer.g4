@@ -106,8 +106,8 @@ F: 'f' ;
 R: 'r' ;
 
 fragment CHARACTER: ~('\''| '"'| '\\') | BACKSLASH ESC_CHAR ;
-IDENT_TAIL: LETTER|DIGIT ;
 IDENT: LETTER (IDENT_TAIL)* ;
+IDENT_TAIL: LETTER|DIGIT ;
 
 // literals
 INT_LIT: (INT_SIGN)? INTEGER ;
