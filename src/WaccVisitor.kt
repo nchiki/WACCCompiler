@@ -46,7 +46,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitAssignLHS(ctx: BasicParser.AssignLHSContext): Node{
         return visitChildren(ctx)
     }
-
+    
     override fun visitAssignRHS(ctx: BasicParser.AssignRHSContext): Node{
         return visitChildren(ctx)
     }

@@ -5,8 +5,6 @@ options {
 }
 prog: BEGIN func* stat END EOF ;
 
-argList: expr ( COMMA expr)* ;
-
 func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
 paramList: param (COMMA param)* ;
@@ -40,17 +38,20 @@ assignRHS: expr
 | CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES
 ;
 
-arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
+
+argList: expr ( COMMA expr)* ;
 
 pairElem: FST expr | SND expr ;
 
-type:  baseType | pairType |type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET ;
+arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
+
+type:  baseType | type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | pairType ;
 
 baseType: INT | BOOL | CHAR | STRING;
 
-pairType: PAIR OPEN_PARENTHESES pairELemType COMMA pairELemType CLOSE_PARENTHESES ;
+pairType: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
 
-pairELemType: baseType type PAIR ;
+pairElemType: baseType | type | PAIR ;
 
 expr:
 INT_LIT
@@ -65,9 +66,9 @@ INT_LIT
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES
 ;
 
-binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
-
 unaryOper: NOT | MINUS | LEN | ORD | CHR ;
+
+binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 

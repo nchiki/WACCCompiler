@@ -1,10 +1,13 @@
 lexer grammar BasicLexer;
 
-WHITESPACE : ' ' -> skip ;
 COMMENT: HASH ~([\r\n])* EOL -> skip;
-WS : [ \n\r\t]+ -> channel(HIDDEN) ;
+//WHITESPACES
+WS : [ \n\r\t]+ -> skip ; //channel(HIDDEN) ;
 // EOL needs to be checked
 EOL: [\r\n] ;
+
+//WHITESPACE : ' ' -> skip ;
+
 
 //commands
 SKIP_FUNC: 'skip' ;
@@ -106,8 +109,8 @@ F: 'f' ;
 R: 'r' ;
 
 fragment CHARACTER: ~('\''| '"'| '\\') | BACKSLASH ESC_CHAR ;
-IDENT_TAIL: LETTER|DIGIT ;
 IDENT: LETTER (IDENT_TAIL)* ;
+IDENT_TAIL: LETTER|DIGIT ;
 
 // literals
 INT_LIT: (INT_SIGN)? INTEGER ;
