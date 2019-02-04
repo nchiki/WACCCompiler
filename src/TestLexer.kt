@@ -3,10 +3,6 @@ package wacc_25
 import antlr.BasicLexer
 import antlr.BasicParser
 import org.antlr.v4.runtime.CharStreams
-<<<<<<< HEAD
-=======
-
->>>>>>> b6500f06a616e0d17c8ad1ce6286377d2e8d1e14
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
@@ -16,6 +12,8 @@ fun main(args: Array<String>){
         if(args.size == 0) {
                 System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/pairs/createPair02" +
                         ".wacc"))
+        } else {
+            System.setIn(FileInputStream(args[0]))
         }
         val input = CharStreams.fromStream(java.lang.System.`in`)
         // create a lexer that feeds off of input CharStream

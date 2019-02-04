@@ -4,7 +4,6 @@
 # but do *not* change its name.
 
 # puts "TODO: setup this script to call your WACC compiler"
-<<<<<<< HEAD
 
 file = ARGV[0]
 if file == nil
@@ -12,6 +11,9 @@ if file == nil
  file = gets.chomp
 end
 puts file
-=======
-system ./grun antlr.Basic prog -gui $1
->>>>>>> b6500f06a616e0d17c8ad1ce6286377d2e8d1e14
+    # call main class
+    system("make")
+    system("mvn package")
+    cmd = IO.popen("java -classpath ../lib/antlr-4.7-complete.jar:. src/TestLexer");
+
+puts cmd.gets
