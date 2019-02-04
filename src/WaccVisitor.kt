@@ -59,7 +59,7 @@ class WaccVisitor : BasicParserVisitor<Node> {
     }
 
     override fun visitPairType(@NotNull ctx: BasicParser.PairTypeContext) : PairNode{
-        val fst =  visit(ctx.pairELemType(0))
+        val fst = visit(ctx.pairELemType(0))
         val snd = visit(ctx.pairELemType(1))
         return PairNode(fst, snd)
     }
@@ -73,7 +73,7 @@ class WaccVisitor : BasicParserVisitor<Node> {
     }
 
     override fun visit(p0: ParseTree?): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO()
     }
 
     override fun visitExpr(ctx: BasicParser.ExprContext?) : Node {
