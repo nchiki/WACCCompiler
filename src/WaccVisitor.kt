@@ -2,12 +2,13 @@ package wacc_25
 
 import antlr.BasicParser
 import antlr.BasicParserVisitor
+import org.antlr.v4.runtime.misc.NotNull
 import org.antlr.v4.runtime.tree.ErrorNode
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.RuleNode
 import org.antlr.v4.runtime.tree.TerminalNode
 
-class TestVisitor : BasicParserVisitor<Void> {
+class WaccVisitor : BasicParserVisitor<Void> {
     override fun visitProg(ctx: BasicParser.ProgContext?): Void {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -28,7 +29,7 @@ class TestVisitor : BasicParserVisitor<Void> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun visitStat(ctx: BasicParser.StatContext?): Void {
+    override fun visitStat(@NotNull ctx: BasicParser.StatContext): Void {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
