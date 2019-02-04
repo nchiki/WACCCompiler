@@ -74,7 +74,8 @@ class WaccVisitor : BasicParserVisitor<Node> {
 
     override fun visit(p0: ParseTree?): Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
+   }
 
     override fun visitExpr(ctx: BasicParser.ExprContext?) : Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
