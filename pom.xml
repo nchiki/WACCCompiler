@@ -104,7 +104,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>src.TestLexer</mainClass>
+                                    <mainClass>src.WaccMain</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

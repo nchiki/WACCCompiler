@@ -5,9 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import wacc_25.WaccErrorListener
 import java.io.FileInputStream
 
-class TestLexer {
-
-    fun main(args: Array<String>){
+fun main(args: Array<String>){
 
         if(args.size == 0) {
             System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/pairs/createPair02" +
@@ -42,6 +40,4 @@ class TestLexer {
         //visitor.visit(tree)
         // print LISP-style tree
 
-
-    }
 }

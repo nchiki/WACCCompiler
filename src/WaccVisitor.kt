@@ -18,7 +18,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val globalTable = ScopeTable(null)
         val symbol_table = SymbolTable()
         symbol_table.addTable(globalTable)
-        //return type??
+        return IdentNode()
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)

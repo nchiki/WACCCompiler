@@ -10,8 +10,8 @@
  #puts "Please, enter the folder below: \n"
  #file = gets.chomp
 #end
-kotlinc src/TestLexer.kt -d TestLexer.jar
-java -cp bin:lib/antlr-4.7-complete.jar TestLexer $1 < $1
+
+java -cp bin:lib/antlr-4.7-complete.jar src/WaccMain $1 < $1
 exit $?
 
 
