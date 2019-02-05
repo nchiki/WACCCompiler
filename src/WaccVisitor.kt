@@ -34,8 +34,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return IntLitNode()
     }
 
-    override fun visit
-
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
         val id = visit(ctx.assignLHS())
         val value = visit(ctx.assignRHS())
