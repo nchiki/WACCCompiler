@@ -28,7 +28,7 @@ stat:
 ;
 
 assignLHS:
-    IDENT       #Id
+    IDENT       #Iden
 | arrayElem     #Array
 | pairElem      #Pairelem
 ;
