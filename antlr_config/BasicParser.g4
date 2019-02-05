@@ -28,17 +28,17 @@ stat:
 ;
 
 assignLHS:
-    IDENT       #Iden
-| arrayElem     #Array
-| pairElem      #Pairelem
+    IDENT       #AssignL_Iden
+| arrayElem     #AssignL_Array
+| pairElem      #AssignL_Pairelem
 ;
 
 assignRHS:
-    expr                                                        #Exp
-| arrayLiter                                                    #ArrayL
-| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #Pair
-| pairElem                                                      #Pair_Elem
-| CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES        #Call
+    expr                                                        #AssigR_Exp
+| arrayLiter                                                    #AssignR_ArrayL
+| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #AssigR_Pair
+| pairElem                                                      #AssignR_Pair_Elem
+| CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES        #AssignR_Call
 ;
 
 

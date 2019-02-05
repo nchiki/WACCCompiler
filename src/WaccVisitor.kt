@@ -2,6 +2,7 @@ package wacc_25
 
 
 import Nodes.ArrayTypeNode
+import Nodes.AssignNode
 import Nodes.IdentNode
 import Nodes.IntLitNode
 import antlr.BasicParser
@@ -31,6 +32,16 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
         val int_val = Integer.valueOf(ctx.INT_LIT().text)
         return IntLitNode()
+    }
+
+    override fun visit
+
+    override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
+        val id = visit(ctx.assignLHS())
+        val value = visit(ctx.assignRHS())
+        /* uncomment when symbol table is implemented */
+        //memory.put(id, value);
+        return AssignNode()
     }
 
     override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node {
