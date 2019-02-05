@@ -1,89 +1,46 @@
 package wacc_25
 
 
+import Nodes.ArrayTypeNode
+import Nodes.IdentNode
+import Nodes.IntLitNode
 import antlr.BasicParser
 import antlr.BasicParserBaseVisitor
-import antlr.BasicParserVisitor
-import org.antlr.v4.runtime.misc.NotNull
-import org.antlr.v4.runtime.tree.ErrorNode
-import org.antlr.v4.runtime.tree.ParseTree
-import org.antlr.v4.runtime.tree.RuleNode
-import org.antlr.v4.runtime.tree.TerminalNode
-import wacc_25.Nodes.BaseNode
+import org.jetbrains.annotations.NotNull
+
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
-    override fun visitPairType(@NotNull ctx: BasicParser.PairTypeContext) : PairNode{
-        val fst = visit(ctx.pairELemType(0))
-        val snd = visit(ctx.pairELemType(1))
+    override fun visitProg(ctx: BasicParser.ProgContext?): Node {
+        //create symbol tables and initialize stuff etc.
+    }
+
+    //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
+    override fun visitId(ctx: BasicParser.IdContext): Node {
+        val id = ctx.IDENT().text
+        /* uncomment when Symbol Table is done */
+        // if (memory.containsKey(id)) {
+            //return memory.get(id)
+        //} else {
+            //return 0;
+        //}
+        return IdentNode()
+    }
+
+    //IntNode needs to be constructed with val of int
+    override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
+        val int_val = Integer.valueOf(ctx.INT_LIT().text)
+        return IntLitNode()
+    }
+
+    override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node {
+        val type = visit(ctx.type())
+        return ArrayTypeNode()
+    }
+
+    override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node {
+        val fst = visit(ctx.pairElemType(0))
+        val snd = visit(ctx.pairElemType(1))
         return PairNode(fst, snd)
-    }
-
-    override fun visitProg(ctx: BasicParser.ProgContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitArgList(ctx: BasicParser.ArgListContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitFunc(ctx: BasicParser.FuncContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitParamList(ctx: BasicParser.ParamListContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitParam(ctx: BasicParser.ParamContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitStat(ctx: BasicParser.StatContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitAssignLHS(ctx: BasicParser.AssignLHSContext): Node{
-        return visitChildren(ctx)
-    }
-    
-    override fun visitAssignRHS(ctx: BasicParser.AssignRHSContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitArrayElem(ctx: BasicParser.ArrayElemContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitPairElem(ctx: BasicParser.PairElemContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitType(ctx: BasicParser.TypeContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitBaseType(ctx: BasicParser.BaseTypeContext): Node{
-        return BaseNode()
-    }
-
-    override fun visitPairELemType(ctx: BasicParser.PairELemTypeContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitExpr(ctx: BasicParser.ExprContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitBinaryOper(ctx: BasicParser.BinaryOperContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext): Node{
-        return visitChildren(ctx)
-    }
-
-    override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext): Node{
-        return visitChildren(ctx)
     }
 }
