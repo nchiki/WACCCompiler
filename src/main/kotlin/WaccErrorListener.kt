@@ -1,6 +1,3 @@
-package wacc_25
-
-import antlr.BasicParser
 import org.antlr.v4.runtime.*
 import java.awt.Color
 import java.util.*
