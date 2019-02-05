@@ -93,7 +93,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>src.main.kotlin.WaccMain</mainClass>
+                                    <mainClass>${project.basedir}/src/main/kotlin/WaccMain</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
