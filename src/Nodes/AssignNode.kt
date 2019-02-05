@@ -1,4 +1,6 @@
 package Nodes
 
-class AssignNode {
+import wacc_25.Node
+
+class AssignNode : Node {
 }

@@ -8,12 +8,17 @@ import Nodes.IntLitNode
 import antlr.BasicParser
 import antlr.BasicParserBaseVisitor
 import org.jetbrains.annotations.NotNull
-
+import ScopeTable
+import SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitProg(ctx: BasicParser.ProgContext?): Node {
         //create symbol tables and initialize stuff etc.
+        val globalTable = ScopeTable(null)
+        val symbol_table = SymbolTable()
+        symbol_table.addTable(globalTable)
+        //return type??
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)

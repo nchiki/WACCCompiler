@@ -1,23 +1,22 @@
-import sun.reflect.generics.scope.Scope
+import org.jetbrains.annotations.NotNull
+import wacc_25.Node
 import java.util.*
 
 class SymbolTable {
 
-    private val stack = Stack<List<Symbol>>()
+    private val stack = Stack<ScopeTable>()
 
-}
-
-class Symbol {
-
-    
+    fun addTable(@NotNull table : ScopeTable){
+        stack.push(table)
+    }
 
 }
 
 class ScopeTable (val parent: ScopeTable?){
 
-    val table = emptyMap<String, Symbol>()
+    val table = emptyMap<String, Node>()
 
-    fun lookupSymbol(identifier: String): Symbol?{
+    fun lookupSymbol(identifier: String): Node?{
 
         if(table.containsKey(identifier)){
             return table[identifier]
@@ -31,10 +30,10 @@ class ScopeTable (val parent: ScopeTable?){
     }
 
     /* Returns false if declaration failed */
-    fun declareVariable (identifier: String, symbol: Symbol): Boolean{
+    /*fun declareVariable (identifier: String, node: Node): Boolean{
 
     }
-
+    */
 }
 
 enum class VariableTypes {
