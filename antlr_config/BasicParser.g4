@@ -11,31 +11,34 @@ paramList: param (COMMA param)* ;
 
 param: type IDENT ;
 
-stat: SKIP_FUNC
-| type IDENT EQUAL assignRHS
-| assignLHS EQUAL assignRHS
-| READ assignLHS
-| FREE expr
-| RETURN expr
-| EXIT expr
-| PRINT expr
-| PRINTLN expr
-| IF expr THEN stat ELSE stat FI
-| WHILE expr DO stat DONE
-| BEGIN stat END
-| stat SEMICOLON stat
+stat:
+    SKIP_FUNC                       #Skip
+| type IDENT EQUAL assignRHS        #Decl
+| assignLHS EQUAL assignRHS         #Assign
+| READ assignLHS                    #Read
+| FREE expr                         #Free
+| RETURN expr                       #Return
+| EXIT expr                         #Exit
+| PRINT expr                        #Print
+| PRINTLN expr                      #Println
+| IF expr THEN stat ELSE stat FI    #IfCond
+| WHILE expr DO stat DONE           #While
+| BEGIN stat END                    #Statement
+| stat SEMICOLON stat               #StatList
 ;
 
-assignLHS: IDENT
-| arrayElem
-| pairElem
+assignLHS:
+    IDENT       #Id
+| arrayElem     #Array
+| pairElem      #Pairelem
 ;
 
-assignRHS: expr
-| arrayLiter
-| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES
-| pairElem
-| CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES
+assignRHS:
+    expr                                                        #Exp
+| arrayLiter                                                    #ArrayL
+| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #Pair
+| pairElem                                                      #Pair_Elem
+| CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES        #Call
 ;
 
 
@@ -45,25 +48,29 @@ pairElem: FST expr | SND expr ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
-type:  baseType | type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | pairType ;
+type:
+    base_type                                       #BaseType
+    | type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET       #ArrayType
+    | pair_type                                     #PairType
+;
 
-baseType: INT | BOOL | CHAR | STRING;
+base_type: INT | BOOL | CHAR | STRING;
 
-pairType: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
+pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
 
-pairElemType: baseType | type | PAIR ;
+pairElemType: base_type | type | PAIR ;
 
 expr:
-INT_LIT
-| BOOL_LIT
-| CHAR_LIT
-| STR_LIT
-| PAIR_LIT
-| IDENT
-| arrayElem
-| unaryOper expr
-| expr binaryOper expr
-| OPEN_PARENTHESES expr CLOSE_PARENTHESES
+    INT_LIT                                 #IntLit
+| BOOL_LIT                                  #BoolLit
+| CHAR_LIT                                  #CharLit
+| STR_LIT                                   #StrLit
+| PAIR_LIT                                  #PairLit
+| IDENT                                     #Id
+| arrayElem                                 #Array_Elem
+| unaryOper expr                            #UnOp
+| expr binaryOper expr                      #BinOper
+| OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
 unaryOper: NOT | MINUS | LEN | ORD | CHR ;
