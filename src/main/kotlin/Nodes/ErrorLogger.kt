@@ -1,6 +1,6 @@
-package wacc_25
+package Nodes
 
-import wacc_25.Errors.ErrorNode
+import Errors.ErrorNode
 
 class ErrorLogger() {
     var errorList: ArrayList<ErrorNode> = arrayListOf()

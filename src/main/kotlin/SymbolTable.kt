@@ -1,5 +1,5 @@
 import org.jetbrains.annotations.NotNull
-import wacc_25.Node
+import Nodes.Node
 import java.util.*
 
 class SymbolTable {

@@ -1,12 +1,4 @@
-package wacc_25
-
-
-import Nodes.ArrayTypeNode
-import Nodes.AssignNode
-import Nodes.IdentNode
-import Nodes.IntLitNode
-import antlr.BasicParser
-import antlr.BasicParserBaseVisitor
+import Nodes.*
 import org.jetbrains.annotations.NotNull
 import ScopeTable
 import SymbolTable

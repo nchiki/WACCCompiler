@@ -1,8 +1,5 @@
-import antlr.BasicLexer
-import antlr.BasicParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import wacc_25.WaccErrorListener
 import java.io.FileInputStream
 
 fun main(args: Array<String>){

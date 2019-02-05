@@ -1,5 +1,4 @@
-package wacc_25
-
+package Nodes
 
 interface Node {
     //add method signatures
