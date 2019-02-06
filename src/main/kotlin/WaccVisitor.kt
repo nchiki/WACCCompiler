@@ -1,7 +1,13 @@
+import Nodes.DeclNode
+import Nodes.IfCondNode
+import Nodes.ParamListNode
+import Nodes.ParamNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.ScopeTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
+
     val globalTable = ScopeTable(null)
 
     override fun visitProg(ctx: BasicParser.ProgContext?): Node? {
@@ -10,10 +16,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val symbol_table = SymbolTable()
         symbol_table.addTable(globalTable)*/
         return ProgNode()
-    }
-
-    override fun visitFunc(ctx: BasicParser.FuncContext?): Node {
-        return super.visitFunc(ctx)
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
@@ -80,11 +82,29 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
-        return super.visitDecl(ctx)
+
+        // type node that will worry about checking if its valid type
+        val type = visit(ctx?.type())
+
+        // idNode that will check if there is a variable already declared with the same id
+        val id = ctx?.IDENT()?.text
+
+        // assignRHS node that will worry about semantic check of the RHS
+        val RHS = visit(ctx?.assignRHS())
+
+        return DeclNode(id!!, type, RHS)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext?): Node {
-        return super.visitIfCond(ctx)
+        // the expr will be evaluted depending on its type
+        val expr = visit(ctx?.expr())
+        // if expr evalutes to true
+        val IfTrueStat = visit(ctx?.stat(0))
+        // if expr evaluates to false
+        val ElseStat = visit(ctx?.stat(1))
+
+        return IfCondNode(expr, IfTrueStat, ElseStat)
+
     }
 
 
@@ -97,7 +117,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
-        return super.visitParamList(ctx)
+        // gets parameters in context
+        val params =ctx?.param()
+
+        // declaration empty list of parameters
+        val listParamNodes = mutableListOf<Node>()
+
+        // iterates through the parameters adding them to the list
+        for (param in params!!) {
+            listParamNodes.add(visit(param))
+        }
+
+        return ParamListNode(listParamNodes) // new Node
     }
 
     override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
@@ -113,7 +144,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
-        return super.visitParam(ctx)
+
+        // typeNode of the parameter
+        val type = visit(ctx?.type())
+
+        // name of param var
+
+        val id = ctx?.IDENT()?.text
+        return ParamNode(id!!, type)
     }
 
     override fun visitCharLit(ctx: BasicParser.CharLitContext?): Node {
