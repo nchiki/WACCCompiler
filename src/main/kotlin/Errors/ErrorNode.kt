@@ -1,4 +1,4 @@
-package wacc_25.Errors
+package Errors
 
 interface ErrorNode {
     fun printError() : String

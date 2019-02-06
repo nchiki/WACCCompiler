@@ -1,14 +1,8 @@
-package src
-
-import antlr.BasicLexer
-import antlr.BasicParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
-class TestLexer {
-
-    fun main(args: Array<String>){
+fun main(args: Array<String>){
 
         if(args.size == 0) {
             System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/pairs/createPair02" +

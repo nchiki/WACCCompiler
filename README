@@ -5,9 +5,9 @@ in this repository regularly committing and pushing your work back to GitLab.
 Provided files/directories  
 ----------------------------
 
-> antlr_config <
+> main.antlr4 <
 
-The antlr_config directory contains simple example ANTLR lexer and parser 
+The main.antlr4 directory contains simple example ANTLR lexer and parser
 specification files .g4 and Basic.g4, along with a script antlrBuild
 that builds the corresponding Java class files using the ANTLR libraries (more 
 details below).

@@ -1,7 +1,7 @@
 # Sample Makefile for the WACC Compiler lab: edit this to build your own comiler
 # Locations
 
-ANTLR_DIR	:= antlr_config
+ANTLR_DIR	:= antlr4
 SOURCE_DIR	:= src
 OUTPUT_DIR	:= bin 
 

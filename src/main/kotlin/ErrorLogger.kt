@@ -1,6 +1,6 @@
-package src
+package kotlin
 
-import wacc_25.Errors.ErrorNode
+import Errors.ErrorNode
 
 class ErrorLogger() {
     var errorList: ArrayList<ErrorNode> = arrayListOf()

@@ -1,8 +1,4 @@
-package src
-
 import Nodes.*
-import antlr.BasicParser
-import antlr.BasicParserBaseVisitor
 import org.jetbrains.annotations.NotNull
 import Nodes.Node
 
