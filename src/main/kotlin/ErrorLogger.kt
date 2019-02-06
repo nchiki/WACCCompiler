@@ -1,4 +1,4 @@
-package Nodes
+package main.kotlin
 
 import Errors.ErrorNode
 
