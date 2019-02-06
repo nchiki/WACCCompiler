@@ -1,9 +1,19 @@
-package main.kotlin.Nodes
+package Nodes
 
 import main.kotlin.ErrorLogger
-import main.kotlin.SymbolTable
+import SymbolTable
+import main.kotlin.Nodes.Node
 
-class FunctionNode : Node {
+class FunctionNode (val id : String, val type : String, val params : ParamListNode, val table : SymbolTable?) : Node {
+
+    fun getID() : String {
+        return id
+    }
+
+    fun getParent() : SymbolTable? {
+        return table?.parent
+    }
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

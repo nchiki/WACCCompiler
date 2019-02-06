@@ -1,4 +1,4 @@
-import main.kotlin.SymbolTable
+import Errors.SyntaxErrorStrategy
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -6,8 +6,7 @@ import java.io.FileInputStream
 fun main(args: Array<String>){
 
         if(args.size == 0) {
-            System.setIn(FileInputStream("/Users/blancatebar/Documents/SecondYear/WACC/wacc_examples/valid/pairs/createPair02" +
-                    ".wacc"))
+            System.setIn(FileInputStream("../wacc_examples/invalid/syntaxErr/pairs/badLookup01.wacc"))
         } else {
             System.setIn(FileInputStream(args[0]))
         }
@@ -16,8 +15,8 @@ fun main(args: Array<String>){
         val listener = WaccErrorListener()
         //Lexical analysis
         val lexer = BasicLexer(input)
-        lexer.removeErrorListeners()
-        lexer.addErrorListener(listener)
+        //lexer.removeErrorListeners()
+        //lexer.addErrorListener(listener)
 
 
         /*---------------------------------------------------------------*/
@@ -30,16 +29,17 @@ fun main(args: Array<String>){
         //Syntactical analysis
         // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
-        parser.removeErrorListeners()
-        parser.addErrorListener(WaccErrorListener())
+        parser.errorHandler = SyntaxErrorStrategy()
+        //parser.removeErrorListeners()
+        //parser.addErrorListener(WaccErrorListener())
         val tree = parser.prog()
         // begin parsing at init rule
         println(tree.toStringTree(parser))
         //visitor.visit(tree)
         // print LISP-style tree
 
-        val visitor = WaccVisitor()
-        val symbolTable = SymbolTable()
+        val symbolTable = SymbolTable(null)
+        val visitor = WaccVisitor(symbolTable)
         val progNode = visitor.visit(tree)
 
         //progNode.getSyntaxErrors

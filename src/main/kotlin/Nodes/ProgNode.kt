@@ -1,9 +1,11 @@
 package main.kotlin.Nodes
 
+import Nodes.FunctionNode
 import main.kotlin.ErrorLogger
-import main.kotlin.SymbolTable
+import SymbolTable
 
-class ProgNode : Node {
+class ProgNode (val funcDefs: List<FunctionNode>) : Node {
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -15,6 +17,10 @@ class ProgNode : Node {
             symbol table for program body
          */
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for (func in funcDefs) {
+
+        }
+
+
     }
 }

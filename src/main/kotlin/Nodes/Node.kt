@@ -1,6 +1,6 @@
 package main.kotlin.Nodes
 
-import main.kotlin.SymbolTable
+import SymbolTable
 import main.kotlin.ErrorLogger
 
 interface Node {
