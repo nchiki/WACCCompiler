@@ -1,24 +1,20 @@
-package wacc_25
+package src
 
 
-import Nodes.ArrayTypeNode
-import Nodes.AssignNode
-import Nodes.IdentNode
-import Nodes.IntLitNode
+import Nodes.*
 import antlr.BasicParser
 import antlr.BasicParserBaseVisitor
 import org.jetbrains.annotations.NotNull
-import ScopeTable
-import SymbolTable
+import Nodes.Node
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitProg(ctx: BasicParser.ProgContext?): Node {
         //create symbol tables and initialize stuff etc.
-        val globalTable = ScopeTable(null)
+        /*val globalTable = ScopeTable(null)
         val symbol_table = SymbolTable()
-        symbol_table.addTable(globalTable)
-        //return type??
+        symbol_table.addTable(globalTable)*/
+        return ProgNode()
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
@@ -32,6 +28,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         //}
         return IdentNode()
     }
+
+    override fun visitFunc(ctx: BasicParser.FuncContext?): Node {
+        TODO()
+    }
+
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {

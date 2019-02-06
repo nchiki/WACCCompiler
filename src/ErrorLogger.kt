@@ -1,4 +1,4 @@
-package wacc_25
+package src
 
 import wacc_25.Errors.ErrorNode
 

@@ -1,4 +1,4 @@
-package wacc_25
+package src
 
 import antlr.BasicParser
 import org.antlr.v4.runtime.*

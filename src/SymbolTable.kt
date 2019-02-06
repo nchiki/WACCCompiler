@@ -1,19 +1,12 @@
-import org.jetbrains.annotations.NotNull
-import wacc_25.Node
-import java.util.*
+package src
 
-class SymbolTable {
+import Nodes.Node
 
-    private val stack = Stack<ScopeTable>()
+class SymbolTable (val parent: SymbolTable?){
 
-    fun addTable(@NotNull table : ScopeTable){
-        stack.push(table)
-    }
-
-}
-
-class ScopeTable (val parent: ScopeTable?){
-
+    final val keywords = arrayOf("char", "int", "ord") //finish filling out
+    private val children = listOf<SymbolTable>()
+    private val parentT = parent
     val table = emptyMap<String, Node>()
 
     fun lookupSymbol(identifier: String): Node?{
@@ -34,12 +27,4 @@ class ScopeTable (val parent: ScopeTable?){
 
     }
     */
-}
-
-enum class VariableTypes {
-    BOOL,
-    INTEGER,
-    STRING,
-    CHARACTER,
-    ARRAY
 }
