@@ -1,13 +1,32 @@
+import Nodes.IdentNode
 import org.jetbrains.annotations.NotNull
 import Nodes.Node
+import com.sun.source.tree.Scope
 import java.util.*
 
 class SymbolTable {
 
-    private val stack = Stack<ScopeTable>()
+    private var table = ScopeTable(null)
 
-    fun addTable(@NotNull table : ScopeTable){
-        stack.push(table)
+    fun getTable(): ScopeTable {
+        return table
+    }
+
+    fun newScope (){
+        var newTable = ScopeTable(table)
+        table = newTable;
+    }
+
+    fun leaveScope () {
+        if(table.parent != null){
+            table = table.parent!!
+        }else{
+            throw Exception("Unable to leave global scope!")
+        }
+    }
+
+    fun lookupSymbol(identifier: IdentNode){
+        table.lookupSymbol(identifier)
     }
 
 }
@@ -16,7 +35,7 @@ class ScopeTable (val parent: ScopeTable?){
 
     val table = emptyMap<String, Node>()
 
-    fun lookupSymbol(identifier: String): Node?{
+    fun lookupSymbol(identifier: IdentNode): Node?{
 
         if(table.containsKey(identifier)){
             return table[identifier]
