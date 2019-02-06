@@ -1,8 +1,6 @@
 package Nodes
 
-import src.ErrorLogger
-import src.SymbolTable
-
+import SymbolTable
 
 interface Node {
     //add method signatures
