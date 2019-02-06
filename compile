@@ -1,12 +1,14 @@
-#!/usr/bin/ruby
+#!/bin/sh
 # Ruby front-end for your compiler.
 # You are free to change the language used for this script,
 # but do *not* change its name.
 
-puts "TODO: setup this script to call your WACC compiler"
+#puts "TODO: setup this script to call your WACC compiler"
 
 
+java -cp kotlin-runtime.jar;. src/main/kotlin/WaccMain.kt $1 < $1
 
+exit $?
 
 #TARGET=./target/wacc_25-1.0-jar-with-dependencies.jar
 

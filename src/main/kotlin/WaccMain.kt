@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
-fun main(args: Array<String>){
+fun main(args: Array<String>) {
 
         if(args.size == 0) {
             System.setIn(FileInputStream("../wacc_examples/invalid/syntaxErr/pairs/badLookup01.wacc"))
