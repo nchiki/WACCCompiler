@@ -1,5 +1,5 @@
 package main.kotlin
-import Nodes.Node
+import main.kotlin.Nodes.Node
 
 class SymbolTable{
 

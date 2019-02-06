@@ -1,3 +1,6 @@
+import antlr.BasicLexer
+import antlr.BasicParser
+import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -38,7 +41,7 @@ fun main(args: Array<String>){
         // print LISP-style tree
 
         val visitor = WaccVisitor()
-        val symbolTable = SymbolTable(null)
+        val symbolTable = SymbolTable()
         val progNode = visitor.visit(tree)
 
         //progNode.getSyntaxErrors
@@ -48,4 +51,3 @@ fun main(args: Array<String>){
 
 
     }
-}
