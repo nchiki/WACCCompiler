@@ -1,8 +1,7 @@
-package Nodes
+package main.kotlin.Nodes
 
-import src.ErrorLogger
-import src.SymbolTable
-
+import main.kotlin.SymbolTable
+import main.kotlin.ErrorLogger
 
 interface Node {
     //add method signatures

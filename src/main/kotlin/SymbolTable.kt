@@ -1,10 +1,7 @@
-import Nodes.IdentNode
-import org.jetbrains.annotations.NotNull
-import Nodes.Node
-import com.sun.source.tree.Scope
-import java.util.*
+package main.kotlin
+import main.kotlin.Nodes.Node
 
-import Nodes.Node
+class SymbolTable{
 
     private var table = ScopeTable(null)
 
@@ -25,7 +22,7 @@ import Nodes.Node
         }
     }
 
-    fun lookupSymbol(identifier: IdentNode){
+    fun lookupSymbol(identifier: String){
         table.lookupSymbol(identifier)
     }
 
@@ -38,7 +35,7 @@ class ScopeTable (val parent: ScopeTable?){
     private val parentT = parent
     val table = emptyMap<String, Node>()
 
-    fun lookupSymbol(identifier: IdentNode): Node?{
+    fun lookupSymbol(identifier: String): Node?{
 
         if(table.containsKey(identifier)){
             return table[identifier]

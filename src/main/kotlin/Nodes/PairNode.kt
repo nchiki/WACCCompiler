@@ -1,7 +1,7 @@
-package Nodes
+package main.kotlin.Nodes
 
-import src.ErrorLogger
-import src.SymbolTable
+import main.kotlin.ErrorLogger
+import main.kotlin.SymbolTable
 
 class PairNode(fstNode : Node, sndNode: Node) : Node{
     override fun syntaxCheck() {
