@@ -1,9 +1,22 @@
 package main.kotlin
+import Errors.NotBoolConditionError
+import Nodes.BoolLitNode
 import main.kotlin.Nodes.Node
 
 class SymbolTable{
 
     private var table = ScopeTable(null)
+
+    /*                   UTILS                           */
+
+    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
+        if (expr !is BoolLitNode) {
+            errors.addError(NotBoolConditionError())
+        }
+    }
+
+    /* |||||||||||||||||||||||||||||||||||||||||||||||||| */
+
     fun getTable(): ScopeTable {
         return table
     }
@@ -38,6 +51,8 @@ class ScopeTable (val parent: ScopeTable?){
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
     }
+
+
 
 
 

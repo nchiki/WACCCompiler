@@ -8,9 +8,9 @@ import main.kotlin.SymbolTable
 
 class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
 
-    val id = id // var name
+    val id = id     // var name
     val type = type // type of var
-    val rhs = rhs // assigned rhs
+    val rhs = rhs   // assigned rhs
 
 
     override fun syntaxCheck() {
@@ -19,10 +19,10 @@ class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // looks up the id in the symbol table
-        val Value = table.lookupSymbol(id)
+        val value = table.lookupSymbol(id)
 
         //if it's not there or there is a function with the same name, don't add an error
-        if (Value != null && !(Value is FunctionNode)) {
+        if (value != null && (value !is FunctionNode)) {
             // if there is already a variable with that name -> error
             errors.addError(VarAlreadyDeclaredError())
         }
