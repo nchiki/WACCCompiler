@@ -92,7 +92,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>src.WaccMain</mainClass>
+                                    <mainClass>src/main/kotlin/WaccMainkt</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

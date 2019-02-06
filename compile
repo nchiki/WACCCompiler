@@ -5,8 +5,14 @@
 
 # puts "TODO: setup this script to call your WACC compiler"
 
+<<<<<<< HEAD
 TARGET= ./target/wacc_25-1.0-jar-with-dependencies.jar
 
 java -jar $TARGET $1 < $1
 
+=======
+TARGET=./target/wacc_25-1.0-jar-with-dependencies.jar
+
+java -jar $TARGET $1 < $1
+>>>>>>> 80195ba99ba9686eb44ec9f13f0c006d99ec41f8
 exit $?
