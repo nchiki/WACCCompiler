@@ -4,7 +4,7 @@ import Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){
 
-    final val keywords = arrayOf("char", "int", "ord") //finish filling out
+    final val keywords = arrayOf("char", "int", "ord", "len") //finish filling out
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     val table = emptyMap<String, Node>()
