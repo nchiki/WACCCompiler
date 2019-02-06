@@ -1,4 +1,6 @@
-import Nodes.*
+import Nodes.stat.StatListNode
+import Nodes.stat.StatementNode
+import Nodes.stat.WhileNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 
@@ -35,7 +37,20 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         scope = newTable!!.parent!!
         return FunctionNode(id, returnType, paramList, newTable)
     }
-    
+
+    override fun visitWhile(ctx: BasicParser.WhileContext): WhileNode {
+        val exprNode = visit(ctx.expr())
+        val statNode = visit(ctx.stat())
+        return WhileNode(exprNode, statNode)
+    }
+
+    override fun visitStatList(ctx: BasicParser.StatListContext): StatListNode {
+        return StatListNode(visit(ctx.stat(0)), visit(ctx.stat(1)))
+    }
+
+    override fun visitStatement(ctx: BasicParser.StatementContext): StatementNode {
+        return StatementNode(visit(ctx.stat()))
+    }
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node? {
