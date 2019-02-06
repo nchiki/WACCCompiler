@@ -4,7 +4,7 @@ import Errors.VarAlreadyDeclaredError
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.FunctionNode
 import main.kotlin.Nodes.Node
-import main.kotlin.SymbolTable
+import SymbolTable
 
 class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
 

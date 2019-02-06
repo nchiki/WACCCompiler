@@ -2,7 +2,7 @@ package Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
-import main.kotlin.SymbolTable
+import SymbolTable
 
 class ParamListNode(listParamNodes: MutableList<Node>) : Node {
 

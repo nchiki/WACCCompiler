@@ -1,12 +1,9 @@
-import Nodes.DeclNode
-import Nodes.IfCondNode
-import Nodes.ParamListNode
-import Nodes.ParamNode
+import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
-import main.kotlin.ScopeTable
 
-class WaccVisitor : BasicParserBaseVisitor<Node>() {
+class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
+
 
     override fun visitProg(@NotNull ctx: BasicParser.ProgContext): Node {
         val funcCtx = ctx.func()
@@ -21,13 +18,19 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitId(ctx: BasicParser.IdContext): Node? {
         val id = ctx.IDENT().text
         /* uncomment when Symbol Table is done */
-        return globalTable.lookupSymbol(id)
-
+        //return globalTable.lookupSymbol(id)
     }
 
-    override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): Node {
-        val params = ctx.paramList().param()
-        val paramList = visitParamList(params)
+    //add Statements as well as parameter of FuncNode
+    override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
+        val paramList = visitParamList(ctx.paramList())
+        val returnType = ctx.type().text
+        val id = ctx.IDENT().text
+        scope =
+        /*if (scope.lookupSymbol(id) == null) {
+
+        } add new symbol table and right reference etc */
+        return FunctionNode(id, returnType, paramList, null)
     }
     
 
@@ -116,7 +119,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return super.visitBoolLit(ctx)
     }
 
-    override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
+    override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
         // gets parameters in context
         val params =ctx?.param()
 

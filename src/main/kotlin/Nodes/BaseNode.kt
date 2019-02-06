@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
-import main.kotlin.SymbolTable
+import SymbolTable
 
 class BaseNode : Node {
 

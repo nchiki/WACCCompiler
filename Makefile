@@ -7,7 +7,7 @@ OUTPUT_DIR	:= bin
 
 # Tools
 
-ANTLR	:= antlr
+ANTLR	:= antlr4
 FIND	:= find
 RM	:= rm -rf
 MKDIR	:= mkdir -p
@@ -29,7 +29,7 @@ rules:
 	$(RM) rules
 
 clean:
-	$(RM) rules $(OUTPUT_DIR) $(SOURCE_DIR)/main/antlr4
+	$(RM) rules $(OUTPUT_DIR) $(SOURCE_DIR)/antlr
 
 .PHONY: all rules clean
 
