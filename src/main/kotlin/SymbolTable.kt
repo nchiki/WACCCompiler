@@ -29,6 +29,7 @@ class ScopeTable (val parent: ScopeTable?){
         return parent.lookupSymbol(identifier)
     }
 
+
     /* Returns false if declaration failed */
     /*fun declareVariable (identifier: String, node: Node): Boolean{
 
