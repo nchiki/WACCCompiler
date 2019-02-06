@@ -26,11 +26,14 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         val paramList = visitParamList(ctx.paramList())
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
-        scope =
-        /*if (scope.lookupSymbol(id) == null) {
-
-        } add new symbol table and right reference etc */
-        return FunctionNode(id, returnType, paramList, null)
+        var newTable : SymbolTable? = null
+        if (scope.lookupSymbol(id) == null) {
+            newTable = SymbolTable(scope)
+            scope = newTable
+        }
+        //visit stats
+        scope = newTable!!.parent!!
+        return FunctionNode(id, returnType, paramList, newTable)
     }
     
 

@@ -4,10 +4,14 @@ import main.kotlin.ErrorLogger
 import SymbolTable
 import main.kotlin.Nodes.Node
 
-class FunctionNode (val id : String, val type : String, val params : ParamListNode, val table : SymbolTable) : Node {
+class FunctionNode (val id : String, val type : String, val params : ParamListNode, val table : SymbolTable?) : Node {
 
     fun getID() : String {
         return id
+    }
+
+    fun getParent() : SymbolTable? {
+        return table?.parent
     }
 
     override fun syntaxCheck() {
