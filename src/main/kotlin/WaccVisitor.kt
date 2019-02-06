@@ -3,11 +3,13 @@ import main.kotlin.Nodes.*
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
-    override fun visitProg(ctx: BasicParser.ProgContext?): Node {
-        //create symbol tables and initialize stuff etc.
-        /*
-        symbol_table.addTable(globalTable)*/
-        return ProgNode()
+    override fun visitProg(@NotNull ctx: BasicParser.ProgContext): Node {
+        val funcCtx = ctx.func()
+        val funcList: MutableList<FunctionNode> = mutableListOf()
+        for (func in funcCtx) {
+            funcList.add(visitFunc(func))
+        }
+        return ProgNode(funcList)
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
@@ -23,9 +25,10 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): Node {
-
+        val params = ctx.paramList().param()
+        val paramList = visitParamList(params)
     }
-
+    
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
