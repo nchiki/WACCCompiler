@@ -1,6 +1,4 @@
 import org.jetbrains.annotations.NotNull
-import antlr.BasicParser
-import antlr.BasicParserBaseVisitor
 import main.kotlin.Nodes.*
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {

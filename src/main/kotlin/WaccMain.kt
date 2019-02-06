@@ -1,5 +1,3 @@
-import antlr.BasicLexer
-import antlr.BasicParser
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
