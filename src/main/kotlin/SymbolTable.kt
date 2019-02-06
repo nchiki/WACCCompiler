@@ -31,8 +31,6 @@ class SymbolTable{
 class ScopeTable (val parent: ScopeTable?){
 
     final val keywords = arrayOf("char", "int", "ord", "len") //finish filling out
-    private val children = listOf<SymbolTable>()
-    private val parentT = parent
     val table = emptyMap<String, Node>()
 
     fun lookupSymbol(identifier: String): Node?{

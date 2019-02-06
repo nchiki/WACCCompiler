@@ -5,8 +5,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitProg(ctx: BasicParser.ProgContext?): Node {
         //create symbol tables and initialize stuff etc.
-        /*val globalTable = ScopeTable(null)
-        val symbol_table = SymbolTable()
+        /*
         symbol_table.addTable(globalTable)*/
         return ProgNode()
     }
@@ -23,8 +22,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return IdentNode()
     }
 
-    override fun visitFunc(ctx: BasicParser.FuncContext?): Node {
-        TODO()
+    override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): Node {
+
     }
 
 

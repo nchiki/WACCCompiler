@@ -1,13 +1,13 @@
 # Sample Makefile for the WACC Compiler lab: edit this to build your own comiler
 # Locations
 
-ANTLR_DIR	:= antlr4
+ANTLR_DIR	:= target/generated-sources/antlr4
 SOURCE_DIR	:= src
 OUTPUT_DIR	:= bin 
 
 # Tools
 
-ANTLR	:= antlrBuild
+ANTLR	:= antlr
 FIND	:= find
 RM	:= rm -rf
 MKDIR	:= mkdir -p
@@ -29,7 +29,7 @@ rules:
 	$(RM) rules
 
 clean:
-	$(RM) rules $(OUTPUT_DIR) $(SOURCE_DIR)/antlr
+	$(RM) rules $(OUTPUT_DIR) $(SOURCE_DIR)/main/antlr4
 
 .PHONY: all rules clean
 
