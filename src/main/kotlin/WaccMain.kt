@@ -1,3 +1,4 @@
+import Errors.SyntaxErrorStrategy
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -29,6 +30,7 @@ fun main(args: Array<String>){
         //Syntactical analysis
         // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
+        parser.errorHandler = SyntaxErrorStrategy()
         parser.removeErrorListeners()
         parser.addErrorListener(WaccErrorListener())
         val tree = parser.prog()
