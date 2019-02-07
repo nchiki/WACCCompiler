@@ -1,5 +1,4 @@
 import Errors.SyntaxErrorStrategy
-import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream

@@ -10,6 +10,6 @@ class SyntaxErrorStrategy : DefaultErrorStrategy() {
     override fun reportError(recognizer: Parser?, e: RecognitionException?) {
         exitProcess(SyntaxExitCode)
     }
-    
+
 
 }
