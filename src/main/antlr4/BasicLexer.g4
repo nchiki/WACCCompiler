@@ -88,7 +88,7 @@ COMMA: ',' ;
 
 BACKSLASH: '\\' ;
 HASH: '#' ;
-NULL: 'null' ;
+fragment NULL: 'null' ;
 
 //numbers
 fragment DIGIT: '0'..'9' ;
