@@ -1,14 +1,8 @@
-import Nodes.DeclNode
-import Nodes.IfCondNode
-import Nodes.ParamListNode
-import Nodes.ParamNode
+import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
-import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
-
-    val globalTable = ScopeTable(null)
 
     override fun visitProg(@NotNull ctx: BasicParser.ProgContext): Node {
         val funcCtx = ctx.func()
@@ -23,9 +17,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
     override fun visitId(ctx: BasicParser.IdContext): Node? {
         val id = ctx.IDENT().text
-        /* uncomment when Symbol Table is done */
-        return globalTable.lookupSymbol(id)
-
+        return IdentNode(id)
     }
 
     //add Statements as well as parameter of FuncNode
@@ -33,14 +25,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val paramList = visitParamList(ctx.paramList())
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
-        var newTable : SymbolTable? = null
-        if (scope.lookupSymbol(id) == null) {
-            newTable = SymbolTable(scope)
-            scope = newTable
-        }
         val stat = visit(ctx.stat()) as StatementNode
-        scope = newTable!!.parent!!
-        return FunctionNode(id, returnType, paramList, newTable)
+        return FunctionNode(id, returnType, paramList, stat)
     }
 
 
@@ -134,7 +120,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return super.visitBoolLit(ctx)
     }
 
-    override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
+    override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
         // gets parameters in context
         val params =ctx?.param()
 
@@ -219,7 +205,4 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
         return super.visitPairElemType(ctx)
     }
-
-
-
 }

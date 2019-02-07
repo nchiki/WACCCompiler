@@ -1,4 +1,5 @@
 import Errors.SyntaxErrorStrategy
+import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -39,12 +40,13 @@ fun main(args: Array<String>) {
         // print LISP-style tree
 
         val visitor = WaccVisitor()
-        val symbolTable = SymbolTable()
+        val errorLogger = ErrorLogger()
+        val symbolTable = SymbolTable(null)
         val progNode = visitor.visit(tree)
 
         //progNode.getSyntaxErrors
 
-        //progNode.semanticCheck
+        progNode.semanticCheck(errorLogger, symbolTable)
 
 
 

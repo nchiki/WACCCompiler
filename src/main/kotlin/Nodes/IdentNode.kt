@@ -3,7 +3,7 @@ package main.kotlin.Nodes
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
-class IdentNode : Node {
+class IdentNode(val id : String) : Node {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

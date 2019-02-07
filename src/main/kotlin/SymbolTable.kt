@@ -1,3 +1,5 @@
+package main.kotlin
+
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){
@@ -5,12 +7,15 @@ class SymbolTable (val parent: SymbolTable?){
     final val keywords = arrayOf("char", "int", "ord") //finish filling out
     private val children = listOf<SymbolTable>()
     private val parentT = parent
-    val table = emptyMap<String, Node>()
+    var table = HashMap<String, Node>()
 
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
     }
 
+    fun add(node : Node, id : String) {
+        table.put(id, node)
+    }
 
     fun lookupSymbol(identifier: String): Node?{
 

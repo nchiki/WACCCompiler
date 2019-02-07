@@ -2,7 +2,7 @@ package Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class StatementNode : Node {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

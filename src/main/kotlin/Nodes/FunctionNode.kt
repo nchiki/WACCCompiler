@@ -1,9 +1,14 @@
 package main.kotlin.Nodes
 
+import Nodes.ParamListNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
-class FunctionNode : Node {
+class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode) : Node {
+
+
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
