@@ -1,10 +1,11 @@
 package main.kotlin.Nodes
 
 import Nodes.FunctionNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import SymbolTable
 
-class ProgNode (val funcDefs: List<FunctionNode>) : Node {
+class ProgNode (val funcDefs: List<FunctionNode>, val stats : StatementNode) : Node {
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

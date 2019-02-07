@@ -11,7 +11,8 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         for (func in funcCtx) {
             funcList.add(visitFunc(func))
         }
-        return ProgNode(funcList)
+        val stat = visit(ctx.stat()) as StatementNode
+        return ProgNode(funcList, stat)
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
@@ -31,7 +32,7 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
             newTable = SymbolTable(scope)
             scope = newTable
         }
-        //visit stats
+        val stat = visit(ctx.stat()) as StatementNode
         scope = newTable!!.parent!!
         return FunctionNode(id, returnType, paramList, newTable)
     }
@@ -62,9 +63,13 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         return PairNode(fst, snd)
     }
 
-    override fun visitArrayElem(ctx: BasicParser.ArrayElemContext?): Node? {
-        val idType = visit(ctx?.IDENT())
-        return null
+    override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
+        val idType = visit(ctx.IDENT())
+        var exprs = arrayListOf<ExprNode>()
+        for (expr in ctx.expr()) {
+            exprs.add(expr as ExprNode)
+        }
+        return ArrayElemNode(idType, exprs)
     }
 
     override fun visitArgList(ctx: BasicParser.ArgListContext?): Node {
