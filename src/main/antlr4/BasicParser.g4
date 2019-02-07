@@ -57,7 +57,7 @@ base_type: INT | BOOL | CHAR | STRING;
 
 pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
 
-pairElemType: base_type | type OPEN_SQR_BRACKET CLOSE_SQR_BRACKET | PAIR ;
+pairElemType: base_type | type | PAIR ;
 
 expr:
     INT_LIT                                 #IntLit
@@ -73,6 +73,7 @@ expr:
 ;
 
 
+
 unaryOper: NOT | MINUS | LEN | ORD | CHR ;
 
 binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
@@ -80,7 +81,6 @@ binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_E
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
-
 
 
 // EOF indicates that the program must consume to the end of the input.
