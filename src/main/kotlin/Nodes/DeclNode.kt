@@ -2,9 +2,8 @@ package Nodes
 
 import Errors.VarAlreadyDeclaredError
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.FunctionNode
 import main.kotlin.Nodes.Node
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
 

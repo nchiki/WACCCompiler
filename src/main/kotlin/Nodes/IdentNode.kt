@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class IdentNode : Node {
     override fun syntaxCheck() {

@@ -2,7 +2,7 @@ package main.kotlin.Nodes
 
 import Nodes.FunctionNode
 import main.kotlin.ErrorLogger
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class ProgNode (val funcDefs: List<FunctionNode>) : Node {
 

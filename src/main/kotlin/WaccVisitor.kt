@@ -1,13 +1,16 @@
+import Nodes.*
 import Nodes.stat.StatListNode
 import Nodes.stat.StatementNode
 import Nodes.stat.WhileNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.SymbolTable
 
-class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
+class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
+    var scope = SymbolTable(null)
 
-    override fun visitProg(@NotNull ctx: BasicParser.ProgContext): Node {
+    override fun visitProg(ctx: BasicParser.ProgContext): Node {
         val funcCtx = ctx.func()
         val funcList: MutableList<FunctionNode> = mutableListOf()
         for (func in funcCtx) {
@@ -21,10 +24,11 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         val id = ctx.IDENT().text
         /* uncomment when Symbol Table is done */
         //return globalTable.lookupSymbol(id)
+        return null
     }
 
     //add Statements as well as parameter of FuncNode
-    override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
+    override fun visitFunc(ctx: BasicParser.FuncContext): FunctionNode {
         val paramList = visitParamList(ctx.paramList())
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
@@ -39,9 +43,16 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitWhile(ctx: BasicParser.WhileContext): WhileNode {
+
+        var newTable = SymbolTable(scope)
+        scope = newTable
+
         val exprNode = visit(ctx.expr())
         val statNode = visit(ctx.stat())
-        return WhileNode(exprNode, statNode)
+
+        scope = scope.parent!!
+
+        return WhileNode(exprNode, statNode, newTable)
     }
 
     override fun visitStatList(ctx: BasicParser.StatListContext): StatListNode {
@@ -82,26 +93,6 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         return null
     }
 
-    override fun visitArgList(ctx: BasicParser.ArgListContext?): Node {
-        return super.visitArgList(ctx)
-    }
-
-    override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext?): Node {
-        return super.visitArrayLiter(ctx)
-    }
-
-    override fun visitBinaryOper(ctx: BasicParser.BinaryOperContext?): Node {
-        return super.visitBinaryOper(ctx)
-    }
-
-    override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
-        return super.visitStatList(ctx)
-    }
-
-    override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext?): Node {
-        return super.visitUnaryOper(ctx)
-    }
-
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
 
         // type node that will worry about checking if its valid type
@@ -129,14 +120,6 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
     }
 
 
-    override fun visitPrint(ctx: BasicParser.PrintContext?): Node {
-        return super.visitPrint(ctx)
-    }
-
-    override fun visitBoolLit(ctx: BasicParser.BoolLitContext?): Node {
-        return super.visitBoolLit(ctx)
-    }
-
     override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
         // gets parameters in context
         val params =ctx?.param()
@@ -152,18 +135,6 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         return ParamListNode(listParamNodes) // new Node
     }
 
-    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
-        return super.visitStrLit(ctx)
-    }
-
-    override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
-        return super.visitWhile(ctx)
-    }
-
-    override fun visitExit(ctx: BasicParser.ExitContext?): Node {
-        return super.visitExit(ctx)
-    }
-
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
 
         // typeNode of the parameter
@@ -174,55 +145,6 @@ class WaccVisitor(var scope : SymbolTable) : BasicParserBaseVisitor<Node>() {
         val id = ctx?.IDENT()?.text
         return ParamNode(id!!, type)
     }
-
-    override fun visitCharLit(ctx: BasicParser.CharLitContext?): Node {
-        return super.visitCharLit(ctx)
-    }
-
-    override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
-        return super.visitStatement(ctx)
-    }
-
-    override fun visitReturn(ctx: BasicParser.ReturnContext?): Node {
-        return super.visitReturn(ctx)
-    }
-
-    override fun visitRead(ctx: BasicParser.ReadContext?): Node {
-        return super.visitRead(ctx)
-    }
-
-    override fun visitPairLit(ctx: BasicParser.PairLitContext?): Node {
-        return super.visitPairLit(ctx)
-    }
-
-    override fun visitSkip(ctx: BasicParser.SkipContext?): Node {
-        return super.visitSkip(ctx)
-    }
-
-    override fun visitPairType(ctx: BasicParser.PairTypeContext?): Node {
-        return super.visitPairType(ctx)
-    }
-
-    override fun visitPrintln(ctx: BasicParser.PrintlnContext?): Node {
-        return super.visitPrintln(ctx)
-    }
-
-    override fun visitFree(ctx: BasicParser.FreeContext?): Node {
-        return super.visitFree(ctx)
-    }
-
-    override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        return super.visitPairElem(ctx)
-    }
-
-    override fun visitBaseType(ctx: BasicParser.BaseTypeContext?): Node {
-        return super.visitBaseType(ctx)
-    }
-
-    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
-        return super.visitPairElemType(ctx)
-    }
-
 
 
 }

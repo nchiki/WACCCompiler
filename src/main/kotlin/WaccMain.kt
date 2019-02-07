@@ -38,8 +38,7 @@ fun main(args: Array<String>){
         //visitor.visit(tree)
         // print LISP-style tree
 
-        val symbolTable = SymbolTable(null)
-        val visitor = WaccVisitor(symbolTable)
+        val visitor = WaccVisitor()
         val progNode = visitor.visit(tree)
 
         //progNode.getSyntaxErrors

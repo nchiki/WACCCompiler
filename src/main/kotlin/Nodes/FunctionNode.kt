@@ -1,8 +1,8 @@
 package Nodes
 
 import main.kotlin.ErrorLogger
-import SymbolTable
 import main.kotlin.Nodes.Node
+import main.kotlin.SymbolTable
 
 class FunctionNode (val id : String, val type : String, val params : ParamListNode, val table : SymbolTable?) : Node {
 

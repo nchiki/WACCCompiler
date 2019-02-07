@@ -1,3 +1,5 @@
+package main.kotlin
+
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){
@@ -10,7 +12,6 @@ class SymbolTable (val parent: SymbolTable?){
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
     }
-
 
     fun lookupSymbol(identifier: String): Node?{
 

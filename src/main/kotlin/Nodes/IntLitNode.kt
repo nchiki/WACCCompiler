@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class IntLitNode : Node {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
