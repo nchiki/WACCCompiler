@@ -1,9 +1,8 @@
 package main.kotlin
-import Errors.NotBoolConditionError
-import Nodes.BoolLitNode
+
 import main.kotlin.Nodes.Node
 
-class SymbolTable{
+class SymbolTable (val parent: SymbolTable?) {
 
     private var table = ScopeTable(null)
 

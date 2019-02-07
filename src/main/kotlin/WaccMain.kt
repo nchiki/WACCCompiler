@@ -6,7 +6,7 @@ import java.io.FileInputStream
 
 fun main(args: Array<String>) {
         if(args.size == 0) {
-            System.setIn(FileInputStream("../wacc_examples/invalid/syntaxErr/pairs/badLookup01.wacc"))
+            //System.setIn(FileInputStream("../wacc_examples/invalid/syntaxErr/pairs/badLookup01.wacc"))
         } else {
             System.setIn(FileInputStream(args[0]))
         }

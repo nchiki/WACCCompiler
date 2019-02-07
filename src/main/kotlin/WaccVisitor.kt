@@ -4,7 +4,7 @@ import Nodes.ParamListNode
 import Nodes.ParamNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
-import main.kotlin.ScopeTable
+import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
