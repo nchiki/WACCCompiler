@@ -23,10 +23,10 @@ all: rules
 # runs the antlr build script then attempts to compile all .java files within src
 rules:
 	mvn package
-	cd $(ANTLR_DIR) && ./$(ANTLR)
-	$(FIND) $(SOURCE_DIR) -name '*.java' > $@
-	$(MKDIR) $(OUTPUT_DIR)
-	$(JAVAC) $(JFLAGS) @$@
+	#cd $(ANTLR_DIR) && ./$(ANTLR)
+	#$(FIND) $(SOURCE_DIR) -name '*.java' > $@
+	#$(MKDIR) $(OUTPUT_DIR)
+	#$(JAVAC) $(JFLAGS) @$@
 	$(RM) rules
 
 clean:
