@@ -7,13 +7,9 @@ const val SyntaxExitCode = 100
 
 class SyntaxErrorStrategy : DefaultErrorStrategy() {
 
-    override fun reportMatch(recognizer: Parser?) {
-
+    override fun reportError(recognizer: Parser?, e: RecognitionException?) {
         exitProcess(SyntaxExitCode)
     }
-
-    override fun recover(recognizer: Parser?, e: RecognitionException?) {
-        exitProcess(SyntaxExitCode)
-    }
+    
 
 }
