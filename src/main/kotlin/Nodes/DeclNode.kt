@@ -2,6 +2,7 @@ package Nodes
 
 import Errors.VarAlreadyDeclaredError
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.FunctionNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
