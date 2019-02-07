@@ -3,12 +3,13 @@ package main.kotlin.Nodes
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
-class IntLitNode(int : Integer) : Node {
-    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+class StringLitNode(str : String) : Node {
+
+    override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

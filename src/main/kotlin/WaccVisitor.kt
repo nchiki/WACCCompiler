@@ -27,11 +27,25 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         TODO()
     }
 
-
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
         val int_val = Integer.valueOf(ctx.INT_LIT().text)
-        return IntLitNode()
+        return IntLitNode(int_val)
+    }
+
+    override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
+        val bool_val = Boolean.
+        return BoolLitNode(bool_val)
+    }
+
+    override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
+        val char_val = ctx.CHAR_LIT().getText()
+        return CharLitNode(char_val)
+    }
+
+    override fun visitStringLit(@NotNull ctx: BasicParser.StrLitContext): Node {
+        val str_val = ctx.STR_LIT().text
+        return StringLitNode(str_val)
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
@@ -52,4 +66,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val snd = visit(ctx.pairElemType(1))
         return PairNode(fst, snd)
     }
+
+    override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
+        val left = visit(ctx?.expr(0))
+        val right = visit(ctx?.expr(1))
+        val operator = ctx?.binaryOper()
+        return BinaryOpNode(left, right, operator!!)
+    }
+
+    override fun visitUnOp(ctx: BasicParser.UnOpContext?): Node {
+        val operand = visit(ctx?.expr())
+        val operator = ctx?.unaryOper()
+        return UnaryOpNode(operand, operator!!)
+    }
+
 }
