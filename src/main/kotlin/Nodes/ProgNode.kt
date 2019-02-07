@@ -4,7 +4,7 @@ import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
-class ProgNode (val funcDefs: List<FunctionNode>, val stats : StatementNode) : Node {
+class ProgNode (val funcDefs: List<FunctionNode>, val stats : Node) : Node {
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
