@@ -1,3 +1,4 @@
+package main.kotlin
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){

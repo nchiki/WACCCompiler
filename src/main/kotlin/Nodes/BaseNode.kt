@@ -3,6 +3,7 @@ package main.kotlin.Nodes
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
+
 class BaseNode : Node {
 
     override fun syntaxCheck() {
