@@ -8,7 +8,7 @@ import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
-    val globalTable = ScopeTable(null)
+    val globalTable = SymbolTable(null)
 
     override fun visitProg(ctx: BasicParser.ProgContext?): Node? {
         //create symbol tables and initialize stuff etc.

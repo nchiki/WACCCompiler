@@ -9,9 +9,9 @@ class SymbolTable (val parent: SymbolTable?) {
     /*                   UTILS                           */
 
     fun boolExprCheck(expr : Node, errors: ErrorLogger) {
-        if (expr !is BoolLitNode) {
+        /*if (expr !is BoolLitNode) {
             errors.addError(NotBoolConditionError())
-        }
+        }*/
     }
 
     /* |||||||||||||||||||||||||||||||||||||||||||||||||| */
