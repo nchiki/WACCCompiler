@@ -2,7 +2,7 @@ package Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
-import SymbolTable
+import main.kotlin.SymbolTable
 
 class ExprNode : Node {
     override fun syntaxCheck() {

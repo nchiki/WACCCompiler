@@ -3,7 +3,7 @@
 
 ANTLR_DIR	:= src/main/antlr4
 SOURCE_DIR	:= src
-OUTPUT_DIR	:= bin 
+OUTPUT_DIR	:= bin
 
 # Tools
 
@@ -14,24 +14,22 @@ MKDIR	:= mkdir -p
 JAVA	:= java
 JAVAC	:= javac
 
-JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp lib/antlr-4.7-complete.jar 
+JFLAGS	:= -sourcepath $(SOURCE_DIR) -d $(OUTPUT_DIR) -cp lib/antlr-4.7-complete.jar
 
 # the make rules
-JAR:
-    mvn package
+
 all: rules
 
 # runs the antlr build script then attempts to compile all .java files within src
 rules:
-	cd $(ANTLR_DIR) && ./$(ANTLR) 
-	$(FIND) $(SOURCE_DIR) -name '*.java' > $@
-	$(MKDIR) $(OUTPUT_DIR)
-	$(JAVAC) $(JFLAGS) @$@
+	mvn package
+	#cd $(ANTLR_DIR) && ./$(ANTLR)
+	#$(FIND) $(SOURCE_DIR) -name '*.java' > $@
+	#$(MKDIR) $(OUTPUT_DIR)
+	#$(JAVAC) $(JFLAGS) @$@
 	$(RM) rules
 
 clean:
 	$(RM) rules $(OUTPUT_DIR) $(SOURCE_DIR)/antlr
 
 .PHONY: all rules clean
-
-

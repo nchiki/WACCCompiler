@@ -33,3 +33,4 @@ class ProgNode (val funcDefs: List<FunctionNode>, val stats : StatementNode) : N
         stats.semanticCheck(errors, statTable)
     }
 }
+
