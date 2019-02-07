@@ -7,7 +7,7 @@ OUTPUT_DIR	:= bin
 
 # Tools
 
-ANTLR	:= antlr4
+ANTLR	:= antlrBuild
 FIND	:= find
 RM	:= rm -rf
 MKDIR	:= mkdir -p
