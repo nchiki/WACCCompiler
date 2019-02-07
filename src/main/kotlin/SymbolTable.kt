@@ -1,6 +1,8 @@
+package main.kotlin
+
 import main.kotlin.Nodes.Node
 
-class SymbolTable (val parent: SymbolTable?){
+class SymbolTable (val parent: SymbolTable?) {
 
     final val keywords = arrayOf("char", "int", "ord") //finish filling out
     private val children = listOf<SymbolTable>()
