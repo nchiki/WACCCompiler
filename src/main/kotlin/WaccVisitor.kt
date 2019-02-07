@@ -4,7 +4,6 @@ import Nodes.stat.StatementNode
 import Nodes.stat.WhileNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
-import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
