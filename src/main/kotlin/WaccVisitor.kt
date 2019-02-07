@@ -29,17 +29,17 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
-        val int_val = Integer.valueOf(ctx.INT_LIT().text)
+        val int_val = ctx.INT_LIT().text.toInt()
         return IntLitNode(int_val)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
-        val bool_val = Boolean.
+        val bool_val = ctx.BOOL_LIT().
         return BoolLitNode(bool_val)
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
-        val char_val = ctx.CHAR_LIT().getText()
+        val char_val = ctx.CHAR_LIT().text.single()
         return CharLitNode(char_val)
     }
 
