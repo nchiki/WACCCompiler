@@ -1,4 +1,5 @@
 package main.kotlin
+
 import Errors.NotBoolConditionError
 import Nodes.BoolLitNode
 import main.kotlin.Nodes.Node

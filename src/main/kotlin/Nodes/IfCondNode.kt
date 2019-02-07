@@ -1,8 +1,5 @@
-package Nodes
+package main.kotlin.Nodes
 
-import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.Node
-import main.kotlin.SymbolTable
 
 class IfCondNode(expr: Node?, ifTrueStat: Node?, elseStat: Node?) : Node {
 
@@ -16,6 +13,7 @@ class IfCondNode(expr: Node?, ifTrueStat: Node?, elseStat: Node?) : Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // check whether the expr evaluates to boolean value
+
         table.boolExprCheck(expr!!, errors)
 
         //checks both statements
