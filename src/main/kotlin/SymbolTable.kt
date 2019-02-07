@@ -34,19 +34,14 @@ class SymbolTable{
         }
     }
 
-    fun lookupSymbol(identifier: String) : Node?{
-        return table.lookupSymbol(identifier)
-    }
+import main.kotlin.Nodes.Node
 
-}
+class SymbolTable (val parent: SymbolTable?){
 
-class ScopeTable (val parent: ScopeTable?){
-
-    final val keywords = arrayOf("char", "int", "ord", "len", "bool") //finish filling out
+    final val keywords = arrayOf("char", "int", "ord") //finish filling out
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     val table = emptyMap<String, Node>()
-
 
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
@@ -69,10 +64,10 @@ class ScopeTable (val parent: ScopeTable?){
         return parent.lookupSymbol(identifier)
     }
 
-
     /* Returns false if declaration failed */
     /*fun declareVariable (identifier: String, node: Node): Boolean{
 
     }
     */
 }
+
