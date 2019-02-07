@@ -5,7 +5,7 @@
 
 #puts "TODO: setup this script to call your WACC compiler"
 
-java -jar target/wacc_25-1.0-jar-with-dependencies.jar $1 < $1
+java -cp target/wacc_25-1.0-jar-with-dependencies.jar WaccMain $1 < $1
 
 exit $?
 
