@@ -1,4 +1,6 @@
 package main.kotlin
+import Errors.NotBoolConditionError
+import Nodes.BoolLitNode
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){
@@ -7,6 +9,12 @@ class SymbolTable (val parent: SymbolTable?){
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     val table = emptyMap<String, Node>()
+
+    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
+        if (expr !is BoolLitNode) {
+            errors.addError(NotBoolConditionError())
+        }
+    }
 
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)

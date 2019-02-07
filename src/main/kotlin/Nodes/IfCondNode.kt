@@ -1,6 +1,5 @@
 package Nodes
 
-import Errors.NotBoolConditionError
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
