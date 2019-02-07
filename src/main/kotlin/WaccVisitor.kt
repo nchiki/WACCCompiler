@@ -1,7 +1,4 @@
-import Nodes.DeclNode
-import Nodes.IfCondNode
-import Nodes.ParamListNode
-import Nodes.ParamNode
+import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
@@ -34,13 +31,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
         var newTable : SymbolTable? = null
-        if (scope.lookupSymbol(id) == null) {
-            newTable = SymbolTable(scope)
-            scope = newTable
+        if (globalTable.lookupSymbol(id) == null) {
+            newTable = SymbolTable(globalTable)
+            //globalTable = newTable
         }
         val stat = visit(ctx.stat()) as StatementNode
-        scope = newTable!!.parent!!
-        return FunctionNode(id, returnType, paramList, newTable)
+        //globalTable = newTable!!.parent!!
+        return FunctionNode(/*id, returnType, paramList, newTable*/)
     }
 
 
