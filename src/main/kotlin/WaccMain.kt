@@ -5,11 +5,10 @@ import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 
 fun main(args: Array<String>) {
-
         if(args.size == 0) {
             System.setIn(FileInputStream("../wacc_examples/invalid/syntaxErr/pairs/badLookup01.wacc"))
         } else {
-            //System.setIn(FileInputStream(args[0]))
+            System.setIn(FileInputStream(args[0]))
         }
         val input = CharStreams.fromStream(java.lang.System.`in`)
         // create a lexer that feeds off of input CharStream
@@ -30,7 +29,7 @@ fun main(args: Array<String>) {
         //Syntactical analysis
         // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
-        parser.errorHandler = SyntaxErrorStrategy()
+        //parser.errorHandler = SyntaxErrorStrategy()
         //parser.removeErrorListeners()
         //parser.addErrorListener(WaccErrorListener())
         val tree = parser.prog()

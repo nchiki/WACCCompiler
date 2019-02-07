@@ -79,6 +79,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext?): Node {
         return super.visitUnaryOper(ctx)
+
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
