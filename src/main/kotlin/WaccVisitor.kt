@@ -10,12 +10,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     val globalTable = ScopeTable(null)
 
-    override fun visitProg(ctx: BasicParser.ProgContext?): Node? {
-        //create symbol tables and initialize stuff etc.
-        /*val globalTable = ScopeTable(null)
-        val symbol_table = SymbolTable()
-        symbol_table.addTable(globalTable)*/
-        return ProgNode()
+    override fun visitProg(@NotNull ctx: BasicParser.ProgContext): Node {
+        val funcCtx = ctx.func()
+        val funcList: MutableList<FunctionNode> = mutableListOf()
+        for (func in funcCtx) {
+            funcList.add(visitFunc(func))
+        }
+        val stat = visit(ctx.stat()) as StatementNode
+        return ProgNode(funcList, stat)
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
@@ -26,8 +28,19 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     }
 
-    override fun visitFunc(ctx: BasicParser.FuncContext?): Node {
-        TODO()
+    //add Statements as well as parameter of FuncNode
+    override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
+        val paramList = visitParamList(ctx.paramList())
+        val returnType = ctx.type().text
+        val id = ctx.IDENT().text
+        var newTable : SymbolTable? = null
+        if (scope.lookupSymbol(id) == null) {
+            newTable = SymbolTable(scope)
+            scope = newTable
+        }
+        val stat = visit(ctx.stat()) as StatementNode
+        scope = newTable!!.parent!!
+        return FunctionNode(id, returnType, paramList, newTable)
     }
 
 
@@ -56,9 +69,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return PairNode(fst, snd)
     }
 
-    override fun visitArrayElem(ctx: BasicParser.ArrayElemContext?): Node? {
-        val idType = visit(ctx?.IDENT())
-        return null
+    override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
+        val idType = visit(ctx.IDENT())
+        var exprs = arrayListOf<ExprNode>()
+        for (expr in ctx.expr()) {
+            exprs.add(expr as ExprNode)
+        }
+        return ArrayElemNode(idType, exprs)
     }
 
     override fun visitArgList(ctx: BasicParser.ArgListContext?): Node {
