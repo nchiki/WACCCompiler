@@ -1,4 +1,38 @@
 package main.kotlin
+import Errors.NotBoolConditionError
+import Nodes.BoolLitNode
+import main.kotlin.Nodes.Node
+
+class SymbolTable{
+
+    private var table = ScopeTable(null)
+
+    /*                   UTILS                           */
+
+    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
+        if (expr !is BoolLitNode) {
+            errors.addError(NotBoolConditionError())
+        }
+    }
+
+    /* |||||||||||||||||||||||||||||||||||||||||||||||||| */
+
+    fun getTable(): ScopeTable {
+        return table
+    }
+
+    fun newScope (){
+        var newTable = ScopeTable(table)
+        table = newTable;
+    }
+
+    fun leaveScope () {
+        if(table.parent != null){
+            table = table.parent!!
+        }else{
+            throw Exception("Unable to leave global scope!")
+        }
+    }
 
 import main.kotlin.Nodes.Node
 
@@ -12,6 +46,10 @@ class SymbolTable (val parent: SymbolTable?){
     fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
     }
+
+
+
+
 
     fun lookupSymbol(identifier: String): Node?{
 

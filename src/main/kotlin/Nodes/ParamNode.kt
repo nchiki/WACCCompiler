@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 
 class ParamNode(id : String, type : Node) : Node {
 
-    val id = id // name of param var
+    val id = id     // name of param var
     val type = type // type of the parameter (Node)
 
     override fun syntaxCheck() {
