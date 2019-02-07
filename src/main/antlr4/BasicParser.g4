@@ -84,4 +84,3 @@ arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
 
 // EOF indicates that the program must consume to the end of the input.
-
