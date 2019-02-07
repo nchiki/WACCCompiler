@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
         //Syntactical analysis
         // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
-        //parser.errorHandler = SyntaxErrorStrategy()
+        parser.errorHandler = SyntaxErrorStrategy()
         //parser.removeErrorListeners()
         //parser.addErrorListener(WaccErrorListener())
         val tree = parser.prog()
