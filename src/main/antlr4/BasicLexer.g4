@@ -8,28 +8,28 @@ EOL: [\r\n] ;
 
 //WHITESPACE : ' ' -> skip ;
 
-
 //commands
-SKIP_FUNC: 'skip' ;
 BEGIN: 'begin' ;
 END: 'end' ;
-WHILE: 'while' ;
-DO: 'do' ;
-DONE: 'done' ;
 IS: 'is' ;
-PRINT: 'print' ;
+SKIP_FUNC: 'skip' ;
 READ: 'read' ;
 FREE: 'free' ;
 RETURN: 'return' ;
 EXIT: 'exit' ;
+PRINT: 'print' ;
 PRINTLN: 'println' ;
-CALL: 'call' ;
-
 //if statement
 IF: 'if' ;
 ELSE: 'else' ;
 THEN: 'then' ;
 FI: 'fi';
+WHILE: 'while' ;
+DO: 'do' ;
+DONE: 'done' ;
+CALL: 'call' ;
+
+
 
 //types
 NEWPAIR: 'newpair' ;
@@ -88,10 +88,8 @@ COMMA: ',' ;
 
 BACKSLASH: '\\' ;
 HASH: '#' ;
-NULL: 'null' ;
+fragment NULL: 'null' ;
 
-//numbers
-fragment DIGIT: '0'..'9' ;
 //letters
 fragment LETTER: '_'|'a'..'z'|'A'..'Z' ;
 
@@ -99,19 +97,26 @@ fragment UNDERSCORE: '_' ;
 
 fragment CHARACTER: ~('\''| '"'| '\\') | BACKSLASH ESC_CHAR ;
 
-IDENT: LETTER (IDENT_TAIL)* ;
+PAIR_LIT: NULL ;
+
+
 fragment IDENT_TAIL: LETTER|DIGIT ;
+fragment INTSIGN: (PLUS | MINUS) ;
 
 // literals
-INT_LIT: (PLUS | MINUS)? DIGIT+ ;
+INT_LIT: (INTSIGN)? DIGIT+ ;
 
-ESC_CHAR: '\\0' | '\\b' | '\\t' | '\\n' | '\\f' | '\\r' | '\\' DBL_QUOTES | '\\' QUOTE | '\\' BACKSLASH ;
+//numbers
+fragment DIGIT: '0'..'9' ;
+
+ESC_CHAR: '0' | 'b' | 't' | 'n' | 'f' | 'r' |  DBL_QUOTES |  QUOTE | BACKSLASH ;
 
 CHAR_LIT: QUOTE CHARACTER QUOTE ;
 
 STR_LIT: DBL_QUOTES (CHARACTER)* DBL_QUOTES ;
+IDENT: LETTER (IDENT_TAIL)* ;
 
-PAIR_LIT: NULL ;
+
 
 
 
