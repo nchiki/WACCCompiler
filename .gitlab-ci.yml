@@ -3,13 +3,13 @@ stages:
     - test
 build:
   stage: build
-  script: 'mvn package'
+  script: 'make'
 valid-tests:
   stage: test
-  script: 'sh test.sh valid'
+  script: 'bash test.sh valid'
 syntax-tests:
   stage: test
-  script: 'sh test.sh syntax_err'
+  script: 'bash test.sh syntax_err'
 semantic-tests:
   stage: test
-  script: 'sh test.sh semantic_err'
+  script: 'bash test.sh semantic_err'
