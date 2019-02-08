@@ -1,5 +1,8 @@
 package main.kotlin.Nodes
 
+import main.kotlin.ErrorLogger
+import main.kotlin.SymbolTable
+
 
 class IfCondNode(expr: Node?, ifTrueStat: Node?, elseStat: Node?) : Node {
 
