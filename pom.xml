@@ -54,8 +54,8 @@
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
                 <version>${kotlin.version}</version>
 
                 <executions>
@@ -65,6 +65,7 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -96,36 +97,11 @@
                         <id>java-compile</id>
                         <phase>compile</phase>
                         <goals> <goal>compile</goal> </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>$(project.basedir)/src/main/kotlin</sourceDir>
-                                <sourceDir>$(project.basedir)/src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
-
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals> <goal>single</goal> </goals>
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <archive>
-                                <manifest>
-                                    <mainClass>src/main/kotlin/WaccMainKt</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
+                        <id>java-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals> <goal>testCompile</goal> </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -148,10 +124,16 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
-                    <source>10</source>
-                    <target>10</target>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>WaccMainKt</mainClass>
+                        </manifest>
+                    </archive>
+
                 </configuration>
             </plugin>
             <plugin>
