@@ -1,6 +1,7 @@
 import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.BoolLitNode
 import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
@@ -137,13 +138,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     }
 
-
     override fun visitPrint(ctx: BasicParser.PrintContext?): Node {
         return super.visitPrint(ctx)
-    }
-
-    override fun visitBoolLit(ctx: BasicParser.BoolLitContext?): Node {
-        return super.visitBoolLit(ctx)
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
@@ -159,10 +155,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         }
 
         return ParamListNode(listParamNodes) // new Node
-    }
-
-    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
-        return super.visitStrLit(ctx)
     }
 
     override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
@@ -182,10 +174,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val id = ctx?.IDENT()?.text
         return ParamNode(id!!, type)
-    }
-
-    override fun visitCharLit(ctx: BasicParser.CharLitContext?): Node {
-        return super.visitCharLit(ctx)
     }
 
     override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
