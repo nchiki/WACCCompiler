@@ -2,9 +2,10 @@ package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
 class ArrayTypeNode : Node {
-    override fun getType() {
+    override fun getType() : KClass<ArrayTypeNode>{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

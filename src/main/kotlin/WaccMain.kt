@@ -1,5 +1,4 @@
 
-import Errors.SyntaxErrorStrategy
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams

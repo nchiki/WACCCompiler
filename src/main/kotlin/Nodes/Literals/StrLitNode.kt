@@ -1,4 +1,4 @@
-package kotlin.Nodes.Literals
+package main.kotlin.Nodes.Literals
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node

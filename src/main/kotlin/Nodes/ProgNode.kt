@@ -4,9 +4,10 @@ import Errors.MemberAlreadyDefinedError
 import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
 class ProgNode (val funcDefs: List<FunctionNode>, val stats : Node) : Node {
-    override fun getType() {
+    override fun getType() : KClass<ProgNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

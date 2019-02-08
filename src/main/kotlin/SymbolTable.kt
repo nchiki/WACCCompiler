@@ -1,7 +1,7 @@
 package main.kotlin
 
 import Errors.NotBoolConditionError
-import Nodes.BoolLitNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){

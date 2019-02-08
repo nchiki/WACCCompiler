@@ -1,12 +1,13 @@
 package main.kotlin.Nodes.Statement
 
-import Nodes.ExprNode
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.ExprNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
 class FreeStatNode(val expr : ExprNode) : Node {
-    override fun getType() {
+    override fun getType() : KClass<FreeStatNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

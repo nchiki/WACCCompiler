@@ -5,9 +5,10 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.FunctionNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
 class ParamNode(id : String, type : Node) : Node {
-    override fun getType() {
+    override fun getType() : KClass<ParamNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

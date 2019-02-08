@@ -1,11 +1,11 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.ExprNode
-import main.kotlin.Nodes.IntLitNode
+import main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.Errors.IncompatibleTypes
 import kotlin.reflect.KClass
 
 class ExitStatNode(val expr : ExprNode) : Node {
