@@ -6,6 +6,10 @@ import main.kotlin.SymbolTable
 
 class ParamListNode(listParamNodes: MutableList<Node>) : Node {
 
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     val listParamNodes = listParamNodes // list of parameterNodes
 
     override fun syntaxCheck() {

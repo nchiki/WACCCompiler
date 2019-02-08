@@ -7,6 +7,9 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
 class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val id = id     // var name
     val type = type // type of var

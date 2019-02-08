@@ -5,6 +5,9 @@ import main.kotlin.SymbolTable
 
 
 class IfCondNode(expr: Node?, ifTrueStat: Node?, elseStat: Node?) : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val expr = expr             // condition (should evaluate to boolean val
     private val ifTrueStat = ifTrueStat // expr = true -> statement

@@ -7,6 +7,9 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
 class ParamNode(id : String, type : Node) : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val id = id     // name of param var
     val type = type // type of the parameter (Node)

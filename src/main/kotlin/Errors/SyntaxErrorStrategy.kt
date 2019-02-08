@@ -1,4 +1,4 @@
-package Errors
+package main.kotlin.Errors
 
 import org.antlr.v4.runtime.*
 import kotlin.system.exitProcess

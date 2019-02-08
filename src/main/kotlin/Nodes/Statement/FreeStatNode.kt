@@ -6,6 +6,10 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
 class FreeStatNode(val expr : ExprNode) : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

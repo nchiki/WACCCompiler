@@ -5,6 +5,9 @@ import main.kotlin.SymbolTable
 
 
 class BaseNode : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

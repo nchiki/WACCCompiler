@@ -6,6 +6,9 @@ import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 
 class ProgNode (val funcDefs: List<FunctionNode>, val stats : Node) : Node {
+    override fun getType() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     var children : MutableList<SymbolTable> = mutableListOf()
 
