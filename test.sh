@@ -27,8 +27,8 @@ find $DIRECTORY -name "*.wacc" | while read fname; do
   sh compile $fname
   if [[ !($? -eq $EXIT_CODE) ]]
   then
-        exit 1
+    exit 1
   fi
 done
 
-exit 0
+exit $?
