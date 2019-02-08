@@ -51,17 +51,17 @@ FALSE: 'false' ;
 
 
 //unary operators
+NOT: '!' ;
 LEN: 'len' ;
 ORD: 'ord' ;
 CHR: 'chr' ;
-NOT: '!' ;
 
 //binary operators
-PLUS: '+' ;
-MINUS: '-' ;
 MULT: '*' ;
 DIV: '/' ;
 MOD: '%' ;
+PLUS: '+' ;
+MINUS: '-' ;
 LESS: '<' ;
 LESS_EQ: '<=' ;
 GREAT: '>' ;
@@ -88,39 +88,28 @@ COMMA: ',' ;
 
 BACKSLASH: '\\' ;
 HASH: '#' ;
-NULL: 'null' ;
+fragment NULL: 'null' ;
 
 //numbers
 fragment DIGIT: '0'..'9' ;
 //letters
 fragment LETTER: '_'|'a'..'z'|'A'..'Z' ;
 
-UNDERSCORE: '_' ;
+fragment UNDERSCORE: '_' ;
 
+fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
 
-fragment ESC_CHAR: ZERO | B | T | N | F | R | DBL_QUOTES | QUOTE | BACKSLASH ;
-
-//escaped chars
-ZERO: '0' ;
-B: 'b' ;
-T: 't' ;
-N: 'n' ;
-F: 'f' ;
-R: 'r' ;
-
-fragment CHARACTER: ~('\''| '"'| '\\') | BACKSLASH ESC_CHAR ;
 IDENT: LETTER (IDENT_TAIL)* ;
-IDENT_TAIL: LETTER|DIGIT ;
+fragment IDENT_TAIL: LETTER|DIGIT ;
 
 // literals
-INT_LIT: (INT_SIGN)? INTEGER ;
-STR_LIT: DBL_QUOTES (CHAR_LIT)* DBL_QUOTES ;
+INT_LIT: (PLUS | MINUS)? DIGIT+ ;
+
+ESC_CHAR: '\\0' | '\\b' | '\\t' | '\\n' | '\\f' | '\\r' | '\\' DBL_QUOTES | '\\' QUOTE | '\\' BACKSLASH ;
+
 CHAR_LIT: QUOTE CHARACTER QUOTE ;
+
+STR_LIT: DBL_QUOTES (CHARACTER)* DBL_QUOTES ;
+
 PAIR_LIT: NULL ;
-
-
-INTEGER: DIGIT+ ;
-INT_SIGN: PLUS | MINUS ;
-
-
 

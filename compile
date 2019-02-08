@@ -3,9 +3,11 @@
 # You are free to change the language used for this script,
 # but do *not* change its name.
 
-# puts "TODO: setup this script to call your WACC compiler"
+#puts "TODO: setup this script to call your WACC compiler"
 
-TARGET=./target/wacc_25-1.0-jar-with-dependencies.jar
+java -jar target/wacc_25-1.0-jar-with-dependencies.jar $1 < $1
 
-java -jar $TARGET $1 < $1
 exit $?
+
+
+
