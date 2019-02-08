@@ -7,7 +7,6 @@ import java.io.FileInputStream
 import kotlin.system.exitProcess
 
 
-class WaccMain {
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/valid/pairs/readPair.wacc"))
@@ -45,6 +44,5 @@ fun main(args: Array<String>) {
         //progNode.getSyntaxErrors
 
         progNode.semanticCheck(errorLogger, symbolTable)
+ }
 
-        }
-}
