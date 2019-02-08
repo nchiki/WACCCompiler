@@ -34,7 +34,7 @@ assignLHS:
 ;
 
 assignRHS:
-    expr                                                        #AssigR_Exp
+    expr                                                        #AssignR_Exp
 | arrayLiter                                                    #AssignR_ArrayL
 | NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #AssigR_Pair
 | pairElem                                                      #AssignR_Pair_Elem

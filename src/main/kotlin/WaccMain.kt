@@ -1,15 +1,18 @@
 
-import Errors.SyntaxErrorStrategy
+import main.kotlin.ErrorLogger
+import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
 import kotlin.system.exitProcess
 
+
+class WaccMain {
 fun main(args: Array<String>) {
-        if(args.size == 0) {
-            System.setIn(FileInputStream("../wacc_examples/valid/pairs/readPair.wacc"))
+        if (args.size == 0) {
+                System.setIn(FileInputStream("../wacc_examples/valid/pairs/readPair.wacc"))
         } else {
-            System.setIn(FileInputStream(args[0]))
+                System.setIn(FileInputStream(args[0]))
         }
         val input = CharStreams.fromStream(java.lang.System.`in`)
         // create a lexer that feeds off of input CharStream
@@ -34,13 +37,14 @@ fun main(args: Array<String>) {
         //visitor.visit(tree)
         // print LISP-style tree
 
-        //val visitor = WaccVisitor()
-        //val progNode = visitor.visit(tree)
+        val visitor = WaccVisitor()
+        val errorLogger = ErrorLogger()
+        val symbolTable = SymbolTable(null)
+        val progNode = visitor.visit(tree)
 
         //progNode.getSyntaxErrors
 
-        //progNode.semanticCheck
+        progNode.semanticCheck(errorLogger, symbolTable)
 
-
-
-    }
+        }
+}

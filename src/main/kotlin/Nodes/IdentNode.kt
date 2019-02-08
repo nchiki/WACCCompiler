@@ -2,8 +2,13 @@ package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
-class IdentNode : Node {
+class IdentNode(val id : String) : Node {
+    override fun getType() : KClass<IdentNode>{
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

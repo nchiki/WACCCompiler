@@ -2,7 +2,7 @@ package main.kotlin
 
 import Errors.ErrorNode
 
-class ErrorLogger() {
+class ErrorLogger {
     var errorList: ArrayList<ErrorNode> = arrayListOf()
 
 

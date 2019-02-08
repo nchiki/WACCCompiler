@@ -1,14 +1,20 @@
 package main.kotlin
+
 import Errors.NotBoolConditionError
-import main.kotlin.Nodes.BoolLitNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 
 class SymbolTable (val parent: SymbolTable?){
 
-    final val keywords = arrayOf("char", "int", "ord") //finish filling out
+    /*final val keywords = listOf("char", "int", "ord", "len", "chr", "pair",
+                                "string", "char", "bool", "fst", "snd", "newpair",
+                                "if", "then", "else", "fi", "while", "do", "done",
+                                "begin", "end", "call", "skip", "read", "free", "return",
+                                "exit", "print", "println", "is", "true", "false",
+                                "null", "+", "-") probably not needed */
     private val children = listOf<SymbolTable>()
     private val parentT = parent
-    val table = emptyMap<String, Node>()
+    var table = HashMap<String, Node>()
 
     fun boolExprCheck(expr : Node, errors: ErrorLogger) {
         if (expr !is BoolLitNode) {
@@ -16,10 +22,13 @@ class SymbolTable (val parent: SymbolTable?){
         }
     }
 
-    fun isValidKey(key : String) : Boolean {
+    /*fun isValidKey(key : String) : Boolean {
         return keywords.contains(key)
-    }
+    }*/
 
+    fun add(node : Node, id : String) {
+        table.put(id, node)
+    }
 
     fun lookupSymbol(identifier: String): Node?{
 

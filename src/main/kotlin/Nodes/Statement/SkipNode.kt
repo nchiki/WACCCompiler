@@ -1,12 +1,13 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class ArrayTypeNode : Node {
-    override fun getType() : KClass<ArrayTypeNode>{
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class SkipNode : Node {
+    override fun getType() : KClass<SkipNode>{
+        return SkipNode::class
     }
 
     override fun syntaxCheck() {
