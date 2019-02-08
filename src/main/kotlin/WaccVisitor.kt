@@ -103,6 +103,19 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return super.visitBinaryOper(ctx)
     }
 
+    override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
+        val left = visit(ctx?.expr(0))
+        val right = visit(ctx?.expr(1))
+        val operator = ctx?.binaryOper()
+        return BinaryOpNode(left, right, operator!!)
+    }
+
+    override fun visitUnOp(ctx: BasicParser.UnOpContext?): Node {
+        val operand = visit(ctx?.expr())
+        val operator = ctx?.unaryOper()
+        return UnaryOpNode(operand, operator!!)
+    }
+
     override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
         return super.visitStatList(ctx)
     }
