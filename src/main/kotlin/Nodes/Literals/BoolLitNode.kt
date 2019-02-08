@@ -6,7 +6,7 @@ import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
 
-class BoolLitNode : Node {
+class BoolLitNode(val bool_val : Boolean) : Node {
 
     override fun getType() : KClass<BoolLitNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

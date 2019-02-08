@@ -5,7 +5,7 @@ import main.kotlin.Nodes.ExprNode
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class IntLitNode : ExprNode {
+class IntLitNode(val int_val : Int) : ExprNode {
     override fun getType(): KClass<IntLitNode> {
         return IntLitNode::class
     }

@@ -2,9 +2,15 @@ package main.kotlin.Nodes
 
 import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClassifier
 
 class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : Node {
+    override fun getType(): KClassifier {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val operand = operand
     val operator = operator

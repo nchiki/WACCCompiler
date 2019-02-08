@@ -1,6 +1,7 @@
 import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Statement.*
 
@@ -145,10 +146,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitPrint(@NotNull ctx: BasicParser.PrintContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return PrintStatNode(expr)
-    }
-
-    override fun visitBoolLit(ctx: BasicParser.BoolLitContext?): Node {
-        return super.visitBoolLit(ctx)
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
