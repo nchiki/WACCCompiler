@@ -35,6 +35,4 @@ class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
         type?.semanticCheck(errors, table)
         rhs?.semanticCheck(errors, table)
     }
-
-
 }

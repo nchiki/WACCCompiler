@@ -141,7 +141,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     }
 
-<<<<<<< HEAD
 
     override fun visitPrint(@NotNull ctx: BasicParser.PrintContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
@@ -153,13 +152,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
-=======
-    override fun visitPrint(ctx: BasicParser.PrintContext?): Node {
-        return super.visitPrint(ctx)
-    }
-
-    override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
->>>>>>> c25ca56c5ab060f91a822b53516714785e95aa11
         // gets parameters in context
         val params =ctx?.param()
 
