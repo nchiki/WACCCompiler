@@ -24,11 +24,12 @@ else
 fi
 
 find $DIRECTORY -name "*.wacc" | while read fname; do
-  sh compile $fname
+  sh compile $fname > /dev/null 2>&1
   if [[ !($? -eq $EXIT_CODE) ]]
   then
+    echo "$fname test failed, expected $EXIT_CODE but returned $?"
     exit 1
   fi
 done
 
-exit $?
+exit 0
