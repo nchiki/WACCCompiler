@@ -1,6 +1,7 @@
 import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.BoolLitNode
 import main.kotlin.SymbolTable
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
@@ -40,11 +41,26 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return FunctionNode(/*id, returnType, paramList, newTable*/)
     }
 
-
     //IntNode needs to be constructed with val of int
-    override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node? {
-        val int_val = Integer.valueOf(ctx.INT_LIT().text)
-        return IntLitNode()
+    override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
+        val int_val = ctx.INT_LIT().text.toInt()
+        return IntLitNode(int_val)
+    }
+
+    override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
+//        val bool_val = ctx.BOOL_LIT().symbol.
+//        return BoolLitNode(bool_val)
+        return BoolLitNode(true)
+    }
+
+    override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
+        val char_val = ctx.CHAR_LIT().text.single()
+        return CharLitNode(char_val)
+    }
+
+    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
+        val str_val = ctx?.STR_LIT()?.text
+        return StringLitNode(str_val!!)
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
@@ -122,13 +138,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     }
 
-
     override fun visitPrint(ctx: BasicParser.PrintContext?): Node {
         return super.visitPrint(ctx)
-    }
-
-    override fun visitBoolLit(ctx: BasicParser.BoolLitContext?): Node {
-        return super.visitBoolLit(ctx)
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): Node {
@@ -144,10 +155,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         }
 
         return ParamListNode(listParamNodes) // new Node
-    }
-
-    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
-        return super.visitStrLit(ctx)
     }
 
     override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
@@ -167,10 +174,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val id = ctx?.IDENT()?.text
         return ParamNode(id!!, type)
-    }
-
-    override fun visitCharLit(ctx: BasicParser.CharLitContext?): Node {
-        return super.visitCharLit(ctx)
     }
 
     override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
