@@ -44,9 +44,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return CharLitNode(char_val)
     }
 
-    override fun visitStringLit(@NotNull ctx: BasicParser.StrLitContext): Node {
-        val str_val = ctx.STR_LIT().text
-        return StringLitNode(str_val)
+    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
+        val str_val = ctx?.STR_LIT()?.text
+        return StringLitNode(str_val!!)
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
