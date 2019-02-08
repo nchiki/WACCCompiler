@@ -32,4 +32,4 @@ find $DIRECTORY -name "*.wacc" | while read fname; do
   fi
 done
 
-exit 0
+exit $?
