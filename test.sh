@@ -11,11 +11,11 @@ if [[ $1 == "valid" ]]
 then
     DIRECTORY=$VALID_TESTS
     EXIT_CODE=0
-elif [[ $2 == "syntax_err" ]]
+elif [[ $1 == "syntax_err" ]]
 then
     DIRECTORY=$INVALID_SYNTAX_TESTS
     EXIT_CODE=100
-elif [[ $3 == "semantic_err" ]]
+elif [[ $1 == "semantic_err" ]]
 then
     DIRECTORY=$INVALID_SEMANTIC_TESTS
     EXIT_CODE=200
