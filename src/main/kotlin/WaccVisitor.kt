@@ -34,8 +34,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
-        val bool_val = ctx.BOOL_LIT().
-        return BoolLitNode(bool_val)
+//        val bool_val = ctx.BOOL_LIT().symbol.
+//        return BoolLitNode(bool_val)
+        return BoolLitNode(true)
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
