@@ -24,7 +24,7 @@ stat:
 | IF expr THEN stat ELSE stat FI    #IfCond
 | WHILE expr DO stat DONE           #While
 | BEGIN stat END                    #Statement
-| stat SEMICOLON stat               #StatList
+| stat SEMICOLON stat #StatList
 ;
 
 assignLHS:
@@ -46,7 +46,6 @@ argList: expr ( COMMA expr)* ;
 
 pairElem: FST expr | SND expr ;
 
-arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 type:
     base_type                                       #BaseType
@@ -73,12 +72,15 @@ expr:
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
+
+
 unaryOper: NOT | MINUS | LEN | ORD | CHR ;
 
 binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+
+arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
 
 // EOF indicates that the program must consume to the end of the input.
-

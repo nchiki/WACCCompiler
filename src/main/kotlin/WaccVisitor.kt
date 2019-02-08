@@ -11,7 +11,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         for (func in funcCtx) {
             funcList.add(visitFunc(func))
         }
-        val stat = visit(ctx.stat()) as StatementNode
+        val stat = visit(ctx.stat()) //as StatementNode
         return ProgNode(funcList, stat)
     }
 
