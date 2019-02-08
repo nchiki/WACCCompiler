@@ -22,6 +22,7 @@ class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
         // looks up the id in the symbol table
         val value = table.lookupSymbol(id)
 
