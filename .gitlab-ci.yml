@@ -4,12 +4,21 @@ stages:
 build:
   stage: build
   script: 'make'
+  artifacts:
+    paths:
+    - 'target/'
 valid-tests:
   stage: test
   script: 'bash test.sh valid'
+  dependencies:
+  - 'build'
 syntax-tests:
   stage: test
   script: 'bash test.sh syntax_err'
+  dependencies:
+  - 'build'
 semantic-tests:
   stage: test
   script: 'bash test.sh semantic_err'
+  dependencies:
+  - 'build'
