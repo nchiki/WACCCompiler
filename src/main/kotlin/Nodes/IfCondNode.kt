@@ -1,6 +1,7 @@
-package main.kotlin.Nodes
+package src.main.kotlin
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 

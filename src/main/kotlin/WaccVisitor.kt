@@ -2,8 +2,11 @@ import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Statement.*
+import src.main.kotlin.IfCondNode
+import src.main.kotlin.Nodes.ArrayElemNode
+import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
