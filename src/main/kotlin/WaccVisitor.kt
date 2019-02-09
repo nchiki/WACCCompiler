@@ -7,6 +7,8 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.Nodes.Statement.StatListNode
+import kotlin.Nodes.Statement.WhileNode
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -110,8 +112,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return UnaryOpNode(operand, operator!!)
     }
 
-    override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
-        return super.visitStatList(ctx)
+    override fun visitStatList(ctx: BasicParser.StatListContext): Node {
+        return StatListNode(visit(ctx.stat(0)), visit(ctx.stat(1)))
     }
 
     override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext?): Node {
@@ -166,8 +168,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ParamListNode(listParamNodes) // new Node
     }
 
-    override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
-        return super.visitWhile(ctx)
+    override fun visitWhile(ctx: BasicParser.WhileContext): Node {
+        return WhileNode(visit(ctx.expr()), visit(ctx.stat()))
     }
 
     override fun visitExit(@NotNull ctx: BasicParser.ExitContext): Node {
@@ -187,7 +189,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
-        return super.visitStatement(ctx)
+        return StatementNode(visit(ctx.stat()))
     }
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
