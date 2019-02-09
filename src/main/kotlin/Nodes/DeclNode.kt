@@ -8,14 +8,14 @@ import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
 class DeclNode(id: String, type: Node?, rhs: Node?) : Node {
-    override fun getType() : KClass<DeclNode>{
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     val id = id     // var name
     val type = type // type of var
     val rhs = rhs   // assigned rhs
 
+    override fun getType() : KClass<DeclNode>{
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
