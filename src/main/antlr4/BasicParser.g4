@@ -44,7 +44,10 @@ assignRHS:
 
 argList: expr ( COMMA expr)* ;
 
-pairElem: FST expr | SND expr ;
+pairElem:
+    FST expr   #PairFirst
+    |SND expr   #PairSecond
+    ;
 
 
 type:
