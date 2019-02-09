@@ -2,9 +2,10 @@ package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClassifier
 
-class CharLitNode(char : Char) : Node {
+class CharLitNode(char : String) : ExprNode {
     override fun getType(): KClassifier {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -14,6 +15,6 @@ class CharLitNode(char : Char) : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not implemented yet
     }
 }

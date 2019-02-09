@@ -2,9 +2,10 @@ package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClassifier
 
-class StringLitNode(str : String) : Node {
+class StringLitNode(str : String) : ExprNode {
     override fun getType(): KClassifier {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

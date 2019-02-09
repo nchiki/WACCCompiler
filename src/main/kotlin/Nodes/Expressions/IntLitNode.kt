@@ -1,15 +1,14 @@
-package main.kotlin.Nodes.Literals
+package src.main.kotlin.Nodes.Literals
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClass
 
-
-class BoolLitNode(val bool_val : Boolean) : Node {
-
-    override fun getType() : KClass<BoolLitNode> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class IntLitNode(val int_val : Int) : ExprNode {
+    override fun getType(): KClass<IntLitNode> {
+        return IntLitNode::class
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -19,5 +18,4 @@ class BoolLitNode(val bool_val : Boolean) : Node {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

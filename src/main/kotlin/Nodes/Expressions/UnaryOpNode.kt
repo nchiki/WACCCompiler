@@ -4,10 +4,11 @@ import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClassifier
 
-class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : Node {
+class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : ExprNode {
     override fun getType(): KClassifier {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

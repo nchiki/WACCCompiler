@@ -15,6 +15,6 @@ class SkipNode : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed
     }
 }

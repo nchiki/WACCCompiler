@@ -2,6 +2,8 @@ import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.PairType.Pair_Fst
+import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.Nodes.Statement.*
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -48,7 +50,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
-        val char_val = ctx.CHAR_LIT().text.single()
+        val char_val = ctx.CHAR_LIT().text
         return CharLitNode(char_val)
     }
 
@@ -71,8 +73,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
-        val fst = visit(ctx.pairElemType(0))
-        val snd = visit(ctx.pairElemType(1))
+        val fst = visit(ctx.pairElemType(1)) as Pair_Fst
+        val snd = visit(ctx.pairElemType(1)) as Pair_Snd
         return PairNode(fst, snd)
     }
 
@@ -208,10 +210,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return SkipNode()
     }
 
-    override fun visitPairType(ctx: BasicParser.PairTypeContext?): Node {
-        return super.visitPairType(ctx)
-    }
-
     override fun visitPrintln(@NotNull ctx: BasicParser.PrintlnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return PrintLnStatNode(expr)
@@ -222,11 +220,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return FreeStatNode(expr)
     }
 
-    override fun visitBaseType(ctx: BasicParser.BaseTypeContext?): Node {
-        return super.visitBaseType(ctx)
-    }
-
-    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
-        return super.visitPairElemType(ctx)
+    override fun visitBaseType(@NotNull ctx: BasicParser.BaseTypeContext): Node {
+        return BaseNode(ctx.text)
     }
 }

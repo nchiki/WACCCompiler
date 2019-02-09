@@ -3,10 +3,11 @@ package main.kotlin.Nodes
 import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClassifier
 
-class BinaryOpNode(left : Node, right: Node, operator: BasicParser.BinaryOperContext) : Node {
+class BinaryOpNode(left : Node, right: Node, operator: BasicParser.BinaryOperContext) : ExprNode {
     override fun getType(): KClassifier {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
