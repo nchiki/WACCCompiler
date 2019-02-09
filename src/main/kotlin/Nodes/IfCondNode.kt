@@ -22,7 +22,7 @@ class IfCondNode(expr: Node?, ifTrueStat: Node?, elseStat: Node?) : Node {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // check whether the expr evaluates to boolean value
 
-        table.boolExprCheck(expr!!, errors)
+        table.boolExprCheck(expr!!, errors, table)
 
         //checks both statements
         ifTrueStat?.semanticCheck(errors, table)

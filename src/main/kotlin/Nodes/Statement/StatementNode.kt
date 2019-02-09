@@ -1,4 +1,4 @@
-package Nodes
+package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node

@@ -3,12 +3,11 @@ import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.*
+import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.Nodes.Statement.StatListNode
-import kotlin.Nodes.Statement.WhileNode
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -178,7 +177,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
-
         // typeNode of the parameter
         val type = visit(ctx?.type())
 
@@ -188,7 +186,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ParamNode(id!!, type)
     }
 
-    override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
+    override fun visitStatement(ctx: BasicParser.StatementContext): Node {
         return StatementNode(visit(ctx.stat()))
     }
 
