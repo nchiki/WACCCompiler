@@ -7,6 +7,8 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.Nodes.PairType.Pair_Fst
+import kotlin.Nodes.PairType.Pair_Snd
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -71,8 +73,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
-        val fst = visit(ctx.pairElemType(0))
-        val snd = visit(ctx.pairElemType(1))
+        val fst = visit(ctx.pairElemType(0)) as Pair_Fst
+        val snd = visit(ctx.pairElemType(1)) as Pair_Snd
         return PairNode(fst, snd)
     }
 
