@@ -50,7 +50,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
-        val char_val = ctx.CHAR_LIT().text.single()
+        val char_val = ctx.CHAR_LIT().text
         return CharLitNode(char_val)
     }
 
@@ -73,7 +73,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
-        val fst = visit(ctx.pairElemType(0)) as Pair_Fst
+        val fst = visit(ctx.pairElemType(1)) as Pair_Fst
         val snd = visit(ctx.pairElemType(1)) as Pair_Snd
         return PairNode(fst, snd)
     }

@@ -8,7 +8,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
         if (args.size == 0) {
-                System.setIn(FileInputStream("../wacc_examples/valid/pairs/readPair.wacc"))
+                System.setIn(FileInputStream("../wacc_examples/invalid/semanticErr/exit/badCharExit.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
@@ -43,5 +43,9 @@ fun main(args: Array<String>) {
         //progNode.getSyntaxErrors
 
         progNode.semanticCheck(errorLogger, symbolTable)
+
+        for (error in errorLogger.errorList) {
+                print(error)
+        }
  }
 

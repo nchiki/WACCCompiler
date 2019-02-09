@@ -3,10 +3,11 @@ package main.kotlin.Nodes.Literals
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClass
 
 
-class BoolLitNode(val bool_val : Boolean) : Node {
+class BoolLitNode(val bool_val : Boolean) : ExprNode {
 
     override fun getType() : KClass<BoolLitNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

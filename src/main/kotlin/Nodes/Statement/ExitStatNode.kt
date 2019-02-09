@@ -14,11 +14,11 @@ class ExitStatNode(val expr : ExprNode) : Node {
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.getType() != IntLitNode::class) {
+        if (expr !is IntLitNode) {
             errors.addError(IncompatibleTypes())
         }
         expr.semanticCheck(errors, table)
