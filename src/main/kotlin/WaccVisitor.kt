@@ -208,10 +208,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return SkipNode()
     }
 
-    override fun visitPairType(ctx: BasicParser.PairTypeContext?): Node {
-        return super.visitPairType(ctx)
-    }
-
     override fun visitPrintln(@NotNull ctx: BasicParser.PrintlnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return PrintLnStatNode(expr)
@@ -222,11 +218,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return FreeStatNode(expr)
     }
 
-    override fun visitBaseType(ctx: BasicParser.BaseTypeContext?): Node {
-        return super.visitBaseType(ctx)
-    }
-
-    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
-        return super.visitPairElemType(ctx)
+    override fun visitBaseType(@NotNull ctx: BasicParser.BaseTypeContext): Node {
+        return BaseNode(ctx.text)
     }
 }

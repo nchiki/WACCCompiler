@@ -18,5 +18,6 @@ class ReturnStatNode (val expr : ExprNode) : Node {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //need to save return type of function in return node and then check
         // type of expr with return type of function
+        //compare with type
     }
 }
