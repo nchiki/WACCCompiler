@@ -2,13 +2,13 @@ import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.PairType.Pair_Fst
+import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.Nodes.Statement.*
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.Nodes.PairType.Pair_Fst
-import kotlin.Nodes.PairType.Pair_Snd
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 

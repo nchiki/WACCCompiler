@@ -1,9 +1,9 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.PairType.Pair_Fst
+import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.SymbolTable
-import kotlin.Nodes.PairType.Pair_Fst
-import kotlin.Nodes.PairType.Pair_Snd
 import kotlin.reflect.KClass
 
 class PairNode(fstNode : Pair_Fst, sndNode: Pair_Snd) : Node{

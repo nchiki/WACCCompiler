@@ -1,4 +1,4 @@
-package kotlin.Nodes.PairType
+package main.kotlin.Nodes.PairType
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
