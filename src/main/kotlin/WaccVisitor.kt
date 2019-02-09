@@ -222,10 +222,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return FreeStatNode(expr)
     }
 
-    override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        return super.visitPairElem(ctx)
-    }
-
     override fun visitBaseType(ctx: BasicParser.BaseTypeContext?): Node {
         return super.visitBaseType(ctx)
     }
