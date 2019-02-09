@@ -47,5 +47,8 @@ fun main(args: Array<String>) {
         for (error in errorLogger.errorList) {
                 print(error)
         }
+        if(errorLogger.errorList.count() != 0) {
+                exitProcess(200)
+        }
  }
 
