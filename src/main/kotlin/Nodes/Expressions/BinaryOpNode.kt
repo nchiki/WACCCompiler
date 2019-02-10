@@ -21,9 +21,9 @@ class BinaryOpNode(left : Node, right: Node, operator: BasicParser.BinaryOperCon
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//        if(!typesAreSame) {
-//            errors.addError(InvalidOperandTypes())
-//        }
+        if (left.getType() != right.getType()) {
+            errors.addError(InvalidOperandTypes())
+        }
         if ((operator.ruleIndex == BasicParser.MULT
                         || operator.ruleIndex == BasicParser.DIV
                         || operator.ruleIndex == BasicParser.MOD
