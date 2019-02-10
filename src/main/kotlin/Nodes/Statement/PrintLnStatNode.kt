@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.CharLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.StringLitNode
@@ -11,7 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 
 class PrintLnStatNode(val expr : ExprNode) : Node {
-    override fun getType() : KClass<PrintLnStatNode> {
+    override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -8,7 +8,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
         if (args.size == 0) {
-                System.setIn(FileInputStream("../wacc_examples/invalid/semanticErr/print/printTypeErr01.wacc"))
+                System.setIn(FileInputStream("../wacc_examples/invalid/semanticErr/variables/basicTypeErr01.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }

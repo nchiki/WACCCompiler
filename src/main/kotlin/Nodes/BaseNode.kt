@@ -7,8 +7,8 @@ import kotlin.system.exitProcess
 
 
 class BaseNode(val type : String) : Node {
-    override fun getType() : KClass<BaseNode>{
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType() : BaseNode{
+        return this
     }
 
     override fun syntaxCheck() {
@@ -18,7 +18,7 @@ class BaseNode(val type : String) : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed (I think)
     }
 
 }

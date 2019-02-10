@@ -12,14 +12,14 @@ import kotlin.system.exitProcess
 class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode) : Node {
 
 
-    override fun getType() : KClass<FunctionNode> {
-        return FunctionNode::class
+    override fun getType() : BaseNode {
+        TODO()
     }
 
     override fun syntaxCheck() {
-        if (stat.getType() != ReturnStatNode::class && stat.getType() != ExitStatNode::class) {
+       /* if (stat.getType() != ReturnStatNode::class && stat.getType() != ExitStatNode::class) {
             exitProcess(100)
-        }
+        }*/
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

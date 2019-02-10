@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClassifier
 
 class BinaryOpNode(left : Node, right: Node, operator: BasicParser.BinaryOperContext) : ExprNode {
-    override fun getType(): KClassifier {
+    override fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
