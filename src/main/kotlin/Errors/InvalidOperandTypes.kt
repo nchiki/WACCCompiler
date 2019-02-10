@@ -1,4 +1,4 @@
-package main.kotlin.Errors
+package Errors
 
 class InvalidOperandTypes: ErrorNode {
     override fun printError(): String {

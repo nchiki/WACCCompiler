@@ -1,4 +1,4 @@
-package main.kotlin.Errors
+package Errors
 
 
 class MemberAlreadyDefinedError(val id : String) : ErrorNode {
