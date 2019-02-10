@@ -21,7 +21,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : Basic
             if(RHS_Node.funId != null) {
                 val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
                 val returnT = Func.type
-                if (returnT != LHS_Node.getType().toString()) {
+                if (returnT != LHS_Node.getType()) {
                     errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
                 }
             }
