@@ -7,9 +7,8 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.reflect.KClass
 
-class ExitStatNode(val expr : ExprNode) : Node {
+class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Node {
     override fun getType(): BaseNode {
         TODO()
     }
@@ -20,7 +19,7 @@ class ExitStatNode(val expr : ExprNode) : Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (expr !is IntLitNode) {
-            errors.addError(IncompatibleTypes())
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
         expr.semanticCheck(errors, table)
     }

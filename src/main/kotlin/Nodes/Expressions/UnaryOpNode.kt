@@ -8,13 +8,10 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClassifier
 
-class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : ExprNode {
+class UnaryOpNode(val operand: Node, val operator: BasicParser.UnaryOperContext) : ExprNode {
     override fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    val operand = operand
-    val operator = operator
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (operator.ruleIndex == BasicParser.NOT && operand !is BoolLitNode
@@ -23,7 +20,7 @@ class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : ExprN
             || operator.ruleIndex == BasicParser.ORD && operand !is CharLitNode
             || operator.ruleIndex == BasicParser.CHR && operand !is IntLitNode)
         {
-            errors.addError(InvalidOperandTypes())
+            errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }
     }
 

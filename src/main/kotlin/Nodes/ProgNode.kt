@@ -6,7 +6,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node) : Node {
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : BasicParser.ProgContext) : Node {
 
     override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -23,7 +23,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node) : Node {
         for (func in funcDefs) {
             val id = func.id
             if (table.lookupSymbol(id) != null) {
-                errors.addError(MemberAlreadyDefinedError(id))
+                errors.addError(MemberAlreadyDefinedError(id, ctx.start.line, ctx.start.charPositionInLine))
             }
             table.add(func, id)
         }

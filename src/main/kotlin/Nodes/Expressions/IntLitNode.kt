@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClass
 
-class IntLitNode(val int_val : Int) : ExprNode {
+class IntLitNode(val int_val : Int, val ctx: BasicParser.IntLitContext) : ExprNode {
     override fun getType(): BaseNode {
         TODO()
     }

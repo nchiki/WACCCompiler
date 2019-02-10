@@ -4,9 +4,8 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.PairType.Pair_Fst
 import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
 
-class PairNode(fstNode : Pair_Fst, sndNode: Pair_Snd) : Node{
+class PairNode(fstNode: Pair_Fst, sndNode: Pair_Snd, ctx: BasicParser.Pair_typeContext) : Node{
     override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

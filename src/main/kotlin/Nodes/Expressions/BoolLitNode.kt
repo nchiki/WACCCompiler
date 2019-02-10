@@ -10,7 +10,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
 
-class BoolLitNode(val bool_val : String) : ExprNode {
+class BoolLitNode(val bool_val : String, val ctx: BasicParser.BoolLitContext) : ExprNode {
 
     override fun getType() : BaseNode {
         return BaseNode("bool")

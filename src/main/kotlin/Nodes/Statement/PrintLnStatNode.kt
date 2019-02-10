@@ -8,10 +8,8 @@ import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.StringLitNode
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.reflect.KClass
-import kotlin.system.exitProcess
 
-class PrintLnStatNode(val expr : ExprNode) : Node {
+class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) : Node {
     override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -22,7 +20,7 @@ class PrintLnStatNode(val expr : ExprNode) : Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (expr !is StringLitNode && expr !is CharLitNode) {
-            errors.addError(IncompatibleTypes())
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
     }
 }
