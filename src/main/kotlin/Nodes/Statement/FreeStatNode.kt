@@ -17,6 +17,6 @@ class FreeStatNode(val expr : ExprNode, val ctx: BasicParser.FreeContext) : Node
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr.semanticCheck(errors, table)
     }
 }
