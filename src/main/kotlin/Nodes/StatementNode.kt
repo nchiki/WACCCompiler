@@ -1,15 +1,13 @@
-package main.kotlin.Nodes
+package Nodes
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClassifier
+import kotlin.reflect.KClass
 
-class StringLitNode(str : String) : Node {
-    override fun getType(): KClassifier {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun syntaxCheck() {
+open class StatementNode : Node {
+    override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -17,4 +15,7 @@ class StringLitNode(str : String) : Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

@@ -1,7 +1,8 @@
 package Errors
 
-class InvalidOperandTypes: ErrorNode {
+class InvalidOperandTypes(val line: Int, val pos: Int) : ErrorNode {
+
     override fun printError(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "Invalid operand types found in line: $line at position: $pos "
     }
 }

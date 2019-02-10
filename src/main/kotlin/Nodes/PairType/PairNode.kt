@@ -1,11 +1,12 @@
-package main.kotlin.Nodes
+package Nodes.PairType
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
 
-class PairNode(fstNode : Node, sndNode: Node) : Node{
-    override fun getType() : KClass<PairNode> {
+class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : Node {
+    override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

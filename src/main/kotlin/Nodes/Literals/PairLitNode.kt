@@ -1,13 +1,14 @@
-package main.kotlin.Nodes.Statement
+package Nodes.Literals
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClassifier
 
-class StatListNode(val stat1: Node, val stat2: Node): Node {
+class PairLitNode(val ctx : BasicParser.PairLitContext): Node {
 
-    override fun getType(): KClassifier {
+    override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -15,7 +16,7 @@ class StatListNode(val stat1: Node, val stat2: Node): Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
+    override fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

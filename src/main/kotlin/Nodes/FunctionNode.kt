@@ -1,20 +1,30 @@
 package main.kotlin.Nodes
 
 import Nodes.ParamListNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.Statement.ExitStatNode
+import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
+import kotlin.system.exitProcess
 
-class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : Node) : Node {
-    override fun getType() : KClass<FunctionNode> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode,
+                    val ctx:BasicParser.FuncContext) : Node {
+
+
+    override fun getType() : BaseNode {
+        TODO()
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       /* if (stat.getType() != ReturnStatNode::class && stat.getType() != ExitStatNode::class) {
+            exitProcess(100)
+        }*/
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        params.semanticCheck(errors, table)
+        stat.semanticCheck(errors, table)
     }
 }
