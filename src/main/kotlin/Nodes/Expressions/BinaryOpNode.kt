@@ -3,14 +3,23 @@ package main.kotlin.Nodes
 import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, ctx: BasicParser.BinOperContext) : ExprNode {
-    override val type = left.type
 
-    fun getType(): BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    override fun getType(): LitTypes {
+        if(operator.ruleIndex == BasicParser.MULT
+                || operator.ruleIndex == BasicParser.DIV
+                || operator.ruleIndex == BasicParser.MOD
+                || operator.ruleIndex == BasicParser.MINUS
+                || operator.ruleIndex == BasicParser.PLUS) {
+            return LitTypes.IntWacc
+        } else {
+            return LitTypes.BoolWacc
+        }
     }
 
     override fun syntaxCheck() {
@@ -18,7 +27,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (left.type != right.type) {
+        if (left.getType() != right.getType()) {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }
         if ((operator.ruleIndex == BasicParser.MULT

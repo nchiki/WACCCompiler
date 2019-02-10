@@ -15,7 +15,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     fun getType(): LitTypes {
         if(type == RHS_type.expr) {
-            return expr!!.type as LitTypes
+            return expr!!.getType() as LitTypes
         } else if (type == RHS_type.array_lit) {
             return ArrayLit!!.getType()
         } else if (type == RHS_type.call) {
@@ -42,7 +42,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     for (i in args.exprs.indices) {
                         val actual = args.exprs[i]
                         val expected = parameters.listParamNodes[i]
-                        if (actual.type != expected.getType()) {
+                        if (actual.getType() != expected.getType()) {
                             errors.addError(IncompatibleTypes(line, pos))
                         }
                     }

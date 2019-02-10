@@ -9,7 +9,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                        "valid/function/simple_functions/functionManyArguments.wacc"))
+                        "invalid/semanticErr/expressions/exprTypeErr.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
