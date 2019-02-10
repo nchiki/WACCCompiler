@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 import Nodes.ParamListNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ExitStatNode
 import main.kotlin.Nodes.Statement.ReturnStatNode
@@ -9,6 +10,8 @@ import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 
 class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode) : Node {
+
+
     override fun getType() : BaseNode {
         TODO()
     }
