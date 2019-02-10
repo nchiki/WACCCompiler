@@ -6,8 +6,10 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
+
 open class StatementNode : Node {
-    override fun getType() : BaseNode {
+
+    open fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -1,12 +1,14 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClass
 
-class AssignNode(val ctx: BasicParser.AssignContext) : Node {
-    override fun getType() : BaseNode {
+class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : BasicParser.AssignContext) : Node {
+
+
+    fun getType() : KClass<AssignNode> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -15,6 +17,17 @@ class AssignNode(val ctx: BasicParser.AssignContext) : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (RHS_Node.type == RHS_type.call) {
+            if(RHS_Node.funId != null) {
+                val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
+                val returnT = Func.type
+                if (returnT != LHS_Node.getType().toString()) {
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                }
+            }
+            LHS_Node.semanticCheck(errors,table)
+            RHS_Node.semanticCheck(errors, table)
+
+        }
     }
 }

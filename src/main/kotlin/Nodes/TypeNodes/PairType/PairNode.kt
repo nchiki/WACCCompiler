@@ -1,13 +1,15 @@
 package Nodes.PairType
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 
-class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : Node {
-    override fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : TypeNode, Node {
+
+    override fun getType() : LitTypes {
+        return LitTypes.PairWacc
     }
 
     override fun syntaxCheck() {

@@ -9,7 +9,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Node {
-    override fun getType(): BaseNode {
+    fun getType(): BaseNode {
         TODO()
     }
 

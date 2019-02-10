@@ -3,18 +3,19 @@ package Nodes
 import Errors.VarAlreadyDeclaredError
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.FunctionNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.*
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
+import main.kotlin.Utils.LitTypes
+
+
 
 class DeclNode(// var name
         val id: String, // type of var
-        val type: Node?, // assigned rhs
-        val rhs: Node?, val ctx : BasicParser.DeclContext) : Node {
+        val type: TypeNode, // assigned rhs
+        val rhs: RHS_Node, val ctx : BasicParser.DeclContext) : Node {
 
-    override fun getType() : BaseNode {
+    fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -24,7 +25,6 @@ class DeclNode(// var name
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (rhs != null) {
 
             // looks up the id in the symbol table
             val value = table.lookupSymbol(id)
@@ -34,14 +34,18 @@ class DeclNode(// var name
                 // if there is already a variable with that name -> error
                 errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
             }
-            
-            if (rhs :: class != value!! :: class) {
+
+            if (false) {
                 errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
             }
 
             // call semantic check on the rest of elements
-            type?.semanticCheck(errors, table)
+            //type.semanticCheck(errors, table)
             rhs.semanticCheck(errors, table)
         }
-    }
+
+
+
 }
+
+

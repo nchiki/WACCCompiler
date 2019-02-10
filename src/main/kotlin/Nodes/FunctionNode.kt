@@ -13,7 +13,7 @@ class FunctionNode (val id : String, val type : String, val params : ParamListNo
                     val ctx:BasicParser.FuncContext) : Node {
 
 
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO()
     }
 

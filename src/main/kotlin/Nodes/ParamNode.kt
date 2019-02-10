@@ -1,18 +1,36 @@
 package Nodes
 
 import Errors.VarAlreadyDeclaredError
+import Nodes.Literals.PairLitNode
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.FunctionNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
-class ParamNode(// name of param var
-        val id: String, // type of the parameter (Node)
+class ParamNode(
+        val id: String,
         val type: Node, val ctx: BasicParser.ParamContext) : Node {
-    override fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
+
+    fun getType() : LitTypes{
+        if(type is IntLitNode) {
+           return LitTypes.IntWacc
+       } else if (type is CharLitNode) {
+           return LitTypes.CharWacc
+       } else if (type is BoolLitNode) {
+           return LitTypes.BoolWacc
+       } else if (type is PairLitNode) {
+           return LitTypes.PairWacc
+       } else if (type is StringLitNode) {
+           return LitTypes.StringWacc
+       } else {
+           return LitTypes.NonLitWacc
+       }
     }
 
     override fun syntaxCheck() {

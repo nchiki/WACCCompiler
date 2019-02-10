@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 
 
 class ReadStatNode : Node {
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO()
     }
 
