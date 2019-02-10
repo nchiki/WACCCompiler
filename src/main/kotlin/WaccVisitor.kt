@@ -36,7 +36,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val paramList = visitParamList(ctx.paramList())
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
-        val stat = visit(ctx.stat()) as StatementNode
+        val stat = visit(ctx.stat()) as ReturnStatNode
         return FunctionNode(id, returnType, paramList, stat, ctx)
     }
 
@@ -141,7 +141,12 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext?): Node {
-        return super.visitArrayLiter(ctx)
+        val exprs = ctx!!.expr()
+        var exprList = ArrayList<ExprNode>()
+        for (expr in exprs) {
+            exprList.add(visit(expr) as ExprNode)
+        }
+        return ArrayLitNode(exprList, ctx)
     }
 
     override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
