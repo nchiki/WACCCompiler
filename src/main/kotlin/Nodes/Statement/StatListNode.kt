@@ -1,13 +1,14 @@
-package src.main.kotlin.Nodes
+package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import kotlin.reflect.KClassifier
 
+class StatListNode(val stat1: Node, val stat2: Node): Node {
 
-class ArrayElemNode(val type : Node, var exprs : List<ExprNode>) : Node {
-    override fun getType() : BaseNode {
+    override fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -18,4 +19,5 @@ class ArrayElemNode(val type : Node, var exprs : List<ExprNode>) : Node {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }

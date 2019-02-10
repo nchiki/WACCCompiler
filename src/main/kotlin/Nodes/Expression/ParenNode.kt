@@ -1,14 +1,14 @@
-package Nodes
+package main.kotlin.Nodes.Expression
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
 
-class StatementNode : Node {
-    override fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class ParenNode(val expr: Node): Node {
+
+    override fun getType(): BaseNode {
+        TODO()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -18,4 +18,5 @@ class StatementNode : Node {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }
