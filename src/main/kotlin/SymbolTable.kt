@@ -1,8 +1,14 @@
 package main.kotlin
 
 import Errors.NotBoolConditionError
+import main.kotlin.Errors.UndeclaredVariableError
+import main.kotlin.Nodes.BinaryOpNode
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.Statement.ParenNode
+import main.kotlin.Nodes.UnaryOpNode
+import org.antlr.v4.runtime.ParserRuleContext
 
 class SymbolTable (val parent: SymbolTable?){
 
@@ -29,10 +35,10 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         if(tempExpr is IdentNode){
-            val variable = symbolTable.lookupSymbol(tempExpr.   id)
+            val variable = symbolTable.lookupSymbol(tempExpr.id)
 
             if(variable == null){
-                errors.addError(UndeclaredVariableError(tempExpr.id))
+                errors.addError(UndeclaredVariableError(tempExpr.id, tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine))
                 return
             }
 
@@ -60,7 +66,7 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
 
-        errors.addError(NotBoolConditionError())
+        errors.addError(NotBoolConditionError(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine))
     }
 
     fun evaluateParenNode(node_: Node): Node{
@@ -68,6 +74,7 @@ class SymbolTable (val parent: SymbolTable?){
         while(node is ParenNode){
             node = node.expr
         }
+        return node
     }
 
     /*fun isValidKey(key : String) : Boolean {
