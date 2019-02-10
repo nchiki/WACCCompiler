@@ -11,6 +11,7 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import main.kotlin.Nodes.Statement.ArgListNode
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -107,6 +108,15 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitStatList(ctx: BasicParser.StatListContext): Node {
         return StatListNode(visit(ctx.stat(0)), visit(ctx.stat(1)))
+    }
+
+    override fun visitArgList(@NotNull ctx: BasicParser.ArgListContext) : Node {
+        val exprs = ctx.expr()
+        var exprList = ArrayList<ExprNode>()
+        for (expr in exprs) {
+            exprList.add(visit(expr) as ExprNode)
+        }
+        return ArgListNode(exprList)
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
