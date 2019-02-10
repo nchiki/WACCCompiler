@@ -9,8 +9,9 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import main.kotlin.Nodes.AssignNode
-
+import kotlin.Nodes.LHS_Node
+import kotlin.Nodes.RHS_Node
+import kotlin.Nodes.RHS_type
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -61,11 +62,29 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
-        val id = visit(ctx.assignLHS())
-        val value = visit(ctx.assignRHS())
+        val id = visit(ctx.assignLHS()) as LHS_Node
+        val value = visit(ctx.assignRHS()) as RHS_Node
         /* uncomment when symbol table is implemented */
         //memory.put(id, value);
-        return AssignNode(ctx)
+        return AssignNode(id, value)
+    }
+
+    override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
+        return RHS_Node(RHS_type.expr, )
+    }
+
+    override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
+        val funId = ctx?.IDENT()!!.text
+        val params = visit(ctx?.argList())
+        return RHS_Node(RHS_type.call, funId, params)
+    }
+
+    override fun visitAssignR_ArrayL(ctx: BasicParser.AssignR_ArrayLContext?): Node {
+        return RHS_Node(RHS_type.array_lit, )
+    }
+
+    override fun visitAssigR_Pair(ctx: BasicParser.AssigR_PairContext?): Node {
+        return RHS_Node(RHS_type.pair_elem, )
     }
 
     override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node? {
@@ -220,4 +239,5 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitBaseType(@NotNull ctx: BasicParser.BaseTypeContext): Node {
         return BaseNode(ctx.text)
     }
+
 }
