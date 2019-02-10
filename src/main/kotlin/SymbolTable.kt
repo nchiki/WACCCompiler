@@ -21,6 +21,7 @@ class SymbolTable (val parent: SymbolTable?){
     private val parentT = parent
     var table = HashMap<String, Node>()
 
+    /* Ensures that the expression node resolves to a boolean type */
     fun boolExprCheck(expr : Node, errors: ErrorLogger, symbolTable: SymbolTable) {
         var tempExpr: Node = expr
 
@@ -33,7 +34,7 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         if(tempExpr is IdentNode){
-            val variable = symbolTable.lookupSymbol(tempExpr.id)
+            val variable = symbolTable.lookupSymbol(tempExpr.   id)
 
             if(variable == null){
                 errors.addError(UndeclaredVariableError(tempExpr.id))
