@@ -16,10 +16,57 @@ class SymbolTable (val parent: SymbolTable?){
     private val parentT = parent
     var table = HashMap<String, Node>()
 
+    /* Ensures that the expression node resolves to a boolean type */
+    fun boolExprCheck(expr : Node, errors: ErrorLogger, symbolTable: SymbolTable) {
+        var tempExpr: Node = expr
 
-    fun boolExprCheck(expr : Node, errors: ErrorLogger, ctx : BasicParser.ExprContext) {
-        if (expr !is BoolLitNode) {
-            errors.addError(NotBoolConditionError(ctx.start.line, ctx.start.charPositionInLine))
+        if(tempExpr is ParenNode){
+            tempExpr = evaluateParenNode(tempExpr)
+        }
+
+        if(tempExpr is BoolLitNode){
+            return
+        }
+
+        if(tempExpr is IdentNode){
+            val variable = symbolTable.lookupSymbol(tempExpr.   id)
+
+            if(variable == null){
+                errors.addError(UndeclaredVariableError(tempExpr.id))
+                return
+            }
+
+            boolExprCheck(variable, errors, symbolTable)
+            return
+        }
+
+        if(tempExpr is UnaryOpNode){
+            if(tempExpr.operator.equals(BasicParser.NOT)){
+                boolExprCheck(tempExpr.operand, errors, symbolTable)
+                return
+            }
+        }
+
+        if(tempExpr is BinaryOpNode){
+            when(tempExpr.operator.ruleIndex){
+                BasicParser.GREAT -> return
+                BasicParser.GREAT_EQ -> return
+                BasicParser.LESS -> return
+                BasicParser.LESS_EQ -> return
+                BasicParser.EQ -> return
+                BasicParser.NOTEQ -> return
+                BasicParser.AND -> return
+                BasicParser.OR -> return
+            }
+        }
+
+        errors.addError(NotBoolConditionError())
+    }
+
+    fun evaluateParenNode(node_: Node): Node{
+        var node = node_
+        while(node is ParenNode){
+            node = node.expr
         }
     }
 
