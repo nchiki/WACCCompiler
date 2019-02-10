@@ -159,7 +159,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitUnOp(ctx: BasicParser.UnOpContext?): Node {
         val operand = visit(ctx?.expr()) as ExprNode
         val operator = ctx?.unaryOper()
-        return UnaryOpNode(operand, operator!!, operand.type)
+        return UnaryOpNode(operand, operator!!, operand.getType())
     }
 
     override fun visitStatList(ctx: BasicParser.StatListContext?): Node {

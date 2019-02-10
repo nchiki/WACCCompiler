@@ -4,14 +4,15 @@ import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any) : ExprNode {
-    override val type = operand.type
-    fun getType(): BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    override fun getType(): LitTypes {
+       return operand.getType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

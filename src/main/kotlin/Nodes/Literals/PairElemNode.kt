@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 class PairElemNode(val expr : ExprNode) : Node{
 
     fun getType() : LitTypes {
-        return expr.type as LitTypes
+        return expr.getType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

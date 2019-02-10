@@ -12,7 +12,7 @@ class LHS_Node(val Nodetype: Node, val id: String, val line: Int, val pos : Int)
 
     fun getType(): LitTypes {
         if (Nodetype is ArrayElemNode) {
-            return Nodetype.type as LitTypes
+            return Nodetype.getType()
         } else if (Nodetype is PairElemNode) {
             return Nodetype.getType()
         } else {
