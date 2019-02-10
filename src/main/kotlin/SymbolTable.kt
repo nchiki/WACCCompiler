@@ -16,6 +16,7 @@ class SymbolTable (val parent: SymbolTable?){
     private val parentT = parent
     var table = HashMap<String, Node>()
 
+
     fun boolExprCheck(expr : Node, errors: ErrorLogger, ctx : BasicParser.ExprContext) {
         if (expr !is BoolLitNode) {
             errors.addError(NotBoolConditionError(ctx.start.line, ctx.start.charPositionInLine))

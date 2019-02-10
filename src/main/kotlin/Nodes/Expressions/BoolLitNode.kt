@@ -10,9 +10,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class BoolLitNode(val bool_val : String, val ctx: BasicParser.BoolLitContext) : ExprNode {
 
-    val type = LitTypes.BoolWacc
+    override val type = LitTypes.BoolWacc
 
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         return BaseNode("bool")
     }
 

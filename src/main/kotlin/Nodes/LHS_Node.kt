@@ -1,27 +1,22 @@
-package kotlin.Nodes
+package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.FunctionNode
-import main.kotlin.Nodes.IdentNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Errors.NonExistingVar
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ArrayElemNode
-import kotlin.Errors.NonExistingVar
 import kotlin.reflect.KClassifier
 
-class LHS_Node(type : Node, id :String) : Node {
-    var type = type
-    val id = id
+class LHS_Node(var type: Node, val id: String, val line: Int, val pos : Int ) : Node {
 
-    override fun getType(): KClassifier {
+    fun getType(): KClassifier {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val value = table.lookupSymbol(id)
         if( value == null || value is FunctionNode) {
-            errors.addError(NonExistingVar())
+            errors.addError(NonExistingVar(line, pos))
         }
         checkType(value!!, errors, table)
 
@@ -38,7 +33,7 @@ class LHS_Node(type : Node, id :String) : Node {
             this.type = typeNode.type
 */
         } else {
-            errors.addError(IncompatibleTypes())
+            errors.addError(IncompatibleTypes(line, pos))
         }
     }
 

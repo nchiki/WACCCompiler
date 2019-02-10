@@ -5,10 +5,11 @@ import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.reflect.KClassifier
 
-class BinaryOpNode(val left: Node, val right: Node, val operator: BasicParser.BinaryOperContext) : ExprNode {
-    override fun getType(): BaseNode {
+class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, ctx: BasicParser.BinOperContext) : ExprNode {
+    override val type = left.type
+
+    fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -17,7 +18,7 @@ class BinaryOpNode(val left: Node, val right: Node, val operator: BasicParser.Bi
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (left.getType() != right.getType()) {
+        if (left.type != right.type) {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }
         if ((operator.ruleIndex == BasicParser.MULT

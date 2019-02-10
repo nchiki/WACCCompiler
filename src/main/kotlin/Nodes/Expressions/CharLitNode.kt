@@ -9,9 +9,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class CharLitNode(char : String, val ctx: BasicParser.CharLitContext) : ExprNode {
 
-    val type = LitTypes.CharWacc
+    override val type = LitTypes.CharWacc
 
-    override fun getType(): BaseNode {
+    fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

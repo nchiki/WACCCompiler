@@ -1,9 +1,10 @@
-package kotlin.Errors
+package main.kotlin.Errors
 
 import Errors.ErrorNode
 
-class IncorrectNumParams : ErrorNode {
+class IncorrectNumParams(val line: Int, val pos: Int) : ErrorNode {
+
     override fun printError(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "Incorrect number of parameters found in line: $line at position: $pos "
     }
 }

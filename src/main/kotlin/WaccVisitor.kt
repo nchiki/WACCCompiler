@@ -9,9 +9,7 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.Nodes.LHS_Node
-import kotlin.Nodes.RHS_Node
-import kotlin.Nodes.RHS_type
+import kotlin.Nodes.TypeNodes.TypeNode
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -66,30 +64,46 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val value = visit(ctx.assignRHS()) as RHS_Node
         /* uncomment when symbol table is implemented */
         //memory.put(id, value);
-        return AssignNode(id, value)
+        return AssignNode(id, value, ctx)
+    }
+
+    override fun visitAssignL_Array(ctx: BasicParser.AssignL_ArrayContext?): Node {
+        return LHS_Node(visit(ctx?.arrayElem()), "", ctx?.start!!.line, ctx?.start.charPositionInLine )
+    }
+
+    override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext?): Node {
+        return LHS_Node(visit(ctx?.IDENT()),  ctx?.IDENT()!!.text, ctx?.start!!.line, ctx?.start.charPositionInLine)
+    }
+
+    override fun visitAssignL_Pairelem(ctx: BasicParser.AssignL_PairelemContext?): Node {
+        return LHS_Node(visit(ctx?.pairElem()), "", ctx?.start!!.line, ctx?.start.charPositionInLine)
     }
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
-        return RHS_Node(RHS_type.expr, )
+        return RHS_Node(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.expr()))
     }
 
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
-        val params = visit(ctx?.argList())
-        return RHS_Node(RHS_type.call, funId, params)
+        val params = visit(ctx.argList()) as ArgListNode
+        return RHS_Node(RHS_type.call, ctx.IDENT().text, params, ctx.start!!.line, ctx.start!!.charPositionInLine)
+    }
+
+    override fun visitAssignR_Pair_Elem(ctx: BasicParser.AssignR_Pair_ElemContext?): Node {
+        return RHS_Node(RHS_type.pair_elem, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.pairElem()))
     }
 
     override fun visitAssignR_ArrayL(ctx: BasicParser.AssignR_ArrayLContext?): Node {
-        return RHS_Node(RHS_type.array_lit, )
+        return RHS_Node(RHS_type.array_lit, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.pairElem()))
     }
 
     override fun visitAssigR_Pair(ctx: BasicParser.AssigR_PairContext?): Node {
-        return RHS_Node(RHS_type.pair_elem, )
+        return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.expr(0)), visit(ctx.expr(1)))
     }
 
     override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node? {
         val type = visit(ctx.type())
-        return ArrayTypeNode(ctx)
+        return ArrayTypeNode(ctx, type as TypeNode)
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
@@ -100,7 +114,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
-        return PairElemTypeNode()
+        if(ctx?.PAIR() != null) {
+            return PairElemTypeNode(null, "pair")
+        } else {
+            return PairElemTypeNode(visit(ctx?.type()) as TypeNode, "")
+        }
     }
 
 
@@ -119,20 +137,31 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
-        val left = visit(ctx?.expr(0))
-        val right = visit(ctx?.expr(1))
+        val left = visit(ctx?.expr(0)) as ExprNode
+        val right = visit(ctx?.expr(1)) as ExprNode
         val operator = ctx?.binaryOper()
-        return BinaryOpNode(left, right, operator!!)
+        return BinaryOpNode(left, right, operator!!, ctx)
     }
 
     override fun visitUnOp(ctx: BasicParser.UnOpContext?): Node {
-        val operand = visit(ctx?.expr())
+        val operand = visit(ctx?.expr()) as ExprNode
         val operator = ctx?.unaryOper()
-        return UnaryOpNode(operand, operator!!)
+        return UnaryOpNode(operand, operator!!, operand.type)
     }
 
     override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
         return super.visitStatList(ctx)
+
+    }
+
+    override fun visitArgList(@NotNull ctx: BasicParser.ArgListContext) : Node {
+        val exprs = ctx.expr()
+        var exprList = ArrayList<ExprNode>()
+        for (expr in exprs) {
+            exprList.add(visit(expr) as ExprNode)
+        }
+        return ArgListNode(exprList)
+
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
@@ -144,9 +173,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val id = ctx?.IDENT()?.text
 
         // assignRHS node that will worry about semantic check of the RHS
-        val RHS = visit(ctx?.assignRHS())
+        val RHS = visit(ctx?.assignRHS()) as RHS_Node
 
-        return DeclNode(id!!, type, RHS, ctx)
+        return DeclNode(id!!, type as TypeNode, RHS, ctx)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext?): Node {
@@ -172,12 +201,12 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val params =ctx?.param()
 
         // declaration empty list of parameters
-        val listParamNodes = mutableListOf<Node>()
+        val listParamNodes = mutableListOf<ParamNode>()
 
         // iterates through the parameters adding them to the list
         if(params != null) {
             for (param in params) {
-                listParamNodes.add(visit(param))
+                listParamNodes.add(visit(param) as ParamNode)
             }
         }
 
@@ -239,5 +268,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitBaseType(@NotNull ctx: BasicParser.BaseTypeContext): Node {
         return BaseNode(ctx.text)
     }
+
+
 
 }

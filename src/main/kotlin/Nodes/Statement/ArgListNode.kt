@@ -18,7 +18,7 @@ class ArgListNode(val exprs : List<ExprNode>) : Node {
         }
     }
 
-    override fun getType(): BaseNode {
+    fun getType(): BaseNode {
         //not needed for this type
         TODO()
     }

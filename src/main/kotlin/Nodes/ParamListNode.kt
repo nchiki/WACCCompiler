@@ -5,13 +5,12 @@ import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
-class ParamListNode(listParamNodes: MutableList<Node>, ctx: BasicParser.ParamListContext?) : Node {
+class ParamListNode(// list of parameterNodes
+        val listParamNodes: MutableList<ParamNode>, ctx: BasicParser.ParamListContext?) : Node {
 
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    val listParamNodes = listParamNodes // list of parameterNodes
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class ReturnStatNode (val expr : ExprNode, val ctx: BasicParser.ReturnContext) : Node {
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
     TODO()
     }
 

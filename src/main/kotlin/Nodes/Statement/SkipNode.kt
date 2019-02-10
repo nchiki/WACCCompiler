@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
 class SkipNode : Node {
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO()
     }
 

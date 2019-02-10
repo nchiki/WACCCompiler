@@ -10,7 +10,7 @@ import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 
 class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) : Node {
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

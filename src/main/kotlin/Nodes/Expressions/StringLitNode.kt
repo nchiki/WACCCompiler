@@ -8,10 +8,10 @@ import src.main.kotlin.Nodes.ExprNode
 
 class StringLitNode(str : String, val ctx: BasicParser.StrLitContext) : ExprNode {
 
-    val type = LitTypes.StringWacc
+    override val type = LitTypes.StringWacc
 
 
-    override fun getType(): BaseNode {
+    fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

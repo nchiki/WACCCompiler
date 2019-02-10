@@ -1,39 +1,48 @@
-package kotlin.Nodes
+package main.kotlin.Nodes
 
-import Nodes.ParamListNode
+
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.FunctionNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Errors.IncorrectNumParams
+import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
-import kotlin.Errors.IncorrectNumParams
-import kotlin.reflect.KClassifier
+import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.ExprNode
 
-class RHS_Node(type: RHS_type, funId: String?, params: Node?) : Node {
-
-    val funId = funId
-    val params = params as ArgListNode
+class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
+               val expr: ExprNode, val expr1: Any?) : Node {
 
 
-    val type = type
+    fun getType(): LitTypes {
+        if(type == RHS_type.expr) {
+            return expr.type as LitTypes
+        } else if (type == RHS_type.array_lit) {
+            return
+        } else if (type == RHS_type.call) {
 
+        } else if(type == RHS_type.newpair) {
 
-    override fun getType(): KClassifier {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        } else if (type == RHS_type.pair_elem) {
+
+        } else {
+
+        }
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if(type == RHS_type.call) {
             val funNode = table.lookupSymbol(funId!!) as FunctionNode
             val parameters = funNode.params
-            if(parameters.listParamNodes.count() != params.listParamNodes.count()) {
-                errors.addError(IncorrectNumParams())
-            } else {
-                for (i in params.listParamNodes.indices) {
-                    val actual = params.listArgNodes[i]
-                    val expected = parameters.listParamNodes[i]
-                    if (actual.type != expected.type) {
-                        errors.addError(IncompatibleTypes())
+            if(args != null) {
+                if (parameters.listParamNodes.count() != args.exprs.count()) {
+                    errors.addError(IncorrectNumParams(line, pos))
+                } else {
+                    for (i in args.exprs.indices) {
+                        val actual = args.exprs[i]
+                        val expected = parameters.listParamNodes[i]
+                        if (actual.type != expected.getType()) {
+                            errors.addError(IncompatibleTypes(line, pos))
+                        }
                     }
                 }
             }
@@ -46,11 +55,11 @@ class RHS_Node(type: RHS_type, funId: String?, params: Node?) : Node {
 
 }
 
-enum class RHS_type {
-    generic,
-    expr,
-    array_lit,
-    newpair,
-    pair_elem,
-    call
+enum class RHS_type(s: String) {
+    generic("generic"),
+    expr("expr"),
+    array_lit("array"),
+    newpair("newpair"),
+    pair_elem("pair"),
+    call("call")
 }

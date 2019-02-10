@@ -6,8 +6,11 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
 
-class ArrayElemNode(val type : Node, var exprs : List<ExprNode>, val ctx: BasicParser.ArrayElemContext) : Node {
-    override fun getType() : BaseNode {
+class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, val ctx: BasicParser.ArrayElemContext) : ExprNode {
+
+    override val type = exprs[0].type
+
+    fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

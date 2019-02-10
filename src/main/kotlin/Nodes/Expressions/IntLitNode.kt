@@ -9,9 +9,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class IntLitNode(val int_val : Int, val ctx: BasicParser.IntLitContext) : ExprNode {
 
-    val type = LitTypes.IntWacc
+    override val type = LitTypes.IntWacc
 
-    override fun getType(): BaseNode {
+    fun getType(): BaseNode {
         TODO()
     }
 

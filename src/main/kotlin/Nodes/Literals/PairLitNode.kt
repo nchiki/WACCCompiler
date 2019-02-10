@@ -15,8 +15,7 @@ class PairLitNode(val ctx : BasicParser.PairLitContext): Node {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    override fun getType(): BaseNode {
+fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

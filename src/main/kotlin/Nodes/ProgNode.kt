@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : BasicParser.ProgContext) : Node {
 
-    override fun getType() : BaseNode {
+    fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
