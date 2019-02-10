@@ -35,7 +35,7 @@ class DeclNode(// var name
                 errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
             }
 
-            if (false) {
+            if (type.getType() != rhs.getType()) {
                 errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
             }
 

@@ -104,7 +104,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
 
-    override fun visitAssigR_Pair(ctx: BasicParser.AssigR_PairContext?): Node {
+    override fun visitAssignR_Pair(ctx: BasicParser.AssignR_PairContext?): Node {
         return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
                 visit(ctx.expr(0)) as ExprNode, visit(ctx.expr(1)) as ExprNode, null, null)
     }

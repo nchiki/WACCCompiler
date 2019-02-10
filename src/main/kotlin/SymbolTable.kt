@@ -1,8 +1,13 @@
 package main.kotlin
 
 import Errors.NotBoolConditionError
+import main.kotlin.Errors.UndeclaredVariableError
+import main.kotlin.Nodes.BinaryOpNode
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.Statement.ParenNode
+import main.kotlin.Nodes.UnaryOpNode
 
 class SymbolTable (val parent: SymbolTable?){
 
@@ -17,7 +22,7 @@ class SymbolTable (val parent: SymbolTable?){
     var table = HashMap<String, Node>()
 
     /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : Node, errors: ErrorLogger, symbolTable: SymbolTable) {
+    fun boolExprCheck(expr : Node, errors: ErrorLogger, symbolTable: SymbolTable, ctx:BasicParser.ExprContext) {
         var tempExpr: Node = expr
 
         if(tempExpr is ParenNode){
@@ -29,20 +34,20 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         if(tempExpr is IdentNode){
-            val variable = symbolTable.lookupSymbol(tempExpr.   id)
+            val variable = symbolTable.lookupSymbol(tempExpr.id)
 
             if(variable == null){
-                errors.addError(UndeclaredVariableError(tempExpr.id))
+                errors.addError(UndeclaredVariableError(tempExpr.id, tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine))
                 return
             }
 
-            boolExprCheck(variable, errors, symbolTable)
+            boolExprCheck(variable, errors, symbolTable, ctx)
             return
         }
 
         if(tempExpr is UnaryOpNode){
             if(tempExpr.operator.equals(BasicParser.NOT)){
-                boolExprCheck(tempExpr.operand, errors, symbolTable)
+                boolExprCheck(tempExpr.operand, errors, symbolTable, ctx)
                 return
             }
         }
@@ -60,7 +65,7 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
 
-        errors.addError(NotBoolConditionError())
+        errors.addError(NotBoolConditionError(ctx.start.line, ctx.start.charPositionInLine))
     }
 
     fun evaluateParenNode(node_: Node): Node{
@@ -68,6 +73,7 @@ class SymbolTable (val parent: SymbolTable?){
         while(node is ParenNode){
             node = node.expr
         }
+        return node
     }
 
     /*fun isValidKey(key : String) : Boolean {
