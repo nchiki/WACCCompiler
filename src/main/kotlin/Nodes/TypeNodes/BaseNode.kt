@@ -1,10 +1,9 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import kotlin.Nodes.TypeNodes.TypeNode
-import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 
 

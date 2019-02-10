@@ -1,4 +1,4 @@
-package kotlin.Nodes.TypeNodes
+package main.kotlin.Nodes.TypeNodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node

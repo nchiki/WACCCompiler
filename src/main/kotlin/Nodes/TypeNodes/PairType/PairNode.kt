@@ -1,11 +1,12 @@
 package Nodes.PairType
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import kotlin.Nodes.TypeNodes.TypeNode
 
-class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : TypeNode {
+class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : TypeNode, Node {
 
     override fun getType() : LitTypes {
         return LitTypes.PairWacc

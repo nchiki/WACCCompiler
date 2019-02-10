@@ -1,9 +1,10 @@
 package Nodes.PairType
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import kotlin.Nodes.TypeNodes.TypeNode
+
 
 open class PairElemTypeNode(val type: TypeNode?, val pair : String?) : TypeNode {
 

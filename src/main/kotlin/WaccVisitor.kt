@@ -1,15 +1,17 @@
 import Nodes.*
+import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairElemTypeNode
 import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.*
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.Nodes.TypeNodes.TypeNode
+
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -68,7 +70,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignL_Array(ctx: BasicParser.AssignL_ArrayContext?): Node {
-        return LHS_Node(visit(ctx?.arrayElem()), "", ctx?.start!!.line, ctx?.start.charPositionInLine )
+        return LHS_Node(visit(ctx?.arrayElem()), "", ctx?.start!!.line, ctx?.start.charPositionInLine)
     }
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext?): Node {
@@ -80,25 +82,31 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
-        return RHS_Node(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.expr()))
+        return RHS_Node(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
+                visit(ctx.expr()) as ExprNode, null, null, null)
     }
 
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
         val params = visit(ctx.argList()) as ArgListNode
-        return RHS_Node(RHS_type.call, ctx.IDENT().text, params, ctx.start!!.line, ctx.start!!.charPositionInLine)
+        return RHS_Node(RHS_type.call, ctx.IDENT().text, params, ctx.start!!.line, ctx.start!!.charPositionInLine,
+                null, null, null, null)
     }
 
     override fun visitAssignR_Pair_Elem(ctx: BasicParser.AssignR_Pair_ElemContext?): Node {
-        return RHS_Node(RHS_type.pair_elem, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.pairElem()))
+        return RHS_Node(RHS_type.pair_elem, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
+                null, null, visit(ctx.pairElem()) as PairElemNode, null)
     }
 
     override fun visitAssignR_ArrayL(ctx: BasicParser.AssignR_ArrayLContext?): Node {
-        return RHS_Node(RHS_type.array_lit, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.pairElem()))
+        return RHS_Node(RHS_type.array_lit, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
+                null, null, null, visit(ctx.arrayLiter()) as ArrayLitNode)
     }
 
+
     override fun visitAssigR_Pair(ctx: BasicParser.AssigR_PairContext?): Node {
-        return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine, visit(ctx.expr(0)), visit(ctx.expr(1)))
+        return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
+                visit(ctx.expr(0)) as ExprNode, visit(ctx.expr(1)) as ExprNode, null, null)
     }
 
     override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node? {
@@ -248,7 +256,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairLit(ctx: BasicParser.PairLitContext?): Node {
-        return super.visitPairLit(ctx)
+        return PairLitNode(ctx!!)
     }
 
     override fun visitSkip(ctx: BasicParser.SkipContext?): SkipNode {

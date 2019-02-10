@@ -10,22 +10,24 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-               val expr: ExprNode, val expr1: Any?) : Node {
+               val expr: ExprNode?, val expr1: ExprNode?, val PairLit : PairElemNode?, val ArrayLit : ArrayLitNode?) : Node {
 
 
     fun getType(): LitTypes {
         if(type == RHS_type.expr) {
-            return expr.type as LitTypes
+            return expr!!.type as LitTypes
         } else if (type == RHS_type.array_lit) {
-            return
+            return ArrayLit!!.getType()
         } else if (type == RHS_type.call) {
 
+            // NEEDS IMPLEMENTATION
+            return LitTypes.NonLitWacc
         } else if(type == RHS_type.newpair) {
-
+            return LitTypes.PairWacc
         } else if (type == RHS_type.pair_elem) {
-
+            return PairLit!!.getType()
         } else {
-
+            return LitTypes.NonLitWacc
         }
     }
 
