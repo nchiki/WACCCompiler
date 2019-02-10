@@ -2,12 +2,11 @@ package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.StringLitNode
+import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
 class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
@@ -20,7 +19,7 @@ class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : N
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.type != LitTypes.StringWacc && expr.type != LitTypes.IntWacc) {
+        if (expr !is StringLitNode && expr !is CharLitNode && expr !is IdentNode && expr !is IntLitNode) {
             errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
         expr.semanticCheck(errors, table)

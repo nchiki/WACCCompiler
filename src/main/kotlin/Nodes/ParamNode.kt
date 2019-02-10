@@ -47,6 +47,5 @@ class ParamNode(
             errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
         }
 
-        type.semanticCheck(errors, table) // checks semantics on the type (valid type)
     }
 }
