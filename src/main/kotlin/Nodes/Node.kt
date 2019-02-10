@@ -13,5 +13,5 @@ interface Node {
 
     fun semanticCheck(errors : ErrorLogger, table : SymbolTable)
 
-    fun getType() : KClassifier
+    fun getType() : BaseNode
 }

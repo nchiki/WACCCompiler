@@ -1,11 +1,12 @@
-package main.kotlin.Nodes.Literals
+package Nodes.PairType
+
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClassifier
 
-class StrLitNode : Node {
+
+class Pair_Snd : PairElemTypeNode() {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -14,7 +15,8 @@ class StrLitNode : Node {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getType(): KClassifier {
-        return StrLitNode::class
+    override fun getType(): BaseNode {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }

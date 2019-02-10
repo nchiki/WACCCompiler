@@ -1,21 +1,26 @@
-package Nodes
+package main.kotlin.Nodes.Literals
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
-open class StatementNode : Node {
+
+class BoolLitNode(val bool_val : String, val ctx: BasicParser.BoolLitContext) : ExprNode {
+
     override fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return BaseNode("bool")
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }

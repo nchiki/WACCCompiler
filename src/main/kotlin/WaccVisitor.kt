@@ -1,4 +1,6 @@
 import Nodes.*
+import Nodes.PairType.PairElemTypeNode
+import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
@@ -20,13 +22,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             funcList.add(visitFunc(func))
         }
         val stat = visit(ctx.stat()) //as StatementNode
-        return ProgNode(funcList, stat)
+        return ProgNode(funcList, stat, ctx)
     }
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
     override fun visitId(ctx: BasicParser.IdContext): Node? {
         val id = ctx.IDENT().text
-        return IdentNode(id)
+        return IdentNode(id, ctx)
     }
 
     //add Statements as well as parameter of FuncNode
@@ -35,29 +37,28 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val returnType = ctx.type().text
         val id = ctx.IDENT().text
         val stat = visit(ctx.stat()) as StatementNode
-        return FunctionNode(id, returnType, paramList, stat)
+        return FunctionNode(id, returnType, paramList, stat, ctx)
     }
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
         val int_val = ctx.INT_LIT().text.toInt()
-        return IntLitNode(int_val)
+        return IntLitNode(int_val, ctx)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
-//        val bool_val = ctx.BOOL_LIT().symbol.
-//        return BoolLitNode(bool_val)
-        return BoolLitNode(true)
+        val bool_val = ctx.BOOL_LIT().text
+        return BoolLitNode(bool_val, ctx)
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
-        val char_val = ctx.CHAR_LIT().text.single()
-        return CharLitNode(char_val)
+        val char_val = ctx.CHAR_LIT().text
+        return CharLitNode(char_val, ctx)
     }
 
-    override fun visitStrLit(ctx: BasicParser.StrLitContext?): Node {
-        val str_val = ctx?.STR_LIT()?.text
-        return StringLitNode(str_val!!)
+    override fun visitStrLit(@NotNull ctx: BasicParser.StrLitContext): Node {
+        val str_val = ctx.STR_LIT().text
+        return StringLitNode(str_val, ctx)
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
@@ -88,14 +89,21 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitArrayType(@NotNull ctx: BasicParser.ArrayTypeContext): Node? {
         val type = visit(ctx.type())
-        return ArrayTypeNode()
+        return ArrayTypeNode(ctx)
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
-        val fst = visit(ctx.pairElemType(0))
-        val snd = visit(ctx.pairElemType(1))
+        val fst = visit(ctx.pairElemType(0)) as PairElemTypeNode
+        val snd = visit(ctx.pairElemType(1)) as PairElemTypeNode
+
         return PairNode(fst, snd)
     }
+
+    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
+        return PairElemTypeNode()
+    }
+
+
 
     override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
         val idType = visit(ctx.IDENT())
@@ -103,19 +111,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         for (expr in ctx.expr()) {
             exprs.add(expr as ExprNode)
         }
-        return ArrayElemNode(idType, exprs)
-    }
-
-    override fun visitArgList(ctx: BasicParser.ArgListContext?): Node {
-        return super.visitArgList(ctx)
+        return ArrayElemNode(idType, exprs, ctx)
     }
 
     override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext?): Node {
         return super.visitArrayLiter(ctx)
-    }
-
-    override fun visitBinaryOper(ctx: BasicParser.BinaryOperContext?): Node {
-        return super.visitBinaryOper(ctx)
     }
 
     override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
@@ -135,11 +135,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return super.visitStatList(ctx)
     }
 
-    override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext?): Node {
-        return super.visitUnaryOper(ctx)
-
-    }
-
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
 
         // type node that will worry about checking if its valid type
@@ -151,7 +146,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // assignRHS node that will worry about semantic check of the RHS
         val RHS = visit(ctx?.assignRHS())
 
-        return DeclNode(id!!, type, RHS)
+        return DeclNode(id!!, type, RHS, ctx)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext?): Node {
@@ -162,14 +157,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // if expr evaluates to false
         val ElseStat = visit(ctx?.stat(1))
 
-        return IfCondNode(expr, IfTrueStat, ElseStat)
+        return IfCondNode(expr, IfTrueStat, ElseStat, ctx?.expr()!!)
 
     }
 
 
     override fun visitPrint(@NotNull ctx: BasicParser.PrintContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return PrintStatNode(expr)
+        return PrintStatNode(expr, ctx)
     }
 
     override fun visitParamList(ctx: BasicParser.ParamListContext?): ParamListNode {
@@ -180,11 +175,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val listParamNodes = mutableListOf<Node>()
 
         // iterates through the parameters adding them to the list
-        for (param in params!!) {
-            listParamNodes.add(visit(param))
+        if(params != null) {
+            for (param in params) {
+                listParamNodes.add(visit(param))
+            }
         }
 
-        return ParamListNode(listParamNodes) // new Node
+        return ParamListNode(listParamNodes, ctx) // new Node
     }
 
     override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
@@ -193,7 +190,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitExit(@NotNull ctx: BasicParser.ExitContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return ExitStatNode(expr)
+        return ExitStatNode(expr, ctx)
     }
 
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
@@ -204,7 +201,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // name of param var
 
         val id = ctx?.IDENT()?.text
-        return ParamNode(id!!, type)
+        return ParamNode(id!!, type, ctx)
     }
 
     override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
@@ -213,7 +210,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return ReturnStatNode(expr)
+        return ReturnStatNode(expr, ctx)
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext?): Node {
@@ -229,30 +226,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return SkipNode()
     }
 
-    override fun visitPairType(ctx: BasicParser.PairTypeContext?): Node {
-        return super.visitPairType(ctx)
-    }
-
     override fun visitPrintln(@NotNull ctx: BasicParser.PrintlnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return PrintLnStatNode(expr)
+        return PrintLnStatNode(expr, ctx)
     }
 
     override fun visitFree(@NotNull ctx: BasicParser.FreeContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return FreeStatNode(expr)
+        return FreeStatNode(expr, ctx)
     }
 
-    override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        return super.visitPairElem(ctx)
-    }
-
-    override fun visitBaseType(ctx: BasicParser.BaseTypeContext?): Node {
-        return super.visitBaseType(ctx)
-    }
-
-    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
-        return super.visitPairElemType(ctx)
+    override fun visitBaseType(@NotNull ctx: BasicParser.BaseTypeContext): Node {
+        return BaseNode(ctx.text)
     }
 
 }

@@ -2,24 +2,24 @@ package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.reflect.KClass
 
-class ExitStatNode(val expr : ExprNode) : Node {
-    override fun getType(): KClass<ExitStatNode> {
-        return ExitStatNode::class
+class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Node {
+    override fun getType(): BaseNode {
+        TODO()
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.getType() != IntLitNode::class) {
-            errors.addError(IncompatibleTypes())
+        if (expr !is IntLitNode) {
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
         expr.semanticCheck(errors, table)
     }

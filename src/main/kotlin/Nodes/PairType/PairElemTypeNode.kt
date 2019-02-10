@@ -1,15 +1,12 @@
-package Nodes
+package Nodes.PairType
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
 
-open class StatementNode : Node {
-    override fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+open class PairElemTypeNode : Node {
+
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -18,4 +15,9 @@ open class StatementNode : Node {
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun getType(): BaseNode {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

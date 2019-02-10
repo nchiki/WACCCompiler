@@ -36,7 +36,7 @@ assignLHS:
 assignRHS:
     expr                                                        #AssignR_Exp
 | arrayLiter                                                    #AssignR_ArrayL
-| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #AssigR_Pair
+| NEWPAIR OPEN_PARENTHESES expr COMMA expr CLOSE_PARENTHESES    #AssignR_Pair
 | pairElem                                                      #AssignR_Pair_Elem
 | CALL IDENT OPEN_PARENTHESES argList? CLOSE_PARENTHESES        #AssignR_Call
 ;
@@ -44,7 +44,10 @@ assignRHS:
 
 argList: expr ( COMMA expr)* ;
 
-pairElem: FST expr | SND expr ;
+pairElem:
+    FST expr   #PairFirst
+    |SND expr   #PairSecond
+    ;
 
 
 type:
