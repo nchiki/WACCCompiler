@@ -4,7 +4,6 @@ import Nodes.ParamListNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ExitStatNode
 import main.kotlin.Nodes.Statement.ReturnStatNode
-import main.kotlin.Nodes.Statement.StatementNode
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess

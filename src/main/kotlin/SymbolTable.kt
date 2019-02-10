@@ -1,8 +1,8 @@
 package main.kotlin
 
-import main.kotlin.Errors.NotBoolConditionError
+import Errors.NotBoolConditionError
 import main.kotlin.Errors.UndeclaredVariableError
-import main.kotlin.Nodes.Expression.BinaryOpNode
+import main.kotlin.Nodes.BinaryOpNode
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode

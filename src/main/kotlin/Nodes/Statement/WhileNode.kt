@@ -1,8 +1,9 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.UnaryOpNode
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClassifier
 
@@ -10,8 +11,8 @@ class WhileNode(val expr: Node, val stat: Node): Node {
 
     var symbolTable: SymbolTable? = null
 
-    override fun getType(): BaseNode {
-        TODO()
+    override fun getType(): KClassifier {
+        return WhileNode::class
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
