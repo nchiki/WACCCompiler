@@ -1,4 +1,4 @@
-package main.kotlin.Errors
+package Errors
 
 interface ErrorNode {
     fun printError() : String

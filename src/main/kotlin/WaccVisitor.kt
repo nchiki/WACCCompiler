@@ -1,12 +1,10 @@
 import Nodes.*
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Expression.BinaryOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.PairType.Pair_Fst
 import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.Nodes.Statement.*
-import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
@@ -105,8 +103,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return UnaryOpNode(operand, operator!!)
     }
 
-    override fun visitStatList(ctx: BasicParser.StatListContext): Node {
-        return StatListNode(visit(ctx.stat(0)), visit(ctx.stat(1)))
+    override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
+        return super.visitStatList(ctx)
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {
@@ -156,8 +154,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ParamListNode(listParamNodes) // new Node
     }
 
-    override fun visitWhile(ctx: BasicParser.WhileContext): Node {
-        return WhileNode(visit(ctx.expr()), visit(ctx.stat()))
+    override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
+        return super.visitWhile(ctx)
     }
 
     override fun visitExit(@NotNull ctx: BasicParser.ExitContext): Node {
@@ -166,6 +164,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
+
         // typeNode of the parameter
         val type = visit(ctx?.type())
 
@@ -175,8 +174,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ParamNode(id!!, type)
     }
 
-    override fun visitStatement(ctx: BasicParser.StatementContext): Node {
-        return StatementNode(visit(ctx.stat()))
+    override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
+        return super.visitStatement(ctx)
     }
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
