@@ -1,12 +1,13 @@
-package main.kotlin.Nodes.PairType
+package Nodes.PairType
+
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClassifier
 
-class Pair_Fst : Node {
+
+
+class Pair_Fst : PairElemTypeNode() {
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

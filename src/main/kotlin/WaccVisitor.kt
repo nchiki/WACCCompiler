@@ -1,15 +1,16 @@
 import Nodes.*
+import Nodes.PairType.PairElemTypeNode
+import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.Nodes.PairType.Pair_Fst
-import main.kotlin.Nodes.PairType.Pair_Snd
 import main.kotlin.Nodes.Statement.*
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.AssignNode
+
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
@@ -73,10 +74,17 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPair_type(@NotNull ctx: BasicParser.Pair_typeContext): Node? {
-        val fst = visit(ctx.pairElemType(1)) as Pair_Fst
-        val snd = visit(ctx.pairElemType(1)) as Pair_Snd
-        return PairNode(fst, snd, ctx)
+        val fst = visit(ctx.pairElemType(0)) as PairElemTypeNode
+        val snd = visit(ctx.pairElemType(1)) as PairElemTypeNode
+
+        return PairNode(fst, snd)
     }
+
+    override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext?): Node {
+        return PairElemTypeNode()
+    }
+
+
 
     override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
         val idType = visit(ctx.IDENT())
