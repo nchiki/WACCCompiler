@@ -9,7 +9,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClassifier
 
 class UnaryOpNode(operand: Node, operator: BasicParser.UnaryOperContext) : ExprNode {
-    override fun getType(): KClassifier {
+    override fun getType(): BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

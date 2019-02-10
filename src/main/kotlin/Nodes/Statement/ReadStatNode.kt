@@ -1,13 +1,14 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
+
 
 class ReadStatNode : Node {
-    override fun getType() : KClass<ReadStatNode>{
-        return ReadStatNode::class
+    override fun getType() : BaseNode {
+        TODO()
     }
 
     override fun syntaxCheck() {

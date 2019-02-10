@@ -44,9 +44,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
-//        val bool_val = ctx.BOOL_LIT().symbol.
-//        return BoolLitNode(bool_val)
-        return BoolLitNode(true)
+        val bool_val = ctx.BOOL_LIT().text
+        return BoolLitNode(bool_val)
     }
 
     override fun visitCharLit(@NotNull ctx: BasicParser.CharLitContext): Node {
@@ -87,16 +86,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ArrayElemNode(idType, exprs)
     }
 
-    override fun visitArgList(@NotNull ctx: BasicParser.ArgListContext): Node {
-        return super.visitArgList(ctx)
-    }
-
     override fun visitArrayLiter(ctx: BasicParser.ArrayLiterContext?): Node {
         return super.visitArrayLiter(ctx)
-    }
-
-    override fun visitBinaryOper(ctx: BasicParser.BinaryOperContext?): Node {
-        return super.visitBinaryOper(ctx)
     }
 
     override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
@@ -114,11 +105,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitStatList(ctx: BasicParser.StatListContext?): Node {
         return super.visitStatList(ctx)
-    }
-
-    override fun visitUnaryOper(ctx: BasicParser.UnaryOperContext?): Node {
-        return super.visitUnaryOper(ctx)
-
     }
 
     override fun visitDecl(ctx: BasicParser.DeclContext?): Node {

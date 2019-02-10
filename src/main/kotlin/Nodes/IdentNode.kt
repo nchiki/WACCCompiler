@@ -5,7 +5,7 @@ import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
 class IdentNode(val id : String) : Node {
-    override fun getType() : KClass<IdentNode>{
+    override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
