@@ -1,14 +1,14 @@
 package main.kotlin.Nodes.Expression
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClassifier
 
 class ParenNode(val expr: Node): Node {
 
-    override fun getType(): KClassifier {
-        return ParenNode::class
+    override fun getType(): BaseNode {
+        TODO()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

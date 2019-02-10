@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
-import Errors.InvalidOperandTypes
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode

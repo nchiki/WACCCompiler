@@ -1,7 +1,7 @@
 package Nodes
 
-import Errors.VarAlreadyDeclaredError
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.VarAlreadyDeclaredError
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.FunctionNode
 import main.kotlin.Nodes.Node

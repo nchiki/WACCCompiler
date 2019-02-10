@@ -1,4 +1,4 @@
-package Errors
+package main.kotlin.Errors
 
 class NotBoolConditionError : ErrorNode {
 

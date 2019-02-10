@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
-import Errors.MemberAlreadyDefinedError
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.MemberAlreadyDefinedError
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 

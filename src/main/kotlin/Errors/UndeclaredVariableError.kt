@@ -1,6 +1,5 @@
 package main.kotlin.Errors
 
-import Errors.ErrorNode
 
 class UndeclaredVariableError(val id: String): ErrorNode {
 
