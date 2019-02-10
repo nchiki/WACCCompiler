@@ -2,12 +2,15 @@ package src.main.kotlin.Nodes.Literals
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.reflect.KClass
+
 
 class IntLitNode(val int_val : Int, val ctx: BasicParser.IntLitContext) : ExprNode {
+
+    val type = LitTypes.IntWacc
+
     override fun getType(): BaseNode {
         TODO()
     }

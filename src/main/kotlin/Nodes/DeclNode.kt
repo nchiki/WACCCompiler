@@ -34,7 +34,7 @@ class DeclNode(// var name
                 // if there is already a variable with that name -> error
                 errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
             }
-            
+
             if (rhs :: class != value!! :: class) {
                 errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
             }

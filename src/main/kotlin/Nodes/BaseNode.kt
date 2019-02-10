@@ -12,6 +12,7 @@ class BaseNode(val type : String) : Node {
     }
 
     override fun syntaxCheck() {
+
         if (type != "int" && type != "char" && type != "bool" && type != "string") {
             exitProcess(100)
         }
