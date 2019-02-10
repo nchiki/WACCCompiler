@@ -2,9 +2,10 @@ package main.kotlin.Errors
 
 import Errors.ErrorNode
 
-class IncompatibleTypes : ErrorNode {
+class IncompatibleTypes(val line: Int, val pos: Int) : ErrorNode {
+
     override fun printError(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "Incompatible types found in line: $line at position: $pos "
     }
 
 

@@ -1,10 +1,11 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
 
-class AssignNode : Node {
+class AssignNode(val ctx: BasicParser.AssignContext) : Node {
     override fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

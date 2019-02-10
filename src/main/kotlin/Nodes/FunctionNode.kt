@@ -9,7 +9,8 @@ import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess
 
-class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode) : Node {
+class FunctionNode (val id : String, val type : String, val params : ParamListNode, val stat : StatementNode,
+                    val ctx:BasicParser.FuncContext) : Node {
 
 
     override fun getType() : BaseNode {
