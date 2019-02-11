@@ -18,4 +18,5 @@ class SyntaxErrorStrategy : DefaultErrorStrategy() {
     override fun sync(recognizer: Parser?) {
 
     }
+
 }

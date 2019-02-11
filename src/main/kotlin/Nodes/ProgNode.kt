@@ -1,11 +1,9 @@
 package main.kotlin.Nodes
 
-import Errors.MemberAlreadyDefinedError
-import Nodes.StatementNode
+import Errors.FunctionDoubleDeclare
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import kotlin.reflect.KClass
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : BasicParser.ProgContext) : Node {
 
@@ -24,7 +22,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : Ba
         for (func in funcDefs) {
             val id = func.id
             if (table.lookupSymbol(id) != null) {
-                errors.addError(MemberAlreadyDefinedError(id, ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(FunctionDoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
             }
             table.add(func, id)
         }

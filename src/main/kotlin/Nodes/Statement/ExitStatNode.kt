@@ -20,7 +20,9 @@ class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Nod
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (expr !is IntLitNode) {
-            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+//            println(5)
+//            println(table.table)
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "INT", expr, table))
         }
         expr.semanticCheck(errors, table)
     }

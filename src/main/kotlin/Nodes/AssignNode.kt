@@ -23,7 +23,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : Basic
                 val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
                 val returnT = Func.getType()
                 if (returnT != LHS_Node.getType()) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, LHS_Node.getType().toString(), Func, table))
                 }
             }
             LHS_Node.semanticCheck(errors,table)
