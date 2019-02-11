@@ -9,7 +9,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                        "/valid/expressions/longExpr.wacc"))
+                        "/valid/pairs/writeFst.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
@@ -46,7 +46,7 @@ fun main(args: Array<String>) {
         progNode.semanticCheck(errorLogger, symbolTable)
 
         for (error in errorLogger.errorList) {
-                print(error.printError())
+                println(error.printError())
         }
         if(errorLogger.errorList.count() != 0) {
                 exitProcess(200)

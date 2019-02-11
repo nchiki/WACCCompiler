@@ -35,15 +35,17 @@ class DeclNode(// var name
                 errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
             }
 
-            if (type.getType() != rhs.getType()) {
-                if(rhs.getType() == LitTypes.IdentWacc) {
-                   val value = rhs.returnIdentType(table)
+        if (type.getType() != rhs.getType()) {
 
-                    if (value == null || value != type.getType()) {
-                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "???", type, table))
+            if(rhs.getType() == LitTypes.IdentWacc) {
+                val value = rhs.returnIdentType(table)
+
+
+                if (value == null || value != type.getType()) {
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), type, table))
                     }
                 } else {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "IDEN", rhs, table))
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                 }
             } else {
                 rhs.semanticCheck(errors, table)

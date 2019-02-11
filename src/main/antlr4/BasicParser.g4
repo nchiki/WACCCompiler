@@ -55,7 +55,8 @@ type:
 
 base_type: INT | BOOL | CHAR | STRING;
 
-pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES ;
+pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES
+| pair_Lit;
 
 pairElemType: base_type | type | PAIR ;
 

@@ -3,6 +3,7 @@ package src.main.kotlin.Nodes
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -10,6 +11,11 @@ import main.kotlin.Utils.LitTypes
 
 class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
+    fun getId() : String{
+        val idBase = baseType as IdentNode
+        return idBase.id
+
+    }
     override fun getType() : LitTypes {
         return exprs[0].getType()
     }
