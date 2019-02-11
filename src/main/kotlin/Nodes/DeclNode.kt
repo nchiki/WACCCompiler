@@ -27,7 +27,7 @@ class DeclNode(// var name
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
             // looks up the id in the symbol table
-            val value = table.lookupSymbol(id)
+            val value = table.lookupLocal(id)
 
             //if it's not there or there is a function with the same name, don't add an error
             if (value != null && (value !is FunctionNode)) {
