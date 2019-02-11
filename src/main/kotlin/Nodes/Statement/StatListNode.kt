@@ -6,7 +6,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-class StatListNode(val listStatNodes: MutableList<StatementNode>, val ctx: BasicParser.StatListContext?) : StatementNode {
+class StatListNode(val listStatNodes: MutableList<Node>, val ctx: BasicParser.StatListContext?) : StatementNode {
 
     override fun getType(): LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
