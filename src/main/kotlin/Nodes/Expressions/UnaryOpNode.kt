@@ -16,11 +16,11 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (operator.ruleIndex == BasicParser.NOT && operand !is BoolLitNode
-            || operator.ruleIndex == BasicParser.MINUS && operand !is IntLitNode
-            || operator.ruleIndex == BasicParser.LEN && operand !is ArrayElemNode
-            || operator.ruleIndex == BasicParser.ORD && operand !is CharLitNode
-            || operator.ruleIndex == BasicParser.CHR && operand !is IntLitNode)
+        if (operator.NOT() != null && operand.getType() != LitTypes.BoolWacc
+            || operator.MINUS() != null && operand.getType() != LitTypes.IntWacc
+            || operator.LEN() != null && operand.getType() != LitTypes.ArrayLit
+            || operator.ORD() != null && operand.getType() != LitTypes.CharWacc
+            || operator.CHR() != null && operand.getType() != LitTypes.IntWacc)
         {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }

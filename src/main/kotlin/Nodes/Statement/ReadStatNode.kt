@@ -1,14 +1,16 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.LHS_Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 
 
-class ReadStatNode : Node {
-    fun getType() : BaseNode {
-        TODO()
+class ReadStatNode(val lhs: LHS_Node, val ctx: BasicParser.ReadContext?) : StatementNode() {
+
+    override fun getType() : LitTypes {
+        return lhs.getType()
     }
 
     override fun syntaxCheck() {
@@ -16,6 +18,6 @@ class ReadStatNode : Node {
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //nothing to do here
     }
 }
