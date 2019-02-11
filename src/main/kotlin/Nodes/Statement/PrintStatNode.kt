@@ -4,10 +4,8 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.reflect.KClass
 
 class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
     fun getType() : BaseNode {
