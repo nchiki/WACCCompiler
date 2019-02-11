@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import kotlin.reflect.KClass
 
-class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : BasicParser.AssignContext) : Node {
+class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
 
     override fun getType() : LitTypes {

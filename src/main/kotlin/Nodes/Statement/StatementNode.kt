@@ -1,12 +1,11 @@
 package Nodes
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-open interface StatementNode : Node {
+class StatementNode(override val ctx: BasicParser.StatementContext): Node {
 
     override open fun getType() : LitTypes {
 

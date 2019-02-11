@@ -7,7 +7,7 @@ import main.kotlin.Utils.LitTypes
 import kotlin.system.exitProcess
 
 
-class BaseNode(val type : String) : TypeNode {
+class BaseNode(val type : String, override val ctx: BasicParser.BaseTypeContext?) : TypeNode {
 
     override fun getType() : LitTypes {
         if (type == "int") {

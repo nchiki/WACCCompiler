@@ -13,8 +13,7 @@ import main.kotlin.Utils.LitTypes
 class DeclNode(// var name
         val id: String, // type of var
         val type: TypeNode, // assigned rhs
-        val rhs: RHS_Node, val ctx : BasicParser.DeclContext) : StatementNode  {
-
+        val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -9,6 +9,7 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 
 import main.kotlin.Nodes.UnaryOpNode
+import src.main.kotlin.Nodes.ExprNode
 
 class SymbolTable (val parent: SymbolTable?){
 
@@ -23,7 +24,7 @@ class SymbolTable (val parent: SymbolTable?){
     var table = HashMap<String, Node>()
 
     /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : Node, errors: ErrorLogger, symbolTable: SymbolTable, ctx:BasicParser.ExprContext) {
+    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
         var tempExpr: Node = expr
 
         if(tempExpr is ParenNode){
@@ -35,20 +36,20 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         if(tempExpr is IdentNode){
-            val variable = symbolTable.lookupSymbol(tempExpr.id)
+            val variable = lookupSymbol(tempExpr.id)
 
             if(variable == null){
                 errors.addError(UndefinedVariable(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine, tempExpr.id))
                 return
             }
 
-            boolExprCheck(variable, errors, symbolTable, ctx)
+            boolExprCheck(variable, errors)
             return
         }
 
         if(tempExpr is UnaryOpNode){
             if(tempExpr.operator.equals(BasicParser.NOT)){
-                boolExprCheck(tempExpr.operand, errors, symbolTable, ctx)
+                boolExprCheck(tempExpr.operand, errors)
                 return
             }
         }
@@ -66,7 +67,7 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
 
-        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "BOOL", expr, symbolTable))
+        errors.addError(IncompatibleTypes(tempExpr.ctx!!.start.line, tempExpr.ctx!!.start.charPositionInLine, "BOOL", expr, this))
     }
 
     fun evaluateParenNode(node_: Node): Node{

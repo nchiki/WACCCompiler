@@ -6,7 +6,7 @@ import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode) : TypeNode, Node {
+class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode, override val ctx: BasicParser.Pair_typeContext) : TypeNode, Node {
 
     override fun getType() : LitTypes {
         return LitTypes.PairWacc

@@ -14,7 +14,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClass
 
-class FreeStatNode(val expr : ExprNode, val ctx: BasicParser.FreeContext) : StatementNode {
+class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContext) : Node {
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

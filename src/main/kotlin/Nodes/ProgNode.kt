@@ -5,7 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : BasicParser.ProgContext) : Node {
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, override val ctx: BasicParser.ProgContext) : Node {
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

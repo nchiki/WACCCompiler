@@ -1,14 +1,12 @@
 package main.kotlin.Nodes.Statement
 
-import Nodes.StatementNode
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class ArgListNode(val exprs : List<ExprNode>) : StatementNode {
+class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgListContext) : Node {
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -10,9 +10,8 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.reflect.KClass
 
-class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : StatementNode {
+class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
     override fun getType() : LitTypes {
         return expr.getType()
     }
