@@ -184,12 +184,12 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val stats =ctx?.stat()
 
         // declaration empty list of parameters
-        val listStatNodes = mutableListOf<StatementNode>()
+        val listStatNodes = mutableListOf<Node>()
 
         // iterates through the parameters adding them to the list
         if(stats != null) {
             for (stat in stats) {
-                listStatNodes.add(visit(stat) as StatementNode)
+                listStatNodes.add(visit(stat))
             }
         }
         return StatListNode(listStatNodes, ctx)
@@ -251,10 +251,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         }
 
         return ParamListNode(listParamNodes, ctx) // new Node
-    }
-
-    override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
-        return super.visitWhile(ctx)
     }
 
     override fun visitExit(@NotNull ctx: BasicParser.ExitContext): Node {
