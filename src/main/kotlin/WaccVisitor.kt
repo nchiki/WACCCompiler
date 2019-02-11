@@ -29,7 +29,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
     override fun visitId(ctx: BasicParser.IdContext): Node? {
-        val id = ctx.IDENT().text
+        val id = ctx.ident().text
         return IdentNode(id, ctx)
     }
 
@@ -124,7 +124,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         if(ctx?.PAIR() != null) {
             return PairElemTypeNode(null, "pair")
         } else {
-            return PairElemTypeNode(visit(ctx?.type()) as TypeNode, "")
+            if(ctx?.type() != null) {
+                return PairElemTypeNode(visit(ctx?.type()) as TypeNode?, "")
+            } else {
+                return PairElemTypeNode(visit(ctx?.getChild(0)) as TypeNode?, "")
+            }
         }
     }
 
@@ -252,8 +256,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext?): Node {
-        //have to add how to do read since we need to represent AssignLhs
-        TODO()
+        val lhs = visit(ctx?.assignLHS()) as LHS_Node
+        return ReadStatNode(lhs, ctx)
     }
 
     override fun visitPairLit(ctx: BasicParser.PairLitContext?): Node {

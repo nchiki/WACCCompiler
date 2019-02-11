@@ -8,7 +8,10 @@ enum class LitTypes(s: String) {
     , CharWacc("char")
     , FuncWacc("bool")
     , IdentWacc("bool"),
-    NonLitWacc("bool");
+
+    NonLitWacc("bool"),
+    ArrayLit("arrayLit")
+
 }
 
 fun getType(s : String) : LitTypes{
@@ -18,5 +21,5 @@ fun getType(s : String) : LitTypes{
         "string" -> LitTypes.StringWacc
         "char" -> LitTypes.CharWacc
         else -> LitTypes.NonLitWacc
-    }
+}
 }
