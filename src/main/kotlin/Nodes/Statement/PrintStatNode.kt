@@ -19,7 +19,8 @@ class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : N
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr !is StringLitNode && expr !is CharLitNode && expr !is IdentNode && expr !is IntLitNode) {
+        if (expr.getType() != LitTypes.StringWacc && expr.getType() != LitTypes.CharWacc &&
+                expr.getType() != LitTypes.IdentWacc && expr.getType() != LitTypes.IntWacc && expr.getType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
         expr.semanticCheck(errors, table)
