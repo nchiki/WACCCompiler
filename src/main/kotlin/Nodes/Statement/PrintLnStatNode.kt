@@ -4,8 +4,8 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
-import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) : Node {
     fun getType() : BaseNode {
@@ -17,7 +17,8 @@ class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) 
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr !is StringLitNode && expr !is CharLitNode && expr !is IdentNode && expr !is IntLitNode) {
+        if (expr.getType() != LitTypes.StringWacc && expr.getType() != LitTypes.CharWacc &&
+                expr.getType() != LitTypes.IdentWacc && expr.getType() != LitTypes.IntWacc) {
             errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
         }
     }

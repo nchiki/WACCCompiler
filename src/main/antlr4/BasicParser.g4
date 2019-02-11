@@ -44,10 +44,7 @@ assignRHS:
 
 argList: expr ( COMMA expr)* ;
 
-pairElem:
-    FST expr   #PairFirst
-    |SND expr   #PairSecond
-    ;
+pairElem: FST expr | SND expr ;
 
 
 type:
@@ -67,15 +64,15 @@ expr:
 | BOOL_LIT                                  #BoolLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
-| PAIR_LIT                                  #PairLit
-| IDENT                                     #Id
+| pair_Lit                                   #PairLit
+| ident                                     #Id
 | arrayElem                                 #Array_Elem
 | unaryOper expr                            #UnOp
 | expr binaryOper expr                      #BinOper
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
-
+ident : IDENT ;
 
 unaryOper: NOT | MINUS | LEN | ORD | CHR ;
 
@@ -85,5 +82,6 @@ arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
+pair_Lit: NULL;
 
 // EOF indicates that the program must consume to the end of the input.

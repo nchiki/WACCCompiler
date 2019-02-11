@@ -11,11 +11,11 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
 
     override fun getType(): LitTypes {
-        if(operator.ruleIndex == BasicParser.MULT
-                || operator.ruleIndex == BasicParser.DIV
-                || operator.ruleIndex == BasicParser.MOD
-                || operator.ruleIndex == BasicParser.MINUS
-                || operator.ruleIndex == BasicParser.PLUS) {
+        if(operator.MULT() != null
+                || operator.DIV() != null
+                || operator.MOD() != null
+                || operator.MINUS() != null
+                || operator.PLUS() != null) {
             return LitTypes.IntWacc
         } else {
             return LitTypes.BoolWacc
@@ -30,12 +30,12 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if (left.getType() != right.getType()) {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }
-        if ((operator.ruleIndex == BasicParser.MULT
-                        || operator.ruleIndex == BasicParser.DIV
-                        || operator.ruleIndex == BasicParser.MOD
-                        || operator.ruleIndex == BasicParser.MINUS
-                        || operator.ruleIndex == BasicParser.PLUS)
-                && left !is IntLitNode) {
+        if ((operator.MULT() != null
+                        || operator.DIV() != null
+                        || operator.MOD() != null
+                        || operator.MINUS() != null
+                        || operator.PLUS() != null)
+                && left.getType() != LitTypes.IntWacc) {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
         }
 

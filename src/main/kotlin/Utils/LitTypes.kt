@@ -8,5 +8,6 @@ enum class LitTypes(s: kotlin.String) {
     , CharWacc("bool")
     , FuncWacc("bool")
     , IdentWacc("bool"),
-    NonLitWacc("bool")
+    NonLitWacc("bool"),
+    ArrayLit("arrayLit")
 }
