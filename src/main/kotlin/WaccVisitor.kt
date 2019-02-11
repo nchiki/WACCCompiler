@@ -116,8 +116,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignR_Pair(ctx: BasicParser.AssignR_PairContext?): Node {
-        val expr1 = visit(ctx?.expr(0)) as ExprNode
-        val expr2 = visit(ctx?.expr(1)) as ExprNode
+        val expr1 = visit(ctx?.expr(0))
+        val expr2 = visit(ctx?.expr(1))
         val newPair = NewPairNode(ctx!!, expr1, expr2)
         return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
                 null, newPair, null, null)
@@ -284,7 +284,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        return PairElemNode(visit(ctx?.expr()) as ExprNode, ctx!!)
+        val pos :Int
+        if(ctx?.SND() != null) {
+           pos = 1
+        } else {
+            pos = 0
+        }
+        return PairElemNode(visit(ctx?.expr()) as ExprNode, ctx!!, pos)
     }
 
     override fun visitSkip(ctx: BasicParser.SkipContext?): SkipNode {
