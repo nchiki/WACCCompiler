@@ -9,10 +9,10 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
     fun getId() : String{
-        val idBase = baseType as IdentNode
+        val idBase = IdentNode(baseType, null)
         return idBase.id
 
     }
@@ -22,7 +22,7 @@ class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, override va
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         for (expr in exprs) {
-            if (expr.getType() != baseType) {
+            if (expr.getType() != BaseNode(baseType, null).getType()) {
                 errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, baseType.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)

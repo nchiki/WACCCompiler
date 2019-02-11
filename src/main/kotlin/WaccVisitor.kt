@@ -153,7 +153,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
-        val idType = visit(ctx.IDENT())
+        val idType = ctx.IDENT().text
         var exprs = arrayListOf<ExprNode>()
         var i = 0
         while(ctx.expr(i) != null) {
