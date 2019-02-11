@@ -13,7 +13,8 @@ import main.kotlin.Utils.LitTypes
 class DeclNode(// var name
         val id: String, // type of var
         val type: TypeNode, // assigned rhs
-        val rhs: RHS_Node, val ctx : BasicParser.DeclContext) : Node {
+        val rhs: RHS_Node, val ctx : BasicParser.DeclContext) : StatementNode  {
+
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -36,13 +37,19 @@ class DeclNode(// var name
             }
 
             if (type.getType() != rhs.getType()) {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.toString().toUpperCase(), rhs, table))
+                if(rhs.getType() == LitTypes.IdentWacc) {
+                   val value = rhs.returnIdentType(table)
+
+                    if (value == null || value != type.getType()) {
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "???", type, table))
+                    }
+                } else {
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "IDEN", rhs, table))
+                }
             } else {
-                rhs.addToTable(table, id)
                 rhs.semanticCheck(errors, table)
-
             }
-
+            rhs.addToTable(table,id)
             // call semantic check on the rest of elements
             //type.semanticCheck(errors, tabl
         }

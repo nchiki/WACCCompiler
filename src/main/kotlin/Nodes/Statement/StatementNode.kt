@@ -6,7 +6,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-open class StatementNode : Node {
+open interface StatementNode : Node {
 
     override open fun getType() : LitTypes {
 

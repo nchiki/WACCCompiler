@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Statement
 
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.BaseNode
@@ -13,7 +14,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClass
 
-class FreeStatNode(val expr : ExprNode, val ctx: BasicParser.FreeContext) : Node {
+class FreeStatNode(val expr : ExprNode, val ctx: BasicParser.FreeContext) : StatementNode {
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Statement
 
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
@@ -11,7 +12,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
-class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
+class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : StatementNode {
     override fun getType() : LitTypes {
         return expr.getType()
     }
@@ -21,11 +22,12 @@ class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : N
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr !is StringLitNode
-                && expr !is CharLitNode
-                && expr !is IdentNode
-                && expr !is IntLitNode
-                && expr !is PairLitNode) {
+        if (expr.getType() != LitTypes.StringWacc
+                && expr.getType() != LitTypes.CharWacc
+                && expr.getType() != LitTypes.IdentWacc
+                && expr.getType() != LitTypes.IntWacc
+                && expr.getType() != LitTypes.BoolWacc
+                && expr.getType() != LitTypes.PairWacc) {
             errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "{STRING, INT, CHAR}", expr, table))
         }
         expr.semanticCheck(errors, table)
