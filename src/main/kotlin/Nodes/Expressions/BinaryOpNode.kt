@@ -60,11 +60,26 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.DIV() != null
                         || operator.MOD() != null
                         || operator.MINUS() != null
-                        || operator.PLUS() != null)
-                && left.getType() != LitTypes.IntWacc) {
+                        || operator.PLUS() != null
+                        ||operator.LESS() != null
+                        || operator.LESS_EQ() != null
+                        || operator.GREAT() != null
+                        || operator.GREAT_EQ() != null)
+                && (left.getType() != LitTypes.IntWacc || right.getType() != LitTypes.IntWacc)) {
             errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
-        }
+        } else if ((operator.AND() != null
+                        || operator.OR() != null)
+                && (left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc)) {
+            errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
 
+
+        } else if ((operator.EQ() != null
+                        || operator.NOTEQ() != null)
+                && ((left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc) && (left.getType() != LitTypes.IntWacc || right.getType() != LitTypes.IntWacc))) {
+            errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
+
+
+        }
     }
 
 }
