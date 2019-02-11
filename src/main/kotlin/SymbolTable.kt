@@ -18,7 +18,7 @@ class SymbolTable (val parent: SymbolTable?){
                                 "if", "then", "else", "fi", "while", "do", "done",
                                 "begin", "end", "call", "skip", "read", "free", "return",
                                 "exit", "print", "println", "is", "true", "false",
-                                "null", "+", "-") probably not needed */
+                                "null", "+", "-") */
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     var table = HashMap<String, Node>()
@@ -46,6 +46,14 @@ class SymbolTable (val parent: SymbolTable?){
             boolExprCheck(variable, errors)
             return
         }
+
+        /*if (tempExpr is IdentNode) {
+            val variable = lookupSymbol(tempExpr.id)
+            if(variable == null){
+                errors.addError(UndefinedVariable(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine, tempExpr.id))
+                return
+            }
+        } */
 
         if(tempExpr is UnaryOpNode){
             if(tempExpr.operator.equals(BasicParser.NOT)){
