@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -9,7 +10,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class ReturnStatNode (val expr : ExprNode, val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : Node {
+class ReturnStatNode (val expr : ExprNode, val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : StatementNode {
 
     override fun getType(): LitTypes {
         if(type_return != null) {
