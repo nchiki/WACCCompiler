@@ -64,7 +64,7 @@ expr:
 | BOOL_LIT                                  #BoolLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
-| NULL                                      #PairLit
+| pair_Lit                                   #PairLit
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
 | unaryOper expr                            #UnOp
@@ -82,5 +82,6 @@ arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
 arrayLiter: OPEN_SQR_BRACKET (expr (COMMA expr)*)? CLOSE_SQR_BRACKET ;
 
+pair_Lit: NULL;
 
 // EOF indicates that the program must consume to the end of the input.

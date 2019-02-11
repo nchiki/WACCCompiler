@@ -41,14 +41,8 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             val pairVal = PairLit?.expr
             if(pairVal?.getType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
-                val value = exprId.getValueType(table)
-                if(value is NewPairNode) {
-                    if(PairLit?.elem == 0) {
-                        return value.exprNode1.getType()
-                    } else {
-                        return value.exprNode2.getType()
-                    }
-                }
+                val value = exprId.getValueType(table)?.getType()
+                return value
             } else {
                 return pairVal?.getType()
             }
