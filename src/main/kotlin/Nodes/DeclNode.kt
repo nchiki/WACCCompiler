@@ -42,9 +42,11 @@ class DeclNode(// var name
 
 
                 if (value == null || value != type.getType()) {
-                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), type, table))
+
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                     }
                 } else {
+                    println(rhs.getType())
                     errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                 }
             } else {
