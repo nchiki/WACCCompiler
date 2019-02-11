@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
@@ -7,7 +8,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import kotlin.reflect.KClass
 
-class SkipNode : Node {
+class SkipNode : StatementNode {
     override fun getType() :LitTypes{
         TODO()
     }

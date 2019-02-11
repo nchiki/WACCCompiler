@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
@@ -9,7 +10,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
-class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
+class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : StatementNode {
     override fun getType() : LitTypes {
         return expr.getType()
     }
