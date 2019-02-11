@@ -1,5 +1,7 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.Literals.PairLitNode
+import Nodes.PairType.PairNode
 import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -20,9 +22,13 @@ class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : S
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.getType() != LitTypes.StringWacc && expr.getType() != LitTypes.CharWacc &&
-                expr.getType() != LitTypes.IdentWacc && expr.getType() != LitTypes.IntWacc && expr.getType() != LitTypes.BoolWacc) {
-            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+        if (expr.getType() != LitTypes.StringWacc
+                && expr.getType() != LitTypes.CharWacc
+                && expr.getType() != LitTypes.IdentWacc
+                && expr.getType() != LitTypes.IntWacc
+                && expr.getType() != LitTypes.BoolWacc
+                && expr.getType() != LitTypes.PairWacc) {
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "{STRING, INT, CHAR}", expr, table))
         }
         expr.semanticCheck(errors, table)
     }

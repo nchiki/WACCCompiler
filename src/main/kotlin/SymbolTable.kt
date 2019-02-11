@@ -1,7 +1,7 @@
 package main.kotlin
 
-import Errors.NotBoolConditionError
-import main.kotlin.Errors.UndeclaredVariableError
+import Errors.UndefinedVariable
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.BinaryOpNode
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
@@ -38,7 +38,7 @@ class SymbolTable (val parent: SymbolTable?){
             val variable = symbolTable.lookupSymbol(tempExpr.id)
 
             if(variable == null){
-                errors.addError(UndeclaredVariableError(tempExpr.id, tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine))
+                errors.addError(UndefinedVariable(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine, tempExpr.id))
                 return
             }
 
@@ -66,7 +66,7 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
 
-        errors.addError(NotBoolConditionError(ctx.start.line, ctx.start.charPositionInLine))
+        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "BOOL", expr, symbolTable))
     }
 
     fun evaluateParenNode(node_: Node): Node{

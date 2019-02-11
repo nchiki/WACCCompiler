@@ -1,6 +1,6 @@
 package Nodes
 
-import Errors.VarAlreadyDeclaredError
+import Errors.DoubleDeclare
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
@@ -33,19 +33,18 @@ class DeclNode(// var name
             //if it's not there or there is a function with the same name, don't add an error
             if (value != null && (value !is FunctionNode)) {
                 // if there is already a variable with that name -> error
-                errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
             }
 
             if (type.getType() != rhs.getType()) {
-
                 if(rhs.getType() == LitTypes.IdentWacc) {
                    val value = rhs.returnIdentType(table)
 
                     if (value == null || value != type.getType()) {
-                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "???", type, table))
                     }
                 } else {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "IDEN", rhs, table))
                 }
             } else {
                 rhs.semanticCheck(errors, table)
@@ -54,8 +53,6 @@ class DeclNode(// var name
             // call semantic check on the rest of elements
             //type.semanticCheck(errors, tabl
         }
-
-
 
 }
 

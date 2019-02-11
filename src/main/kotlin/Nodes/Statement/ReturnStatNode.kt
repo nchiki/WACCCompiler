@@ -30,16 +30,17 @@ class ReturnStatNode (val expr : ExprNode, val ctx: BasicParser.ReturnContext, v
 
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
         if (type_return != (expr.getType())) {
             if(expr.getType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 if (value?.getType() != type_return) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                    println(4)
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type_return.toString(), value!!, table))
                 }
             } else {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                println(3)
+                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type_return.toString(), expr, table))
             }
         }
     }

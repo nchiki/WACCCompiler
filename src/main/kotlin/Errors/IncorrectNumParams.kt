@@ -1,10 +1,11 @@
 package main.kotlin.Errors
 
-import Errors.ErrorNode
+import Errors.SemanticError
 
-class IncorrectNumParams(val line: Int, val pos: Int) : ErrorNode {
+class IncorrectNumParams(line: Int, pos: Int, private val expectedNum : Int, private val actualNum : Int) : SemanticError(line, pos) {
 
     override fun printError(): String {
-        return "Incorrect number of parameters found in line: $line at position: $pos "
+        return "Incorrect number of parameters in line: $line at position: $pos (expected: $expectedNum, actual: $actualNum"
     }
+
 }

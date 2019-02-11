@@ -18,9 +18,14 @@ class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) 
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.getType() != LitTypes.StringWacc && expr.getType() != LitTypes.CharWacc &&
-                expr.getType() != LitTypes.IdentWacc && expr.getType() != LitTypes.IntWacc && expr.getType() != LitTypes.BoolWacc) {
-            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+        if (expr.getType() != LitTypes.StringWacc
+                && expr.getType() != LitTypes.CharWacc
+                && expr.getType() != LitTypes.IdentWacc
+                && expr.getType() != LitTypes.IntWacc
+                && expr.getType() != LitTypes.PairWacc
+                && expr.getType() != LitTypes.BoolWacc
+                ) {
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "{STRING, INT, CHAR}", expr, table))
         }
     }
 }

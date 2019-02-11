@@ -26,10 +26,10 @@ class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Sta
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 if (value?.getType() != LitTypes.IntWacc) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "INT", value!!, table))
                 }
             }else {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "INT", expr, table))
             }
         }
         expr.semanticCheck(errors, table)
