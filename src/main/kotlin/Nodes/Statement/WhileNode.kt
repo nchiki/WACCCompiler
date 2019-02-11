@@ -1,6 +1,10 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.UnknownIdentifier
+import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -14,11 +18,13 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val childTable = SymbolTable(table)
-
-        expr.semanticCheck(errors, childTable)
+        if (!expr.getType().equals(BaseNode("bool", null).getType())) {
+            errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
+        }
+        expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, childTable)
+        //table.boolExprCheck(expr, errors)
 
-        table.boolExprCheck(expr, errors)
     }
 
     override fun syntaxCheck() {
