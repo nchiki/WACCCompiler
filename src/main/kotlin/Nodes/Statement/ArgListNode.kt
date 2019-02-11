@@ -1,9 +1,9 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgListContext) : Node {
@@ -18,7 +18,7 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
         }
     }
 
-    fun getType(): BaseNode {
+    override fun getType(): LitTypes {
         //not needed for this type
         TODO()
     }

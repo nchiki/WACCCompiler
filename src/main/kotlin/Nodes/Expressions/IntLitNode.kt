@@ -1,7 +1,6 @@
 package src.main.kotlin.Nodes.Literals
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
@@ -14,7 +13,7 @@ class IntLitNode(val int_val : Int, override val ctx: BasicParser.IntLitContext)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//nothing to implement here
     }
 
     override fun syntaxCheck() {

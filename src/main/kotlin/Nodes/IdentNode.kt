@@ -13,6 +13,10 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext) : Expr
         return LitTypes.IdentWacc
     }
 
+    fun getValueType(table: SymbolTable) : Node? {
+        return table.lookupSymbol(id)
+    }
+
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

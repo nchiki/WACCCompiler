@@ -1,17 +1,27 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type: LitTypes?) : Node {
+class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : Node{
+
+    override fun getType(): LitTypes {
+        if(type_return != null) {
+            return type_return!!
+        } else {
+            return LitTypes.Null!!
+        }
+    }
 
     fun setFunctionReturn(type : LitTypes) {
-        this.type = type
+        this.type_return = type
     }
 
     override fun syntaxCheck() {
@@ -20,8 +30,18 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
 
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (!(type!!.equals(expr.getType()))) {
-            errors.addError(IncompatibleTypes(0, 0))
+        if (type_return != (expr.getType())) {
+            if(expr.getType() == LitTypes.IdentWacc) {
+                val idexpr = expr as IdentNode
+                val value = table.lookupSymbol(expr.id)
+                if (value?.getType() != type_return) {
+                    println(4)
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type_return.toString(), value!!, table))
+                }
+            } else {
+                println(3)
+                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type_return.toString(), expr, table))
+            }
         }
     }
 }

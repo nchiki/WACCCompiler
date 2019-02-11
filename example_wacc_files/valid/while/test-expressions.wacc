@@ -1,0 +1,15 @@
+begin
+  if 0
+  then
+    println "if(0) is true"
+  else
+    println "if(0) is false"
+  fi ;
+
+  if 5
+  then
+    println "if(5) is true"
+  else
+    println "if(5) is false"
+  fi
+end

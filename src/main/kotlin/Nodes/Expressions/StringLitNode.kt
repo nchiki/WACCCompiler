@@ -17,7 +17,7 @@ class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) :
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       //not necessary
     }
 
 }

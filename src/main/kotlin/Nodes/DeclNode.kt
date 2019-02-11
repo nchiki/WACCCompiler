@@ -1,6 +1,6 @@
 package Nodes
 
-import Errors.VarAlreadyDeclaredError
+import Errors.DoubleDeclare
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
@@ -15,7 +15,7 @@ class DeclNode(// var name
         val type: TypeNode, // assigned rhs
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
 
-    fun getType() : LitTypes {
+    override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -32,19 +32,26 @@ class DeclNode(// var name
             //if it's not there or there is a function with the same name, don't add an error
             if (value != null && (value !is FunctionNode)) {
                 // if there is already a variable with that name -> error
-                errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
             }
 
             if (type.getType() != rhs.getType()) {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+                if(rhs.getType() == LitTypes.IdentWacc) {
+                   val value = rhs.returnIdentType(table)
+
+                    if (value == null || value != type.getType()) {
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "???", type, table))
+                    }
+                } else {
+                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "IDEN", rhs, table))
+                }
+            } else {
+                rhs.semanticCheck(errors, table)
             }
-
+            rhs.addToTable(table,id)
             // call semantic check on the rest of elements
-            //type.semanticCheck(errors, table)
-            rhs.semanticCheck(errors, table)
+            //type.semanticCheck(errors, tabl
         }
-
-
 
 }
 

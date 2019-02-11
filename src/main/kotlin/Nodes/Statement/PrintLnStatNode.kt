@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
@@ -7,9 +8,9 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node {
-    fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
+    override fun getType() : LitTypes {
+        return expr.getType()
     }
 
     override fun syntaxCheck() {
@@ -17,9 +18,14 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (expr.getType() != LitTypes.StringWacc && expr.getType() != LitTypes.CharWacc &&
-                expr.getType() != LitTypes.IdentWacc && expr.getType() != LitTypes.IntWacc) {
-            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+        if (expr.getType() != LitTypes.StringWacc
+                && expr.getType() != LitTypes.CharWacc
+                && expr.getType() != LitTypes.IdentWacc
+                && expr.getType() != LitTypes.IntWacc
+                && expr.getType() != LitTypes.PairWacc
+                && expr.getType() != LitTypes.BoolWacc
+                ) {
+            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "{STRING, INT, CHAR}", expr, table))
         }
     }
 }

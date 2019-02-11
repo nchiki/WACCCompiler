@@ -1,13 +1,12 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import kotlin.reflect.KClass
+import main.kotlin.Utils.LitTypes
 
-class SkipNode(override val ctx: BasicParser.SkipContext): Node {
-    fun getType() : BaseNode {
+class SkipNode(override val ctx: BasicParser.SkipContext): Node{
+    override fun getType() :LitTypes{
         TODO()
     }
 
