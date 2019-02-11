@@ -88,7 +88,7 @@ COMMA: ',' ;
 
 BACKSLASH: '\\' ;
 HASH: '#' ;
-fragment NULL: 'null' ;
+NULL: 'null' ;
 
 //numbers
 fragment DIGIT: '0'..'9' ;
@@ -98,6 +98,7 @@ fragment LETTER: '_'|'a'..'z'|'A'..'Z' ;
 fragment UNDERSCORE: '_' ;
 
 fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
+
 
 IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
@@ -111,4 +112,4 @@ CHAR_LIT: QUOTE CHARACTER QUOTE ;
 
 STR_LIT: DBL_QUOTES (CHARACTER)* DBL_QUOTES ;
 
-PAIR_LIT: NULL ;
+
