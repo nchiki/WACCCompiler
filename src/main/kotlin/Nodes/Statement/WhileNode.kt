@@ -18,7 +18,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val childTable = SymbolTable(table)
-        if (!expr.getType().equals(BaseNode("bool", null).getType())) {
+        if (expr.getType() != LitTypes.BoolWacc) {
             errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
         }
         expr.semanticCheck(errors, table)
