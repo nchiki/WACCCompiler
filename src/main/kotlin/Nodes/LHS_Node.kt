@@ -21,6 +21,7 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val value = table.lookupSymbol(id)
+
         if( value == null || value is FunctionNode) {
             errors.addError(UndefinedVariable(line, pos, id))
         }

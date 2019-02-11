@@ -72,7 +72,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignL_Array(ctx: BasicParser.AssignL_ArrayContext): Node {
-        return LHS_Node(visit(ctx.arrayElem()), "", ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        val arrayElem = visit(ctx.arrayElem()) as ArrayElemNode
+
+        return LHS_Node(arrayElem, arrayElem.getId(), ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext): Node {
@@ -87,7 +89,10 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignL_Pairelem(ctx: BasicParser.AssignL_PairelemContext): Node {
-        return LHS_Node(visit(ctx.pairElem()), "", ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        val pairELem = visit(ctx.pairElem()) as PairElemNode
+        val exprId = pairELem.expr as IdentNode
+        val id = exprId.id
+        return LHS_Node(pairELem,id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
@@ -284,7 +289,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        return PairElemNode(visit(ctx?.expr()) as ExprNode, ctx!!)
+        val pos :Int
+        if(ctx?.SND() != null) {
+            pos = 1
+        } else {
+            pos = 0
+        }
+        return PairElemNode(visit(ctx?.expr()) as ExprNode, ctx!!, pos)
+
     }
 
     override fun visitSkip(ctx: BasicParser.SkipContext): SkipNode {
