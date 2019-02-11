@@ -105,8 +105,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
-        //val params = visit(ctx.argList()) as ArgListNode
-        return RHS_Node(RHS_type.call, ctx.IDENT().text, null, ctx.start!!.line, ctx.start!!.charPositionInLine,
+        val args = visit(ctx.argList()) as ArgListNode
+        return RHS_Node(RHS_type.call, funId, args, ctx.start!!.line, ctx.start!!.charPositionInLine,
                 null, null, null, null, ctx)
     }
 
