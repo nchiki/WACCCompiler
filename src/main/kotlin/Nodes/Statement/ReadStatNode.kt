@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ReadStatNode(val lhs: LHS_Node, val ctx: BasicParser.ReadContext?) : StatementNode() {
+class ReadStatNode(val lhs: LHS_Node, val ctx: BasicParser.ReadContext?) : StatementNode {
 
     override fun getType() : LitTypes {
         return lhs.getType()

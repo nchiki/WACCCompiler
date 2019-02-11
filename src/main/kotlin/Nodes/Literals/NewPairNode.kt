@@ -1,25 +1,22 @@
-package main.kotlin.Nodes.Statement
+package main.kotlin.Nodes.Literals
 
-import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.ExprNode
 
-class StatListNode(val listStatNodes: MutableList<StatementNode>, val ctx: BasicParser.StatListContext?) : StatementNode {
+class NewPairNode(val ctx:BasicParser.AssignR_PairContext, val exprNode1: ExprNode, val exprNode2: ExprNode) :Node {
 
     override fun getType(): LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return LitTypes.PairWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-       for (stat in listStatNodes) {
-           stat.semanticCheck(errors, table)
-       }
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }
