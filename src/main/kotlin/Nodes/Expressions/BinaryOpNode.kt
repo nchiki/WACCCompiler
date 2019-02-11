@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 import Errors.InvalidOperandTypes
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
@@ -27,12 +28,33 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (getType() == LitTypes.IntWacc && left.getType() != LitTypes.IntWacc) {
-            errors.addError(IncompatibleTypes(operator.start.line, operator.start.charPositionInLine, "INT", left, table))
-        } else if (getType() == LitTypes.IntWacc && right.getType() != LitTypes.IntWacc) {
-            errors.addError(IncompatibleTypes(operator.start.line, operator.start.charPositionInLine, "INT", right, table))
-        } else if (left.getType() != right.getType()) {
-            errors.addError(IncompatibleTypes(operator.start.line, operator.start.charPositionInLine, left.getType().toString(), right, table))
+//        println(0)
+        val line = operator.start.line
+        val pos = operator.start.charPositionInLine
+        var leftType = left.getType()
+        if (left is IdentNode) {
+            val leftValue = table.lookupSymbol(left.id)
+            if (leftValue == null) {
+                errors.addError(UndefinedVariable(line, pos, left.id))
+                return
+            }
+            leftType = leftValue.getType()
+        }
+        var rightType = right.getType()
+        if (right is IdentNode) {
+            val rightValue = table.lookupSymbol(right.id)
+            if (rightValue == null) {
+                errors.addError(UndefinedVariable(line, pos, right.id))
+                return
+            }
+            rightType = rightValue.getType()
+        }
+        if (getType() == LitTypes.IntWacc && leftType != LitTypes.IntWacc) {
+            errors.addError(IncompatibleTypes(line, pos, "INT", left, table))
+        } else if (getType() == LitTypes.IntWacc && rightType != LitTypes.IntWacc) {
+            errors.addError(IncompatibleTypes(line, pos, "INT", right, table))
+        } else if (leftType != rightType) {
+            errors.addError(IncompatibleTypes(line, pos, leftType.toString(), right, table))
         }
         if ((operator.MULT() != null
                         || operator.DIV() != null
