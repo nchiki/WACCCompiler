@@ -21,7 +21,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         } else if (type == RHS_type.call) {
 
             // NEEDS IMPLEMENTATION
-            return LitTypes.NonLitWacc
+            return LitTypes.FuncWacc
         } else if(type == RHS_type.newpair) {
             return LitTypes.PairWacc
         } else if (type == RHS_type.pair_elem) {
@@ -38,20 +38,22 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             return value
         }  else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
-            if(pairVal?.getType() == LitTypes.IdentWacc) {
+            if (pairVal?.getType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
                 val value = exprId.getValueType(table)
-                if(value is NewPairNode) {
-                    if(PairLit?.elem == 0) {
+                if (value is NewPairNode) {
+                    if (PairLit?.elem == 0) {
                         return value.exprNode1.getType()
                     } else {
                         return value.exprNode2.getType()
                     }
+                } else {
+                    return pairVal?.getType()
                 }
-            } else {
-                return pairVal?.getType()
-            }
 
+            }
+        }else if(type == RHS_type.call) {
+                return table.lookupSymbol(funId!!)!!.getType()
         }
         return null
     }

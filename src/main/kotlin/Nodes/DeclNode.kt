@@ -36,8 +36,7 @@ class DeclNode(// var name
             }
 
         if (type.getType() != rhs.getType()) {
-
-            if(rhs.getType() == LitTypes.IdentWacc) {
+            if(rhs.getType() == LitTypes.IdentWacc || rhs.getType() == LitTypes.FuncWacc) {
                 val value = rhs.returnIdentType(table)
 
 
@@ -46,7 +45,6 @@ class DeclNode(// var name
                         errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                     }
                 } else {
-                    println(rhs.getType())
                     errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                 }
             } else {
