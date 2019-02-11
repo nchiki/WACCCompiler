@@ -94,6 +94,13 @@ class SymbolTable (val parent: SymbolTable?){
         table.put(id, node)
     }
 
+    fun lookupLocal(identifier:String) : Node?{
+        if(table.containsKey(identifier)){
+            return table[identifier]
+        }
+        return null
+    }
+
     fun lookupSymbol(identifier: String): Node?{
 
         if(table.containsKey(identifier)){
