@@ -1,5 +1,6 @@
 package src.main.kotlin
 
+import Errors.NotBoolConditionError
 import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
@@ -24,8 +25,10 @@ class IfCondNode(// condition (should evaluate to boolean val
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // check whether the expr evaluates to boolean value
 
-        table.boolExprCheck(expr!!, errors, table, ctx)
-
+        //table.boolExprCheck(expr!!, errors, table, ctx)
+        if(expr?.getType() != LitTypes.BoolWacc) {
+            errors.addError(NotBoolConditionError(ctx.start.line, ctx.start.charPositionInLine))
+        }
         //checks both statements
         ifTrueStat?.semanticCheck(errors, table)
         elseStat?.semanticCheck(errors, table)
