@@ -2,6 +2,7 @@ package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.NonExistingVar
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import kotlin.reflect.KClass
@@ -18,6 +19,9 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : Basic
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        if (table.lookupSymbol(LHS_Node.id) == null) {
+            errors.addError(NonExistingVar(ctx.start.line, ctx.start.charPositionInLine))
+        }
         if (RHS_Node.type == RHS_type.call) {
             if(RHS_Node.funId != null) {
                 val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
