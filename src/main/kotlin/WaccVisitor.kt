@@ -13,6 +13,7 @@ import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import main.kotlin.Nodes.Statement.StatListNode
 
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
@@ -29,7 +30,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
     override fun visitId(ctx: BasicParser.IdContext): Node? {
-        val id = ctx.ident().text
+        val id = ctx.IDENT().text
         return IdentNode(id, ctx)
     }
 
@@ -228,10 +229,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ParamListNode(listParamNodes, ctx) // new Node
     }
 
-    override fun visitWhile(ctx: BasicParser.WhileContext?): Node {
-        return super.visitWhile(ctx)
-    }
-
     override fun visitExit(@NotNull ctx: BasicParser.ExitContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return ExitStatNode(expr, ctx)
@@ -251,6 +248,15 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return ReturnStatNode(expr, ctx, null)
+    }
+
+    override fun visitStatList(@NotNull ctx: BasicParser.StatListContext): Node {
+        val stats = ctx.stat()
+        val statList = arrayListOf<Node>()
+        for (stat in stats) {
+            statList.add(visit(stat))
+        }
+        return StatListNode(statList)
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext?): Node {

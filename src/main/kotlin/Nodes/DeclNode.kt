@@ -40,7 +40,6 @@ class DeclNode(// var name
             } else {
                 rhs.addToTable(table, id)
                 rhs.semanticCheck(errors, table)
-
             }
 
             // call semantic check on the rest of elements

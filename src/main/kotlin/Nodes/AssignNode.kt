@@ -32,7 +32,6 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : Basic
             }
             LHS_Node.semanticCheck(errors,table)
             RHS_Node.semanticCheck(errors, table)
-
         }
     }
 }
