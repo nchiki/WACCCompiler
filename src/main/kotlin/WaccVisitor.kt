@@ -40,7 +40,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val paramList = visitParamList(ctx.paramList())
         val returnType = getType(ctx.type().text)
         val id = ctx.IDENT().text
-        val stat = visit(ctx.stat())
+        val stat = visit(ctx.stat()) as ReturnStatNode
         return FunctionNode(id, returnType, paramList, stat, ctx)
     }
 
