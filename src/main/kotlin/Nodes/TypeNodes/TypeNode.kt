@@ -7,6 +7,7 @@ import main.kotlin.Utils.LitTypes
 
 
 interface TypeNode : Node {
+
     fun getType() : LitTypes
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 

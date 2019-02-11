@@ -6,7 +6,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, val ctx : BasicParser.ProgContext) : Node {
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node, override val ctx: BasicParser.ProgContext) : Node {
 
     fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

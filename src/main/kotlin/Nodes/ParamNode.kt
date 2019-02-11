@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 class ParamNode(
         val id: String,
-        val type: Node, val ctx: BasicParser.ParamContext) : Node {
+        val type: Node, override val ctx: BasicParser.ParamContext) : Node {
 
 
 

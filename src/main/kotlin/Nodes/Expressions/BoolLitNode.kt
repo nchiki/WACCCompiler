@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 
-class BoolLitNode(val bool_val : String, val ctx: BasicParser.BoolLitContext) : ExprNode {
+class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
 
 
 

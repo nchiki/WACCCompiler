@@ -7,7 +7,7 @@ import src.main.kotlin.Nodes.ExprNode
 import java.util.*
 import kotlin.reflect.KClass
 
-class IdentNode(val id : String, val ctx: BasicParser.IdContext) : ExprNode {
+class IdentNode(val id : String, override val ctx: BasicParser.IdContext) : ExprNode {
 
     override fun getType() : LitTypes {
         return LitTypes.IdentWacc

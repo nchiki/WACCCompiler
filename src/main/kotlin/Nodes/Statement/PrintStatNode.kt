@@ -7,9 +7,10 @@ import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
+class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node {
+
     fun getType() : BaseNode {
-        return BaseNode("string")
+        return BaseNode("string", null)
     }
 
     override fun syntaxCheck() {

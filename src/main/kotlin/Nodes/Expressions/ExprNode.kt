@@ -5,7 +5,6 @@ import main.kotlin.Utils.LitTypes
 
 interface ExprNode : Node {
 
-
     fun getType() : LitTypes
 
 }

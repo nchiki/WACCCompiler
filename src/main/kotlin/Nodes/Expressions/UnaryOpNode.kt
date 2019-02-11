@@ -9,7 +9,7 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any) : ExprNode {
+class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any, override val ctx: BasicParser.UnOpContext) : ExprNode {
 
     override fun getType(): LitTypes {
        return operand.getType()

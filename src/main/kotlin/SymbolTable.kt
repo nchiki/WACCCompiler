@@ -6,7 +6,7 @@ import main.kotlin.Nodes.BinaryOpNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.Statement.ParenNode
+import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.UnaryOpNode
 import src.main.kotlin.Nodes.ExprNode
 
@@ -23,7 +23,7 @@ class SymbolTable (val parent: SymbolTable?){
     var table = HashMap<String, Node>()
 
     /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : ExprNode, errors: ErrorLogger) {
+    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
         var tempExpr: Node = expr
 
         if(tempExpr is ParenNode){
@@ -65,8 +65,7 @@ class SymbolTable (val parent: SymbolTable?){
                 BasicParser.OR -> return
             }
         }
-
-        errors.addError(NotBoolConditionError(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine))
+        errors.addError(NotBoolConditionError(tempExpr.ctx!!.start.line, tempExpr.ctx!!.start.charPositionInLine))
     }
 
     fun evaluateParenNode(node_: Node): Node{

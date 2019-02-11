@@ -6,7 +6,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class StringLitNode(str : String, val ctx: BasicParser.StrLitContext) : ExprNode {
+class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
 
     override fun getType(): LitTypes {
        return LitTypes.StringWacc

@@ -8,7 +8,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class ReturnStatNode (val expr : ExprNode, val ctx: BasicParser.ReturnContext, var type: LitTypes?) : Node {
+class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type: LitTypes?) : Node {
 
     fun setFunctionReturn(type : LitTypes) {
         this.type = type

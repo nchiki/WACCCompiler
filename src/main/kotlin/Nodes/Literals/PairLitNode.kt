@@ -8,7 +8,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.reflect.KClassifier
 
-class PairLitNode(val ctx : BasicParser.PairLitContext): ExprNode {
+class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

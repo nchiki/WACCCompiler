@@ -5,7 +5,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class PairElemNode(val expr : ExprNode) : Node{
+class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemContext) : Node{
 
     fun getType() : LitTypes {
         return expr.getType()

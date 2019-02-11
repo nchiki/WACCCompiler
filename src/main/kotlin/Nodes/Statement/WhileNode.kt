@@ -3,9 +3,9 @@ package main.kotlin.Nodes.Statement
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import org.antlr.v4.runtime.ParserRuleContext
+import src.main.kotlin.Nodes.ExprNode
 
-class WhileNode(val expr: Node, val stat: Node, val ctx: BasicParser.WhileContext): Node {
+class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParser.WhileContext): Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val childTable = SymbolTable(table)

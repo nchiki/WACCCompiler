@@ -6,8 +6,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
 
-
-class LHS_Node(val Nodetype: Node, val id: String, val line: Int, val pos : Int) : Node {
+class LHS_Node(val Nodetype: Node, val id: String, val line: Int, val pos : Int, override val ctx: BasicParser.AssignLHSContext) : Node {
 
 
     fun getType(): LitTypes {

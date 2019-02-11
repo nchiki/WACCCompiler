@@ -6,7 +6,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 
 class ParamListNode(// list of parameterNodes
-        val listParamNodes: MutableList<ParamNode>, ctx: BasicParser.ParamListContext?) : Node {
+        val listParamNodes: MutableList<ParamNode>, override val ctx: BasicParser.ParamListContext) : Node {
 
     fun getType() : BaseNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

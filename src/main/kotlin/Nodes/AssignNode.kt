@@ -5,7 +5,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, val ctx : BasicParser.AssignContext) : Node {
+class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
 
     fun getType() : KClass<AssignNode> {

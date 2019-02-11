@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val baseType : Node, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
     override fun getType() : LitTypes {
         return exprs[0].getType()

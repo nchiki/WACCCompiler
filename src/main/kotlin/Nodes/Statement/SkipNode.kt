@@ -6,7 +6,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.reflect.KClass
 
-class SkipNode : Node {
+class SkipNode(override val ctx: BasicParser.SkipContext): Node {
     fun getType() : BaseNode {
         TODO()
     }

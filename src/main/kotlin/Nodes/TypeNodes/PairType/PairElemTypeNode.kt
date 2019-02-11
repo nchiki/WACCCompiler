@@ -6,7 +6,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-open class PairElemTypeNode(val type: TypeNode?, val pair : String?) : TypeNode {
+open class PairElemTypeNode(val type: TypeNode?, val pair : String?, override val ctx: BasicParser.PairElemTypeContext) : TypeNode {
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

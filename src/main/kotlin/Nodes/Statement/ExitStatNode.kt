@@ -8,7 +8,7 @@ import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class ExitStatNode(val expr : ExprNode, val ctx : BasicParser.ExitContext) : Node {
+class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
     fun getType(): BaseNode {
         TODO()
     }

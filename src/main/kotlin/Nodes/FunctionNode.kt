@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 class FunctionNode (val id: String, val type: LitTypes, val params: ParamListNode, val stat: ReturnStatNode,
-                    val ctx:BasicParser.FuncContext) : Node {
+                    override val ctx:BasicParser.FuncContext) : Node {
 
 
     fun getType() : BaseNode {
