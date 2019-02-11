@@ -30,7 +30,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
     override fun visitId(ctx: BasicParser.IdContext): Node? {
-        val id = ctx.IDENT().text
+        val id = ctx.ident().text
         return IdentNode(id, ctx)
     }
 
