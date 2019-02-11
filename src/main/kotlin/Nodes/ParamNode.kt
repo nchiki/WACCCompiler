@@ -17,8 +17,8 @@ class ParamNode(
 
 
 
-    fun getType() : LitTypes{
-        if(type is IntLitNode) {
+    override fun getType() : LitTypes{
+        /*if(type is IntLitNode) {
            return LitTypes.IntWacc
        } else if (type is CharLitNode) {
            return LitTypes.CharWacc
@@ -30,7 +30,9 @@ class ParamNode(
            return LitTypes.StringWacc
        } else {
            return LitTypes.NonLitWacc
-       }
+       }*/
+        val toType = type as BaseNode
+        return toType.getType()
     }
 
     override fun syntaxCheck() {
@@ -42,9 +44,11 @@ class ParamNode(
         val Value = table.lookupSymbol(id)
 
         //if it's not there or there is a function with the same name, don't add an error
-        if (Value != null && !(Value is FunctionNode)) {
+        if (Value != null && (Value !is FunctionNode)) {
             // if there is already a variable with that name -> error
             errors.addError(VarAlreadyDeclaredError(ctx.start.line, ctx.start.charPositionInLine))
+        } else {
+            table.add(this, id)
         }
 
     }

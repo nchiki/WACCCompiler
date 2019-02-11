@@ -8,8 +8,8 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class PrintLnStatNode(val expr : ExprNode, val ctx: BasicParser.PrintlnContext) : Node {
-    fun getType() : BaseNode {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType() : LitTypes {
+        return expr.getType()
     }
 
     override fun syntaxCheck() {

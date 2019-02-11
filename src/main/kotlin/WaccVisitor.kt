@@ -74,7 +74,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext?): Node {
-        return LHS_Node(visit(ctx?.IDENT()),  ctx?.IDENT()!!.text, ctx?.start!!.line, ctx?.start.charPositionInLine)
+        val id = ctx?.IDENT()
+        val text : String
+        if(id != null) {
+            text = id.text
+        } else {
+            text = ""
+        }
+        return LHS_Node(id,  text, ctx?.start!!.line, ctx?.start.charPositionInLine)
     }
 
     override fun visitAssignL_Pairelem(ctx: BasicParser.AssignL_PairelemContext?): Node {

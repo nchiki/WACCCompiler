@@ -7,10 +7,10 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
 
 
-class LHS_Node(val Nodetype: Node, val id: String, val line: Int, val pos : Int) : Node {
+class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int) : Node {
 
 
-    fun getType(): LitTypes {
+    override fun getType(): LitTypes {
         if (Nodetype is ArrayElemNode) {
             return Nodetype.getType()
         } else if (Nodetype is PairElemNode) {

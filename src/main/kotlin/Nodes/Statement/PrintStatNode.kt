@@ -10,8 +10,8 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.reflect.KClass
 
 class PrintStatNode(val expr : ExprNode, val ctx : BasicParser.PrintContext) : Node {
-    fun getType() : BaseNode {
-        return BaseNode("string")
+    override fun getType() : LitTypes {
+        return expr.getType()
     }
 
     override fun syntaxCheck() {

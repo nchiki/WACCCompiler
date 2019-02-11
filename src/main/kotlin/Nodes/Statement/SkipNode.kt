@@ -4,10 +4,11 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import kotlin.reflect.KClass
 
 class SkipNode : Node {
-    fun getType() : BaseNode {
+    override fun getType() :LitTypes{
         TODO()
     }
 
