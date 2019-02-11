@@ -12,7 +12,7 @@ import main.kotlin.Utils.LitTypes
 class IfCondNode(// condition (should evaluate to boolean val
         private val expr: Node?, // expr = true -> statement
         private val ifTrueStat: Node?, // expr = false -> statement
-        private val elseStat: Node?, val ctx: BasicParser.ExprContext) : Node {
+        private val elseStat: Node?, val ctx: BasicParser.ExprContext) : StatementNode {
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
