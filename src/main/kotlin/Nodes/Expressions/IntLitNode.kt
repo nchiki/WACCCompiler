@@ -14,7 +14,7 @@ class IntLitNode(val int_val : Int, val ctx: BasicParser.IntLitContext) : ExprNo
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun syntaxCheck() {
