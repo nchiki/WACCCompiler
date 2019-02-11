@@ -26,35 +26,36 @@ class DeclNode(// var name
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        // looks up the id in the symbol table
-        val value = table.lookupSymbol(id)
+            // looks up the id in the symbol table
+            val value = table.lookupSymbol(id)
 
-        //if it's not there or there is a function with the same name, don't add an error
-        if (value != null && (value !is FunctionNode)) {
-            // if there is already a variable with that name -> error
-            errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
-        }
+            //if it's not there or there is a function with the same name, don't add an error
+            if (value != null && (value !is FunctionNode)) {
+                // if there is already a variable with that name -> error
+                errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
+            }
 
         if (type.getType() != rhs.getType()) {
 
-            if (rhs.getType() == LitTypes.IdentWacc) {
+            if(rhs.getType() == LitTypes.IdentWacc) {
                 val value = rhs.returnIdentType(table)
 
+
                 if (value == null || value != type.getType()) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
 
+                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
+                    }
                 } else {
-
+                    println(rhs.getType())
                     errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
                 }
             } else {
                 rhs.semanticCheck(errors, table)
             }
-            rhs.addToTable(table, id)
+            rhs.addToTable(table,id)
             // call semantic check on the rest of elements
             //type.semanticCheck(errors, tabl
         }
-    }
 
 }
 
