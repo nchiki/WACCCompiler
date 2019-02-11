@@ -206,6 +206,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return StatListNode(listStatNodes, ctx)
     }
 
+    override fun visitStatement(@NotNull ctx: BasicParser.StatementContext): Node {
+        val stat = visit(ctx.stat())
+        return StatementNode(stat, ctx)
+    }
+
     override fun visitArgList(ctx: BasicParser.ArgListContext) : Node {
         val exprs = ctx.expr()
         val exprList = ArrayList<ExprNode>()
