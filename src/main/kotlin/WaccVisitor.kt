@@ -7,6 +7,8 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.*
 import main.kotlin.Nodes.TypeNodes.TypeNode
+import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.getType
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
@@ -34,7 +36,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     //add Statements as well as parameter of FuncNode
     override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
         val paramList = visitParamList(ctx.paramList())
-        val returnType = ctx.type().text
+        val returnType = getType(ctx.type().text)
         val id = ctx.IDENT().text
         val stat = visit(ctx.stat()) as ReturnStatNode
         return FunctionNode(id, returnType, paramList, stat, ctx)
@@ -64,8 +66,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
         val id = visit(ctx.assignLHS()) as LHS_Node
         val value = visit(ctx.assignRHS()) as RHS_Node
-        /* uncomment when symbol table is implemented */
-        //memory.put(id, value);
         return AssignNode(id, value, ctx)
     }
 
@@ -88,8 +88,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
-        val params = visit(ctx.argList()) as ArgListNode
-        return RHS_Node(RHS_type.call, ctx.IDENT().text, params, ctx.start!!.line, ctx.start!!.charPositionInLine,
+        //val params = visit(ctx.argList()) as ArgListNode
+        return RHS_Node(RHS_type.call, ctx.IDENT().text, null, ctx.start!!.line, ctx.start!!.charPositionInLine,
                 null, null, null, null)
     }
 
@@ -102,7 +102,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return RHS_Node(RHS_type.array_lit, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
                 null, null, null, visit(ctx.arrayLiter()) as ArrayLitNode)
     }
-
 
     override fun visitAssignR_Pair(ctx: BasicParser.AssignR_PairContext?): Node {
         return RHS_Node(RHS_type.newpair, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
@@ -132,8 +131,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             }
         }
     }
-
-
 
     override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
         val idType = visit(ctx.IDENT())
@@ -207,7 +204,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     }
 
-
     override fun visitPrint(@NotNull ctx: BasicParser.PrintContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
         return PrintStatNode(expr, ctx)
@@ -256,7 +252,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return ReturnStatNode(expr, ctx)
+        return ReturnStatNode(expr, ctx, null)
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext?): Node {
