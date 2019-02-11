@@ -1,6 +1,5 @@
 package main.kotlin.Nodes.Statement
 
-import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
