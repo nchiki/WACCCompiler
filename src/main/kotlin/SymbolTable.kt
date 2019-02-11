@@ -3,10 +3,11 @@ package main.kotlin
 import Errors.NotBoolConditionError
 import main.kotlin.Errors.UndeclaredVariableError
 import main.kotlin.Nodes.BinaryOpNode
+import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.Statement.ParenNode
+
 import main.kotlin.Nodes.UnaryOpNode
 
 class SymbolTable (val parent: SymbolTable?){

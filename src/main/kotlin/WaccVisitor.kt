@@ -4,6 +4,7 @@ import Nodes.PairType.PairElemTypeNode
 import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.*
 import main.kotlin.Nodes.TypeNodes.TypeNode
@@ -91,9 +92,12 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
         return RHS_Node(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
-                visit(ctx.expr()) as ExprNode, null, null, null)
+                visit(ctx.expr()) as ExprNode?, null, null, null)
     }
 
+    override fun visitParen(ctx: BasicParser.ParenContext?): Node {
+        return ParenNode(visit(ctx?.expr()))
+    }
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
         //val params = visit(ctx.argList()) as ArgListNode
