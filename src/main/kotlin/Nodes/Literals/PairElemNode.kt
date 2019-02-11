@@ -7,7 +7,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 class PairElemNode(val expr : ExprNode) : Node{
 
-    fun getType() : LitTypes {
+    override fun getType() : LitTypes {
         return expr.getType()
     }
 

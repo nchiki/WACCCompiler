@@ -1,6 +1,8 @@
 package main.kotlin.Nodes
 
 
+import Nodes.Literals.PairLitNode
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
@@ -13,7 +15,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                val expr: ExprNode?, val expr1: ExprNode?, val PairLit : PairElemNode?, val ArrayLit : ArrayLitNode?) : Node {
 
 
-    fun getType(): LitTypes {
+    override fun getType(): LitTypes {
         if(type == RHS_type.expr) {
             return expr!!.getType() as LitTypes
         } else if (type == RHS_type.array_lit) {
@@ -48,11 +50,31 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     }
                 }
             }
+
         }
+
     }
 
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun addToTable(table: SymbolTable, id:String) {
+        if(type == RHS_type.call) {
+            val funNode = table.lookupSymbol(funId!!) as FunctionNode?
+            if(funNode != null) {
+                val value = funNode.stat
+                table.add(value, id)
+            }
+        } else if(type == RHS_type.expr) {
+            table.add(expr!!, id)
+        } else if (type == RHS_type.newpair) {
+            //MISSING PAIR NODE
+        } else if(type == RHS_type.pair_elem) {
+            table.add(PairLit!!, id)
+        } else if(type == RHS_type.array_lit) {
+            table.add(ArrayLit!!, id)
+        }
     }
 
 }

@@ -13,5 +13,6 @@ interface Node {
     fun syntaxCheck()
 
     fun semanticCheck(errors : ErrorLogger, table : SymbolTable)
+    abstract fun getType(): LitTypes
 
 }

@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 class ArrayLitNode(val exprList : MutableList<ExprNode>, val ctx : BasicParser.ArrayLiterContext) : Node {
 
-    fun getType() : LitTypes {
+    override fun getType() : LitTypes {
         return exprList[0].getType()
     }
 

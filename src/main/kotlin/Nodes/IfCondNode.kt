@@ -5,7 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-
+import main.kotlin.Utils.LitTypes
 
 
 class IfCondNode(// condition (should evaluate to boolean val
@@ -13,7 +13,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         private val ifTrueStat: Node?, // expr = false -> statement
         private val elseStat: Node?, val ctx: BasicParser.ExprContext) : Node {
 
-    fun getType() : BaseNode {
+    override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

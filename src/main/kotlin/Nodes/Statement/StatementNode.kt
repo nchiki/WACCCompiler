@@ -8,7 +8,7 @@ import main.kotlin.Utils.LitTypes
 
 open class StatementNode : Node {
 
-    open fun getType() : LitTypes {
+    override open fun getType() : LitTypes {
 
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

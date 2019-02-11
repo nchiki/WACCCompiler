@@ -6,12 +6,12 @@ import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-class FunctionNode (val id: String, val type: LitTypes, val params: ParamListNode, val stat: ReturnStatNode,
+class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode, val stat: ReturnStatNode,
                     val ctx:BasicParser.FuncContext) : Node {
 
 
-    fun getType() : BaseNode {
-        TODO()
+    override fun getType() : LitTypes {
+        return fun_type
     }
 
     override fun syntaxCheck() {
@@ -21,7 +21,8 @@ class FunctionNode (val id: String, val type: LitTypes, val params: ParamListNod
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        stat.setFunctionReturn(type)
+
+        stat.setFunctionReturn(fun_type)
         params.semanticCheck(errors, table)
         stat.semanticCheck(errors, table)
     }
