@@ -24,7 +24,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         for (func in funcCtx) {
             funcList.add(visitFunc(func))
         }
-        val stat = visit(ctx.stat()) //as StatementNode
+        val stat = visit(ctx.stat())
         return ProgNode(funcList, stat, ctx)
     }
 
@@ -265,10 +265,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val id = ctx?.IDENT()?.text
         return ParamNode(id!!, type, ctx)
-    }
-
-    override fun visitStatement(ctx: BasicParser.StatementContext?): Node {
-        return super.visitStatement(ctx)
     }
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
