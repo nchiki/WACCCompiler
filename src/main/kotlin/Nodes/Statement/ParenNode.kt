@@ -4,10 +4,11 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 
 class ParenNode(val expr: Node): Node {
 
-    fun getType(): BaseNode {
+    override fun getType():LitTypes{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

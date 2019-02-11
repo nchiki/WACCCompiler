@@ -6,6 +6,6 @@ import main.kotlin.Utils.LitTypes
 interface ExprNode : Node {
 
 
-    fun getType() : LitTypes
+    override fun getType() : LitTypes
 
 }

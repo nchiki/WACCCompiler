@@ -10,7 +10,8 @@ enum class LitTypes(s: String) {
     , IdentWacc("bool"),
 
     NonLitWacc("bool"),
-    ArrayLit("arrayLit")
+    ArrayLit("arrayLit"),
+    Null("null")
 
 }
 

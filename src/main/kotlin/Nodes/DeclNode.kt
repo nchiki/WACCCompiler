@@ -15,7 +15,7 @@ class DeclNode(// var name
         val type: TypeNode, // assigned rhs
         val rhs: RHS_Node, val ctx : BasicParser.DeclContext) : Node {
 
-    fun getType() : LitTypes {
+    override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -37,11 +37,14 @@ class DeclNode(// var name
 
             if (type.getType() != rhs.getType()) {
                 errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine))
+            } else {
+                rhs.addToTable(table, id)
+                rhs.semanticCheck(errors, table)
+
             }
 
             // call semantic check on the rest of elements
-            //type.semanticCheck(errors, table)
-            rhs.semanticCheck(errors, table)
+            //type.semanticCheck(errors, tabl
         }
 
 
