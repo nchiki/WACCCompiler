@@ -35,11 +35,11 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 if (value?.getType() != type_return) {
-                    println(4)
+
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }
             } else {
-                println(3)
+
                 errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))
             }
         }
