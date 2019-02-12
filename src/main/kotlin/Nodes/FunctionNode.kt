@@ -7,6 +7,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
+import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
                     override val ctx: BasicParser.FuncContext) : Node {
@@ -20,6 +21,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
        /* if (stat.getType() != ReturnStatNode::class && stat.getType() != ExitStatNode::class) {
             exitProcess(100)
         }*/
+        exitProcess(100)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -29,12 +31,14 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
                 statement = s
             }
             if(statement !is ReturnStatNode) {
+                syntaxCheck()
                 errors.addError(IncorrectReturnTypes(ctx.start.line, ctx.start.charPositionInLine))
             } else {
                 statement.setFunctionReturn(fun_type)
             }
         } else {
             if (stat !is ReturnStatNode) {
+                syntaxCheck()
                 errors.addError(IncorrectReturnTypes(ctx.start.line, ctx.start.charPositionInLine))
             }
             val statRet = stat as ReturnStatNode

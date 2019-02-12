@@ -1,9 +1,12 @@
 package main.kotlin.Nodes.Statement
 
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
@@ -18,8 +21,32 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (lhs.Nodetype != LitTypes.CharWacc && lhs.Nodetype != LitTypes.IntWacc) {
-            errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
+        if (lhs.getType() == LitTypes.IdentWacc) {
+            val node = lhs
+            val value = table.lookupSymbol((node).id)
+            if (value == null) {
+                errors.addError(UndefinedVariable(ctx, node.id))
+                return
+            } else {
+                var v = value
+                while (v != null && v?.getType() == LitTypes.IdentWacc) {
+                    if (v is PairElemNode) {
+                        v = v.expr
+                    }
+                    v = table.lookupSymbol((v as IdentNode).id)
+                }
+                if (v == null) {
+                    errors.addError(UndefinedVariable(ctx, (lhs).id))
+                    return
+                }
+                if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc) {
+                    errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
+                }
+            }
+        }else {
+            if (lhs.getType() != LitTypes.CharWacc && lhs.getType() != LitTypes.IntWacc) {
+                errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
+            }
         }
     }
 }

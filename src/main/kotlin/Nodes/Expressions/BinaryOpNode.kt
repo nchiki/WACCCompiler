@@ -57,28 +57,54 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 }
                 rightType = rightValue.getType()
             }
+            rightType = rightValue.getType()
         }
-//        println(leftType)
-//        println(rightType)
-//        println(getType())
-//        println((left as IdentNode).getValueType(table))
-//        println(right)
+        if (getType() == LitTypes.IntWacc && !leftType.equals(LitTypes.IntWacc)) {
+            errors.addError(IncompatibleTypes(ctx, "INT", left, table))
+        } else if (getType() == LitTypes.IntWacc && !rightType.equals(LitTypes.IntWacc)) {
+            errors.addError(IncompatibleTypes(ctx, "INT", right, table))
+        } else if (!leftType.equals(rightType)) {
+            var l = left as Node?
+            while (leftType == LitTypes.IdentWacc) {
+                l = table.lookupSymbol((l as IdentNode).id)
+                if (l != null) {
+                    leftType = l.getType()
+                } else {
+                    break
+                }
+            }
+            var r = right as Node?
+            while (rightType == LitTypes.IdentWacc ) {
+                r = table.lookupSymbol((r as IdentNode).id)
+                if (r != null) {
+                    rightType = r.getType()
+                } else {
+                    break
+                }
+            }
+            if (leftType != rightType) {
+                errors.addError(IncompatibleTypes(ctx, leftType.toString(), right, table))
+            }
+        }
 
-        if (getType() == LitTypes.IntWacc) {
-            if (leftType != LitTypes.IntWacc) {
-                errors.addError(IncompatibleTypes(ctx.expr(0), "INT", left, table))
-            }
-            if (rightType != LitTypes.IntWacc) {
-                errors.addError(IncompatibleTypes(ctx.expr(1), "INT", right, table))
-            }
-        } else if (getType() == LitTypes.BoolWacc) {
-            if (leftType != LitTypes.BoolWacc) {
-                errors.addError(IncompatibleTypes(ctx.expr(0), "BOOL", left, table))
-            }
-            if (rightType != LitTypes.BoolWacc) {
-                errors.addError(IncompatibleTypes(ctx.expr(1), "BOOL", right, table))
-            }
+        if ((operator.MULT() != null
+                        || operator.DIV() != null
+                        || operator.MOD() != null
+                        || operator.MINUS() != null
+                        || operator.PLUS() != null
+                        || operator.LESS() != null
+                        || operator.LESS_EQ() != null
+                        || operator.GREAT() != null
+                        || operator.GREAT_EQ() != null)
+                && (leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc)) {
+            errors.addError(InvalidOperandTypes(ctx))
+        } else if ((operator.AND() != null
+                        || operator.OR() != null)
+                && (leftType != LitTypes.BoolWacc || rightType != LitTypes.BoolWacc)) {
+            errors.addError(InvalidOperandTypes(ctx))
         }
+        left.semanticCheck(errors, table)
+        right.semanticCheck(errors, table)
     }
 
 }
