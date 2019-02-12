@@ -9,7 +9,6 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-
 class DeclNode(// var name
         val id: String, // type of var
         val type: TypeNode, // assigned rhs
@@ -26,35 +25,33 @@ class DeclNode(// var name
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-            // looks up the id in the symbol table
-            val value = table.lookupLocal(id)
+        // looks up the id in the symbol table
+        val value = table.lookupLocal(id)
 
-            //if it's not there or there is a function with the same name, don't add an error
-            if (value != null && (value !is FunctionNode)) {
-                // if there is already a variable with that name -> error
-                errors.addError(DoubleDeclare(ctx, id))
-            }
+        //if it's not there or there is a function with the same name, don't add an error
+        if (value != null && (value !is FunctionNode)) {
+            // if there is already a variable with that name -> error
+            errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
+        }
 
         if (type.getType() != rhs.getType()) {
-            if(rhs.getType() == LitTypes.IdentWacc || rhs.getType() == LitTypes.FuncWacc) {
+            if (rhs.getType() == LitTypes.IdentWacc || rhs.getType() == LitTypes.FuncWacc) {
                 val value = rhs.returnIdentType(table)
 
-
                 if (value == null || value != type.getType()) {
-                        errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
-                    } else {
+                    errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
+                } else {
                     rhs.semanticCheck(errors, table)
                 }
-                } else {
-                    errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
-                }
             } else {
-                rhs.semanticCheck(errors, table)
+                errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
             }
-            rhs.addToTable(table,id)
-            // call semantic check on the rest of elements
-            //type.semanticCheck(errors, tabl
         }
+        rhs.addToTable(table,id)
+        // call semantic check on the rest of elements
+        rhs.semanticCheck(errors, table)
+        //type.semanticCheck(errors, table)
+    }
 
 }
 

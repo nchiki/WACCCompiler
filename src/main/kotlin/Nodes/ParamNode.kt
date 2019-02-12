@@ -34,12 +34,12 @@ class ParamNode(
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // looks up the id in the symbol table
-        val Value = table.lookupSymbol(id)
+        val value = table.lookupSymbol(id)
 
         //if it's not there or there is a function with the same name, don't add an error
-        if (Value != null && (Value !is FunctionNode)) {
+        if (value != null && (value !is FunctionNode)) {
             // if there is already a variable with that name -> error
-            errors.addError(DoubleDeclare(ctx, id))
+            errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         } else {
             table.add(this, id)
         }

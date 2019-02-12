@@ -19,7 +19,7 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (lhs.Nodetype != LitTypes.CharWacc && lhs.Nodetype != LitTypes.IntWacc) {
-            errors.addError(IncompatibleTypes(ctx, ctx.text, lhs, table))
+            errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
         }
     }
 }

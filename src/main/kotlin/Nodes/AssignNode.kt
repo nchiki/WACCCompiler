@@ -20,10 +20,10 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val type = table.lookupSymbol(LHS_Node.id)
         if (type == null) {
-            errors.addError(UndefinedVariable(ctx, LHS_Node.id))
+            errors.addError(UndefinedVariable(ctx, LHS_Node.getType().toString()))
         }
         if (type != RHS_Node.type) {
-            errors.addError(IncompatibleTypes(ctx, LHS_Node.id, LHS_Node, table))
+            errors.addError(IncompatibleTypes(ctx, type!!.getType().toString(), RHS_Node, table))
         }
         if (RHS_Node.type == RHS_type.call) {
             if(RHS_Node.funId != null) {
