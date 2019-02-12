@@ -7,6 +7,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
@@ -28,7 +29,7 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
             if (expr.getType() == LitTypes.IdentWacc) {
                 val IdExpr = expr as IdentNode
                 val value = IdExpr.getValueType(table)
-                if (value !is PairNode && value !is PairLitNode) {
+                if (value !is PairNode && value !is PairLitNode && value !is NewPairNode) {
                     errors.addError(IncompatibleTypes(ctx, "PAIR", value!!, table))
                 }
             } else {
