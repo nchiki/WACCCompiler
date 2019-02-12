@@ -1,9 +1,11 @@
 package Errors
 
-class InvalidOperandTypes(val line: Int, val pos: Int) : ErrorNode {
+import org.antlr.v4.runtime.ParserRuleContext
+
+class InvalidOperandTypes(ctx : ParserRuleContext) : SemanticError(ctx) {
 
     override fun printError(): String {
-        return "Invalid operand types found in line: $line at position: $pos "
+        return "Invalid operand types"
     }
 
 }

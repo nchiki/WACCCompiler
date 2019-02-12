@@ -19,15 +19,16 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        println(ctx.children.joinToString(" ") { it.text } )
         if (expr.getType() != LitTypes.IntWacc) {
-            if(expr.getType() == LitTypes.IdentWacc) {
+            if (expr.getType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 if (value?.getType() != LitTypes.IntWacc) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "INT", value!!, table))
+                    errors.addError(IncompatibleTypes(ctx, "INT", value!!, table))
                 }
-            }else {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "INT", expr, table))
+            } else {
+                errors.addError(IncompatibleTypes(ctx, "INT", expr, table))
             }
         }
         expr.semanticCheck(errors, table)

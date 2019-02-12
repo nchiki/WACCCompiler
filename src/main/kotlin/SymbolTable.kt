@@ -39,7 +39,7 @@ class SymbolTable (val parent: SymbolTable?){
             val variable = lookupSymbol(tempExpr.id)
 
             if(variable == null){
-                errors.addError(UndefinedVariable(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine, tempExpr.id))
+                errors.addError(UndefinedVariable(tempExpr.ctx, tempExpr.id))
                 return
             }
 
@@ -75,7 +75,7 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
 
-        errors.addError(IncompatibleTypes(tempExpr.ctx!!.start.line, tempExpr.ctx!!.start.charPositionInLine, "BOOL", expr, this))
+        errors.addError(IncompatibleTypes(tempExpr.ctx!!, "BOOL", expr, this))
     }
 
     fun evaluateParenNode(node_: Node): Node{
