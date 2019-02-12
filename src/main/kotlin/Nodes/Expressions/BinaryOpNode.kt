@@ -101,11 +101,11 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.LESS_EQ() != null
                         || operator.GREAT() != null
                         || operator.GREAT_EQ() != null)
-                && (left.getType() != LitTypes.IntWacc || right.getType() != LitTypes.IntWacc)) {
+                && (leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
         } else if ((operator.AND() != null
                         || operator.OR() != null)
-                && (left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc)) {
+                && (leftType != LitTypes.BoolWacc || rightType != LitTypes.BoolWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
         }
         left.semanticCheck(errors, table)
