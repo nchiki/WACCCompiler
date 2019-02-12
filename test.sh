@@ -23,14 +23,26 @@ else
     exit 127
 fi
 
-find $DIRECTORY -name "*.wacc" | while read fname; do
-  sh compile $fname > /dev/null 2>&1
-  RETURNED=$?
-  if [[ !($RETURNED -eq $EXIT_CODE) ]]
-  then
-    echo "$fname test failed, expected $EXIT_CODE but returned $RETURNED"
-    exit 1
-  fi
-done
+TESTS=$(find $DIRECTORY -name "*.wacc" | wc -l)
 
-exit $?
+find $DIRECTORY -name "*.wacc" | (
+    FAILED=0
+    while read fname; do
+        sh compile $fname > /dev/null 2>&1
+        RETURNED=$?
+        if [[ !($RETURNED -eq $EXIT_CODE) ]]
+        then
+            echo "$fname test failed, expected $EXIT_CODE but returned $RETURNED"
+            FAILED=$(($FAILED + 1))
+        fi
+    done
+
+    exit $FAILED
+)
+
+FAILED=$?
+if [[ $FAILED -gt 0 ]]
+then
+    echo "$1 failed $FAILED out of $TESTS tests"
+fi
+exit $FAILED
