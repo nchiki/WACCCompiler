@@ -16,7 +16,7 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         val type = exprList[0].getType()
         for (expr in exprList) {
             if(type != expr.getType()) {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.toString(), expr, table))
+                errors.addError(IncompatibleTypes(ctx, type.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }

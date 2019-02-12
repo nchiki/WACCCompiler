@@ -21,7 +21,7 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : Exp
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //nothing to do here
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) { 
+
     }
 }

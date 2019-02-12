@@ -1,11 +1,12 @@
 package main.kotlin.Errors
 
 import Errors.SemanticError
+import org.antlr.v4.runtime.ParserRuleContext
 
-class IncorrectNumParams(line: Int, pos: Int, private val expectedNum : Int, private val actualNum : Int) : SemanticError(line, pos) {
+class IncorrectNumParams(ctx : ParserRuleContext, private val expectedNum : Int, private val actualNum : Int) : SemanticError(ctx) {
 
     override fun printError(): String {
-        return "Incorrect number of parameters in line: $line at position: $pos (expected: $expectedNum, actual: $actualNum)"
+        return "Incorrect number of parameters (expected: $expectedNum, actual: $actualNum)"
     }
 
 }

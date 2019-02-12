@@ -22,7 +22,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         for (func in funcDefs) {
             val id = func.id
             if (table.lookupSymbol(id) != null) {
-                errors.addError(FunctionDoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
+                errors.addError(FunctionDoubleDeclare(ctx, id))
             }
             table.add(func, id)
         }

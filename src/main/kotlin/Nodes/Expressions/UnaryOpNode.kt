@@ -22,7 +22,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             || operator.ORD() != null && operand.getType() != LitTypes.CharWacc
             || operator.CHR() != null && operand.getType() != LitTypes.IntWacc)
         {
-            errors.addError(InvalidOperandTypes(operator.start.line, operator.start.charPositionInLine))
+            errors.addError(InvalidOperandTypes(ctx))
         }
     }
 

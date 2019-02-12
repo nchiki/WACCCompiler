@@ -32,7 +32,7 @@ class DeclNode(// var name
             //if it's not there or there is a function with the same name, don't add an error
             if (value != null && (value !is FunctionNode)) {
                 // if there is already a variable with that name -> error
-                errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
+                errors.addError(DoubleDeclare(ctx, id))
             }
 
         if (type.getType() != rhs.getType()) {
@@ -41,13 +41,12 @@ class DeclNode(// var name
 
 
                 if (value == null || value != type.getType()) {
-
-                        errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
+                        errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
                     } else {
                     rhs.semanticCheck(errors, table)
                 }
                 } else {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, type.getType().toString(), rhs, table))
+                    errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
                 }
             } else {
                 rhs.semanticCheck(errors, table)

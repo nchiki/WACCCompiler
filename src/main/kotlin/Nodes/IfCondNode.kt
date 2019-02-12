@@ -2,7 +2,6 @@ package src.main.kotlin
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -24,17 +23,17 @@ class IfCondNode(// condition (should evaluate to boolean val
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
         // check whether the expr evaluates to boolean value
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
         if(expr?.getType() != LitTypes.BoolWacc) {
-            errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "BOOL", expr!!, table))
+            errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
         //checks both statements
         ifTrueStat?.semanticCheck(errors, table)
         elseStat?.semanticCheck(errors, table)
 
     }
-
 
 }

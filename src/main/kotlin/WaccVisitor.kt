@@ -37,11 +37,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //add Statements as well as parameter of FuncNode
     override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
-        val paramList = visitParamList(ctx.paramList())
+
         val returnType = getType(ctx.type().text)
         val id = ctx.IDENT().text
         val stat = visit(ctx.stat())
-        return FunctionNode(id, returnType, paramList, stat, ctx)
+        if (ctx.paramList() == null) {
+            var params = arrayListOf<ParamNode>()
+            val paramList = ParamListNode(params, null)
+            return FunctionNode(id, returnType, paramList, stat, ctx)
+        } else {
+            val paramList = visit(ctx.paramList()) as ParamListNode
+            return FunctionNode(id, returnType, paramList, stat, ctx)
+        }
     }
 
     //IntNode needs to be constructed with val of int
@@ -105,8 +112,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
-        val args = visit(ctx.argList()) as ArgListNode
-        return RHS_Node(RHS_type.call, funId, args, ctx.start!!.line, ctx.start!!.charPositionInLine,
+        var argList = arrayListOf<ExprNode>()
+        if (ctx.argList() != null) {
+            val args = ctx.argList().expr()
+            for (arg in args) {
+                argList.add(visit(arg) as ExprNode)
+            }
+        }
+        return RHS_Node(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line, ctx.start!!.charPositionInLine,
                 null, null, null, null, ctx)
     }
 
@@ -254,7 +267,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitParamList(ctx: BasicParser.ParamListContext): ParamListNode {
         // gets parameters in context
-        val params =ctx.param()
+        val params = ctx.param()
 
         // declaration empty list of parameters
         val listParamNodes = mutableListOf<ParamNode>()

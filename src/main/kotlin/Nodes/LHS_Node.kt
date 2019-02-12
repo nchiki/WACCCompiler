@@ -23,7 +23,7 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
         val value = table.lookupSymbol(id)
 
         if( value == null || value is FunctionNode) {
-            errors.addError(UndefinedVariable(line, pos, id))
+            errors.addError(UndefinedVariable(ctx, id))
         }
     }
 
