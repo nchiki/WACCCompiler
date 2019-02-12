@@ -8,7 +8,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
 
-class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode, val stat: Node,
+class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
                     override val ctx: BasicParser.FuncContext) : Node {
 
 
@@ -42,7 +42,9 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
             stat.setFunctionReturn(fun_type)
             statRet.setFunctionReturn(fun_type)
         }
-        params.semanticCheck(errors, table)
+        if (params != null) {
+            params.semanticCheck(errors, table)
+        }
         stat.semanticCheck(errors, table)
 
 
