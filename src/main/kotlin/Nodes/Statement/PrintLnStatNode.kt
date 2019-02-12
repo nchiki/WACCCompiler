@@ -19,6 +19,8 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        if(expr !is UnaryOpNode) {
+
         if (expr.getType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
@@ -52,7 +54,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
                 && expr.getType() != LitTypes.BoolWacc
                 && expr.getType() != LitTypes.PairWacc) {
             errors.addError(IncompatibleTypes(ctx, "{STRING, INT, CHAR, PAIR, BOOL}", expr, table))
-        }
+        }}
         expr.semanticCheck(errors, table)
     }
 }

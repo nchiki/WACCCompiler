@@ -94,11 +94,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.DIV() != null
                         || operator.MOD() != null
                         || operator.MINUS() != null
-                        || operator.PLUS() != null
-                        || operator.LESS() != null
-                        || operator.LESS_EQ() != null
-                        || operator.GREAT() != null
-                        || operator.GREAT_EQ() != null)) {
+                        || operator.PLUS() != null)) {
             if((leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc) ) {
                 errors.addError(InvalidOperandTypes(ctx))
             }
@@ -109,6 +105,14 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.OR() != null)
                 && (leftType != LitTypes.BoolWacc || rightType != LitTypes.BoolWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
+        } else if ((operator.LESS() != null
+                || operator.LESS_EQ() != null
+                || operator.GREAT() != null
+                || operator.GREAT_EQ() != null) &&
+                (left is IdentNode && table.lookupSymbol(left.id) is ArrayLitNode)
+                ||(right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode) ) {
+                    errors.addError(InvalidOperandTypes(ctx))
+
         }
         left.semanticCheck(errors, table)
         right.semanticCheck(errors, table)
