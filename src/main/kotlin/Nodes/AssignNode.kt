@@ -39,7 +39,6 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
                 }
             }
 
-
             if (RHS_Node.type == RHS_type.call) {
                 if (RHS_Node.funId != null) {
                     val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
