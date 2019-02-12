@@ -17,11 +17,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 || operator.DIV() != null
                 || operator.MOD() != null
                 || operator.MINUS() != null
-                || operator.PLUS() != null
-                || operator.LESS() != null
-                || operator.LESS_EQ() != null
-                || operator.GREAT() != null
-                || operator.GREAT_EQ() != null) {
+                || operator.PLUS() != null) {
             return LitTypes.IntWacc
         } else {
             return LitTypes.BoolWacc
