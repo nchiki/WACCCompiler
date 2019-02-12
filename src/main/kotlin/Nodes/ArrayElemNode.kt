@@ -23,7 +23,7 @@ class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         for (expr in exprs) {
             if (expr.getType() != BaseNode(baseType, null).getType()) {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, baseType.toString(), expr, table))
+                errors.addError(IncompatibleTypes(ctx, baseType.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }

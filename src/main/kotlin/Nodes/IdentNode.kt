@@ -22,6 +22,7 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : Exp
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //nothing to do here
+        println(table.table)
+        println(0)
     }
 }

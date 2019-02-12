@@ -39,7 +39,7 @@ class ParamNode(
         //if it's not there or there is a function with the same name, don't add an error
         if (Value != null && (Value !is FunctionNode)) {
             // if there is already a variable with that name -> error
-            errors.addError(DoubleDeclare(ctx.start.line, ctx.start.charPositionInLine, id))
+            errors.addError(DoubleDeclare(ctx, id))
         } else {
             table.add(this, id)
         }

@@ -29,10 +29,10 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
                 val IdExpr = expr as IdentNode
                 val value = IdExpr.getValueType(table)
                 if (value !is PairNode && value !is PairLitNode) {
-                    errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "PAIR", value!!, table))
+                    errors.addError(IncompatibleTypes(ctx, "PAIR", value!!, table))
                 }
             } else {
-                errors.addError(IncompatibleTypes(ctx.start.line, ctx.start.charPositionInLine, "PAIR", expr, table))
+                errors.addError(IncompatibleTypes(ctx, "PAIR", expr, table))
             }
         }
     }

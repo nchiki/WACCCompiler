@@ -67,13 +67,13 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             if(args != null) {
                 if (parameters.listParamNodes.count() != args.exprs.count()) {
 //                    println(3)
-                    errors.addError(IncorrectNumParams(line, pos, parameters.listParamNodes.count(), args.exprs.count()))
+                    errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), args.exprs.count()))
                 } else {
                     for (i in args.exprs.indices) {
                         val actual = args.exprs[i]
                         val expected = parameters.listParamNodes[i]
                         if (actual.getType() != expected.getType()) {
-                            errors.addError(IncompatibleTypes(line, pos, expected.getType().toString(), actual, table))
+                            errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
                         }
                     }
                 }
