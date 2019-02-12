@@ -22,8 +22,15 @@ class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         for (expr in exprs) {
-            if (expr.getType() != BaseNode(baseType, null).getType()) {
-                errors.addError(IncompatibleTypes(ctx, baseType.toString(), expr, table))
+
+            var tempExpr = expr
+
+            if(expr is IdentNode){
+                tempExpr = table.lookupSymbol(expr.id) as ExprNode
+            }
+
+            if (tempExpr.getType() != BaseNode(baseType, null).getType()) {
+                errors.addError(IncompatibleTypes(ctx, baseType.toString(), tempExpr, table))
             }
             expr.semanticCheck(errors, table)
         }
