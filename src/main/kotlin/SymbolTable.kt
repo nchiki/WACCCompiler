@@ -39,7 +39,7 @@ class SymbolTable (val parent: SymbolTable?){
             val variable = lookupSymbol(tempExpr.id)
 
             if(variable == null){
-                errors.addError(UndefinedVariable(tempExpr.ctx, tempExpr.id))
+                errors.addError(UndefinedVariable(tempExpr.ctx!!, tempExpr.id))
                 return
             }
 

@@ -78,7 +78,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     }
                 }
             } else {
-                errors.addError(IncorrectNumParams(line, pos, parameters.listParamNodes.count(), 0))
+                errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), 0))
             }
 
         } else if(type == RHS_type.expr) {
