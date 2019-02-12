@@ -81,7 +81,14 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 errors.addError(IncorrectNumParams(line, pos, parameters.listParamNodes.count(), 0))
             }
 
+        } else if(type == RHS_type.expr) {
+            expr!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.array_lit) {
+            ArrayLit!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.pair_elem) {
+            PairLit!!.semanticCheck(errors,table)
         }
+
 
     }
 
