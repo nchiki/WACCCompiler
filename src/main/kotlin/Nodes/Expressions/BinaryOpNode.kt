@@ -109,10 +109,27 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 || operator.LESS_EQ() != null
                 || operator.GREAT() != null
                 || operator.GREAT_EQ() != null) &&
-                ((left is IdentNode && table.lookupSymbol(left.id) is ArrayLitNode)
-                ||(right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode) || leftType != LitTypes.CharWacc
+                ( leftType != LitTypes.CharWacc
                         || leftType != LitTypes.IntWacc || rightType != LitTypes.CharWacc || rightType != LitTypes.IntWacc) ) {
-                    errors.addError(InvalidOperandTypes(ctx))
+            if(left is IdentNode || right is IdentNode) {
+                if (left is IdentNode) {
+                    val value = table.lookupSymbol(left.id)
+                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.IntWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+
+                }
+                if (right is IdentNode) {
+                    val value = table.lookupSymbol(right.id)
+                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.IntWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+                }
+            } else {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
 
         }
         left.semanticCheck(errors, table)
