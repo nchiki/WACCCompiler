@@ -2,6 +2,7 @@ package src.main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
@@ -26,12 +27,18 @@ class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override 
             var tempExpr = expr
 
             if(expr is IdentNode){
-                tempExpr = table.lookupSymbol(expr.id) as ExprNode
+                val lookup = table.lookupSymbol(expr.id)
+                if(lookup != null){
+                    tempExpr = lookup as ExprNode
+                }else {
+                    errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
+                }
             }
 
             if (tempExpr.getType() != BaseNode(baseType, null).getType()) {
-                errors.addError(IncompatibleTypes(ctx, baseType.toString(), tempExpr, table))
+                errors.addError(IncompatibleTypes(ctx, baseType, tempExpr, table))
             }
+
             expr.semanticCheck(errors, table)
         }
     }
