@@ -41,9 +41,10 @@ class DeclNode(// var name
 
 
                 if (value == null || value != type.getType()) {
-
                         errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
-                    }
+                    } else {
+                    rhs.semanticCheck(errors, table)
+                }
                 } else {
                     errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
                 }

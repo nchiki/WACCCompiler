@@ -60,13 +60,11 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//        println(0)
+//
         if(type == RHS_type.call) {
-//            println(1)
             val funNode = table.lookupSymbol(funId!!) as FunctionNode
             val parameters = funNode.params
             if(args != null) {
-//                println(2)
                 if (parameters.listParamNodes.count() != args.exprs.count()) {
 //                    println(3)
                     errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), args.exprs.count()))
@@ -79,9 +77,18 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                         }
                     }
                 }
+            } else {
+                errors.addError(IncorrectNumParams(line, pos, parameters.listParamNodes.count(), 0))
             }
 
+        } else if(type == RHS_type.expr) {
+            expr!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.array_lit) {
+            ArrayLit!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.pair_elem) {
+            PairLit!!.semanticCheck(errors,table)
         }
+
 
     }
 

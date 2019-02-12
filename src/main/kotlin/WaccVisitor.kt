@@ -40,7 +40,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val paramList = visitParamList(ctx.paramList())
         val returnType = getType(ctx.type().text)
         val id = ctx.IDENT().text
-        val stat = visit(ctx.stat()) as ReturnStatNode
+        val stat = visit(ctx.stat())
         return FunctionNode(id, returnType, paramList, stat, ctx)
     }
 
@@ -105,8 +105,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
-        //val params = visit(ctx.argList()) as ArgListNode
-        return RHS_Node(RHS_type.call, ctx.IDENT().text, null, ctx.start!!.line, ctx.start!!.charPositionInLine,
+        val args = visit(ctx.argList()) as ArgListNode
+        return RHS_Node(RHS_type.call, funId, args, ctx.start!!.line, ctx.start!!.charPositionInLine,
                 null, null, null, null, ctx)
     }
 
@@ -153,7 +153,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitArrayElem(@NotNull ctx: BasicParser.ArrayElemContext): Node? {
-        val idType = visit(ctx.IDENT())
+        val idType = ctx.IDENT().text
         var exprs = arrayListOf<ExprNode>()
         var i = 0
         while(ctx.expr(i) != null) {
