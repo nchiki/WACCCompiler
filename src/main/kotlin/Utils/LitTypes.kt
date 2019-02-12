@@ -3,13 +3,13 @@ package main.kotlin.Utils
 enum class LitTypes(s: String) {
     IntWacc("int")
     , BoolWacc("bool")
-    , PairWacc("bool")
+    , PairWacc("pair")
     , StringWacc("string")
     , CharWacc("char")
-    , FuncWacc("bool")
-    , IdentWacc("bool"),
+    , FuncWacc("func")
+    , IdentWacc("ident"),
 
-    NonLitWacc("bool"),
+    NonLitWacc("nonlit"),
     ArrayLit("arrayLit"),
     Null("null")
 
