@@ -1,6 +1,7 @@
 package main.kotlin.Nodes.Statement
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -17,6 +18,8 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //nothing to do here
+        if (lhs.Nodetype != LitTypes.CharWacc && lhs.Nodetype != LitTypes.IntWacc) {
+            errors.addError(IncompatibleTypes(ctx, ctx.text, lhs, table))
+        }
     }
 }
