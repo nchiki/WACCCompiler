@@ -116,7 +116,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         if (ctx.argList() != null) {
             val args = ctx.argList().expr()
             for (arg in args) {
-                argList.add(arg as ExprNode)
+                argList.add(visit(arg) as ExprNode)
             }
         }
         return RHS_Node(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line, ctx.start!!.charPositionInLine,

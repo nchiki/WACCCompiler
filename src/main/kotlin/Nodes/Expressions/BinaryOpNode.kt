@@ -32,7 +32,12 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//        println(0)
+        if (right.getType().equals(LitTypes.IdentWacc) && table.lookupSymbol(right.toString()) == null) {
+            errors.addError(UndefinedVariable(ctx, right.toString()))
+        }
+        if (left.getType().equals(LitTypes.IdentWacc) && table.lookupSymbol(left.toString()) == null) {
+            errors.addError(UndefinedVariable(ctx, left.toString()))
+        }
         val line = operator.start.line
         val pos = operator.start.charPositionInLine
         var leftType = left.getType()
@@ -53,11 +58,11 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             }
             rightType = rightValue.getType()
         }
-        if (getType() == LitTypes.IntWacc && leftType != LitTypes.IntWacc) {
+        if (getType() == LitTypes.IntWacc && !leftType.equals(LitTypes.IntWacc)) {
             errors.addError(IncompatibleTypes(ctx, "INT", left, table))
-        } else if (getType() == LitTypes.IntWacc && rightType != LitTypes.IntWacc) {
+        } else if (getType() == LitTypes.IntWacc && !rightType.equals(LitTypes.IntWacc)) {
             errors.addError(IncompatibleTypes(ctx, "INT", right, table))
-        } else if (leftType != rightType) {
+        } else if (!leftType.equals(rightType)) {
             errors.addError(IncompatibleTypes(ctx, leftType.toString(), right, table))
         }
         if ((operator.MULT() != null
@@ -76,8 +81,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 && (left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
         }
-
-
 
     }
 
