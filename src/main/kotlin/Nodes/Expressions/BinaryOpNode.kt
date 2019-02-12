@@ -69,7 +69,27 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         } else if (getType() == LitTypes.IntWacc && !rightType.equals(LitTypes.IntWacc)) {
             errors.addError(IncompatibleTypes(ctx, "INT", right, table))
         } else if (!leftType.equals(rightType)) {
-            errors.addError(IncompatibleTypes(ctx, leftType.toString(), right, table))
+            var l = left as Node?
+            while (leftType == LitTypes.IdentWacc) {
+                l = table.lookupSymbol((l as IdentNode).id)
+                if (l != null) {
+                    leftType = l.getType()
+                } else {
+                    break
+                }
+            }
+            var r = right as Node?
+            while (rightType == LitTypes.IdentWacc ) {
+                r = table.lookupSymbol((r as IdentNode).id)
+                if (r != null) {
+                    rightType = r.getType()
+                } else {
+                    break
+                }
+            }
+            if (leftType != rightType) {
+                errors.addError(IncompatibleTypes(ctx, leftType.toString(), right, table))
+            }
         }
 
         if ((operator.MULT() != null

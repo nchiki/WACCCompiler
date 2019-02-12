@@ -25,20 +25,30 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         if (expr.getType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
-                errors.addError(UndefinedVariable(ctx, (expr as IdentNode).id))
+                errors.addError(UndefinedVariable(ctx, (expr).id))
                 return
             } else {
-                if (value.getType() != LitTypes.StringWacc
-                        && value.getType() != LitTypes.CharWacc
-                        && value.getType() != LitTypes.IntWacc
-                        && value.getType() != LitTypes.BoolWacc
-                        && value.getType() != LitTypes.PairWacc) {
-                    errors.addError(IncompatibleTypes(ctx, "{STRING, INT, CHAR, PAIR, BOOL}", value, table))
+                var v = value
+                while(v != null && v?.getType() == LitTypes.IdentWacc) {
+                    if(v is PairElemNode) {
+                        v = v.expr
+                    }
+                    v = table.lookupSymbol((v as IdentNode).id)
+                }
+                if ( v == null ) {
+                    errors.addError(UndefinedVariable(ctx, (expr).id))
+                    return
+                } else if (v.getType() != LitTypes.StringWacc
+                            && v.getType() != LitTypes.CharWacc
+                            && v.getType() != LitTypes.IntWacc
+                            && v.getType() != LitTypes.BoolWacc
+                            && v.getType() != LitTypes.PairWacc
+                ) {
+                    errors.addError(IncompatibleTypes(ctx, "{STRING, INT, CHAR, PAIR, BOOL}", v, table))
                     return
                 }
             }
-        }
-        if (expr.getType() != LitTypes.StringWacc
+        } else if (expr.getType() != LitTypes.StringWacc
                 && expr.getType() != LitTypes.CharWacc
                 && expr.getType() != LitTypes.IdentWacc
                 && expr.getType() != LitTypes.IntWacc
