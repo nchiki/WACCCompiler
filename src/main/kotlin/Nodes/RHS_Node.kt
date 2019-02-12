@@ -32,11 +32,10 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun returnIdentType(table: SymbolTable) :LitTypes?{
-        if(type == RHS_type.expr && expr!!.getType() == LitTypes.IdentWacc) {
+        if (type == RHS_type.expr && expr!!.getType() == LitTypes.IdentWacc) {
             val exprId = expr as IdentNode
-            val value = exprId.getValueType(table)?.getType()
-            return value
-        }  else if (type == RHS_type.pair_elem) {
+            return exprId.getValueType(table)?.getType()
+        } else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
             if (pairVal?.getType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
@@ -52,15 +51,15 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 }
 
             }
-        }else if(type == RHS_type.call) {
-                return table.lookupSymbol(funId!!)!!.getType()
+        } else if (type == RHS_type.call) {
+            return table.lookupSymbol(funId!!)!!.getType()
         }
         return null
     }
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//
+
         if(type == RHS_type.call) {
             val funNode = table.lookupSymbol(funId!!) as FunctionNode
             val parameters = funNode.params
@@ -81,7 +80,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 errors.addError(IncorrectNumParams(ctx, parameters!!.listParamNodes.count(), 0))
             }
 
-        } else if(type == RHS_type.expr) {
+        } else if (type == RHS_type.expr) {
             expr!!.semanticCheck(errors, table)
         } else if (type == RHS_type.array_lit) {
             ArrayLit!!.semanticCheck(errors, table)
@@ -108,7 +107,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         } else if (type == RHS_type.newpair) {
             table.add(newPairNode!!, id)
         } else if(type == RHS_type.pair_elem) {
-
             table.add(PairLit!!, id)
         } else if(type == RHS_type.array_lit) {
             table.add(ArrayLit!!, id)
