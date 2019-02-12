@@ -28,9 +28,4 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-    fun getPrintableType() : String {
-        return "PAIR(${exprNode1.getType().toString().toUpperCase().replace("WACC", "")}, ${exprNode2.getType().toString().toUpperCase().replace("WACC", "")})"
-    }
-
 }

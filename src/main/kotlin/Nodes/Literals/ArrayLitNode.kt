@@ -22,10 +22,6 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         }
     }
 
-    fun getPrintableType() : String {
-        return getType().toString().toUpperCase().replace("WACC", "") + "[]"
-    }
-
     override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

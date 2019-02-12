@@ -1,11 +1,13 @@
 package main.kotlin.Nodes
 
+import Errors.InvalidOperandTypes
 import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: BasicParser.BinOperContext) : ExprNode {
 
@@ -30,32 +32,35 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        left.semanticCheck(errors, table)
-        right.semanticCheck(errors, table)
+      /*  if (right.getType().equals(LitTypes.IdentWacc)) {
+                    val rightId = right as IdentNode
+                    if(table.lookupSymbol(rightId.id) == null) {
+                        errors.addError(UndefinedVariable(ctx, rightId.id))
+                    }
+        }
+        if (left.getType().equals(LitTypes.IdentWacc)) {
+        val leftId = left as IdentNode
+        if(table.lookupSymbol(leftId.id) == null) {
+            errors.addError(UndefinedVariable(ctx, leftId.id))
+        }
+        }*/
+        val line = operator.start.line
+        val pos = operator.start.charPositionInLine
         var leftType = left.getType()
         if (left is IdentNode) {
-            if (left.getValueType(table) is ArrayLitNode) {
-                leftType = LitTypes.ArrayLit
-            } else {
-                val leftValue = table.lookupSymbol(left.id)
-                if (leftValue == null) {
-                    errors.addError(UndefinedVariable(ctx, left.id))
-                    return
-                }
-                leftType = leftValue.getType()
+            val leftValue = table.lookupSymbol(left.id)
+            if (leftValue == null) {
+                errors.addError(UndefinedVariable(ctx, left.id))
+                return
             }
+            leftType = leftValue.getType()
         }
         var rightType = right.getType()
         if (right is IdentNode) {
-            if (right.getValueType(table) is ArrayLitNode) {
-                rightType = LitTypes.ArrayLit
-            } else {
-                val rightValue = table.lookupSymbol(right.id)
-                if (rightValue == null) {
-                    errors.addError(UndefinedVariable(ctx, right.id))
-                    return
-                }
-                rightType = rightValue.getType()
+            val rightValue = table.lookupSymbol(right.id)
+            if (rightValue == null) {
+                errors.addError(UndefinedVariable(ctx, right.id))
+                return
             }
             rightType = rightValue.getType()
         }

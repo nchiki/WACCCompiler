@@ -40,12 +40,12 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
                     return
                 }
                 if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc) {
-                    errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
+                    errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
                 }
             }
         }else {
             if (lhs.getType() != LitTypes.CharWacc && lhs.getType() != LitTypes.IntWacc) {
-                errors.addError(IncompatibleTypes(ctx, "{CHAR, INT}", lhs, table))
+                errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
             }
         }
     }

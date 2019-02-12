@@ -1,10 +1,7 @@
 package main.kotlin.Nodes
 
 import Errors.FunctionDoubleDeclare
-import Errors.GlobalReturn
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.Statement.ReturnStatNode
-import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
@@ -38,16 +35,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
         val statTable = SymbolTable(table)
         if (stats != null) {
-            if (stats is StatListNode) {
-                for (node in stats.listStatNodes) {
-                    if (node is ReturnStatNode) {
-                        errors.addError(GlobalReturn(node.ctx))
-                    }
-                }
-            }
-            if (errors.errorList.size == 0) {
-                stats.semanticCheck(errors, statTable)
-            }
+            stats.semanticCheck(errors, statTable)
         }
     }
 }

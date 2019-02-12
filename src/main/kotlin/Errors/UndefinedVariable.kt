@@ -7,5 +7,4 @@ class UndefinedVariable(ctx : ParserRuleContext, val varID : String) : SemanticE
     override fun printError(): String {
         return super.printError() + "Variable $varID is not defined in this scope"
     }
-
 }
