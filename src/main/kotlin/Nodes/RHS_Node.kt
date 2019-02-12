@@ -14,21 +14,14 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : Node {
 
     override fun getType(): LitTypes {
-        if(type == RHS_type.expr) {
-            return expr!!.getType()
-        } else if (type == RHS_type.array_lit) {
-            return ArrayLit!!.getType()
-        } else if (type == RHS_type.call) {
-
-            // NEEDS IMPLEMENTATION
-            return LitTypes.FuncWacc
-        } else if(type == RHS_type.newpair) {
-            return LitTypes.PairWacc
-        } else if (type == RHS_type.pair_elem) {
-            return PairLit!!.getType()
-        } else {
-            return LitTypes.NonLitWacc
+        when(type){
+            RHS_type.expr -> return expr!!.getType()
+            RHS_type.array_lit -> return ArrayLit!!.getType()
+            RHS_type.call -> return LitTypes.FuncWacc
+            RHS_type.newpair -> return LitTypes.PairWacc
+            RHS_type.pair_elem -> return PairLit!!.getType()
         }
+        return LitTypes.NonLitWacc
     }
 
     fun returnIdentType(table: SymbolTable) :LitTypes?{

@@ -20,42 +20,66 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if(LHS_Node.Nodetype is PairElemNode) {
+        LHS_Node.semanticCheck(errors, table)
+        RHS_Node.semanticCheck(errors, table)
+
+        /* Attempting to assign to a pair */
+        if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
             val node = (table.lookupSymbol(LHS_Node.id) as NewPairNode).returnElemNode(elem)
             if (node.getType() != RHS_Node.getType()) {
                 errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
             }
-        } else {
-            val node = table.lookupSymbol(LHS_Node.id)
-            if (node == null) {
-                errors.addError(UndefinedVariable(ctx, LHS_Node.id))
-            } else if (node.getType() != RHS_Node.getType()) {
-                if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
-                        RHS_Node.getType() == LitTypes.CharWacc) {
+            return
+        }
 
-                } else {
-                    errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
-                }
+        val node = table.lookupSymbol(LHS_Node.id)
+        if (node == null) {
+            errors.addError(UndefinedVariable(ctx, LHS_Node.id))
+            return
+        }
+
+        /* Types match */
+        if (node.getType() == RHS_Node.getType()) {
+            return
+        }
+
+
+        val idType = RHS_Node.returnIdentType(table)
+        if(idType != null){
+            if(idType == node.getType()){
+                return
             }
+            errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+            return
+        }
 
-            if (RHS_Node.type == RHS_type.call) {
-                if (RHS_Node.funId != null) {
-                    val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
-                    val returnT = Func.getType()
-                    if (returnT != LHS_Node.getType()) {
-                        if (LHS_Node.getType() == LitTypes.IdentWacc) {
-                            val idLHS = LHS_Node as IdentNode
-                            if (table.lookupSymbol(idLHS.id) == null) {
-                                errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
-                            }
+        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+
+        if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
+                    RHS_Node.getType() == LitTypes.CharWacc) {
+                TODO("NOT IMPLEMENTED YET")
+        } else {
+                errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        }
+
+        /* Call to function */
+        /* ================ Probably solved by line 48 ===============
+        if (RHS_Node.type == RHS_type.call) {
+            if (RHS_Node.funId != null) {
+                val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
+                val returnT = Func.getType()
+                if (returnT != LHS_Node.getType()) {
+                    if (LHS_Node.getType() == LitTypes.IdentWacc) {
+                        val idLHS = LHS_Node as IdentNode
+                        if (table.lookupSymbol(idLHS.id) == null) {
+                            errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
                         }
-                        errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
                     }
+                    errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
                 }
             }
         }
-        LHS_Node.semanticCheck(errors,table)
-        RHS_Node.semanticCheck(errors, table)
+        */
     }
 }
