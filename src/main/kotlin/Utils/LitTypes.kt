@@ -3,24 +3,29 @@ package main.kotlin.Utils
 enum class LitTypes(s: String) {
     IntWacc("int")
     , BoolWacc("bool")
-    , PairWacc("bool")
+    , PairWacc("pair")
     , StringWacc("string")
     , CharWacc("char")
     , FuncWacc("bool")
-    , IdentWacc("bool"),
+    , IdentWacc("ident"),
 
-    NonLitWacc("bool"),
+    NonLitWacc("nonlit"),
     ArrayLit("arrayLit"),
     Null("null")
 
 }
 
 fun getType(s : String) : LitTypes{
-    return when (s) {
+    var input = s
+    if (s.contains("pair")) {
+        input = "pair"
+    }
+    return when (input) {
         "bool" -> LitTypes.BoolWacc
         "int" -> LitTypes.IntWacc
         "string" -> LitTypes.StringWacc
         "char" -> LitTypes.CharWacc
+         "pair"-> LitTypes.PairWacc
         else -> LitTypes.NonLitWacc
 }
 }

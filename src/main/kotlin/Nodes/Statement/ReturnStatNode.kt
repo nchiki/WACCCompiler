@@ -34,12 +34,14 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
             if(expr.getType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
+                println("$value")
+                println("$type_return")
                 if (value?.getType() != type_return) {
-
+                    println("adding error1")
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }
             } else {
-
+                println("adding error2")
                 errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))
             }
         }
