@@ -15,6 +15,8 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
+import java.lang.Exception
+import kotlin.system.exitProcess
 
 
 class WaccVisitor : BasicParserBaseVisitor<Node>() {
@@ -53,7 +55,12 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
-        val int_val = ctx.INT_LIT().text.toInt()
+        val int_val : Int
+        try {
+             int_val = ctx.INT_LIT().text.toInt()
+        } catch (e : Exception) {
+            exitProcess(100)
+        }
         return IntLitNode(int_val, ctx)
     }
 
