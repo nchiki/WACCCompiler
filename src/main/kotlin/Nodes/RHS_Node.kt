@@ -104,7 +104,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 table.add(value, id)
             }
         } else if(type == RHS_type.expr) {
-
             table.add(expr!!, id)
         } else if (type == RHS_type.newpair) {
             table.add(newPairNode!!, id)
