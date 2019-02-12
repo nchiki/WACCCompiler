@@ -6,6 +6,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.ArrayElemNode
 
 class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
@@ -30,8 +31,15 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             if (node == null) {
                 errors.addError(UndefinedVariable(ctx, LHS_Node.id))
             } else if (node.getType() != RHS_Node.getType()) {
-                errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+                if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
+                        RHS_Node.getType() == LitTypes.CharWacc) {
+
+                } else {
+                    errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+                }
             }
+
+
             if (RHS_Node.type == RHS_type.call) {
                 if (RHS_Node.funId != null) {
                     val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
