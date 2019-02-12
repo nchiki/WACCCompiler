@@ -62,43 +62,41 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         if(type == RHS_type.call) {
-            val func = table.lookupSymbol(funId!!) as FunctionNode
-            if (args!!.exprs.size > func.params!!.listParamNodes.size) {
-                errors.addError(IncorrectNumParams(ctx, args.exprs.size, func.params.listParamNodes.size))
-            }
-            val funcList = args.exprs
-            val paramlist = func.params.listParamNodes
-            for (i in 0..args.exprs.size) {
-                if (funcList[i].getType() != paramlist[i].getType()) {
-                    errors.addError(IncompatibleTypes(ctx, funcList[i].getType().name, paramlist[i], table))
-                }
-            }
-            /*
-            val funNode = table.lookupSymbol(funId!!) as FunctionNode
-            val parameters = funNode.params
-            if(args != null) {
-                if (parameters!!.listParamNodes.count() != args.exprs.count()) {
-//                    println(3)
-                    errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), args.exprs.count()))
-                } else {
-                    for (i in args.exprs.indices) {
-                        val actual = args.exprs[i]
-                        val expected = parameters.listParamNodes[i]
-                        if (actual.getType() != expected.getType()) {
-                            errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
+            if(type == RHS_type.call) {
+                val funNode = table.lookupSymbol(funId!!) as FunctionNode
+                val parameters = funNode.params
+                if (args != null) {
+                    if (parameters!!.listParamNodes.count() != args.exprs.count()) {
+                        println("adding error1")
+                        errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), args.exprs.count()))
+                    } else {
+                        for (i in 0..args.exprs.size-1) {
+                            val actual = args.exprs[i]
+                            val expected = parameters.listParamNodes[i]
+                            if (actual.getType() == LitTypes.IdentWacc) {
+                                val actIdent = actual as IdentNode
+                                val actType = table.lookupSymbol(actual.id)
+                                if (expected.getType() != actType!!.getType()) {
+                                    errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
+                                }
+                            } else if (actual.getType() != expected.getType()) {
+                                errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
+                            }
                         }
                     }
+                } else {
+                    println("adding error3")
+                    errors.addError(IncorrectNumParams(ctx, parameters!!.listParamNodes.count(), 0))
                 }
-            */
+            }
 
-        } else if(type == RHS_type.expr) {
+            } else if(type == RHS_type.expr) {
             expr!!.semanticCheck(errors, table)
         } else if (type == RHS_type.array_lit) {
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
             PairLit!!.semanticCheck(errors,table)
         }
-
 
     }
 
