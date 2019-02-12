@@ -9,7 +9,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ArrayElemNode(val baseType : String, val expr : ExprNode, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
     fun getId() : String{
         val idBase = IdentNode(baseType, null)
@@ -17,21 +17,23 @@ class ArrayElemNode(val baseType : String, val expr : ExprNode, override val ctx
 
     }
     override fun getType() : LitTypes {
-        return expr.getType()
+        return exprs[0].getType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        var tempExpr = expr
+        for (expr in exprs) {
 
-        if(expr is IdentNode){
-            tempExpr = table.lookupSymbol(expr.id) as ExprNode
+            var tempExpr = expr
+
+            if(expr is IdentNode){
+                tempExpr = table.lookupSymbol(expr.id) as ExprNode
+            }
+
+            if (tempExpr.getType() != BaseNode(baseType, null).getType()) {
+                errors.addError(IncompatibleTypes(ctx, baseType.toString(), tempExpr, table))
+            }
+            expr.semanticCheck(errors, table)
         }
-
-        if (tempExpr.getType() != BaseNode(baseType, null).getType()) {
-            errors.addError(IncompatibleTypes(ctx, baseType.toString(), tempExpr, table))
-        }
-
-        expr.semanticCheck(errors, table)
     }
 
     override fun syntaxCheck() {
