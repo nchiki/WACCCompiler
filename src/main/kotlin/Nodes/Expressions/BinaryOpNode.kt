@@ -32,7 +32,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (right.getType().equals(LitTypes.IdentWacc)) {
+      /*  if (right.getType().equals(LitTypes.IdentWacc)) {
                     val rightId = right as IdentNode
                     if(table.lookupSymbol(rightId.id) == null) {
                         errors.addError(UndefinedVariable(ctx, rightId.id))
@@ -43,7 +43,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if(table.lookupSymbol(leftId.id) == null) {
             errors.addError(UndefinedVariable(ctx, leftId.id))
         }
-        }
+        }*/
         val line = operator.start.line
         val pos = operator.start.charPositionInLine
         var leftType = left.getType()
@@ -71,6 +71,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         } else if (!leftType.equals(rightType)) {
             errors.addError(IncompatibleTypes(ctx, leftType.toString(), right, table))
         }
+
         if ((operator.MULT() != null
                         || operator.DIV() != null
                         || operator.MOD() != null
@@ -87,7 +88,8 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 && (left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
         }
-
+        left.semanticCheck(errors, table)
+        right.semanticCheck(errors, table)
     }
 
 }
