@@ -32,11 +32,17 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (right.getType().equals(LitTypes.IdentWacc) && table.lookupSymbol(right.toString()) == null) {
-            errors.addError(UndefinedVariable(ctx, right.toString()))
+        if (right.getType().equals(LitTypes.IdentWacc)) {
+                    val rightId = right as IdentNode
+                    if(table.lookupSymbol(rightId.id) == null) {
+                        errors.addError(UndefinedVariable(ctx, rightId.id))
+                    }
         }
-        if (left.getType().equals(LitTypes.IdentWacc) && table.lookupSymbol(left.toString()) == null) {
-            errors.addError(UndefinedVariable(ctx, left.toString()))
+        if (left.getType().equals(LitTypes.IdentWacc)) {
+        val leftId = left as IdentNode
+        if(table.lookupSymbol(leftId.id) == null) {
+            errors.addError(UndefinedVariable(ctx, leftId.id))
+        }
         }
         val line = operator.start.line
         val pos = operator.start.charPositionInLine
