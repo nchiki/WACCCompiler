@@ -26,6 +26,8 @@ fun getType(s : String) : LitTypes{
         "string" -> LitTypes.StringWacc
         "char" -> LitTypes.CharWacc
          "pair"-> LitTypes.PairWacc
+        "ident" -> LitTypes.IdentWacc
+        "arrayLit" -> LitTypes.ArrayLit
         else -> LitTypes.NonLitWacc
 }
 }
