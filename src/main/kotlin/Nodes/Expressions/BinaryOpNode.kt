@@ -6,6 +6,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
@@ -44,6 +45,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             errors.addError(UndefinedVariable(ctx, leftId.id))
         }
         }*/
+
         val line = operator.start.line
         val pos = operator.start.charPositionInLine
         var leftType = left.getType()
@@ -100,9 +102,13 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.LESS() != null
                         || operator.LESS_EQ() != null
                         || operator.GREAT() != null
-                        || operator.GREAT_EQ() != null)
-                && (leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc)) {
-            errors.addError(InvalidOperandTypes(ctx))
+                        || operator.GREAT_EQ() != null)) {
+            if((leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc) ) {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
+            if((left is IdentNode && table.lookupSymbol(left.id) is ArrayLitNode) ||(right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode) ) {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
         } else if ((operator.AND() != null
                         || operator.OR() != null)
                 && (leftType != LitTypes.BoolWacc || rightType != LitTypes.BoolWacc)) {
