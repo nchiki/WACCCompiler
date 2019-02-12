@@ -13,7 +13,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun syntaxCheck() {
