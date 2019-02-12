@@ -94,11 +94,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.DIV() != null
                         || operator.MOD() != null
                         || operator.MINUS() != null
-                        || operator.PLUS() != null
-                        || operator.LESS() != null
-                        || operator.LESS_EQ() != null
-                        || operator.GREAT() != null
-                        || operator.GREAT_EQ() != null)) {
+                        || operator.PLUS() != null)) {
             if((leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc) ) {
                 errors.addError(InvalidOperandTypes(ctx))
             }
@@ -109,6 +105,32 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || operator.OR() != null)
                 && (leftType != LitTypes.BoolWacc || rightType != LitTypes.BoolWacc)) {
             errors.addError(InvalidOperandTypes(ctx))
+        } else if ((operator.LESS() != null
+                || operator.LESS_EQ() != null
+                || operator.GREAT() != null
+                || operator.GREAT_EQ() != null) &&
+                ( leftType != LitTypes.CharWacc
+                        || leftType != LitTypes.IntWacc || rightType != LitTypes.CharWacc || rightType != LitTypes.IntWacc) ) {
+            if(left is IdentNode || right is IdentNode) {
+                if (left is IdentNode) {
+                    val value = table.lookupSymbol(left.id)
+                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.IntWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+
+                }
+                if (right is IdentNode) {
+                    val value = table.lookupSymbol(right.id)
+                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.IntWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+                }
+            } else {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
+
         }
         left.semanticCheck(errors, table)
         right.semanticCheck(errors, table)

@@ -6,7 +6,7 @@ enum class LitTypes(s: String) {
     , PairWacc("pair")
     , StringWacc("string")
     , CharWacc("char")
-    , FuncWacc("bool")
+    , FuncWacc("func")
     , IdentWacc("ident"),
 
     NonLitWacc("nonlit"),
