@@ -137,11 +137,29 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
 }
 
-class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext, override val ctx: ParserRuleContext?) : ExprNode {
+class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext, override val ctx: ParserRuleContext) : ExprNode {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if(left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc) {
-            errors.addError(InvalidOperandTypes(ctx!!))
+            if (left is IdentNode || right is IdentNode) {
+                if (left is IdentNode) {
+                    val value = table.lookupSymbol(left.id)
+                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.BoolWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+
+                }
+                if (right is IdentNode) {
+                    val value = table.lookupSymbol(right.id)
+                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
+                                    && value.getType() != LitTypes.BoolWacc)) {
+                        errors.addError(InvalidOperandTypes(ctx))
+                    }
+                }
+            } else {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
         }
     }
 
