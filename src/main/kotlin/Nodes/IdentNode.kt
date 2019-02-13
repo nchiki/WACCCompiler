@@ -1,11 +1,10 @@
 package main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
-import java.util.*
-import kotlin.reflect.KClass
 
 class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : ExprNode {
 
@@ -22,6 +21,8 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : Exp
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        if(table.lookupSymbol(id) == null){
+            errors.addError(UnknownIdentifier(ctx?.start?.line!!, ctx.start.charPositionInLine))
+        }
     }
 }

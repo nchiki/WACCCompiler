@@ -2,6 +2,7 @@ package src.main.kotlin.Nodes
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
@@ -9,10 +10,10 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
     fun getId() : String{
-        val idBase = IdentNode(baseType, null)
+        val idBase = IdentNode(identifier, null)
         return idBase.id
 
     }
@@ -21,17 +22,29 @@ class ArrayElemNode(val baseType : String, var exprs : List<ExprNode>, override 
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        val arrayType = table.lookupSymbol(identifier)?.getType()
         for (expr in exprs) {
 
             var tempExpr = expr
 
             if(expr is IdentNode){
-                tempExpr = table.lookupSymbol(expr.id) as ExprNode
+                val lookup = table.lookupSymbol(expr.id)
+                if(lookup != null){
+                    tempExpr = lookup as ExprNode
+                }else {
+                    errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
+                    continue
+                }
             }
 
-            if (tempExpr.getType() != BaseNode(baseType, null).getType()) {
-                errors.addError(IncompatibleTypes(ctx, baseType.toString(), tempExpr, table))
+            if(arrayType == null){
+                continue
             }
+
+            if (tempExpr.getType() != arrayType) {
+                errors.addError(IncompatibleTypes(ctx, arrayType.toString(), tempExpr, table))
+            }
+
             expr.semanticCheck(errors, table)
         }
     }
