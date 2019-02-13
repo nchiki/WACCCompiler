@@ -7,6 +7,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
+import src.main.kotlin.IfCondNode
 import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
@@ -31,20 +32,35 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
                 statement = s
             }
             if(statement !is ReturnStatNode) {
-                syntaxCheck()
-                errors.addError(IncorrectReturnTypes(ctx))
+                if(statement is IfCondNode) {
+                    val node = statement.ifTrueStat
+                    checkReturn(node, errors, table)
+                    val ElseNode = statement.elseStat
+                    checkReturn(ElseNode, errors, table)
+                } else {
+                    syntaxCheck()
+                    errors.addError(IncorrectReturnTypes(ctx))
+                }
             } else {
                 statement.setFunctionReturn(fun_type)
             }
         } else {
-            if (stat !is ReturnStatNode) {
-                syntaxCheck()
-                errors.addError(IncorrectReturnTypes(ctx))
-            }
-            val statRet = stat as ReturnStatNode
+            if(stat is IfCondNode) {
+                val node = stat.ifTrueStat
+                checkReturn(node, errors, table)
+                val ElseNode = stat.elseStat
+                checkReturn(ElseNode, errors, table)
+            } else if (stat !is ReturnStatNode) {
 
-            stat.setFunctionReturn(fun_type)
-            statRet.setFunctionReturn(fun_type)
+                    syntaxCheck()
+                    errors.addError(IncorrectReturnTypes(ctx))
+
+            } else {
+                val statRet = stat as ReturnStatNode
+
+                stat.setFunctionReturn(fun_type)
+                statRet.setFunctionReturn(fun_type)
+            }
         }
         if (params != null) {
             params.semanticCheck(errors, table)
@@ -52,5 +68,34 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         stat.semanticCheck(errors, table)
 
 
+    }
+
+    private fun checkReturn(node: Node?, errors : ErrorLogger, table: SymbolTable) {
+        if (node is ReturnStatNode) {
+            node.setFunctionReturn(fun_type)
+            return
+        }
+        var statement = node
+        if (node is StatListNode) {
+            for (s in node.listStatNodes) {
+                    statement = s
+                }
+            if(statement !is ReturnStatNode) {
+                if(statement is IfCondNode) {
+                    val node = statement.ifTrueStat
+                    checkReturn(node, errors, table)
+                    val ElseNode = statement.elseStat
+                    checkReturn(ElseNode, errors, table)
+                } else {
+                    syntaxCheck()
+                    errors.addError(IncorrectReturnTypes(ctx))
+                }
+            } else {
+                statement.setFunctionReturn(fun_type)
+            }
+            return
+        }
+        syntaxCheck()
+        errors.addError(IncorrectReturnTypes(ctx))
     }
 }

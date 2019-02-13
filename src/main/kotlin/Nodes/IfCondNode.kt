@@ -9,10 +9,10 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class IfCondNode(// condition (should evaluate to boolean val
-        private val expr: ExprNode?, // expr = true -> statement
-        private val ifTrueStat: Node?, // expr = false -> statement
+       val expr: ExprNode?, // expr = true -> statement
+        val ifTrueStat: Node?, // expr = false -> statement
 
-        private val elseStat: Node?, override val ctx: BasicParser.IfCondContext) : Node {
+        val elseStat: Node?, override val ctx: BasicParser.IfCondContext) : Node {
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

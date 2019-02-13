@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "/valid/advanced/ticTacToe.wacc"))
+                        "/valid/function/nested_functions/functionConditionalReturn.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))
