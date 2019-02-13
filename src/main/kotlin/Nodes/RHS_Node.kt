@@ -50,8 +50,8 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 }
 
             }
-        }else if(type == RHS_type.call) {
-            val value = table.lookupSymbol(funId!!)!!.getType()
+        } else if(type == RHS_type.call) {
+            val value = table.getFunction(funId!!)!!.getType()
 
             return value
         }
