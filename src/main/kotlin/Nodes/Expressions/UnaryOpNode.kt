@@ -13,7 +13,12 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any, override val ctx: BasicParser.UnOpContext) : ExprNode {
 
     override fun getType(): LitTypes {
-       return operand.getType()
+        when (operator.text) {
+            "!" -> return LitTypes.BoolWacc
+            "ord" -> return LitTypes.CharWacc
+            "len" -> return LitTypes.ArrayLit
+            else -> return LitTypes.IntWacc
+        }
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

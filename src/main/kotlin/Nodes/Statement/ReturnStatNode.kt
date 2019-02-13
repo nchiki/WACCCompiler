@@ -3,8 +3,10 @@ package main.kotlin.Nodes.Statement
 import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.BinaryOpNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.UnaryOpNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
@@ -31,7 +33,9 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (type_return != (expr.getType())) {
-            if(expr.getType() == LitTypes.IdentWacc) {
+            println("type return is $type_return")
+            println(expr.getType())
+            if(expr is IdentNode) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 println("$value")
@@ -40,7 +44,15 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
                     println("adding error1")
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }
-            } else {
+            } /*else if (expr is UnaryOpNode) {
+                val value = table.lookupSymbol(expr.operand.toString())
+                if (value?.getType() != type_return) {
+                    println("adding error1")
+                    errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
+                }
+            } else if (expr is BinaryOpNode) {
+                val value = table.lookupSymbol()*/
+            else {
                 println("adding error2")
                 errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))
             }
