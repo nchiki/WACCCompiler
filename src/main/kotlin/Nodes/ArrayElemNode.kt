@@ -42,7 +42,6 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
             }
 
             if (tempExpr.getType() != arrayType) {
-                println("Found $tempExpr.getType() needed $arrayType")
                 errors.addError(IncompatibleTypes(ctx, arrayType.toString(), tempExpr, table))
             }
 
