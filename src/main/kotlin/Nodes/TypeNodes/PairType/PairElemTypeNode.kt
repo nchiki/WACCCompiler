@@ -19,7 +19,6 @@ open class PairElemTypeNode(val type: TypeNode?, val pair : String?, override va
 
     override fun getType(): LitTypes {
         if (pair == "") {
-            println(type)
             return type!!.getType()
         } else {
            return LitTypes.PairWacc

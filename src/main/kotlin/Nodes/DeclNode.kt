@@ -44,7 +44,7 @@ class DeclNode(// var name
         /* RHS is a pair assignment*/
         if (rhs.type == RHS_type.pair_elem) {
             val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id,rhs.PairLit)
-            println("$nodeT is TYOPE")
+
             if(nodeT != type.getType()) {
                 errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs.PairLit.expr, table))
             }
@@ -81,7 +81,7 @@ class DeclNode(// var name
     }
 
     fun checkType(table:SymbolTable, id:String, node :Node) :LitTypes {
-        println(node)
+
         if (node is PairElemNode) {
             val elem = node.elem
             val node = (table.lookupSymbol((node.expr as IdentNode).id))

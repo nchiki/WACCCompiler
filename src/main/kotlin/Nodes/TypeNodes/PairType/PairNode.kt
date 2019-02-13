@@ -21,8 +21,6 @@ class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode, ove
     }
 
     fun returnElemNode(i: Int): LitTypes {
-        println("FST: ${fstNode.getType()}")
-        println("SND: ${sndNode.getType()}")
         return when(i) {
             1 -> sndNode.getType()
             else -> fstNode.getType()

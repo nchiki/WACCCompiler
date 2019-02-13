@@ -33,7 +33,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
                 if (node != RHS_Node.returnIdentType(table)) {
                     errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
                 }
-            } else if (node != RHS_Node.returnIdentType(table)) {
+            } else if (node != RHS_Node.getType()) {
                 errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
             }
             return
