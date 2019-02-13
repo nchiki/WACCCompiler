@@ -25,7 +25,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
                 return
             } else {
                 if (value.getType().equals(BaseNode("bool", null).getType())) {
-                    errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", value, table))
                     return
                 }
             }
@@ -35,7 +34,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         }
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, childTable)
-        //table.boolExprCheck(expr, errors)
+
 
     }
 

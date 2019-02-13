@@ -1,6 +1,7 @@
 package Nodes
 
 import Errors.DoubleDeclare
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
@@ -11,24 +12,11 @@ class ParamNode(
         val type: Node, override val ctx: BasicParser.ParamContext) : Node {
 
     override fun getType() : LitTypes{
-        /*if(type is IntLitNode) {
-           return LitTypes.IntWacc
-       } else if (type is CharLitNode) {
-           return LitTypes.CharWacc
-       } else if (type is BoolLitNode) {
-           return LitTypes.BoolWacc
-       } else if (type is PairLitNode) {
-           return LitTypes.PairWacc
-       } else if (type is StringLitNode) {
-           return LitTypes.StringWacc
-       } else {
-           return LitTypes.NonLitWacc
-       }*/
         var v = type
         while (v is ArrayTypeNode) {
             v = v.type
         }
-        val toType = v as BaseNode
+        val toType = v
         return toType.getType()
     }
 
