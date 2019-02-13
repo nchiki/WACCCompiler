@@ -32,14 +32,14 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
             }
             if(statement !is ReturnStatNode) {
                 syntaxCheck()
-                errors.addError(IncorrectReturnTypes(ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(IncorrectReturnTypes(ctx))
             } else {
                 statement.setFunctionReturn(fun_type)
             }
         } else {
             if (stat !is ReturnStatNode) {
                 syntaxCheck()
-                errors.addError(IncorrectReturnTypes(ctx.start.line, ctx.start.charPositionInLine))
+                errors.addError(IncorrectReturnTypes(ctx))
             }
             val statRet = stat as ReturnStatNode
 
