@@ -61,21 +61,21 @@ pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 pairElemType: base_type | type | PAIR ;
 
 expr:
-    INT_LIT                                 #IntLit
+    expr binaryOper expr                    #BinOper
+| unaryOper expr                            #UnOp
+| INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
-| pair_Lit                                   #PairLit
+| pair_Lit                                  #PairLit
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
-| unaryOper expr                            #UnOp
-| expr binaryOper expr                      #BinOper
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
 ident : IDENT ;
 
-unaryOper: NOT | MINUS | LEN | ORD | CHR ;
+unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
 binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
 
