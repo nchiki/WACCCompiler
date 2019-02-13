@@ -3,12 +3,13 @@ package Nodes
 import Errors.DoubleDeclare
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-
+import javax.lang.model.type.ArrayType
 
 
 class DeclNode(// var name
@@ -36,33 +37,47 @@ class DeclNode(// var name
             errors.addError(DoubleDeclare(ctx, id))
         }
 
+        rhs.addToTable(table, id)
+        rhs.semanticCheck(errors, table)
+
+        /* RHS is a pair assignment*/
         if (rhs.type == RHS_type.pair_elem) {
             val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id,rhs.PairLit)
             if(nodeT != type.getType()) {
                 errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs.PairLit, table))
             }
-        } else {
-            if (type.getType() != rhs.getType()) {
-                if (rhs.getType() == LitTypes.IdentWacc || rhs.getType() == LitTypes.FuncWacc) {
-                    val value = rhs.returnIdentType(table)
-
-
-                    if (value == null || value != type.getType()) {
-                        errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
-                    } else {
-                        rhs.semanticCheck(errors, table)
-                    }
-                } else {
-                    errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
-                }
-            } else {
-                rhs.semanticCheck(errors, table)
-            }
-
-            // call semantic check on the rest of elements
-            //type.semanticCheck(errors, tabl
+            return
         }
-        rhs.addToTable(table, id)
+
+        /* Easy declaration */
+        if(type.getType().equals(rhs.getType())){
+            return
+        }
+
+        /* RHS Could be an empty array */
+        if(type is ArrayTypeNode){
+            if(rhs.getType().equals(LitTypes.ArrayLit)){
+                return
+            }
+        }
+
+        /* RHS can only be an identifier to something now */
+        val realType = rhs.returnIdentType(table)
+
+        if(realType == null){
+            errors.addError(UnknownIdentifier(rhs.ctx.start.line, rhs.ctx.start.charPositionInLine))
+            return
+        }
+
+        println("RHS : ${rhs.getType()}, REALTYPE : ${realType}")
+
+        /* Type Match */
+        if(type.getType().equals(realType)){
+            return
+        }
+
+        /* Types don't match */
+        errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
     }
 
     fun checkType(table:SymbolTable, id:String, node :Node) :LitTypes {

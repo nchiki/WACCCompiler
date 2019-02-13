@@ -9,10 +9,16 @@ import src.main.kotlin.Nodes.ExprNode
 class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : Node {
 
     override fun getType() : LitTypes {
+        if(exprList.size == 0){
+            return LitTypes.ArrayLit
+        }
         return exprList[0].getType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        if(exprList.size == 0){
+            return
+        }
         val type = exprList[0].getType()
         for (expr in exprList) {
             if(type != expr.getType()) {
