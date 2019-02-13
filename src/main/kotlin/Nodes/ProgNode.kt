@@ -15,7 +15,9 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for (func in funcDefs) {
+            func.syntaxCheck()
+        }
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
