@@ -1,16 +1,14 @@
 package Nodes
 
 import Errors.DoubleDeclare
+import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import javax.lang.model.type.ArrayType
 
 
 class DeclNode(// var name
@@ -67,7 +65,7 @@ class DeclNode(// var name
         val realType = rhs.returnIdentType(table)
 
         if(realType == null){
-            errors.addError(UnknownIdentifier(rhs.ctx.start.line, rhs.ctx.start.charPositionInLine))
+            errors.addError(UndefinedVariable(rhs.ctx, id))
             return
         }
 

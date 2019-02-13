@@ -1,11 +1,9 @@
 package src.main.kotlin.Nodes
 
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Errors.UnknownIdentifier
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
-import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
@@ -27,17 +25,17 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
         println("arraytype is ${arrayType.toString()}")
         for (expr in exprs) {
             var tempExpr = expr
-            if(expr is IdentNode){
+            if (expr is IdentNode) {
                 val lookup = table.lookupSymbol(expr.id)
-                if(lookup != null){
+                if (lookup != null) {
                     tempExpr = lookup as ExprNode
-                }else {
-                    errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
+                } else {
+                    errors.addError(UndefinedVariable(ctx, identifier))
                     continue
                 }
             }
 
-            if(arrayType == null){
+            if (arrayType == null) {
                 continue
             }
 
