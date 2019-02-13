@@ -1,19 +1,13 @@
-package main.kotlin.Nodes.Statement
-
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
-import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.reflect.KClass
 
 class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContext) : Node {
     override fun getType() : LitTypes {
@@ -28,8 +22,13 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         if (expr.getType() != LitTypes.PairWacc) {
             if (expr.getType() == LitTypes.IdentWacc) {
                 val IdExpr = expr as IdentNode
-                val value = IdExpr.getValueType(table)
+                var value = table.lookupSymbol(IdExpr.id)
+                while (value is IdentNode) {
+                    value = value as IdentNode
+                    value = table.lookupSymbol(value.id)
+                }
                 if (value !is PairNode && value !is PairLitNode && value !is NewPairNode) {
+                    println(value.toString())
                     errors.addError(IncompatibleTypes(ctx, "PAIR", value!!, table))
                 }
             } else {
