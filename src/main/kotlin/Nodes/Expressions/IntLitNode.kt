@@ -13,10 +13,10 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//nothing to implement here
+        //not needed for the Literals
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       //not needed for the Literals
     }
 }

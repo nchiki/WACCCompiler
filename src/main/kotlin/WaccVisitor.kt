@@ -16,7 +16,6 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
-import org.antlr.v4.runtime.RuleContext
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -33,13 +32,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ProgNode(funcList, stat, ctx)
     }
 
-    //IdentNode needs to be constructed with Identifier (constructor of IdentNode not done yet)
+    //IdentNode needs to be constructed with Identifier
     override fun visitId(ctx: BasicParser.IdContext): Node? {
         val id = ctx.ident().text
         return IdentNode(id, ctx)
     }
 
-    //add Statements as well as parameter of FuncNode
+
     override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
 
         val returnType = getType(ctx.type().text)
@@ -55,7 +54,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         }
     }
 
-    //IntNode needs to be constructed with val of int
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
         val int_val : Int
         try {
@@ -134,7 +132,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
                 argList.add(visit(arg) as ExprNode)
             }
         }
-        return RHS_Node(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line, ctx.start!!.charPositionInLine,
+        return RHS_Node(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line,
+                ctx.start!!.charPositionInLine,
                 null, null, null, null, ctx)
     }
 
@@ -213,7 +212,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val operator = ctx.binaryOper()
 
         if(left.getType().equals(LitTypes.StringWacc) || right.getType().equals(LitTypes.StringWacc)){
-            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at position ${ctx.start.charPositionInLine}")
+            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
+                    "position ${ctx.start.charPositionInLine}")
             exitProcess(100)
         }
 
@@ -322,7 +322,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val type = visit(ctx?.type())
 
         // name of param var
-
         val id = ctx?.IDENT()?.text
         return ParamNode(id!!, type, ctx)
     }
