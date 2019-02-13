@@ -27,8 +27,10 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             if (table.lookupSymbol(id) != null) {
                 errors.addError(FunctionDoubleDeclare(func.ctx, id))
             }
-            table.add(func, id)
+            //table.add(func, id)
         }
+
+        table.addToFunctions(funcDefs)
 
         for (func in funcDefs) {
             val funcTable = SymbolTable(table)

@@ -2,14 +2,10 @@ package main.kotlin
 
 import Errors.UndefinedVariable
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BinaryOpNode
+import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.Nodes.Node
 
-import main.kotlin.Nodes.UnaryOpNode
-import src.main.kotlin.Nodes.ExprNode
 
 class SymbolTable (val parent: SymbolTable?){
 
@@ -22,6 +18,32 @@ class SymbolTable (val parent: SymbolTable?){
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     var table = HashMap<String, Node>()
+    var functions = HashMap<String, FunctionNode>()
+
+    fun addToFunctions(funcs : List<FunctionNode>) {
+        for (func in funcs) {
+            functions.put(func.id, func)
+        }
+    }
+
+    fun printFunctions() {
+        for (func in functions) {
+            println(func.key)
+        }
+    }
+
+    fun getFunction(funcId : String) : FunctionNode?{
+        var tab = this
+        if (functions.isEmpty()) {
+            while(tab.functions.isEmpty()) {
+                tab = tab.parent!!
+            }
+            if (parent == null) {
+                return null
+            }
+        }
+        return tab.functions.get(funcId)
+    }
 
     /* Ensures that the expression node resolves to a boolean type */
     fun boolExprCheck(expr : Node, errors: ErrorLogger) {

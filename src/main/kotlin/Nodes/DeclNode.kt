@@ -31,7 +31,7 @@ class DeclNode(// var name
         val value = table.lookupLocal(id)
 
         //if it's not there or there is a function with the same name, don't add an error
-        if (value != null && (value !is FunctionNode)) {
+        if (value != null) {
             // if there is already a variable with that name -> error
             errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         }
