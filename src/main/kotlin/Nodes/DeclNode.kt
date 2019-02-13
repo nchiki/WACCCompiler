@@ -72,7 +72,7 @@ class DeclNode(// var name
         println("RHS : ${rhs.getType()}, REALTYPE : ${realType}")
 
         /* Type Match */
-        if(type.equals(realType)){
+        if(type.getType().equals(realType)){
             return
         }
 
