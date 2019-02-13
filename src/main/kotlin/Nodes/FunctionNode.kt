@@ -2,12 +2,11 @@ package main.kotlin.Nodes
 
 import Nodes.ParamListNode
 import main.kotlin.ErrorLogger
-import main.kotlin.Errors.IncorrectReturnTypes
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.*
+import main.kotlin.Errors.IncorrectReturnTypes
 import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
@@ -27,19 +26,14 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         var statement = stat
-
         if(stat is StatListNode) {
-            if(!hasReturnStat(stat as StatListNode) && !hasExitStat(stat as StatListNode)) {
-                exitProcess(100)
-            }
-            /*
             for(s in stat.listStatNodes) {
                 statement = s
             }
             if(statement !is ReturnStatNode) {
                 syntaxCheck()
                 errors.addError(IncorrectReturnTypes(ctx.start.line, ctx.start.charPositionInLine))
-            } else*/ if (statement is ReturnStatNode){
+            } else {
                 statement.setFunctionReturn(fun_type)
             }
         } else {

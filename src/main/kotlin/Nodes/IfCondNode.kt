@@ -27,16 +27,13 @@ class IfCondNode(// condition (should evaluate to boolean val
         // check whether the expr evaluates to boolean value
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
-
         if(expr?.getType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
-
-        val trueTable = SymbolTable(table)
-        val falseTable = SymbolTable(table)
         //checks both statements
-        ifTrueStat?.semanticCheck(errors, trueTable)
-        elseStat?.semanticCheck(errors, falseTable)
+        ifTrueStat?.semanticCheck(errors, table)
+        elseStat?.semanticCheck(errors, table)
+
     }
 
 }
