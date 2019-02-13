@@ -41,7 +41,8 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
                     errors.addError(UndefinedVariable(ctx, (lhs).id))
                     return
                 }
-                if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc && v !is PairNode) {
+
+                if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc && lhs.Nodetype !is PairElemNode) {
                     errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
                 }
             }
