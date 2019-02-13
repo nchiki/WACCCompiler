@@ -69,6 +69,10 @@ class DeclNode(// var name
             return
         }
 
+        if(rhs.type.equals(LitTypes.FuncWacc)){
+            println("FUNC REAL TYPE: ${realType}")
+        }
+
         /* Type Match */
         if(type.equals(realType)){
             return
