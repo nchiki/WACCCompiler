@@ -61,11 +61,13 @@ pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 pairElemType: base_type | type | PAIR ;
 
 expr:
-    INT_LIT                                 #IntLit
+    expr binaryOper expr                    #BinOper
+| unaryOper expr                            #UnOp
+| INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
-| pair_Lit                                   #PairLit
+| pair_Lit                                  #PairLit
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
 | unaryOper expr                            #UnOp
@@ -76,7 +78,7 @@ expr:
 
 ident : IDENT ;
 
-unaryOper: NOT | MINUS | LEN | ORD | CHR ;
+unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
 boolOp: AND | OR ;
 

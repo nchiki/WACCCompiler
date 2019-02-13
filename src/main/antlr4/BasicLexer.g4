@@ -104,7 +104,7 @@ IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
 
 // literals
-INT_LIT: (PLUS | MINUS)? DIGIT+ ;
+INT_LIT: DIGIT+ ;
 
 ESC_CHAR: '\\0' | '\\b' | '\\t' | '\\n' | '\\f' | '\\r' | '\\' DBL_QUOTES | '\\' QUOTE | '\\' BACKSLASH ;
 

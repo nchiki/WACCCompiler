@@ -1,9 +1,10 @@
 package main.kotlin.Nodes
 
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
-import main.kotlin.Errors.UnknownIdentifier
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : ExprNode {
@@ -22,7 +23,7 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : Exp
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if(table.lookupSymbol(id) == null){
-            errors.addError(UnknownIdentifier(ctx?.start?.line!!, ctx.start.charPositionInLine))
+            errors.addError(UndefinedVariable(ctx as ParserRuleContext, id))
         }
     }
 }

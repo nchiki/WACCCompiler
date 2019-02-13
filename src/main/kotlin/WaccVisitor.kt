@@ -15,6 +15,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
+import main.kotlin.Utils.LitTypes
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -198,18 +199,25 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ArrayLitNode(exprList, ctx)
     }
 
+    override fun visitBinOper(ctx: BasicParser.BinOperContext): Node {
+        val left = visit(ctx.expr(0)) as ExprNode
+        val right = visit(ctx.expr(1)) as ExprNode
+
+        val operator = ctx.binaryOper()
+
+        if(left.getType().equals(LitTypes.StringWacc) || right.getType().equals(LitTypes.StringWacc)){
+            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at position ${ctx.start.charPositionInLine}")
+            exitProcess(100)
+        }
+
+        return BinaryOpNode(left, right, operator, ctx)
+    }
+    
     override fun visitBoolOper(ctx: BasicParser.BoolOperContext?): Node {
         val left = visit(ctx?.expr(0)) as ExprNode
         val right = visit(ctx?.expr(1)) as ExprNode
         val operator = ctx?.boolOp()
         return BoolOpNode(left, right, operator!!, ctx)
-    }
-
-    override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
-        val left = visit(ctx?.expr(0)) as ExprNode
-        val right = visit(ctx?.expr(1)) as ExprNode
-        val operator = ctx?.binaryOper()
-        return BinaryOpNode(left, right, operator!!, ctx)
     }
 
     override fun visitUnOp(ctx: BasicParser.UnOpContext): Node {
