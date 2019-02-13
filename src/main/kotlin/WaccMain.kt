@@ -9,8 +9,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                       // "valid/runtimeErr/nullDereference/readNull1.wacc"))
-                        "/valid/array/array.wacc"))
+                        "valid/while/min.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))

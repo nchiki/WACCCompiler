@@ -22,9 +22,7 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        println("in semantic check of array")
         val arrayType = table.lookupSymbol(identifier)?.getType()
-        println("arraytype is ${arrayType.toString()}")
         for (expr in exprs) {
             var tempExpr = expr as Node
             if(expr is IdentNode){

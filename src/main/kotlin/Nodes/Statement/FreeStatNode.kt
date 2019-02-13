@@ -28,7 +28,6 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
                     value = table.lookupSymbol(value.id)
                 }
                 if (value !is PairNode && value !is PairLitNode && value !is NewPairNode) {
-                    println(value.toString())
                     errors.addError(IncompatibleTypes(ctx, "PAIR", value!!, table))
                 }
             } else {
