@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
                 exitProcess(100)
         }
         // begin parsing at init rule
-        println(tree.toStringTree(parser))
+//        println(tree.toStringTree(parser))
         //visitor.visit(tree)
         // print LISP-style tree
 

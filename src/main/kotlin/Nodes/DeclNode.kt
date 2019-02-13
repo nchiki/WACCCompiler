@@ -35,7 +35,7 @@ class DeclNode(// var name
         //if it's not there or there is a function with the same name, don't add an error
         if (value != null && (value !is FunctionNode)) {
             // if there is already a variable with that name -> error
-            errors.addError(DoubleDeclare(ctx, id))
+            errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         }
 
         addToTable(table, id)
