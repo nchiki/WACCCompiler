@@ -53,6 +53,11 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             return
         }
 
+        if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
+                RHS_Node.getType() == LitTypes.CharWacc) {
+            // ITS FINE
+            return
+        }
 
         val idType = RHS_Node.returnIdentType(table)
         if(idType != null){
@@ -65,15 +70,9 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             return
         }
 
-        //errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
 
-        if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
-                    RHS_Node.getType() == LitTypes.CharWacc) {
-               // ITS FINE
-        } else {
 
-                errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
-        }
 
         /* Call to function */
         /* ================ Probably solved by line 48 ===============
