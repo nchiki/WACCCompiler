@@ -198,6 +198,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ArrayLitNode(exprList, ctx)
     }
 
+    override fun visitBoolOper(ctx: BasicParser.BoolOperContext?): Node {
+        val left = visit(ctx?.expr(0)) as ExprNode
+        val right = visit(ctx?.expr(1)) as ExprNode
+        val operator = ctx?.boolOp()
+        return BoolOpNode(left, right, operator!!, ctx)
+    }
+
     override fun visitBinOper(ctx: BasicParser.BinOperContext?): Node {
         val left = visit(ctx?.expr(0)) as ExprNode
         val right = visit(ctx?.expr(1)) as ExprNode
