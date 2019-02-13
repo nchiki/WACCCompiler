@@ -30,11 +30,13 @@ fun main(args: Array<String>) {
         val parser = BasicParser(tokens)
         //parser.errorHandler = SyntaxErrorStrategy()
         val tree = parser.prog()
+
+        println(tree.toStringTree(parser))
+
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
         }
         // begin parsing at init rule
-        println(tree.toStringTree(parser))
         //visitor.visit(tree)
         // print LISP-style tree
 
@@ -42,8 +44,6 @@ fun main(args: Array<String>) {
         val errorLogger = ErrorLogger()
         val symbolTable = SymbolTable(null)
         val progNode = visitor.visit(tree)
-
-        //progNode.getSyntaxErrors
 
         progNode.semanticCheck(errorLogger, symbolTable)
 
