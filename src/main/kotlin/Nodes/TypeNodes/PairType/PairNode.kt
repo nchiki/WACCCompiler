@@ -6,7 +6,7 @@ import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
-class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode, override val ctx: BasicParser.Pair_typeContext) : TypeNode, Node {
+class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode, override val ctx: BasicParser.Pair_typeContext) : TypeNode, Node {
 
     override fun getType() : LitTypes {
         return LitTypes.PairWacc
@@ -18,6 +18,15 @@ class PairNode(fstNode: PairElemTypeNode, sndNode: PairElemTypeNode, override va
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun returnElemNode(i: Int): LitTypes {
+        println("FST: ${fstNode.getType()}")
+        println("SND: ${sndNode.getType()}")
+        return when(i) {
+            1 -> sndNode.getType()
+            else -> fstNode.getType()
+        }
     }
 
 }

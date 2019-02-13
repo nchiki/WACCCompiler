@@ -1,6 +1,7 @@
 package Nodes
 
 import Errors.DoubleDeclare
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UnknownIdentifier
@@ -43,8 +44,9 @@ class DeclNode(// var name
         /* RHS is a pair assignment*/
         if (rhs.type == RHS_type.pair_elem) {
             val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id,rhs.PairLit)
+            println("$nodeT is TYOPE")
             if(nodeT != type.getType()) {
-                errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs.PairLit, table))
+                errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs.PairLit.expr, table))
             }
             return
         }
@@ -79,20 +81,22 @@ class DeclNode(// var name
     }
 
     fun checkType(table:SymbolTable, id:String, node :Node) :LitTypes {
+        println(node)
         if (node is PairElemNode) {
             val elem = node.elem
             val node = (table.lookupSymbol((node.expr as IdentNode).id))
-            if(node is NewPairNode) {
+            if(node is PairNode) {
                 val node = node.returnElemNode(elem)
-                if (node.getType() != LitTypes.IdentWacc) {
-                    return node.getType()
+                if (node != LitTypes.IdentWacc) {
+                    return node
                 }
             } else if(node is IdentNode){
                 var n = node
-                while (n !is NewPairNode) {
+                while (n !is PairNode) {
+
                     n = (table.lookupSymbol((n as IdentNode).id))
                 }
-                return n.returnElemNode(elem).getType()
+                return n.returnElemNode(elem)
             }
         } else if (node.getType() == LitTypes.IdentWacc) {
 
@@ -104,7 +108,6 @@ class DeclNode(// var name
                 return checkType(table, (node).id, node)
             }
         }
-
         return node.getType()
 
     }

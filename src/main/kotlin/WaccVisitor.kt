@@ -164,8 +164,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         if(ctx.PAIR() != null) {
             return PairElemTypeNode(null, "pair", ctx)
         } else {
-            if(ctx.type() != null) {
-                return PairElemTypeNode(visit(ctx.type()) as TypeNode?, "", ctx)
+            if(ctx.base_type() != null) {
+                return PairElemTypeNode(visit(ctx.getChild(0)) as TypeNode?, "", ctx)
             } else {
                 return PairElemTypeNode(visit(ctx.getChild(0)) as TypeNode?, "", ctx)
             }
@@ -348,6 +348,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return BaseNode(ctx.text, ctx)
     }
 
+    override fun visitBase_type(ctx: BasicParser.Base_typeContext?): Node {
+        return BaseNode(ctx!!.text, ctx)
+    }
 
 
 }
