@@ -5,10 +5,11 @@ import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
 
-class BaseNode(val type : String, override val ctx: ParserRuleContext?) : TypeNode {
+class BaseNode(val type : String, override val ctx: ParserRuleContext?) : TypeNode, ExprNode {
 
     override fun getType() : LitTypes {
         if (type == "int") {
