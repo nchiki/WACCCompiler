@@ -24,11 +24,12 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val arrayType = table.lookupSymbol(identifier)?.getType()
         for (expr in exprs) {
-            var tempExpr = expr
+            var tempExpr = expr as Node
             if(expr is IdentNode){
                 val lookup = table.lookupSymbol(expr.id)
                 if(lookup != null){
-                    tempExpr = lookup as BaseNode
+                     tempExpr = lookup
+
                 }else {
                     errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
                     continue

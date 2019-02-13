@@ -70,6 +70,9 @@ expr:
 | pair_Lit                                  #PairLit
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
+| unaryOper expr                            #UnOp
+| expr binaryOper expr                      #BinOper
+| expr boolOp expr                          #BoolOper
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
@@ -77,7 +80,9 @@ ident : IDENT ;
 
 unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
-binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ| AND | OR ;
+boolOp: AND | OR ;
+
+binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 

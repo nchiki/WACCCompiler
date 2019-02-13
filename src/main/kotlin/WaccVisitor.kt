@@ -212,6 +212,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         return BinaryOpNode(left, right, operator, ctx)
     }
+    
+    override fun visitBoolOper(ctx: BasicParser.BoolOperContext?): Node {
+        val left = visit(ctx?.expr(0)) as ExprNode
+        val right = visit(ctx?.expr(1)) as ExprNode
+        val operator = ctx?.boolOp()
+        return BoolOpNode(left, right, operator!!, ctx)
+    }
 
     override fun visitUnOp(ctx: BasicParser.UnOpContext): Node {
         val operand = visit(ctx.expr()) as ExprNode
