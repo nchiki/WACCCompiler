@@ -114,7 +114,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             if(left is IdentNode || right is IdentNode) {
                 if (left is IdentNode) {
                     val value = table.lookupSymbol(left.id)
-                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
                                     && value.getType() != LitTypes.IntWacc)) {
                         errors.addError(InvalidOperandTypes(ctx))
                     }
@@ -122,7 +122,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 }
                 if (right is IdentNode) {
                     val value = table.lookupSymbol(right.id)
-                    if (value == null || value is ArrayLitNode || (value.getType() != LitTypes.CharWacc
+                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
                                     && value.getType() != LitTypes.IntWacc)) {
                         errors.addError(InvalidOperandTypes(ctx))
                     }
