@@ -25,7 +25,6 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        println("funtype is $fun_type")
         var statement = stat
         if(stat is StatListNode) {
             for(s in stat.listStatNodes) {
