@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "valid/while/whileBoolFlip.wacc"))
+                        "/valid/advanced/ticTacToe.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))
