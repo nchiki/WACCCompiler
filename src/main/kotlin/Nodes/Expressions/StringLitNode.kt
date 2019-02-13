@@ -13,11 +13,11 @@ class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) :
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed for Literals
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-       //not necessary
+       //not needed for Literals
     }
 
 }

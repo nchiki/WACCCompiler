@@ -27,15 +27,16 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : TypeNo
             return LitTypes.NonLitWacc
         }
     }
-    override fun syntaxCheck() {
 
+    //exit if type is not a valid basetype
+    override fun syntaxCheck() {
         if (type != "int" && type != "char" && type != "bool" && type != "string") {
             exitProcess(100)
         }
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed (I think)
+        //not needed
     }
 
 }

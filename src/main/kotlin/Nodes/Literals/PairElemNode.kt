@@ -15,9 +15,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         expr.semanticCheck(errors, table)
     }
 
-
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed for PairElemNode
     }
-
 }
