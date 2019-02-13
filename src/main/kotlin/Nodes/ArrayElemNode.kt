@@ -41,7 +41,7 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
                 continue
             }
 
-            if (tempExpr.getType() != BaseNode(arrayType.toString(), null).getType()) {
+            if (tempExpr.getType() != arrayType) {
                 errors.addError(IncompatibleTypes(ctx, arrayType.toString(), tempExpr, table))
             }
 
