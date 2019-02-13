@@ -9,6 +9,7 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
@@ -26,10 +27,17 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun returnIdentType(table: SymbolTable) :LitTypes?{
-        if(type == RHS_type.expr && expr!!.getType() == LitTypes.IdentWacc) {
+        if(type == RHS_type.expr) {
+            if (expr!!.getType() == LitTypes.IdentWacc) {
+                if(expr is ArrayElemNode) {
+                    return table.lookupSymbol(expr.identifier)?.getType()
+                }
             val exprId = expr as IdentNode
             val value = exprId.getValueType(table)?.getType()
             return value
+            } else {
+                return expr.getType()
+            }
         }  else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
             if (pairVal?.getType() == LitTypes.IdentWacc) {
@@ -43,7 +51,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
             }
         }else if(type == RHS_type.call) {
-                val value = table.lookupSymbol(funId!!)!!.getType()
+            val value = table.lookupSymbol(funId!!)!!.getType()
 
             return value
         }
