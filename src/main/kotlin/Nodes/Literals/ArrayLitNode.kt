@@ -13,6 +13,9 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        if(exprList.size == 0){
+            return
+        }
         val type = exprList[0].getType()
         for (expr in exprList) {
             if(type != expr.getType()) {
