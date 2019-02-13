@@ -27,7 +27,11 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
             val node = (table.lookupSymbol(LHS_Node.id) as NewPairNode).returnElemNode(elem)
-            if (node.getType() != RHS_Node.getType()) {
+            if (RHS_Node.getType() == LitTypes.IdentWacc) {
+                if (node.getType() != RHS_Node.returnIdentType(table)) {
+                    errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+                }
+            } else if (node != RHS_Node.returnIdentType(table)) {
                 errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
             }
             return
