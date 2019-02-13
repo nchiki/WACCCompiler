@@ -7,44 +7,31 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
-        if (args.size == 0) {
-                System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "/invalid/semanticErr/function/functionRedefine.wacc"))
-
-        } else {
-                System.setIn(FileInputStream(args[0]))
-        }
+        System.setIn(FileInputStream(args[0]))
         val input = CharStreams.fromStream(java.lang.System.`in`)
-        // create a lexer that feeds off of input CharStream
-        //val listener = WaccErrorListener()
+
         //Lexical analysis
         val lexer = BasicLexer(input)
 
-        //val visitor = WaccVisitor()
-        // create a buffer of tokens pulled from the lexer
+        //Create a buffer of tokens
         val tokens = CommonTokenStream(lexer)
 
         //Syntactical analysis
-        // create a parser that feeds off the tokens buffer
         val parser = BasicParser(tokens)
-        //parser.errorHandler = SyntaxErrorStrategy()
         val tree = parser.prog()
 
-        println(tree.toStringTree(parser))
-
+        //Exit with code 100 if there are any syntax errors
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
         }
-        // begin parsing at init rule
-        //visitor.visit(tree)
-        // print LISP-style tree
 
         val visitor = WaccVisitor()
         val errorLogger = ErrorLogger()
         val symbolTable = SymbolTable(null)
         val progNode = visitor.visit(tree)
 
+        //Semantic Check
         progNode.semanticCheck(errorLogger, symbolTable)
 
         for (error in errorLogger.errorList) {
@@ -52,9 +39,6 @@ fun main(args: Array<String>) {
         }
         if(errorLogger.errorList.count() > 0) {
                 exitProcess(200)
-        } else {
-
-                exitProcess(0)
         }
  }
 

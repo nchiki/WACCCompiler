@@ -13,10 +13,11 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        //base types do not need to be checked
     }
 
     override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       //not needed for Bool Literal
     }
 
 }
