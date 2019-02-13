@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "valid/expressions/orExpr.wacc"))
+                        "valid/scope/printAllTypes.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))

@@ -18,13 +18,14 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
 
     }
     override fun getType() : LitTypes {
-        return exprs[0].getType()
+        return LitTypes.IdentWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val arrayType = table.lookupSymbol(identifier)?.getType()
-        for (expr in exprs) {
-            var tempExpr = expr as Node
+
+       for (expr in exprs) {
+            /*var tempExpr = expr as Node
             if(expr is IdentNode){
                 val lookup = table.lookupSymbol(expr.id)
                 if(lookup != null){
@@ -42,7 +43,7 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
 
             if (tempExpr.getType() != arrayType) {
                 errors.addError(IncompatibleTypes(ctx, arrayType.toString(), tempExpr, table))
-            }
+            }*/
 
             expr.semanticCheck(errors, table)
         }

@@ -63,6 +63,25 @@ class DeclNode(// var name
             }
         }
 
+        if (rhs.type == RHS_type.array_lit ) {
+            val list = rhs.ArrayLit!!.exprList
+            if (list.count() > 0) {
+                if(list[0].getType() == type.getType()) {
+                    return
+                }
+                if(list[0].getType() == LitTypes.IdentWacc) {
+                    val typeId = table.lookupSymbol((list[0] as IdentNode).id)?.getType()
+                    if(typeId == type.getType()) {
+                        return
+                    }
+                }
+
+            } else {
+                return
+            }
+
+        }
+
         /* RHS can only be an identifier to something now */
         val realType = rhs.returnIdentType(table)
 
