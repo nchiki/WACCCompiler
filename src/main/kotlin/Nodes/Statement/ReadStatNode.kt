@@ -1,6 +1,7 @@
 package main.kotlin.Nodes.Statement
 
 import Errors.UndefinedVariable
+import Nodes.Literals.PairLitNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -39,11 +40,11 @@ class ReadStatNode(val lhs: LHS_Node, override val ctx: BasicParser.ReadContext)
                     errors.addError(UndefinedVariable(ctx, (lhs).id))
                     return
                 }
-                if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc) {
+                if(v.getType() != LitTypes.CharWacc && v.getType() != LitTypes.IntWacc && v !is PairLitNode) {
                     errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
                 }
             }
-        }else {
+        } else {
             if (lhs.getType() != LitTypes.CharWacc && lhs.getType() != LitTypes.IntWacc) {
                 errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
             }
