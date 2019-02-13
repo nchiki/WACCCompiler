@@ -28,7 +28,8 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
             if(expr is IdentNode){
                 val lookup = table.lookupSymbol(expr.id)
                 if(lookup != null){
-                    tempExpr = lookup as Node
+                     tempExpr = lookup
+
                 }else {
                     errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
                     continue

@@ -30,7 +30,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
         }
         if (operator.text == "!" && op!!.getType() != LitTypes.BoolWacc
             || operator.text == "minus" && op!!.getType() != LitTypes.IntWacc
-            || operator.text == "len" && op!!.getType() != LitTypes.ArrayLit
+            || operator.text == "len" && op !is ArrayTypeNode
             || operator.text == "ord" && op!!.getType() != LitTypes.CharWacc
             || operator.text == "chr" && op!!.getType() != LitTypes.IntWacc)
         {
