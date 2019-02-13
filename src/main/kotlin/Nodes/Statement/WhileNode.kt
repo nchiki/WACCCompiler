@@ -25,13 +25,13 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
                 return
             } else {
                 if (value.getType().equals(BaseNode("bool", null).getType())) {
-                    errors.addError(IncompatibleTypes(ctx, "BOOL", value, table))
+                    errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", value, table))
                     return
                 }
             }
         }
         if (!expr.getType().equals(BaseNode("bool", null).getType())) {
-            errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
+            errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr, table))
         }
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, childTable)
