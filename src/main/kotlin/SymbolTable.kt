@@ -5,23 +5,22 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Errors.GenericError
 
 
 class SymbolTable (val parent: SymbolTable?){
 
-    /*final val keywords = listOf("char", "int", "ord", "len", "chr", "pair",
-                                "string", "char", "bool", "fst", "snd", "newpair",
-                                "if", "then", "else", "fi", "while", "do", "done",
-                                "begin", "end", "call", "skip", "read", "free", "return",
-                                "exit", "print", "println", "is", "true", "false",
-                                "null", "+", "-") */
     private val children = listOf<SymbolTable>()
     private val parentT = parent
     var table = HashMap<String, Node>()
     var functions = HashMap<String, FunctionNode>()
+    var errors = ErrorLogger()
 
     fun addToFunctions(funcs : List<FunctionNode>) {
         for (func in funcs) {
+            if (functions.containsKey(func.id)) {
+                errors.addError(GenericError("Function already declared"))
+            }
             functions.put(func.id, func)
         }
     }
@@ -69,13 +68,6 @@ class SymbolTable (val parent: SymbolTable?){
             return
         }
 
-        /*if (tempExpr is IdentNode) {
-            val variable = lookupSymbol(tempExpr.id)
-            if(variable == null){
-                errors.addError(UndefinedVariable(tempExpr.ctx.start.line, tempExpr.ctx.start.charPositionInLine, tempExpr.id))
-                return
-            }
-        } */
 
         if(tempExpr is UnaryOpNode){
             if(tempExpr.operator.equals(BasicParser.NOT)){
