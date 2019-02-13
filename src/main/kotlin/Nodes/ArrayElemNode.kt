@@ -26,11 +26,11 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
         val arrayType = table.lookupSymbol(identifier)?.getType()
         println("arraytype is ${arrayType.toString()}")
         for (expr in exprs) {
-            var tempExpr = expr
+            var tempExpr = expr as Node
             if(expr is IdentNode){
                 val lookup = table.lookupSymbol(expr.id)
                 if(lookup != null){
-                    tempExpr = lookup as ExprNode
+                    tempExpr = lookup as Node
                 }else {
                     errors.addError(UnknownIdentifier(ctx.start.line, ctx.start.charPositionInLine))
                     continue
