@@ -15,8 +15,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
     override fun getType(): LitTypes {
         when (operator.text) {
             "!" -> return LitTypes.BoolWacc
-            "ord" -> return LitTypes.CharWacc
-            "len" -> return LitTypes.ArrayLit
+            "chr" -> return LitTypes.CharWacc
             else -> return LitTypes.IntWacc
         }
     }

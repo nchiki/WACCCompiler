@@ -24,7 +24,11 @@ class ParamNode(
        } else {
            return LitTypes.NonLitWacc
        }*/
-        val toType = type as BaseNode
+        var v = type
+        while (v is ArrayTypeNode) {
+            v = v.type
+        }
+        val toType = v as BaseNode
         return toType.getType()
     }
 
