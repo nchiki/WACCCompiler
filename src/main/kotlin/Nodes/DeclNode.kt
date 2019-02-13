@@ -37,7 +37,7 @@ class DeclNode(// var name
             errors.addError(DoubleDeclare(ctx, id))
         }
 
-        rhs.addToTable(table, id)
+        addToTable(table, id)
         rhs.semanticCheck(errors, table)
 
         /* RHS is a pair assignment*/
@@ -107,6 +107,10 @@ class DeclNode(// var name
 
         return node.getType()
 
+    }
+
+    fun addToTable(table: SymbolTable, id:String) {
+        table.add(type, id)
     }
 
 }

@@ -23,6 +23,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         LHS_Node.semanticCheck(errors, table)
         RHS_Node.semanticCheck(errors, table)
 
+
         /* Attempting to assign to a pair */
         if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
@@ -38,6 +39,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         }
 
         val node = table.lookupSymbol(LHS_Node.id)
+
         if (node == null) {
             errors.addError(UndefinedVariable(ctx, LHS_Node.id))
             return
@@ -51,19 +53,22 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         val idType = RHS_Node.returnIdentType(table)
         if(idType != null){
+
             if(idType == node.getType()){
                 return
             }
-            errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+
+            errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
 
-        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        //errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
 
         if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
                     RHS_Node.getType() == LitTypes.CharWacc) {
                 TODO("NOT IMPLEMENTED YET")
         } else {
+
                 errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
         }
 

@@ -21,6 +21,7 @@ class BaseNode(val type : String, override val ctx: BasicParser.BaseTypeContext?
         }else if (type == "pair") {
             return LitTypes.PairWacc
         } else {
+
             return LitTypes.NonLitWacc
         }
     }
