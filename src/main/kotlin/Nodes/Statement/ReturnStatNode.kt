@@ -33,15 +33,13 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (type_return != (expr.getType())) {
-            println("type return is $type_return")
-            println(expr.getType())
+
             if(expr is IdentNode) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
-                println("$value")
-                println("$type_return")
+
                 if (value?.getType() != type_return) {
-                    println("adding error1")
+
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }
             } /*else if (expr is UnaryOpNode) {
@@ -53,7 +51,7 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
             } else if (expr is BinaryOpNode) {
                 val value = table.lookupSymbol()*/
             else {
-                println("adding error2")
+
                 errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))
             }
         }

@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 import Errors.UndefinedVariable
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.Literals.NewPairNode
@@ -23,21 +24,23 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         LHS_Node.semanticCheck(errors, table)
         RHS_Node.semanticCheck(errors, table)
 
+
         /* Attempting to assign to a pair */
         if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
-            val node = (table.lookupSymbol(LHS_Node.id) as NewPairNode).returnElemNode(elem)
+            val node = (table.lookupSymbol(LHS_Node.id) as PairNode).returnElemNode(elem)
             if (RHS_Node.getType() == LitTypes.IdentWacc) {
-                if (node.getType() != RHS_Node.returnIdentType(table)) {
-                    errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+                if (node != RHS_Node.returnIdentType(table)) {
+                    errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
                 }
-            } else if (node != RHS_Node.returnIdentType(table)) {
-                errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+            } else if (node != RHS_Node.getType()) {
+                errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
             }
             return
         }
 
         val node = table.lookupSymbol(LHS_Node.id)
+
         if (node == null) {
             errors.addError(UndefinedVariable(ctx, LHS_Node.id))
             return
@@ -51,19 +54,22 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         val idType = RHS_Node.returnIdentType(table)
         if(idType != null){
+
             if(idType == node.getType()){
                 return
             }
-            errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+
+            errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
 
-        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        //errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
 
         if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
                     RHS_Node.getType() == LitTypes.CharWacc) {
-                TODO("NOT IMPLEMENTED YET")
+               // ITS FINE
         } else {
+
                 errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
         }
 

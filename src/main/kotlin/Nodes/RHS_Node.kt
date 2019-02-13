@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
@@ -34,19 +35,17 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             if (pairVal?.getType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
                 val value = exprId.getValueType(table)
-                if (value is NewPairNode) {
-                    if (PairLit?.elem == 0) {
-                        return value.exprNode1.getType()
-                    } else {
-                        return value.exprNode2.getType()
-                    }
+                if (value is PairNode) {
+                    return(value.returnElemNode(PairLit!!.elem))
                 } else {
                     return pairVal?.getType()
                 }
 
             }
         }else if(type == RHS_type.call) {
-                return table.lookupSymbol(funId!!)!!.getType()
+                val value = table.lookupSymbol(funId!!)!!.getType()
+
+            return value
         }
         return null
     }
@@ -94,7 +93,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun addToTable(table: SymbolTable, id:String) {
+    /*fun addToTable(table: SymbolTable, id:String) {
         if(type == RHS_type.call) {
             val funNode = table.lookupSymbol(funId!!) as FunctionNode?
             if(funNode != null) {
@@ -112,7 +111,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             table.add(ArrayLit!!, id)
         }
 
-    }
+    }*/
 
 }
 
