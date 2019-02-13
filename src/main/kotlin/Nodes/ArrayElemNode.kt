@@ -4,6 +4,7 @@ import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
@@ -24,7 +25,7 @@ class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, overrid
         val arrayType = table.lookupSymbol(identifier)?.getType()
         println("arraytype is ${arrayType.toString()}")
         for (expr in exprs) {
-            var tempExpr = expr
+            var tempExpr = expr as Node
             if (expr is IdentNode) {
                 val lookup = table.lookupSymbol(expr.id)
                 if (lookup != null) {
