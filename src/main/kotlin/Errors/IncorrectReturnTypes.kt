@@ -1,9 +1,12 @@
 package main.kotlin.Errors
 
-import Errors.ErrorNode
+import Errors.SemanticError
+import org.antlr.v4.runtime.ParserRuleContext
 
-class IncorrectReturnTypes(val line :Int, val pos :Int) : ErrorNode {
+class IncorrectReturnTypes(ctx : ParserRuleContext) : SemanticError(ctx) {
+
     override fun printError(): String {
-        return "Incorrect return type (line $line, pos $pos). Expected exit or return."
+        return "Incorrect return type. Expected exit or return."
     }
+
 }
