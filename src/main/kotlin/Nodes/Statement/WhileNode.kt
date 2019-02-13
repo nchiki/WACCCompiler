@@ -30,7 +30,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
             }
         }
         if (!expr.getType().equals(BaseNode("bool", null).getType())) {
-            errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
+            errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr, table))
         }
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, childTable)

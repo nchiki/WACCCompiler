@@ -35,7 +35,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             || operator.text == "chr" && op!!.getType() != LitTypes.IntWacc)
         {
 
-            errors.addError(InvalidOperandTypes(ctx))
+            errors.addError(InvalidOperandTypes(ctx, operator.text, op!!.getType().name))
         }
     }
 
