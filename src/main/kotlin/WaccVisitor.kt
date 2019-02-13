@@ -16,6 +16,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
+import org.antlr.v4.runtime.RuleContext
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -58,11 +59,17 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
         val int_val : Int
         try {
-             int_val = ctx.INT_LIT().text.toInt()
+            int_val = ctx.INT_LIT().text.toInt()
         } catch (e : Exception) {
+            if(ctx.getParent() is BasicParser.UnOpContext){
+                val parent = ctx.getParent() as BasicParser.UnOpContext
+                if(parent.unaryOper().text == "-" && ctx.INT_LIT().text.toLong().equals(2147483648)){
+                    return IntLitNode(ctx.INT_LIT().text.toLong(), ctx)
+                }
+            }
             exitProcess(100)
         }
-        return IntLitNode(int_val, ctx)
+        return IntLitNode(int_val.toLong(), ctx)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
