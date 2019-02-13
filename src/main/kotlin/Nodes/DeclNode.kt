@@ -19,7 +19,7 @@ class DeclNode(// var name
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
 
     override fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return type.getType()
     }
 
 

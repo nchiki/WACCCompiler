@@ -49,8 +49,11 @@ fun main(args: Array<String>) {
         for (error in errorLogger.errorList) {
                 println(error.printError())
         }
-        if(errorLogger.errorList.count() != 0) {
+        if(errorLogger.errorList.count() > 0) {
                 exitProcess(200)
+        } else {
+
+                exitProcess(0)
         }
  }
 

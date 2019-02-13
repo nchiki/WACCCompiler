@@ -28,11 +28,12 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
                 errors.addError(UndefinedVariable(ctx, operand.id))
             }
         }
-        if (operator.NOT() != null && op?.getType() != LitTypes.BoolWacc
-            || operator.MINUS() != null && op?.getType() != LitTypes.IntWacc
-            || operator.LEN() != null && op?.getType() != LitTypes.ArrayLit
-            || operator.ORD() != null && op?.getType() != LitTypes.CharWacc
-            || operator.CHR() != null && op?.getType() != LitTypes.IntWacc)
+        println(operand.getType())
+        if (operator.text == "!" && op!!.getType() != LitTypes.BoolWacc
+            || operator.text == "minus" && op!!.getType() != LitTypes.IntWacc
+            || operator.text == "len" && op!!.getType() != LitTypes.ArrayLit
+            || operator.text == "ord" && op!!.getType() != LitTypes.CharWacc
+            || operator.text == "chr" && op!!.getType() != LitTypes.IntWacc)
         {
 
             errors.addError(InvalidOperandTypes(ctx))
