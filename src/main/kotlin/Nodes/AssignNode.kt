@@ -66,7 +66,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
                     RHS_Node.getType() == LitTypes.CharWacc) {
-                TODO("NOT IMPLEMENTED YET")
+               // ITS FINE
         } else {
 
                 errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
