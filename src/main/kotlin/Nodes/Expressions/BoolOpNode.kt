@@ -1,7 +1,9 @@
 package kotlin.Nodes.Expressions
 
 import Errors.InvalidOperandTypes
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
@@ -13,37 +15,49 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
                  override val ctx: ParserRuleContext) : ExprNode {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if(left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc) {
 
-            //checks that both identifiers are bools
-            if (left is IdentNode || right is IdentNode) {
-                if (left is IdentNode) {
-                    val value = table.lookupSymbol(left.id)
-                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
-                                    && value.getType() != LitTypes.BoolWacc)) {
-                        errors.addError(InvalidOperandTypes(ctx))
-                    }
-                }
+        var realLeft = left
 
-                if (right is IdentNode) {
-                    val value = table.lookupSymbol(right.id)
-                    if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
-                                    && value.getType() != LitTypes.BoolWacc)) {
-                        errors.addError(InvalidOperandTypes(ctx))
-                    }
-                }
+        /* Get left value from symbol table */
+        if (left is IdentNode) {
+            val leftValue = table.lookupSymbol(left.id)
+
+            if (leftValue == null) {
+                errors.addError(UndefinedVariable(ctx, left.id))
+                return
             }
 
-            //if operands could not be identified, throw Invalid Operand Error
-            else {
-                errors.addError(InvalidOperandTypes(ctx))
-            }
+            realLeft = leftValue
         }
+
+        var realRight = right
+
+        /* Get left value from symbol table */
+        if (right is IdentNode) {
+            val rightValue = table.lookupSymbol(right.id)
+
+            if (rightValue == null) {
+                errors.addError(UndefinedVariable(ctx, right.id))
+                return
+            }
+
+            realRight = rightValue
+        }
+
+
+        if(realLeft is ArrayTypeNode || !realLeft.getBaseType().equals(LitTypes.BoolWacc)){
+            errors.addError(IncompatibleTypes(ctx, LitTypes.BoolWacc.toString(), realLeft, table))
+        }
+
+        if(realRight is ArrayTypeNode || !realRight.getBaseType().equals(LitTypes.BoolWacc)){
+            errors.addError(IncompatibleTypes(ctx, LitTypes.BoolWacc.toString(), realRight, table))
+        }
+
     }
 
 
     //returns type of Node
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.BoolWacc
     }
 
