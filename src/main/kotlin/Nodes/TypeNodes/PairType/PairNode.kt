@@ -2,7 +2,6 @@ package Nodes.PairType
 
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 

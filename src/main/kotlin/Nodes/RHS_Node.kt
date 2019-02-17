@@ -19,16 +19,16 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         when(type){
             RHS_type.expr -> return expr!!.getBaseType()
             RHS_type.array_lit -> return ArrayLit!!.getBaseType()
-            RHS_type.call -> return LitTypes.FuncWacc   
+            RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> return PairLit!!.getType()
         }
         return LitTypes.NonLitWacc
     }
 
-    fun returnIdentType(table: SymbolTable) :LitTypes?{
+    fun returnIdentType(table: SymbolTable): LitTypes?{
         if(type == RHS_type.expr) {
-            if (expr!!.getType() == LitTypes.IdentWacc) {
+            if (expr!!.getBaseType() == LitTypes.IdentWacc) {
                 if(expr is ArrayElemNode) {
                     return table.lookupSymbol(expr.identifier)?.getType()
                 }

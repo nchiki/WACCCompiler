@@ -7,7 +7,6 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.*
-import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.Utils.getType
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
