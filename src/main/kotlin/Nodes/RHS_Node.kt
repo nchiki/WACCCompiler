@@ -13,13 +13,13 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : Node {
+               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         when(type){
-            RHS_type.expr -> return expr!!.getType()
-            RHS_type.array_lit -> return ArrayLit!!.getType()
-            RHS_type.call -> return LitTypes.FuncWacc
+            RHS_type.expr -> return expr!!.getBaseType()
+            RHS_type.array_lit -> return ArrayLit!!.getBaseType()
+            RHS_type.call -> return LitTypes.FuncWacc   
             RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> return PairLit!!.getType()
         }

@@ -1,24 +1,18 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Statement
 
 import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.Literals.NewPairNode
+import main.kotlin.Nodes.LHS_Node
+import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.PairElemNode
+import main.kotlin.Nodes.RHS_Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
 
 class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
-
-
-    override fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         LHS_Node.semanticCheck(errors, table)
@@ -50,7 +44,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         }
 
         /* Types match */
-        if (node.getType() == RHS_Node.getType()) {
+        if (node.getBaseType() == RHS_Node.getType) {
             return
         }
 

@@ -1,20 +1,20 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Expressions
 
 import Errors.InvalidOperandTypes
 import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
-import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
-import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
 
     //differs between a Boolean expression or calculation of two operands
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         if(operator.MULT() != null
                 || operator.DIV() != null
                 || operator.MOD() != null
@@ -26,11 +26,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }
     }
 
-    override fun syntaxCheck() {
-        //not needed for BinaryOpNode
-    }
-
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //check the semantics of both operands
             left.semanticCheck(errors, table)
@@ -41,36 +36,36 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             val pos = operator.start.charPositionInLine
 
         //check that left operand is valid
-            var leftType = left.getType()
+            var leftType = left.getBaseType()
             if (left is IdentNode) {
-                val leftValue = table.lookupSymbol(left.id)
+                val leftValue = table.lookupSymbol(left.id) as ExprNode?
                 if (leftValue == null) {
                     errors.addError(UndefinedVariable(ctx, left.id))
                     return
                 }
-                leftType = leftValue.getType()
+                leftType = leftValue.getBaseType()
             }
 
         //check that right operand is valid
-            var rightType = right.getType()
+            var rightType = right.getBaseType()
             if (right is IdentNode) {
-                val rightValue = table.lookupSymbol(right.id)
+                val rightValue = table.lookupSymbol(right.id) as ExprNode?
                 if (rightValue == null) {
                     errors.addError(UndefinedVariable(ctx, right.id))
                     return
                 }
-                rightType = rightValue.getType()
+                rightType = rightValue.getBaseType()
             }
-            if (getType() == LitTypes.IntWacc && !leftType.equals(LitTypes.IntWacc)) {
+            if (getBaseType() == LitTypes.IntWacc && !leftType.equals(LitTypes.IntWacc)) {
                 errors.addError(IncompatibleTypes(ctx, "INT", left, table))
-            } else if (getType() == LitTypes.IntWacc && !rightType.equals(LitTypes.IntWacc)) {
+            } else if (getBaseType() == LitTypes.IntWacc && !rightType.equals(LitTypes.IntWacc)) {
                 errors.addError(IncompatibleTypes(ctx, "INT", right, table))
             } else if (!leftType.equals(rightType)) {
-                var l = left as Node?
+                var l = left as ExprNode?
                 while (leftType == LitTypes.IdentWacc) {
-                    l = table.lookupSymbol((l as IdentNode).id)
+                    l = table.lookupSymbol((l as IdentNode).id) as ExprNode?
                     if (l != null) {
-                        leftType = l.getType()
+                        leftType = l as ExprNode.ge
                     } else {
                         break
                     }
