@@ -29,7 +29,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             funcList.add(visitFunc(func))
         }
         val stat = visit(ctx.stat())
-        return ProgNode(funcList, stat, ctx)
+        // THIS WEIGHT IS NOT CORRECT
+        return ProgNode(funcList, stat, ctx, stat.weight)
     }
 
     //IdentNode needs to be constructed with Identifier
