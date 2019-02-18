@@ -1,7 +1,5 @@
 package main.kotlin.Nodes.Statement
 
-import Nodes.Literals.PairLitNode
-import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable

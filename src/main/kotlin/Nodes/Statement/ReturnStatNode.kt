@@ -1,12 +1,9 @@
 package main.kotlin.Nodes.Statement
 
-import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Nodes.BinaryOpNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.UnaryOpNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode

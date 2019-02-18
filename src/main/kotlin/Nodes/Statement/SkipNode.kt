@@ -6,7 +6,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 class SkipNode(override val ctx: BasicParser.SkipContext): Node{
-    override fun getType() :LitTypes{
+    override fun getType() : LitTypes {
         TODO()
     }
 

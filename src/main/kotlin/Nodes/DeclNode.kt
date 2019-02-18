@@ -92,7 +92,7 @@ class DeclNode(// var name
         errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
     }
 
-    fun checkType(table:SymbolTable, id:String, node :Node) :LitTypes {
+    fun checkType(table:SymbolTable, id:String, node :Node) : LitTypes {
 
         if (node is PairElemNode) {
             val elem = node.elem

@@ -15,7 +15,7 @@ enum class LitTypes(s: String) {
 
 }
 
-fun getType(s : String) : LitTypes{
+fun getType(s : String) : LitTypes {
     var input = s
     if (s.contains("pair")) {
         input = "pair"

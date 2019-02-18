@@ -1,6 +1,5 @@
 package Nodes
 
-import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Nodes.*
@@ -11,7 +10,7 @@ class ParamNode(
         val id: String,
         val type: Node, override val ctx: BasicParser.ParamContext) : Node {
 
-    override fun getType() : LitTypes{
+    override fun getType() : LitTypes {
         var v = type
         while (v is ArrayTypeNode) {
             v = v.type
