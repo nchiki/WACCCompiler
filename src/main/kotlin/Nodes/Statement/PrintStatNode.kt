@@ -17,10 +17,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         return expr.getType()
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }

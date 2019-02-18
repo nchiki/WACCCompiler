@@ -14,10 +14,6 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (expr.getType() != LitTypes.PairWacc) {
             if (expr.getType() == LitTypes.IdentWacc) {

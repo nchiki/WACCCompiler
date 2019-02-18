@@ -15,9 +15,4 @@ class ParenNode(val expr: Node, override val ctx: BasicParser.ParenContext): Exp
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 }

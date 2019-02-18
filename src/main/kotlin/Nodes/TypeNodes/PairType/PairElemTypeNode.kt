@@ -13,9 +13,6 @@ open class PairElemTypeNode(val type: TypeNode?, val pair : String?, override va
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun getType(): LitTypes {
         if (pair == "") {

@@ -27,12 +27,4 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
         }
     }
 
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
-
-
 }

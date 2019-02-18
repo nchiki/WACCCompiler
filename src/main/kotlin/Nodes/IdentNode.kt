@@ -17,10 +17,6 @@ class IdentNode(val id : String, override val ctx: BasicParser.IdContext?) : Exp
         return table.lookupSymbol(id)
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if(table.lookupSymbol(id) == null){
             errors.addError(UndefinedVariable(ctx as ParserRuleContext, id))

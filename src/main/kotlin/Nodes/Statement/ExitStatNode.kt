@@ -14,10 +14,6 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
         TODO()
     }
 
-    override fun syntaxCheck() {
-        //not needed
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //println(ctx.children.joinToString(" ") { it.text } )
         if (expr.getType() != LitTypes.IntWacc) {

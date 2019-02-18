@@ -18,10 +18,6 @@ class IfCondNode(// condition (should evaluate to boolean val
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         // check whether the expr evaluates to boolean value

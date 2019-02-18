@@ -97,32 +97,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    /*fun addToTable(table: SymbolTable, id:String) {
-        if(type == RHS_type.call) {
-            val funNode = table.lookupSymbol(funId!!) as FunctionNode?
-            if(funNode != null) {
-                val value = funNode.stat
-                table.add(value, id)
-            }
-        } else if(type == RHS_type.expr) {
-            table.add(expr!!, id)
-        } else if (type == RHS_type.newpair) {
-            table.add(newPairNode!!, id)
-        } else if(type == RHS_type.pair_elem) {
-
-            table.add(PairLit!!, id)
-        } else if(type == RHS_type.array_lit) {
-            table.add(ArrayLit!!, id)
-        }
-
-    }*/
-
-}
-
 enum class RHS_type(s: String) {
     generic("generic"),
     expr("expr"),

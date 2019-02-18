@@ -25,23 +25,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        /*  if (right.getType().equals(LitTypes.IdentWacc)) {
-                    val rightId = right as IdentNode
-                    if(table.lookupSymbol(rightId.id) == null) {
-                        errors.addError(UndefinedVariable(ctx, rightId.id))
-                    }
-        }
-        if (left.getType().equals(LitTypes.IdentWacc)) {
-        val leftId = left as IdentNode
-        if(table.lookupSymbol(leftId.id) == null) {
-            errors.addError(UndefinedVariable(ctx, leftId.id))
-        }
-        }*/
 
             left.semanticCheck(errors, table)
             right.semanticCheck(errors, table)

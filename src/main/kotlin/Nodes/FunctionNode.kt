@@ -18,10 +18,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         return fun_type
     }
 
-    override fun syntaxCheck() {
-       /* if (stat.getType() != ReturnStatNode::class && stat.getType() != ExitStatNode::class) {
-            exitProcess(100)
-        }*/
+    fun syntaxCheck() {
         exitProcess(100)
     }
 

@@ -16,7 +16,4 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
 //nothing to implement here
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

@@ -26,10 +26,6 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
         this.type_return = type
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (type_return != (expr.getType())) {

@@ -20,10 +20,6 @@ class ParamNode(
         return toType.getType()
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         // looks up the id in the symbol table
         val value = table.lookupSymbol(id)

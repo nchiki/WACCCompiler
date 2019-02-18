@@ -13,13 +13,7 @@ class ParamListNode(// list of parameterNodes
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
-
 
         // iterates through the list of parameters, checking semantics of each of them
         for (param in listParamNodes) {

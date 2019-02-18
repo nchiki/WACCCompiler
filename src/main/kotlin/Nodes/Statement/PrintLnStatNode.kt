@@ -14,10 +14,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         return expr.getType()
     }
 
-    override fun syntaxCheck() {
-
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }

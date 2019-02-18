@@ -18,7 +18,4 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
 
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
