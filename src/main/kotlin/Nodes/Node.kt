@@ -23,7 +23,4 @@ interface Node {
 
     fun generateCode(codeGeneration: CodeGeneration)
 
-    fun translate()
-
-
 }
