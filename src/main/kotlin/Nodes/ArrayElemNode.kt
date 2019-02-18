@@ -1,5 +1,6 @@
 package src.main.kotlin.Nodes
 
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -15,10 +16,22 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
        for (expr in exprs) {
-            expr.semanticCheck(errors, table)
-            if(!expr.getBaseType().equals(LitTypes.IntWacc)){
-                errors.addError(IncompatibleTypes(ctx, "INT", expr, table))
-            }
+           expr.semanticCheck(errors, table)
+
+           var realExpr = expr
+
+           if(expr is IdentNode){
+               val exprValue = table.lookupSymbol(expr.id)
+               if(exprValue == null){
+                   errors.addError(UndefinedVariable(ctx, expr.id))
+                   return
+               }
+               realExpr = exprValue
+           }
+
+           if(!realExpr.getBaseType().equals(LitTypes.IntWacc)){
+               errors.addError(IncompatibleTypes(ctx, "INT", realExpr, table))
+           }
        }
     }
     
