@@ -16,9 +16,4 @@ class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: Basic
            stat.semanticCheck(errors, table)
        }
     }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 }

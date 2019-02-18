@@ -1,14 +1,11 @@
 package main.kotlin.Nodes
 
-import Errors.InvalidOperandTypes
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Errors.InvalidOperandTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
-import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
@@ -45,11 +42,4 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             errors.addError(InvalidOperandTypes(ctx))
         }
     }
-
-    override fun syntaxCheck() {
-        //not needed for Operators
-    }
-
-
-
 }

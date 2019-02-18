@@ -19,9 +19,8 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //println(ctx.children.joinToString(" ") { it.text } )
-        if (expr.getType() != LitTypes.IntWacc) {
-            if (expr.getType() == LitTypes.IdentWacc) {
+        if (expr.getBaseType() != LitTypes.IntWacc) {
+            if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
                 if (value?.getType() != LitTypes.IntWacc) {

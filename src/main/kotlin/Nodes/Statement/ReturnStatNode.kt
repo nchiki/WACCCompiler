@@ -11,10 +11,9 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
+class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : ExprNode{
 
-class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : Node{
-
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         if(type_return != null) {
             return type_return!!
         } else {

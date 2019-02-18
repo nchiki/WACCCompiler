@@ -12,8 +12,8 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ty
         return type.getType()
     }
 
-    override fun syntaxCheck() {
-        //not needed
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

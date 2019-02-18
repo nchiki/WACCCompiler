@@ -1,9 +1,13 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Statement
 
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Nodes.LHS_Node
+import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.PairElemNode
+import main.kotlin.Nodes.RHS_Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode

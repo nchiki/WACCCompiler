@@ -5,8 +5,8 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.IfCondNode
 import kotlin.system.exitProcess
 
