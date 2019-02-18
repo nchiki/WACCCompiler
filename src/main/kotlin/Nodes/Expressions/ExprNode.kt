@@ -5,5 +5,5 @@ import main.kotlin.Utils.LitTypes
 
 interface ExprNode : Node {
 
-    fun getBaseType() : LitTypes
+    override fun getType() : LitTypes
 }
