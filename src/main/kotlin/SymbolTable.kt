@@ -6,13 +6,15 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Errors.GenericError
+import main.kotlin.Nodes.Expressions.BinaryOpNode
+import src.main.kotlin.Nodes.ExprNode
 
 
 class SymbolTable (val parent: SymbolTable?){
 
     private val children = listOf<SymbolTable>()
     private val parentT = parent
-    var table = HashMap<String, Node>()
+    var table = HashMap<String, ExprNode>()
     var functions = HashMap<String, FunctionNode>()
     var errors = ErrorLogger()
 
@@ -45,7 +47,7 @@ class SymbolTable (val parent: SymbolTable?){
     }
 
     /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
+    fun boolExprCheck(expr : ExprNode, errors: ErrorLogger) {
         var tempExpr: Node = expr
 
         if(tempExpr is ParenNode){
@@ -104,18 +106,18 @@ class SymbolTable (val parent: SymbolTable?){
         return keywords.contains(key)
     }*/
 
-    fun add(node : Node, id : String) {
+    fun add(node : ExprNode, id : String) {
         table.put(id, node)
     }
 
-    fun lookupLocal(identifier:String) : Node?{
+    fun lookupLocal(identifier:String) : ExprNode?{
         if(table.containsKey(identifier)){
             return table[identifier]
         }
         return null
     }
 
-    fun lookupSymbol(identifier: String): Node?{
+    fun lookupSymbol(identifier: String): ExprNode? {
 
         if(table.containsKey(identifier)){
             return table[identifier]

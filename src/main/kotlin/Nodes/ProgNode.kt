@@ -6,20 +6,26 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
+import main.kotlin.CodeGeneration
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
 
-    override fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
+
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+
+        codeGeneration.loadPC()
+        for (func in funcDefs) {
+            func.generateCode(codeGeneration)
+        }
+        stats!!.generateCode(codeGeneration)
+
+        // returned strings or list of instructions from generateCode will be passed to
+        // codeGeneration.translateCode(instructions)
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()
 
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         table.errors = errors
@@ -49,5 +55,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             stats!!.semanticCheck(errors, statTable)
         }
     }
+
+
 }
 
