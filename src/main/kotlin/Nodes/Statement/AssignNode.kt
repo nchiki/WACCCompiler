@@ -24,12 +24,12 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             val elem = LHS_Node.Nodetype.elem
             println(LHS_Node.id)
             val node = (table.lookupSymbol(LHS_Node.id) as PairNode).returnElemNode(elem)
-            if (RHS_Node.getType() == LitTypes.IdentWacc) {
+            if (RHS_Node.getBaseType() == LitTypes.IdentWacc) {
                 if (node != RHS_Node.returnIdentType(table)) {
 
                     errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
                 }
-            } else if (node != RHS_Node.getType()) {
+            } else if (node != RHS_Node.getBaseType()) {
 
                 errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
             }
@@ -44,12 +44,12 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         }
 
         /* Types match */
-        if (node.getBaseType() == RHS_Node.getType) {
+        if (node.getBaseType() == RHS_Node.getBaseType()) {
             return
         }
 
-        if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
-                RHS_Node.getType() == LitTypes.CharWacc) {
+        if (LHS_Node.Nodetype is ArrayElemNode && node.getBaseType() == LitTypes.StringWacc &&
+                RHS_Node.getBaseType() == LitTypes.CharWacc) {
             // ITS FINE
             return
         }
@@ -57,7 +57,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         val idType = RHS_Node.returnIdentType(table)
         if(idType != null){
 
-            if(idType == node.getType()){
+            if(idType == node.getBaseType()){
                 return
             }
 
@@ -65,27 +65,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             return
         }
 
-        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHS_Node, table))
 
-
-
-        /* Call to function */
-        /* ================ Probably solved by line 48 ===============
-        if (RHS_Node.type == RHS_type.call) {
-            if (RHS_Node.funId != null) {
-                val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
-                val returnT = Func.getType()
-                if (returnT != LHS_Node.getType()) {
-                    if (LHS_Node.getType() == LitTypes.IdentWacc) {
-                        val idLHS = LHS_Node as IdentNode
-                        if (table.lookupSymbol(idLHS.id) == null) {
-                            errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
-                        }
-                    }
-                    errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
-                }
-            }
-        }
-        */
     }
 }

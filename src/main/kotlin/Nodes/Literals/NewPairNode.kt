@@ -6,9 +6,9 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode1: ExprNode, val exprNode2: ExprNode) :Node {
+class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode1: ExprNode, val exprNode2: ExprNode) : ExprNode {
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.PairWacc
     }
 
@@ -22,10 +22,6 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed for NewPairNode
-    }
-
-    override fun syntaxCheck() {
         //not needed for NewPairNode
     }
 }

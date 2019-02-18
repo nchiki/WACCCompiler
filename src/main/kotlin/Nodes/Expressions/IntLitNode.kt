@@ -8,15 +8,11 @@ import src.main.kotlin.Nodes.ExprNode
 
 class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.IntWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //not needed for the Literals
-    }
-
-    override fun syntaxCheck() {
-       //not needed for the Literals
     }
 }

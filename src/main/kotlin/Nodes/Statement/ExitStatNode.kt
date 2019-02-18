@@ -10,21 +10,13 @@ import src.main.kotlin.Nodes.ExprNode
 
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
 
-    override fun getType(): LitTypes {
-        TODO()
-    }
-
-    override fun syntaxCheck() {
-        //not needed
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //println(ctx.children.joinToString(" ") { it.text } )
-        if (expr.getType() != LitTypes.IntWacc) {
-            if (expr.getType() == LitTypes.IdentWacc) {
+        if (expr.getBaseType() != LitTypes.IntWacc) {
+            if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
-                if (value?.getType() != LitTypes.IntWacc) {
+                if (value?.getBaseType() != LitTypes.IntWacc) {
                     errors.addError(IncompatibleTypes(ctx, "INT", value!!, table))
                 }
             } else {

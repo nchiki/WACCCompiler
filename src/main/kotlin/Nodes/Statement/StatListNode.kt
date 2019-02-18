@@ -7,18 +7,10 @@ import main.kotlin.Utils.LitTypes
 
 class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: BasicParser.StatListContext) : Node{
 
-    override fun getType(): LitTypes {
-        return LitTypes.NonLitWacc
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
        for (stat in listStatNodes) {
            stat.semanticCheck(errors, table)
        }
-    }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

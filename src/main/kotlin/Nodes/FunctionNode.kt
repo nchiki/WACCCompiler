@@ -8,17 +8,18 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
 import src.main.kotlin.IfCondNode
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
-                    override val ctx: BasicParser.FuncContext) : Node {
+                    override val ctx: BasicParser.FuncContext) : ExprNode {
 
 
-    override fun getType() : LitTypes {
+    override fun getBaseType() : LitTypes {
         return fun_type
     }
 
-    override fun syntaxCheck() {
+    fun syntaxCheck() {
         exitProcess(100)
     }
 
