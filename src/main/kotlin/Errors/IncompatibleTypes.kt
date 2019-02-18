@@ -1,5 +1,6 @@
 package main.kotlin.Errors
 
+import Errors.SemanticError
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable

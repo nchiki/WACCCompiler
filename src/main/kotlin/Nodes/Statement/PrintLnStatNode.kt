@@ -1,6 +1,9 @@
 package main.kotlin.Nodes.Statement
 
+import Errors.UndefinedVariable
+import Nodes.StatementNode
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes

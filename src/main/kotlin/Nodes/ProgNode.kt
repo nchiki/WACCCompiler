@@ -1,8 +1,8 @@
 package main.kotlin.Nodes
 
+import Errors.FunctionDoubleDeclare
+import Errors.GlobalReturn
 import main.kotlin.ErrorLogger
-import main.kotlin.Errors.FunctionDoubleDeclare
-import main.kotlin.Errors.GlobalReturn
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
@@ -15,6 +15,11 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()
+
+
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         table.errors = errors

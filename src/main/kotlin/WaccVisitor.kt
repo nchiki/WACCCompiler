@@ -16,7 +16,6 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.getType
 import java.lang.Exception
 import kotlin.system.exitProcess
 

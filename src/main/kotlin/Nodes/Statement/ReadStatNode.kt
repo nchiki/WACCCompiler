@@ -1,8 +1,10 @@
 package main.kotlin.Nodes.Statement
 
+import Errors.UndefinedVariable
+import Nodes.Literals.PairLitNode
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
