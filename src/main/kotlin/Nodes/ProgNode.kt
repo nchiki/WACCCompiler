@@ -10,7 +10,11 @@ import main.kotlin.CodeGeneration
 import main.kotlin.Utils.Register
 
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
+
+
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
 
     override fun generateCode(codeGeneration: CodeGeneration) {
