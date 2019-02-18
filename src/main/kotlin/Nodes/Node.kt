@@ -19,5 +19,4 @@ interface Node {
 
     fun generateCode(codeGeneration: CodeGeneration)
 
-
 }

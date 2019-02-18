@@ -44,14 +44,7 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
 
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }
-            } /*else if (expr is UnaryOpNode) {
-                val value = table.lookupSymbol(expr.operand.toString())
-                if (value?.getType() != type_return) {
-                    println("adding error1")
-                    errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
-                }
-            } else if (expr is BinaryOpNode) {
-                val value = table.lookupSymbol()*/
+            }
             else {
 
                 errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))

@@ -1,6 +1,7 @@
 package main.kotlin
 
 import java.util.*
+import kotlin.Instructions.Instruction
 
 import kotlin.Utils.Register
 
@@ -48,13 +49,13 @@ class CodeGeneration {
 
     }
 
-
     // MAYBE PARAMS FOR THIS FUNC?
     fun restoreRegs() {
 
     }
 
-    fun translateCode(value : List<String>) {
+
+    fun translateCode(value : List<Instruction>) {
 
         val beginnningAssembly = ".text\n" +
                 "\t\n" +
@@ -70,7 +71,7 @@ class CodeGeneration {
         var instructions = ""
         for (vals in value) {
             instructions += "\t\t"
-            instructions += vals
+            instructions += vals.getString()
             instructions += "\n"
         }
 

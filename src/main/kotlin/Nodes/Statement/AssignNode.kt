@@ -2,7 +2,11 @@ package main.kotlin.Nodes.Statement
 
 import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
+<<<<<<< HEAD:src/main/kotlin/Nodes/Statement/AssignNode.kt
 import main.kotlin.CodeGeneration
+=======
+import Nodes.ParamNode
+>>>>>>> dd55e2a419962aed1c03054ee7f3e948c237c866:src/main/kotlin/Nodes/AssignNode.kt
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.LHS_Node
@@ -30,6 +34,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         /* Attempting to assign to a pair */
         if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
+<<<<<<< HEAD:src/main/kotlin/Nodes/Statement/AssignNode.kt
             println(LHS_Node.id)
             val node = (table.lookupSymbol(LHS_Node.id) as PairNode).returnElemNode(elem)
             if (RHS_Node.getBaseType() == LitTypes.IdentWacc) {
@@ -38,8 +43,31 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
                     errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
                 }
             } else if (node != RHS_Node.getBaseType()) {
+=======
+            val elemTable = table.lookupSymbol(LHS_Node.id)
+            if (elemTable is ParamNode) {
+                val node = elemTable.type
+                if (RHS_Node.getType() == LitTypes.IdentWacc) {
+                    if (node != RHS_Node.returnIdentType(table)) {
 
-                errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
+                        errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
+                    }
+                } else if (node != RHS_Node.getType()) {
+
+                    errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
+                }
+            } else {
+                val node = (elemTable as PairNode).returnElemNode(elem)
+                if (RHS_Node.getType() == LitTypes.IdentWacc) {
+                    if (node != RHS_Node.returnIdentType(table)) {
+
+                        errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
+                    }
+                } else if (node != RHS_Node.getType()) {
+>>>>>>> dd55e2a419962aed1c03054ee7f3e948c237c866:src/main/kotlin/Nodes/AssignNode.kt
+
+                    errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
+                }
             }
             return
         }

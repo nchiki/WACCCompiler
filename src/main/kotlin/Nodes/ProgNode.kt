@@ -19,6 +19,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             func.generateCode(codeGeneration)
         }
         stats!!.generateCode(codeGeneration)
+
         // returned strings or list of instructions from generateCode will be passed to
         // codeGeneration.translateCode(instructions)
     }
