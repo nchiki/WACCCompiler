@@ -7,7 +7,7 @@ import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.CodeGeneration
-import main.kotlin.Utils.LitTypes
+
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
 

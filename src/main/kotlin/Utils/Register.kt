@@ -1,4 +1,4 @@
-package kotlin.Utils
+package main.kotlin.Utils
 
 enum class Register(s: String) {
     r0(""), r1(""), r2(""), r3(""), r4(""), r5(""), r6(""), r7(""),

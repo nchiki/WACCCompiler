@@ -1,4 +1,4 @@
-package kotlin.Instructions
+package main.kotlin.Instructions
 
 class LoadInstr : Instruction {
     override fun getString() {

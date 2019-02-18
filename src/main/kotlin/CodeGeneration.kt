@@ -1,9 +1,9 @@
 package main.kotlin
 
+import main.kotlin.Utils.Register
 import java.util.*
-import kotlin.Instructions.Instruction
+import main.kotlin.Instructions.Instruction
 
-import kotlin.Utils.Register
 
 class CodeGeneration {
 
