@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Expressions
 
 
 import Nodes.PairType.PairNode
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.InvalidOperandTypes
@@ -14,6 +15,12 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     //differs between a Boolean expression or calculation of two operands
     override fun getBaseType(): LitTypes {

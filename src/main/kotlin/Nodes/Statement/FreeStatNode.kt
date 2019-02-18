@@ -1,5 +1,6 @@
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -11,6 +12,12 @@ import src.main.kotlin.Nodes.ExprNode
 
 class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContext) : Node {
 
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (expr.getBaseType() != LitTypes.PairWacc) {
             if (expr.getBaseType() == LitTypes.IdentWacc) {

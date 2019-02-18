@@ -1,4 +1,4 @@
-package kotlin.Instructions
+package main.kotlin.Instructions
 
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.Register

@@ -2,6 +2,7 @@ package main.kotlin.Nodes
 
 
 import Nodes.PairType.PairNode
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
@@ -16,6 +17,12 @@ import src.main.kotlin.Nodes.ExprNode
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
                val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
     override fun getBaseType(): LitTypes {
         when(type){
             RHS_type.expr -> return expr!!.getBaseType()
