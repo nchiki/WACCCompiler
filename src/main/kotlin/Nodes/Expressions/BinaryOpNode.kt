@@ -1,15 +1,13 @@
 package main.kotlin.Nodes
 
-import Errors.InvalidOperandTypes
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.InvalidOperandTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
-import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
-import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
 

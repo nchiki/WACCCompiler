@@ -1,9 +1,9 @@
 package main.kotlin.Nodes
 
-import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -69,25 +69,5 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
 
-
-
-        /* Call to function */
-        /* ================ Probably solved by line 48 ===============
-        if (RHS_Node.type == RHS_type.call) {
-            if (RHS_Node.funId != null) {
-                val Func = table.lookupSymbol(RHS_Node.funId) as FunctionNode
-                val returnT = Func.getType()
-                if (returnT != LHS_Node.getType()) {
-                    if (LHS_Node.getType() == LitTypes.IdentWacc) {
-                        val idLHS = LHS_Node as IdentNode
-                        if (table.lookupSymbol(idLHS.id) == null) {
-                            errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
-                        }
-                    }
-                    errors.addError(IncompatibleTypes(ctx, LHS_Node.getType().toString(), Func, table))
-                }
-            }
-        }
-        */
     }
 }

@@ -1,8 +1,8 @@
 package main.kotlin.Nodes
 
-import Errors.FunctionDoubleDeclare
-import Errors.GlobalReturn
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.FunctionDoubleDeclare
+import main.kotlin.Errors.GlobalReturn
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable

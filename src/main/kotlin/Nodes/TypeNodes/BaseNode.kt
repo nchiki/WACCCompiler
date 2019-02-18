@@ -28,10 +28,8 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : TypeNo
         }
     }
 
-    fun syntaxCheck() {
-
     //exit if type is not a valid basetype
-    override fun syntaxCheck() {
+    fun syntaxCheck() {
         if (type != "int" && type != "char" && type != "bool" && type != "string") {
             exitProcess(100)
         }

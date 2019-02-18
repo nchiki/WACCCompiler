@@ -1,8 +1,8 @@
 package main.kotlin.Nodes.Statement
 
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node

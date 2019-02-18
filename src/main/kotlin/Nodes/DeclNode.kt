@@ -1,10 +1,10 @@
 package Nodes
 
-import Errors.DoubleDeclare
-import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable

@@ -1,8 +1,8 @@
 package main.kotlin.Nodes
 
-import Errors.InvalidOperandTypes
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.InvalidOperandTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes

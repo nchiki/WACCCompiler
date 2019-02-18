@@ -1,8 +1,8 @@
 package Nodes
 
-import Errors.DoubleDeclare
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes

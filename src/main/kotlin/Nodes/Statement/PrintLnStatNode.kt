@@ -1,6 +1,5 @@
 package main.kotlin.Nodes.Statement
 
-import Errors.UndefinedVariable
 import Nodes.StatementNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes

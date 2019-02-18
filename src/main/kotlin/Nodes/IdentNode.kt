@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext

@@ -1,11 +1,11 @@
 package main.kotlin
 
-import Errors.UndefinedVariable
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Errors.GenericError
+import main.kotlin.Errors.UndefinedVariable
 
 
 class SymbolTable (val parent: SymbolTable?){
