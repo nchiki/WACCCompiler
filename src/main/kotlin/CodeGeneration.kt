@@ -52,4 +52,27 @@ class CodeGeneration {
     fun restoreRegs() {
 
     }
+
+    fun translateCode(value : List<String>) {
+        
+        val beginnningAssembly = ".text\n" +
+                "\t\n" +
+                "\t.global main\n" +
+                "\tmain:\n" +
+                "\t\tPUSH {lr}\n"
+
+        val endingAssembly =
+                "\t\tLDR r0, =0\n" +
+                "\t\tPOP {pc}\n" +
+        		"\t\t.ltorg"
+
+        var instructions = ""
+        for (vals in value) {
+            instructions += "\t\t"
+            instructions += vals
+            instructions += "\n"
+        }
+
+        val program = beginnningAssembly + instructions + endingAssembly
+    }
 }
