@@ -15,15 +15,9 @@ interface Node {
 
     val ctx : ParserRuleContext?
 
-    //add method signatures
-    fun syntaxCheck()
-
     fun semanticCheck(errors : ErrorLogger, table : SymbolTable)
-    abstract fun getType(): LitTypes
 
     fun generateCode(codeGeneration: CodeGeneration)
-
-    fun translate()
 
 
 }

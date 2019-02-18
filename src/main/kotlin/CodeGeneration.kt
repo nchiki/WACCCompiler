@@ -55,7 +55,7 @@ class CodeGeneration {
     }
 
     fun translateCode(value : List<String>) {
-        
+
         val beginnningAssembly = ".text\n" +
                 "\t\n" +
                 "\t.global main\n" +

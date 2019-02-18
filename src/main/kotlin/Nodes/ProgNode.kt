@@ -12,14 +12,6 @@ import main.kotlin.Utils.LitTypes
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
 
 
-    override fun translate() {
-        for (func in funcDefs) {
-            func.translate()
-        }
-        stats!!.translate()
-
-    }
-
     override fun generateCode(codeGeneration: CodeGeneration) {
 
         codeGeneration.loadPC()
@@ -27,19 +19,12 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             func.generateCode(codeGeneration)
         }
         stats!!.generateCode(codeGeneration)
-
-    }
-
-    override fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // returned strings or list of instructions from generateCode will be passed to
+        // codeGeneration.translateCode(instructions)
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()
 
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         table.errors = errors
