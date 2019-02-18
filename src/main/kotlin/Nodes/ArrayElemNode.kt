@@ -6,22 +6,31 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 
-class ArrayElemNode(val identifier : String, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
-    fun getId() : String{
-        val idBase = IdentNode(identifier, null)
-        return idBase.id
-
-    }
-    override fun getType() : LitTypes {
-        return LitTypes.IdentWacc
+    override fun getBaseType(): LitTypes {
+        return identifier.getBaseType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        val arrayType = table.lookupSymbol(identifier)?.getType()
-
        for (expr in exprs) {
-            expr.semanticCheck(errors, table)
-        }
+           expr.semanticCheck(errors, table)
+
+           var realExpr = expr
+
+           if(expr is IdentNode){
+               val exprValue = table.lookupSymbol(expr.id)
+               if(exprValue == null){
+                   errors.addError(UndefinedVariable(ctx, expr.id))
+                   return
+               }
+               realExpr = exprValue
+           }
+
+           if(!realExpr.getBaseType().equals(LitTypes.IntWacc)){
+               errors.addError(IncompatibleTypes(ctx, "INT", realExpr, table))
+           }
+       }
     }
+    
 }

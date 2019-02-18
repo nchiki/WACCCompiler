@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
 
-    override fun getType() : LitTypes {
+    override fun getBaseType() : LitTypes {
         return LitTypes.BoolWacc
     }
 

@@ -11,11 +11,11 @@ import src.main.kotlin.Nodes.ExprNode
 
 class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : Node{
 
-    override fun getType(): LitTypes {
+    fun getType(): LitTypes {
         if(type_return != null) {
             return type_return!!
         } else {
-            return LitTypes.Null!!
+            return LitTypes.Null
         }
     }
 
@@ -25,13 +25,13 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
 
     //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (type_return != (expr.getType())) {
+        if (type_return != (expr.getBaseType())) {
 
             if(expr is IdentNode) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
 
-                if (value?.getType() != type_return) {
+                if (value?.getBaseType() != type_return) {
 
                     errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
                 }

@@ -7,15 +7,8 @@ import main.kotlin.Utils.LitTypes
 
 class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext): Node {
 
-    override fun getType() : LitTypes {
-
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         var childTable = SymbolTable(table)
         stat.semanticCheck(errors, childTable)
-
     }
-
 }

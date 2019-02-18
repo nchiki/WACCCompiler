@@ -11,7 +11,7 @@ class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
         //not needed for PairLitNode
     }
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.PairWacc
     }
 

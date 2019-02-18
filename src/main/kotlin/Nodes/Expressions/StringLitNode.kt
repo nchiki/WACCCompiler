@@ -8,7 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
        return LitTypes.StringWacc
     }
 

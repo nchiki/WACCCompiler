@@ -13,9 +13,4 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
             expr.semanticCheck(errors, table)
         }
     }
-
-    override fun getType(): LitTypes {
-        //not needed for this type
-        TODO()
-    }
 }
