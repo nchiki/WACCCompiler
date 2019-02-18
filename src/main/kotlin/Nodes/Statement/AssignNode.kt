@@ -1,12 +1,9 @@
 package main.kotlin.Nodes.Statement
 
-import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
-
-import main.kotlin.CodeGeneration
-
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
@@ -17,10 +14,8 @@ import src.main.kotlin.Nodes.ArrayElemNode
 
 class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -60,7 +55,6 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         if (LHS_Node.Nodetype is ArrayElemNode && node.getBaseType() == LitTypes.StringWacc &&
                 RHS_Node.getBaseType() == LitTypes.CharWacc) {
-            // ITS FINE
             return
         }
 

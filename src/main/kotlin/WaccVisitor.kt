@@ -18,6 +18,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.getType
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -31,8 +32,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             funcList.add(visitFunc(func))
         }
         val stat = visit(ctx.stat())
-        // THIS WEIGHT IS NOT CORRECT
-        return ProgNode(funcList, stat, ctx, stat.weight)
+        return ProgNode(funcList, stat, ctx)
     }
 
     //IdentNode needs to be constructed with Identifier
@@ -222,7 +222,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         return BinaryOpNode(left, right, operator, ctx)
     }
-    
+
     override fun visitBoolOper(ctx: BasicParser.BoolOperContext?): Node {
         val left = visit(ctx?.expr(0)) as ExprNode
         val right = visit(ctx?.expr(1)) as ExprNode

@@ -1,8 +1,8 @@
 package main.kotlin.Nodes
 
-import Errors.FunctionDoubleDeclare
-import Errors.GlobalReturn
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.FunctionDoubleDeclare
+import main.kotlin.Errors.GlobalReturn
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
@@ -14,7 +14,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun generateCode(codeGeneration: CodeGeneration) {
-        codeGeneration.pushToStack(Register.r14)
+        codeGeneration.pushToStack(Register.lr)
         codeGeneration.loadPC()
         for (func in funcDefs) {
             func.generateCode(codeGeneration)
@@ -22,7 +22,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         stats!!.generateCode(codeGeneration)
 
         codeGeneration.loadToReg(0, Register.r0)
-        codeGeneration.popFromStack()
+
 
 
         // returned strings or list of instructions from generateCode will be passed to
@@ -30,7 +30,6 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()
-
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         table.errors = errors
@@ -60,7 +59,4 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             stats!!.semanticCheck(errors, statTable)
         }
     }
-
-
 }
-

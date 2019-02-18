@@ -1,6 +1,5 @@
 package main.kotlin.Errors
 
-import Errors.SemanticError
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext

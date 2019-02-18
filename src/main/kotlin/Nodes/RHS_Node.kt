@@ -2,10 +2,10 @@ package main.kotlin.Nodes
 
 
 import Nodes.PairType.PairNode
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
+import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
@@ -14,18 +14,7 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?,
-               val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
-
-
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
     override fun getBaseType(): LitTypes {
         when(type){
@@ -44,19 +33,22 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 if(expr is ArrayElemNode) {
                     return table.lookupSymbol(expr.identifier.id)?.getBaseType()
                 }
-            val exprId = expr as IdentNode
-            val value = exprId.getValueType(table)?.getBaseType()
-            return value
+                if (expr is BinaryOpNode) {
+
+                }
+                val exprId = expr as IdentNode
+                val value = expr.getValueType(table)?.getBaseType()
+                return value
             } else {
                 return expr.getBaseType()
             }
-        }  else if (type == RHS_type.pair_elem) {
+        } else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
             if (pairVal?.getBaseType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
                 val value = exprId.getValueType(table)
                 if (value is PairNode) {
-                    return(value.returnElemNode(PairLit!!.elem))
+                    return (value.returnElemNode(PairLit!!.elem))
                 } else {
                     return pairVal?.getBaseType()
                 }
@@ -73,7 +65,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(type == RHS_type.call) {
+        if (type == RHS_type.call) {
             val funNode = table.getFunction(funId!!)
             val parameters = funNode!!.params
             if (args != null) {
@@ -99,36 +91,15 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             }
 
 
-        } else if(type == RHS_type.expr) {
+        } else if (type == RHS_type.expr) {
             expr!!.semanticCheck(errors, table)
         } else if (type == RHS_type.array_lit) {
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
-            PairLit!!.semanticCheck(errors,table)
+            PairLit!!.semanticCheck(errors, table)
         }
 
     }
-
-    /*fun addToTable(table: SymbolTable, id:String) {
-        if(type == RHS_type.call) {
-            val funNode = table.lookupSymbol(funId!!) as FunctionNode?
-            if(funNode != null) {
-                val value = funNode.stat
-                table.add(value, id)
-            }
-        } else if(type == RHS_type.expr) {
-            table.add(expr!!, id)
-        } else if (type == RHS_type.newpair) {
-            table.add(newPairNode!!, id)
-        } else if(type == RHS_type.pair_elem) {
-
-            table.add(PairLit!!, id)
-        } else if(type == RHS_type.array_lit) {
-            table.add(ArrayLit!!, id)
-        }
-
-    }*/
-
 }
 
 enum class RHS_type(s: String) {

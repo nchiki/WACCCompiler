@@ -12,6 +12,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -32,7 +33,6 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //println(ctx.children.joinToString(" ") { it.text } )
         if (expr.getBaseType() != LitTypes.IntWacc) {
             if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
@@ -48,6 +48,4 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
         }
         expr.semanticCheck(errors, table)
     }
-
-
 }

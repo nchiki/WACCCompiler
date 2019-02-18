@@ -1,11 +1,10 @@
 package Nodes
 
-import Errors.DoubleDeclare
-import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
+import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -16,13 +15,6 @@ class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
-
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 

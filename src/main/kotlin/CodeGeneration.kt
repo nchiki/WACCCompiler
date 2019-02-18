@@ -12,7 +12,7 @@ class CodeGeneration {
 
     fun pushToStack(value: Any) {
         // increment PC by 4 bytes
-        registers.replace(Register.r15, (this.getPC() as Int).plus(4))
+        registers.replace(Register.pc, (this.getPC() as Int).plus(4))
 
         //stack.push(value)
     }
@@ -25,11 +25,11 @@ class CodeGeneration {
     }*/
 
     fun loadPC() {
-        registers.put(Register.r15, 0)
+        registers.put(Register.pc, 0)
     }
 
     fun getPC() : Any? {
-        return registers[Register.r15]
+        return registers[Register.pc]
     }
 
     fun loadToReg(value : Any, reg : Register) {

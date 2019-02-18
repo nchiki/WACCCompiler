@@ -7,6 +7,7 @@ import main.kotlin.SymbolTable
 
 class SkipNode(override val ctx: BasicParser.SkipContext): Node{
 
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -16,3 +17,5 @@ class SkipNode(override val ctx: BasicParser.SkipContext): Node{
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {}
 }
+
+
