@@ -5,7 +5,6 @@ import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
-import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
@@ -33,22 +32,19 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 if(expr is ArrayElemNode) {
                     return table.lookupSymbol(expr.identifier)?.getType()
                 }
-                if (expr is BinaryOpNode) {
-
-                }
-                val exprId = expr as IdentNode
-                val value = expr.getValueType(table)?.getBaseType()
-                return value
+            val exprId = expr as IdentNode
+            val value = exprId.getValueType(table)?.getType()
+            return value
             } else {
                 return expr.getType()
             }
-        } else if (type == RHS_type.pair_elem) {
+        }  else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
             if (pairVal?.getType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
                 val value = exprId.getValueType(table)
                 if (value is PairNode) {
-                    return (value.returnElemNode(PairLit!!.elem))
+                    return(value.returnElemNode(PairLit!!.elem))
                 } else {
                     return pairVal?.getType()
                 }
@@ -65,7 +61,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if (type == RHS_type.call) {
+        if(type == RHS_type.call) {
             val funNode = table.getFunction(funId!!)
             val parameters = funNode!!.params
             if (args != null) {
@@ -91,15 +87,40 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             }
 
 
-        } else if (type == RHS_type.expr) {
+        } else if(type == RHS_type.expr) {
             expr!!.semanticCheck(errors, table)
         } else if (type == RHS_type.array_lit) {
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
-            PairLit!!.semanticCheck(errors, table)
+            PairLit!!.semanticCheck(errors,table)
         }
 
     }
+
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /*fun addToTable(table: SymbolTable, id:String) {
+        if(type == RHS_type.call) {
+            val funNode = table.lookupSymbol(funId!!) as FunctionNode?
+            if(funNode != null) {
+                val value = funNode.stat
+                table.add(value, id)
+            }
+        } else if(type == RHS_type.expr) {
+            table.add(expr!!, id)
+        } else if (type == RHS_type.newpair) {
+            table.add(newPairNode!!, id)
+        } else if(type == RHS_type.pair_elem) {
+
+            table.add(PairLit!!, id)
+        } else if(type == RHS_type.array_lit) {
+            table.add(ArrayLit!!, id)
+        }
+
+    }*/
+
 }
 
 enum class RHS_type(s: String) {

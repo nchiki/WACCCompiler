@@ -1,16 +1,13 @@
 package main.kotlin.Nodes
 
-
-import Nodes.PairType.PairNode
+import Errors.InvalidOperandTypes
+import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Errors.InvalidOperandTypes
-import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
@@ -22,8 +19,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 || operator.DIV() != null
                 || operator.MOD() != null
                 || operator.MINUS() != null
-                || operator.PLUS() != null)
-        {
+                || operator.PLUS() != null) {
             return LitTypes.IntWacc
         } else {
             return LitTypes.BoolWacc
@@ -44,11 +40,15 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             val line = operator.start.line
             val pos = operator.start.charPositionInLine
 
-        /* Get left value from symbol table */
-        if (left is IdentNode) {
-            val leftValue = table.lookupSymbol(left.id)
-            if (leftValue is PairNode) {
-                errors.addError(InvalidOperandTypes(ctx))
+        //check that left operand is valid
+            var leftType = left.getType()
+            if (left is IdentNode) {
+                val leftValue = table.lookupSymbol(left.id)
+                if (leftValue == null) {
+                    errors.addError(UndefinedVariable(ctx, left.id))
+                    return
+                }
+                leftType = leftValue.getType()
             }
 
         //check that right operand is valid
@@ -168,14 +168,10 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
                 }
             }
 
-        if(realLeft is BoolLitNode && getBaseType() != LitTypes.BoolWacc) {
-            errors.addError(InvalidOperandTypes(ctx))
-        }
-
-        /* Can only be Integer operator now  */
-        if(realLeft.getBaseType() != realRight.getBaseType()){
-            errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
-            errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
+            //if operands could not be identified, throw Invalid Operand Error
+            else {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
         }
     }
 

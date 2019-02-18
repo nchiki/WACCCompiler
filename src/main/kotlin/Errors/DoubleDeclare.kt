@@ -1,4 +1,4 @@
-package main.kotlin.Errors
+package Errors
 
 import org.antlr.v4.runtime.ParserRuleContext
 
