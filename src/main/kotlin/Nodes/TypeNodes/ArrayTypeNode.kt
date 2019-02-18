@@ -13,7 +13,7 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed
+        
     }
 
     override fun equals(other: Any?): Boolean {
