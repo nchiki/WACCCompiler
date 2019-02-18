@@ -15,7 +15,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
     //differs between a Boolean expression or calculation of two operands
     override fun getType(): LitTypes {
-        if(operator.MULT() != null
+        if (operator.MULT() != null
                 || operator.DIV() != null
                 || operator.MOD() != null
                 || operator.MINUS() != null
@@ -28,16 +28,16 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //check the semantics of both operands
+        fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+            //check the semantics of both operands
             left.semanticCheck(errors, table)
             right.semanticCheck(errors, table)
 
-        //get lines and positions for errors
+            //get lines and positions for errors
             val line = operator.start.line
             val pos = operator.start.charPositionInLine
 
-        //check that left operand is valid
+            //check that left operand is valid
             var leftType = left.getType()
             if (left is IdentNode) {
                 val leftValue = table.lookupSymbol(left.id)
@@ -48,7 +48,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 leftType = leftValue.getType()
             }
 
-        //check that right operand is valid
+            //check that right operand is valid
             var rightType = right.getType()
             if (right is IdentNode) {
                 val rightValue = table.lookupSymbol(right.id)
@@ -86,7 +86,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 }
             }
 
-        //check if operators are valid and compatible with types of operands
+            //check if operators are valid and compatible with types of operands
             if ((operator.MULT() != null
                             || operator.DIV() != null
                             || operator.MOD() != null
@@ -99,8 +99,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         || (right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode)) {
                     errors.addError(InvalidOperandTypes(ctx))
                 }
-            }
-            else if ((operator.LESS() != null
+            } else if ((operator.LESS() != null
                             || operator.LESS_EQ() != null
                             || operator.GREAT() != null
                             || operator.GREAT_EQ() != null) &&
@@ -132,15 +131,12 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                     errors.addError(InvalidOperandTypes(ctx))
                 }
             }
+        }
     }
 }
 
 class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext,
                  override val ctx: ParserRuleContext) : ExprNode {
-    override fun syntaxCheck() {
-        //not needed for BoolOpNode
-    }
-
 
     //checks whether
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
