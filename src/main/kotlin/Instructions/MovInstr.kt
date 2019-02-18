@@ -1,9 +1,11 @@
 package main.kotlin.Instructions
 
-class MovInstr(val value1 : Any, val dest : Any) : Instruction{
+import main.kotlin.Utils.Condition
+
+class MovInstr(val value1 : Any, val dest : Any, val cond : Condition) : Instruction{
 
     override fun getString() : String {
-        return "MOV ${value1.toString()} ${dest.toString()}"
+        return "MOV${cond.toString()} ${value1.toString()} ${dest.toString()}"
 
     }
 
