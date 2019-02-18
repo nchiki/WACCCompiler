@@ -6,9 +6,29 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
+import main.kotlin.CodeGeneration
 import main.kotlin.Utils.LitTypes
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
+class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
+
+
+    override fun translate() {
+        for (func in funcDefs) {
+            func.translate()
+        }
+        stats!!.translate()
+
+    }
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+
+        codeGeneration.loadPC()
+        for (func in funcDefs) {
+            func.generateCode(codeGeneration)
+        }
+        stats!!.generateCode(codeGeneration)
+
+    }
 
     override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -49,5 +69,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             stats!!.semanticCheck(errors, statTable)
         }
     }
+
+
 }
 

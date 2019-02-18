@@ -11,6 +11,13 @@ class ParamNode(
         val id: String,
         val type: Node, override val ctx: BasicParser.ParamContext) : Node {
 
+
+    override val weight =type.weight
+
+    override fun generateCode() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getType() : LitTypes{
         var v = type
         while (v is ArrayTypeNode) {
