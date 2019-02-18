@@ -5,20 +5,21 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import main.kotlin.Errors.IncorrectReturnTypes
+import main.kotlin.Utils.LitTypes
 import src.main.kotlin.IfCondNode
+import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
-                    override val ctx: BasicParser.FuncContext) : Node {
+                    override val ctx: BasicParser.FuncContext) : ExprNode {
 
 
-    override fun getType() : LitTypes {
+    override fun getBaseType() : LitTypes {
         return fun_type
     }
 
-    override fun syntaxCheck() {
+    fun syntaxCheck() {
         exitProcess(100)
     }
 
@@ -49,8 +50,8 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
                 checkReturn(ElseNode, errors, table)
             } else if (stat !is ReturnStatNode) {
 
-                    syntaxCheck()
-                    errors.addError(IncorrectReturnTypes(ctx))
+                syntaxCheck()
+                errors.addError(IncorrectReturnTypes(ctx))
 
             } else {
                 val statRet = stat as ReturnStatNode
@@ -75,8 +76,8 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         var statement = node
         if (node is StatListNode) {
             for (s in node.listStatNodes) {
-                    statement = s
-                }
+                statement = s
+            }
             if(statement !is ReturnStatNode) {
                 if(statement is IfCondNode) {
                     val node = statement.ifTrueStat

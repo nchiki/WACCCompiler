@@ -1,6 +1,6 @@
 package main.kotlin
 
-import Errors.ErrorNode
+import main.kotlin.Errors.ErrorNode
 
 class ErrorLogger {
     var errorList: ArrayList<ErrorNode> = arrayListOf()

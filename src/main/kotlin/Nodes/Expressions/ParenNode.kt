@@ -6,17 +6,13 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class ParenNode(val expr: Node, override val ctx: BasicParser.ParenContext): ExprNode {
+class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext): ExprNode {
 
-    override fun getType(): LitTypes {
-        return expr.getType()
+    override fun getBaseType(): LitTypes {
+        return expr.getBaseType()
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
-    }
-
-    override fun syntaxCheck() {
-        //not needed for parentheses
     }
 }

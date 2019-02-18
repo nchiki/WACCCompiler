@@ -9,25 +9,18 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class IfCondNode(// condition (should evaluate to boolean val
-       val expr: ExprNode?, // expr = true -> statement
+        val expr: ExprNode?, // expr = true -> statement
         val ifTrueStat: Node?, // expr = false -> statement
 
         val elseStat: Node?, override val ctx: BasicParser.IfCondContext) : Node {
 
-    override fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         // check whether the expr evaluates to boolean value
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
-        if(expr?.getType() != LitTypes.BoolWacc) {
+        if(expr?.getBaseType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
         //checks both statements

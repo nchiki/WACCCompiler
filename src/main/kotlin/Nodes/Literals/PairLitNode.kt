@@ -7,15 +7,11 @@ import src.main.kotlin.Nodes.ExprNode
 
 class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
 
-    override fun syntaxCheck() {
-        //not needed for PairLitNode
-    }
-
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //not needed for PairLitNode
     }
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.PairWacc
     }
 
