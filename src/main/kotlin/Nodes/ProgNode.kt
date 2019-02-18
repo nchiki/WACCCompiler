@@ -8,6 +8,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.CodeGeneration
 import main.kotlin.Utils.LitTypes
+import kotlin.Utils.Register
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext, override val weight: Int) : Node {
 
@@ -21,12 +22,14 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     }
 
     override fun generateCode(codeGeneration: CodeGeneration) {
-
+        codeGeneration.pushToStack(Register.r14)
         codeGeneration.loadPC()
         for (func in funcDefs) {
             func.generateCode(codeGeneration)
         }
         stats!!.generateCode(codeGeneration)
+        codeGeneration.loadToReg(0, Register.r0)
+        codeGeneration.popFromStack()
     }
 
     override fun getType() : LitTypes {

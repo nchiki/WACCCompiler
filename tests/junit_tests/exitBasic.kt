@@ -1,5 +1,5 @@
-import main.kotlin.ErrorLogger
-import main.kotlin.Nodes.Statement.ExitStatNode
+import kotlin.ErrorLogger
+import src.kotlin.Nodes.Statement.ExitStatNode
 import main.kotlin.SymbolTable
 import org.junit.Test
 import src.main.kotlin.Nodes.Literals.IntLitNode

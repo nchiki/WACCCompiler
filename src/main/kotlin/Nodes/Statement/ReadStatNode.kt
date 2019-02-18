@@ -17,6 +17,15 @@ import kotlin.Instructions.LoadInstr
 import kotlin.Instructions.MovInstr
 
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun translate() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

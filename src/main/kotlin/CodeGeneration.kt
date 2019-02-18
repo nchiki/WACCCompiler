@@ -10,7 +10,7 @@ class CodeGeneration {
     var stack = Stack<String>()
     var registers = HashMap<Register, String>()
 
-    fun pushToStack(value:String) {
+    fun pushToStack(value: Any) {
         // increment PC by 4 bytes
         registers.replace(Register.r15, this.getPC()?.plus(4).toString())
 
@@ -32,7 +32,7 @@ class CodeGeneration {
         return registers[Register.r15]?.toInt()
     }
 
-    fun loadToReg(value : String, reg : Register) {
+    fun loadToReg(value : Any, reg : Register) {
         registers.replace(reg, value)
     }
 
