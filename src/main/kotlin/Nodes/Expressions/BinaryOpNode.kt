@@ -11,6 +11,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
@@ -59,31 +60,19 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             realRight = rightValue
         }
 
-        if(realLeft is ArrayTypeNode){
+        if(realLeft is ArrayTypeNode || realLeft is ArrayLitNode){
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
             return
         }
 
-        if(realRight is ArrayTypeNode){
+        if(realRight is ArrayTypeNode || realRight is ArrayLitNode){
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
             return
         }
 
-        if(getBaseType().equals(LitTypes.BoolWacc)){
-            if(realLeft.getBaseType() != LitTypes.BoolWacc){
-                errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
-            }
-            if(realRight.getBaseType() != LitTypes.BoolWacc){
-                errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
-            }
-            return
-        }
-
         /* Can only be Integer operator now  */
-        if(realLeft.getBaseType() != LitTypes.IntWacc){
+        if(realLeft.getBaseType() != realRight.getBaseType()){
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
-        }
-        if(realRight.getBaseType() != LitTypes.IntWacc){
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
         }
     }
