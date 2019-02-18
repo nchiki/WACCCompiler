@@ -6,11 +6,11 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : Node {
+class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : ExprNode {
 
-    override fun getType() : LitTypes {
+    override fun getBaseType() : LitTypes {
         if (exprList.size > 0) {
-            return exprList[0].getType()
+            return exprList[0].getBaseType()
         }
         return LitTypes.ArrayLit
     }
@@ -19,16 +19,12 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         if(exprList.size == 0){
             return
         }
-        val type = exprList[0].getType()
+        val type = exprList[0].getBaseType()
         for (expr in exprList) {
-            if(type != expr.getType()) {
+            if(type != expr.getBaseType()) {
                 errors.addError(IncompatibleTypes(ctx, type.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }
-    }
-
-    override fun syntaxCheck() {
-       //not needed for the ArrayType
     }
 }

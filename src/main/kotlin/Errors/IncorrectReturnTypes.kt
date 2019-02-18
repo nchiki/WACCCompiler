@@ -1,6 +1,5 @@
 package main.kotlin.Errors
 
-import Errors.SemanticError
 import org.antlr.v4.runtime.ParserRuleContext
 
 class IncorrectReturnTypes(ctx : ParserRuleContext) : SemanticError(ctx) {

@@ -15,7 +15,7 @@ enum class LitTypes(s: String) {
 
 }
 
-fun getType(s : String) : LitTypes{
+fun getType(s : String) : LitTypes {
     var input = s
     if (s.contains("pair")) {
         input = "pair"
@@ -25,9 +25,9 @@ fun getType(s : String) : LitTypes{
         "int" -> LitTypes.IntWacc
         "string" -> LitTypes.StringWacc
         "char" -> LitTypes.CharWacc
-         "pair"-> LitTypes.PairWacc
+        "pair"-> LitTypes.PairWacc
         "ident" -> LitTypes.IdentWacc
         "arrayLit" -> LitTypes.ArrayLit
         else -> LitTypes.NonLitWacc
-}
+    }
 }

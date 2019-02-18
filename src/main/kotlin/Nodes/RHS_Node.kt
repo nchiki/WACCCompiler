@@ -5,6 +5,7 @@ import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
+import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
@@ -13,45 +14,48 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : Node {
+               val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
-    override fun getType(): LitTypes {
+    override fun getBaseType(): LitTypes {
         when(type){
-            RHS_type.expr -> return expr!!.getType()
-            RHS_type.array_lit -> return ArrayLit!!.getType()
+            RHS_type.expr -> return expr!!.getBaseType()
+            RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc
-            RHS_type.pair_elem -> return PairLit!!.getType()
+            RHS_type.pair_elem -> return PairLit!!.getBaseType()
         }
         return LitTypes.NonLitWacc
     }
 
-    fun returnIdentType(table: SymbolTable) :LitTypes?{
+    fun returnIdentType(table: SymbolTable): LitTypes?{
         if(type == RHS_type.expr) {
-            if (expr!!.getType() == LitTypes.IdentWacc) {
+            if (expr!!.getBaseType() == LitTypes.IdentWacc) {
                 if(expr is ArrayElemNode) {
-                    return table.lookupSymbol(expr.identifier)?.getType()
+                    return table.lookupSymbol(expr.identifier.id)?.getBaseType()
                 }
-            val exprId = expr as IdentNode
-            val value = exprId.getValueType(table)?.getType()
-            return value
+                if (expr is BinaryOpNode) {
+
+                }
+                val exprId = expr as IdentNode
+                val value = expr.getValueType(table)?.getBaseType()
+                return value
             } else {
-                return expr.getType()
+                return expr.getBaseType()
             }
-        }  else if (type == RHS_type.pair_elem) {
+        } else if (type == RHS_type.pair_elem) {
             val pairVal = PairLit?.expr
-            if (pairVal?.getType() == LitTypes.IdentWacc) {
+            if (pairVal?.getBaseType() == LitTypes.IdentWacc) {
                 val exprId = pairVal as IdentNode
                 val value = exprId.getValueType(table)
                 if (value is PairNode) {
-                    return(value.returnElemNode(PairLit!!.elem))
+                    return (value.returnElemNode(PairLit!!.elem))
                 } else {
-                    return pairVal?.getType()
+                    return pairVal?.getBaseType()
                 }
 
             }
         } else if(type == RHS_type.call) {
-            val value = table.getFunction(funId!!)!!.getType()
+            val value = table.getFunction(funId!!)!!.getBaseType()
 
             return value
         }
@@ -61,7 +65,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(type == RHS_type.call) {
+        if (type == RHS_type.call) {
             val funNode = table.getFunction(funId!!)
             val parameters = funNode!!.params
             if (args != null) {
@@ -71,14 +75,14 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     for (i in 0..args.exprs.size - 1) {
                         val actual = args.exprs[i]
                         val expected = parameters.listParamNodes[i]
-                        if (actual.getType() == LitTypes.IdentWacc) {
+                        if (actual.getBaseType() == LitTypes.IdentWacc) {
                             val actIdent = actual as IdentNode
                             val actType = table.lookupSymbol(actual.id)
-                            if (expected.getType() != actType!!.getType()) {
-                                errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
+                            if (expected.getBaseType() != actType!!.getBaseType()) {
+                                errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                             }
-                        } else if (actual.getType() != expected.getType()) {
-                            errors.addError(IncompatibleTypes(ctx, expected.getType().toString(), actual, table))
+                        } else if (actual.getBaseType() != expected.getBaseType()) {
+                            errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                         }
                     }
                 }
@@ -87,40 +91,15 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             }
 
 
-        } else if(type == RHS_type.expr) {
+        } else if (type == RHS_type.expr) {
             expr!!.semanticCheck(errors, table)
         } else if (type == RHS_type.array_lit) {
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
-            PairLit!!.semanticCheck(errors,table)
+            PairLit!!.semanticCheck(errors, table)
         }
 
     }
-
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    /*fun addToTable(table: SymbolTable, id:String) {
-        if(type == RHS_type.call) {
-            val funNode = table.lookupSymbol(funId!!) as FunctionNode?
-            if(funNode != null) {
-                val value = funNode.stat
-                table.add(value, id)
-            }
-        } else if(type == RHS_type.expr) {
-            table.add(expr!!, id)
-        } else if (type == RHS_type.newpair) {
-            table.add(newPairNode!!, id)
-        } else if(type == RHS_type.pair_elem) {
-
-            table.add(PairLit!!, id)
-        } else if(type == RHS_type.array_lit) {
-            table.add(ArrayLit!!, id)
-        }
-
-    }*/
-
 }
 
 enum class RHS_type(s: String) {
