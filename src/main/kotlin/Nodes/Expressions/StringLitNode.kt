@@ -13,7 +13,7 @@ class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) :
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-       //not necessary
+       //not needed for Literals
     }
 
 }

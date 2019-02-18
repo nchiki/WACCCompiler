@@ -13,6 +13,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
 
+    //differs between a Boolean expression or calculation of two operands
     override fun getType(): LitTypes {
         if(operator.MULT() != null
                 || operator.DIV() != null
@@ -27,10 +28,16 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        //check the semantics of both operands
             left.semanticCheck(errors, table)
             right.semanticCheck(errors, table)
+
+        //get lines and positions for errors
             val line = operator.start.line
             val pos = operator.start.charPositionInLine
+
+        //check that left operand is valid
             var leftType = left.getType()
             if (left is IdentNode) {
                 val leftValue = table.lookupSymbol(left.id)
@@ -40,6 +47,8 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 }
                 leftType = leftValue.getType()
             }
+
+        //check that right operand is valid
             var rightType = right.getType()
             if (right is IdentNode) {
                 val rightValue = table.lookupSymbol(right.id)
@@ -77,6 +86,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 }
             }
 
+        //check if operators are valid and compatible with types of operands
             if ((operator.MULT() != null
                             || operator.DIV() != null
                             || operator.MOD() != null
@@ -85,7 +95,8 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                 if ((leftType != LitTypes.IntWacc || rightType != LitTypes.IntWacc)) {
                     errors.addError(InvalidOperandTypes(ctx))
                 }
-                if ((left is IdentNode && table.lookupSymbol(left.id) is ArrayLitNode) || (right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode)) {
+                if ((left is IdentNode && table.lookupSymbol(left.id) is ArrayLitNode)
+                        || (right is IdentNode && table.lookupSymbol(right.id) is ArrayLitNode)) {
                     errors.addError(InvalidOperandTypes(ctx))
                 }
             }
@@ -94,7 +105,9 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                             || operator.GREAT() != null
                             || operator.GREAT_EQ() != null) &&
                     (leftType != LitTypes.CharWacc
-                            || leftType != LitTypes.IntWacc || rightType != LitTypes.CharWacc || rightType != LitTypes.IntWacc)) {
+                            || leftType != LitTypes.IntWacc || rightType != LitTypes.CharWacc
+                            || rightType != LitTypes.IntWacc)) {
+
                 if (left is IdentNode || right is IdentNode) {
                     if (left is IdentNode) {
                         val value = table.lookupSymbol(left.id)
@@ -104,6 +117,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                         }
 
                     }
+
                     if (right is IdentNode) {
                         val value = table.lookupSymbol(right.id)
                         if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
@@ -111,20 +125,28 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
                             errors.addError(InvalidOperandTypes(ctx))
                         }
                     }
-                } else {
-                    errors.addError(InvalidOperandTypes(ctx))
                 }
 
+                //else operands have to be invalid
+                else {
+                    errors.addError(InvalidOperandTypes(ctx))
+                }
             }
-
     }
-
 }
 
-class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext, override val ctx: ParserRuleContext) : ExprNode {
+class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext,
+                 override val ctx: ParserRuleContext) : ExprNode {
+    override fun syntaxCheck() {
+        //not needed for BoolOpNode
+    }
 
+
+    //checks whether
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if(left.getType() != LitTypes.BoolWacc || right.getType() != LitTypes.BoolWacc) {
+
+            //checks that both identifiers are bools
             if (left is IdentNode || right is IdentNode) {
                 if (left is IdentNode) {
                     val value = table.lookupSymbol(left.id)
@@ -132,8 +154,8 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
                                     && value.getType() != LitTypes.BoolWacc)) {
                         errors.addError(InvalidOperandTypes(ctx))
                     }
-
                 }
+
                 if (right is IdentNode) {
                     val value = table.lookupSymbol(right.id)
                     if (value == null || value is ArrayTypeNode || (value.getType() != LitTypes.CharWacc
@@ -141,16 +163,17 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
                         errors.addError(InvalidOperandTypes(ctx))
                     }
                 }
-            } else {
+            }
+
+            //if operands could not be identified, throw Invalid Operand Error
+            else {
                 errors.addError(InvalidOperandTypes(ctx))
             }
         }
     }
 
-    override fun syntaxCheck() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
+    //returns type of Node
     override fun getType(): LitTypes {
         return LitTypes.BoolWacc
     }

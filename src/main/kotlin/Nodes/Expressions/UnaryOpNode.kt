@@ -10,8 +10,10 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any, override val ctx: BasicParser.UnOpContext) : ExprNode {
+class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
+                  override val ctx: BasicParser.UnOpContext) : ExprNode {
 
+    //return the type of the operand
     override fun getType(): LitTypes {
         when (operator.text) {
             "!" -> return LitTypes.BoolWacc
@@ -20,14 +22,19 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
         }
     }
 
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         var op = operand as Node?
+
+        //get type of operand from Symboltable
         if(operand is IdentNode) {
             op = table.lookupSymbol(operand.id)
             if (op == null) {
                 errors.addError(UndefinedVariable(ctx, operand.id))
             }
         }
+
+        //check whether operand and operator are compatible
         if (operator.text == "!" && op!!.getType() != LitTypes.BoolWacc
             || operator.text == "minus" && op!!.getType() != LitTypes.IntWacc
             || operator.text == "len" && op !is ArrayTypeNode

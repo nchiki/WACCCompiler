@@ -6,7 +6,6 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-
 class CharLitNode(char : String, override val ctx: BasicParser.CharLitContext) : ExprNode {
 
     override fun getType(): LitTypes {
@@ -14,6 +13,6 @@ class CharLitNode(char : String, override val ctx: BasicParser.CharLitContext) :
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not implemented yet
+        //not needed for Literal
     }
 }

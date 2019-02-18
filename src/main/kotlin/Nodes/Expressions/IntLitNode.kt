@@ -13,7 +13,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-//nothing to implement here
+        //not needed for the Literals
     }
 
 }

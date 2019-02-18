@@ -15,4 +15,11 @@ class ParenNode(val expr: Node, override val ctx: BasicParser.ParenContext): Exp
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }
+<<<<<<< HEAD
+=======
+
+    override fun syntaxCheck() {
+        //not needed for parentheses
+    }
+>>>>>>> a1bf963b58d818fc65cae007b5efc1aaf2a27cb8
 }

@@ -13,6 +13,7 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        //base types do not need to be checked
     }
 
 }

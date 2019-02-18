@@ -17,14 +17,13 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     var children : MutableList<SymbolTable> = mutableListOf()
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        table.errors = errors
         for (func in funcDefs) {
             val id = func.id
             if (table.lookupSymbol(id) != null) {
                 errors.addError(FunctionDoubleDeclare(func.ctx, id))
             }
-            //table.add(func, id)
         }
-
         table.addToFunctions(funcDefs)
 
         for (func in funcDefs) {
