@@ -1,9 +1,9 @@
 package main.kotlin.Nodes.Statement
 
-import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode

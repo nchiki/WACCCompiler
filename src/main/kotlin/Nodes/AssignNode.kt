@@ -11,7 +11,7 @@ import src.main.kotlin.Nodes.ArrayElemNode
 class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
 
-    override fun getType() : LitTypes {
+    fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -25,12 +25,12 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             val elem = LHS_Node.Nodetype.elem
             println(LHS_Node.id)
             val node = (table.lookupSymbol(LHS_Node.id) as PairNode).returnElemNode(elem)
-            if (RHS_Node.getType() == LitTypes.IdentWacc) {
+            if (RHS_Node.getBaseType() == LitTypes.IdentWacc) {
                 if (node != RHS_Node.returnIdentType(table)) {
 
                     errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
                 }
-            } else if (node != RHS_Node.getType()) {
+            } else if (node != RHS_Node.getBaseType()) {
 
                 errors.addError(IncompatibleTypes(ctx, node.toString(), RHS_Node, table))
             }
@@ -45,12 +45,12 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         }
 
         /* Types match */
-        if (node.getType() == RHS_Node.getType()) {
+        if (node.getBaseType() == RHS_Node.getBaseType()) {
             return
         }
 
-        if (LHS_Node.Nodetype is ArrayElemNode && node.getType() == LitTypes.StringWacc &&
-                RHS_Node.getType() == LitTypes.CharWacc) {
+        if (LHS_Node.Nodetype is ArrayElemNode && node.getBaseType() == LitTypes.StringWacc &&
+                RHS_Node.getBaseType() == LitTypes.CharWacc) {
             // ITS FINE
             return
         }
@@ -58,7 +58,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         val idType = RHS_Node.returnIdentType(table)
         if(idType != null){
 
-            if(idType == node.getType()){
+            if(idType == node.getBaseType()){
                 return
             }
 
@@ -66,7 +66,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             return
         }
 
-        errors.addError(IncompatibleTypes(ctx, node.getType().toString(), RHS_Node, table))
+        errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHS_Node, table))
 
     }
 }

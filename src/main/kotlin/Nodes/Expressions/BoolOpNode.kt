@@ -1,8 +1,8 @@
 package main.kotlin.Nodes.Expressions
 
-import Errors.UndefinedVariable
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable

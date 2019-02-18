@@ -12,10 +12,6 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
     var children : MutableList<SymbolTable> = mutableListOf()
 
-<<<<<<< HEAD
-=======
-
->>>>>>> aae5626fcd6e85a4686e6730748f292d5ae4b544
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         table.errors = errors
         for (func in funcDefs) {
