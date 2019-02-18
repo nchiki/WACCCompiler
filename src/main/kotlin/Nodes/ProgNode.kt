@@ -27,7 +27,6 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             func.generateCode(codeGeneration)
         }
         stats!!.generateCode(codeGeneration)
-
     }
 
     override fun getType() : LitTypes {
