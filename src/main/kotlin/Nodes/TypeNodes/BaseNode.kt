@@ -1,30 +1,38 @@
 package main.kotlin.Nodes
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 
-class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNode {
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+class BaseNode(val type : String, override val ctx: ParserRuleContext?) : TypeNode, ExprNode {
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType() : LitTypes {
+        if (type == "int") {
+            return LitTypes.IntWacc
+        } else if (type == "char") {
+            return LitTypes.CharWacc
+        } else if (type == "bool") {
+            return LitTypes.BoolWacc
+        } else if (type == "string") {
+            return LitTypes.StringWacc
+        }else if (type == "pair") {
+            return LitTypes.PairWacc
+        } else {
+
+            return LitTypes.NonLitWacc
+        }
     }
 
-    override fun getBaseType() : LitTypes {
-        when(type){
-            "int"    -> return LitTypes.IntWacc
-            "char"   -> return LitTypes.CharWacc
-            "bool"   -> return LitTypes.BoolWacc
-            "string" -> return LitTypes.StringWacc
-            "pair"   -> return LitTypes.PairWacc
+    //exit if type is not a valid basetype
+    override fun syntaxCheck() {
+        if (type != "int" && type != "char" && type != "bool" && type != "string") {
+            exitProcess(100)
         }
-        return LitTypes.NonLitWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

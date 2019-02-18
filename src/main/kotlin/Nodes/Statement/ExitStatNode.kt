@@ -1,6 +1,5 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -10,20 +9,22 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType(): LitTypes {
+        TODO()
+    }
+
+    override fun syntaxCheck() {
+        //not needed
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //println(ctx.children.joinToString(" ") { it.text } )
-        if (expr.getBaseType() != LitTypes.IntWacc) {
-            if (expr.getBaseType() == LitTypes.IdentWacc) {
+        if (expr.getType() != LitTypes.IntWacc) {
+            if (expr.getType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode
                 val value = table.lookupSymbol(expr.id)
-                if (value?.getBaseType() != LitTypes.IntWacc) {
+                if (value?.getType() != LitTypes.IntWacc) {
                     errors.addError(IncompatibleTypes(ctx, "INT", value!!, table))
                 }
             } else {

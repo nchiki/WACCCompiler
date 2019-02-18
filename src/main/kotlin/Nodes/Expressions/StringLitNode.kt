@@ -1,6 +1,5 @@
 package main.kotlin.Nodes
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -8,15 +7,13 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType(): LitTypes {
+       return LitTypes.StringWacc
     }
 
-    override fun getBaseType(): LitTypes {
-       return LitTypes.StringWacc
+    override fun syntaxCheck() {
+        //not needed for Literals
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

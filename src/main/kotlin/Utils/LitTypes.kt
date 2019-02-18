@@ -29,5 +29,5 @@ fun getType(s : String) : LitTypes{
         "ident" -> LitTypes.IdentWacc
         "arrayLit" -> LitTypes.ArrayLit
         else -> LitTypes.NonLitWacc
-	}
+}
 }

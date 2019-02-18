@@ -5,11 +5,9 @@ import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.Expressions.BinaryOpNode
-import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.Nodes.Statement.AssignNode
 import main.kotlin.Nodes.Statement.*
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.Utils.getType
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -31,8 +29,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             funcList.add(visitFunc(func))
         }
         val stat = visit(ctx.stat())
-        // THIS WEIGHT IS NOT CORRECT
-        return ProgNode(funcList, stat, ctx, stat.weight)
+        return ProgNode(funcList, stat, ctx)
     }
 
     //IdentNode needs to be constructed with Identifier
@@ -88,7 +85,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return StringLitNode(str_val, ctx)
     }
 
-    override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
+    override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
         val id = visit(ctx.assignLHS()) as LHS_Node
         val value = visit(ctx.assignRHS()) as RHS_Node
         return AssignNode(id, value, ctx)
@@ -97,7 +94,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitAssignL_Array(ctx: BasicParser.AssignL_ArrayContext): Node {
         val arrayElem = visit(ctx.arrayElem()) as ArrayElemNode
 
-        return LHS_Node(arrayElem, arrayElem.identifier.id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        return LHS_Node(arrayElem, arrayElem.getId(), ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext): Node {
@@ -159,8 +156,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitArrayType(ctx: BasicParser.ArrayTypeContext): Node? {
-        val type = visit(ctx.type()) as ExprNode
-        return ArrayTypeNode(ctx, type)
+        val type = visit(ctx.type())
+        return ArrayTypeNode(ctx, type as TypeNode)
     }
 
     override fun visitPair_type(ctx: BasicParser.Pair_typeContext): Node? {
@@ -175,9 +172,9 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             return PairElemTypeNode(null, "pair", ctx)
         } else {
             if(ctx.base_type() != null) {
-                return PairElemTypeNode(visit(ctx.getChild(0)) as ExprNode, "", ctx)
+                return PairElemTypeNode(visit(ctx.getChild(0)) as TypeNode?, "", ctx)
             } else {
-                return PairElemTypeNode(visit(ctx.getChild(0)) as ExprNode, "", ctx)
+                return PairElemTypeNode(visit(ctx.getChild(0)) as TypeNode?, "", ctx)
             }
         }
     }
@@ -190,7 +187,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             exprs.add(visit(ctx.expr(i)) as ExprNode)
             i++
         }
-        return ArrayElemNode(IdentNode(id, ctx), exprs, ctx)
+        return ArrayElemNode(id, exprs, ctx)
     }
 
     override fun visitWhile(@NotNull ctx: BasicParser.WhileContext): Node {
@@ -214,7 +211,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val operator = ctx.binaryOper()
 
-        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+        if(left.getType().equals(LitTypes.StringWacc) || right.getType().equals(LitTypes.StringWacc)){
             println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
                     "position ${ctx.start.charPositionInLine}")
             exitProcess(100)
@@ -233,7 +230,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitUnOp(ctx: BasicParser.UnOpContext): Node {
         val operand = visit(ctx.expr()) as ExprNode
         val operator = ctx.unaryOper()
-        return UnaryOpNode(operand, operator!!, operand.getBaseType(), ctx)
+        return UnaryOpNode(operand, operator!!, operand.getType(), ctx)
     }
 
     override fun visitStatList(ctx: BasicParser.StatListContext): Node {
@@ -269,7 +266,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitDecl(ctx: BasicParser.DeclContext): Node {
 
         // type node that will worry about checking if its valid type
-        val type = visit(ctx.type()) as ExprNode
+        val type = visit(ctx.type())
 
         // idNode that will check if there is a variable already declared with the same id
         val id = ctx.IDENT()?.text
@@ -277,7 +274,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // assignRHS node that will worry about semantic check of the RHS
         val RHS = visit(ctx.assignRHS()) as RHS_Node
 
-        return DeclNode(id!!, type, RHS, ctx)
+        return DeclNode(id!!, type as TypeNode, RHS, ctx)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext): Node {
@@ -322,7 +319,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitParam(ctx: BasicParser.ParamContext?): Node {
 
         // typeNode of the parameter
-        val type = visit(ctx?.type()) as ExprNode
+        val type = visit(ctx?.type())
 
         // name of param var
         val id = ctx?.IDENT()?.text

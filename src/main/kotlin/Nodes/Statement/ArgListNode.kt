@@ -1,6 +1,5 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -9,10 +8,7 @@ import src.main.kotlin.Nodes.ExprNode
 
 class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgListContext?) : Node {
 
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun syntaxCheck() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -20,5 +16,10 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
         for (expr in exprs) {
             expr.semanticCheck(errors, table)
         }
+    }
+
+    override fun getType(): LitTypes {
+        //not needed for this type
+        TODO()
     }
 }

@@ -1,23 +1,16 @@
 package main.kotlin.Nodes
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : ExprNode {
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : Node {
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getBaseType() : LitTypes {
+    override fun getType() : LitTypes {
         if (exprList.size > 0) {
-            return exprList[0].getBaseType()
+            return exprList[0].getType()
         }
         return LitTypes.ArrayLit
     }
@@ -26,12 +19,16 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         if(exprList.size == 0){
             return
         }
-        val type = exprList[0].getBaseType()
+        val type = exprList[0].getType()
         for (expr in exprList) {
-            if(type != expr.getBaseType()) {
+            if(type != expr.getType()) {
                 errors.addError(IncompatibleTypes(ctx, type.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }
+    }
+
+    override fun syntaxCheck() {
+       //not needed for the ArrayType
     }
 }

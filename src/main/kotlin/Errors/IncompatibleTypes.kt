@@ -2,11 +2,11 @@ package main.kotlin.Errors
 
 import Errors.SemanticError
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
-import src.main.kotlin.Nodes.ExprNode
 
-class IncompatibleTypes(ctx : ParserRuleContext, private val expected : String, val expr : ExprNode, private val symbolTable: SymbolTable) : SemanticError(ctx) {
+class IncompatibleTypes(ctx : ParserRuleContext, private val expected : String, val expr : Node, private val symbolTable: SymbolTable) : SemanticError(ctx) {
 
     override fun printError(): String {
         var newExpr = expr
@@ -17,7 +17,7 @@ class IncompatibleTypes(ctx : ParserRuleContext, private val expected : String, 
 //            println(symbolTable.lookupSymbol(expr.id))
             newExpr = symbolTable.lookupSymbol(expr.id)!!
         }
-        return super.printError() + "Incompatible type (expected: ${expected.toUpperCase().replace("WACC", "")}, actual: ${newExpr.getBaseType().toString().toUpperCase().replace("WACC", "")})"
+        return super.printError() + "Incompatible type (expected: ${expected.toUpperCase().replace("WACC", "")}, actual: ${newExpr.getType().toString().toUpperCase().replace("WACC", "")})"
     }
 
 }

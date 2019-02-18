@@ -3,26 +3,27 @@ package Nodes
 import Errors.DoubleDeclare
 import Errors.UndefinedVariable
 import Nodes.PairType.PairNode
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.TypeNodes.TypeNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import src.main.kotlin.Nodes.ExprNode
 
 
 class DeclNode(// var name
         val id: String, // type of var
-        val type: ExprNode, // assigned rhs
+        val type: TypeNode, // assigned rhs
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getType() : LitTypes {
+        return type.getType()
     }
 
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
@@ -42,20 +43,20 @@ class DeclNode(// var name
         if (rhs.type == RHS_type.pair_elem) {
             val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id,rhs.PairLit)
 
-            if(nodeT != type.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs.PairLit.expr, table))
+            if(nodeT != type.getType()) {
+                errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs.PairLit.expr, table))
             }
             return
         }
 
         /* Easy declaration */
-        if(type.getBaseType().equals(rhs.getBaseType())){
+        if(type.getType().equals(rhs.getType())){
             return
         }
 
         /* RHS Could be an empty array */
         if(type is ArrayTypeNode){
-            if(rhs.getBaseType().equals(LitTypes.ArrayLit)){
+            if(rhs.getType().equals(LitTypes.ArrayLit)){
                 return
             }
         }
@@ -63,12 +64,12 @@ class DeclNode(// var name
         if (rhs.type == RHS_type.array_lit ) {
             val list = rhs.ArrayLit!!.exprList
             if (list.count() > 0) {
-                if(list[0].getBaseType() == type.getBaseType()) {
+                if(list[0].getType() == type.getType()) {
                     return
                 }
-                if(list[0].getBaseType() == LitTypes.IdentWacc) {
-                    val typeId = table.lookupSymbol((list[0] as IdentNode).id)?.getBaseType()
-                    if(typeId == type.getBaseType()) {
+                if(list[0].getType() == LitTypes.IdentWacc) {
+                    val typeId = table.lookupSymbol((list[0] as IdentNode).id)?.getType()
+                    if(typeId == type.getType()) {
                         return
                     }
                 }
@@ -88,15 +89,15 @@ class DeclNode(// var name
         }
 
         /* Type Match */
-        if(type.getBaseType().equals(realType)){
+        if(type.getType().equals(realType)){
             return
         }
 
         /* Types don't match */
-        errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs, table))
+        errors.addError(IncompatibleTypes(ctx, type.getType().toString(), rhs, table))
     }
 
-    fun checkType(table:SymbolTable, id: String, node: ExprNode) :LitTypes {
+    fun checkType(table:SymbolTable, id:String, node :Node) :LitTypes {
 
         if (node is PairElemNode) {
             val elem = node.elem
@@ -114,7 +115,7 @@ class DeclNode(// var name
                 }
                 return n.returnElemNode(elem)
             }
-        } else if (node.getBaseType() == LitTypes.IdentWacc) {
+        } else if (node.getType() == LitTypes.IdentWacc) {
 
             val elem = node as IdentNode
             val node = (table.lookupSymbol(elem.id))
@@ -124,7 +125,7 @@ class DeclNode(// var name
                 return checkType(table, (node).id, node)
             }
         }
-        return node.getBaseType()
+        return node.getType()
 
     }
 

@@ -1,6 +1,5 @@
 package src.main.kotlin
 
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.Node
@@ -14,20 +13,21 @@ class IfCondNode(// condition (should evaluate to boolean val
         val ifTrueStat: Node?, // expr = false -> statement
 
         val elseStat: Node?, override val ctx: BasicParser.IfCondContext) : Node {
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         // check whether the expr evaluates to boolean value
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
-        if(expr?.getBaseType() != LitTypes.BoolWacc) {
+        if(expr?.getType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
         //checks both statements

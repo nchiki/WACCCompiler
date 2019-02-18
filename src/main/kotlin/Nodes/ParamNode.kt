@@ -2,32 +2,26 @@ package Nodes
 
 import Errors.DoubleDeclare
 import Nodes.PairType.PairNode
-import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import src.main.kotlin.Nodes.ExprNode
 
 class ParamNode(
         val id: String,
-        val type: ExprNode, override val ctx: BasicParser.ParamContext) : ExprNode {
+        val type: Node, override val ctx: BasicParser.ParamContext) : Node {
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override val weight =type.weight
-
-
-    override fun getBaseType() : LitTypes{
-
+    override fun getType() : LitTypes{
         var v = type
         while (v is ArrayTypeNode) {
             v = v.type
         }
         val toType = v
-        return toType.getBaseType()
+        return toType.getType()
+    }
+
+    override fun syntaxCheck() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
