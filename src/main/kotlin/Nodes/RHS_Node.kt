@@ -34,7 +34,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     return table.lookupSymbol(expr.identifier.id)?.getBaseType()
                 }
                 if (expr is BinaryOpNode) {
-                    return expr.getBaseType()
+
                 }
                 val exprId = expr as IdentNode
                 val value = expr.getValueType(table)?.getBaseType()

@@ -7,6 +7,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
@@ -16,15 +17,15 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
     //differs between a Boolean expression or calculation of two operands
     override fun getBaseType(): LitTypes {
-       /* if(operator.MULT() != null
+        if(operator.MULT() != null
                 || operator.DIV() != null
                 || operator.MOD() != null
                 || operator.MINUS() != null
-                || operator.PLUS() != null) {*/
-        if (left.getBaseType() == right.getBaseType()) {
-            return left.getBaseType()
+                || operator.PLUS() != null)
+        {
+            return LitTypes.IntWacc
         } else {
-            return LitTypes.NonLitWacc
+            return LitTypes.BoolWacc
         }
     }
 
@@ -70,6 +71,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if(realRight is ArrayTypeNode || realRight is ArrayLitNode){
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
             return
+        }
+
+        if(realLeft is BoolLitNode && getBaseType() != LitTypes.BoolWacc) {
+            errors.addError(InvalidOperandTypes(ctx))
         }
 
         /* Can only be Integer operator now  */
