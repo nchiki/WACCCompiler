@@ -17,7 +17,7 @@ class DeclNode(// var name
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        
         // looks up the id in the symbol table
         val value = table.lookupLocal(id)
 

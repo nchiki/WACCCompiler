@@ -16,14 +16,15 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
 
     //differs between a Boolean expression or calculation of two operands
     override fun getBaseType(): LitTypes {
-        if(operator.MULT() != null
+       /* if(operator.MULT() != null
                 || operator.DIV() != null
                 || operator.MOD() != null
                 || operator.MINUS() != null
-                || operator.PLUS() != null) {
-            return LitTypes.IntWacc
+                || operator.PLUS() != null) {*/
+        if (left.getBaseType() == right.getBaseType()) {
+            return left.getBaseType()
         } else {
-            return LitTypes.BoolWacc
+            return LitTypes.NonLitWacc
         }
     }
 
