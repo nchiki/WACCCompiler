@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Expressions.BinaryOpNode
+import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Statement.AssignNode
 import main.kotlin.Nodes.Statement.*
 import main.kotlin.Utils.getType
 import src.main.kotlin.IfCondNode
@@ -17,7 +19,6 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
-import kotlin.Nodes.Expressions.BoolOpNode
 import kotlin.system.exitProcess
 
 
@@ -86,7 +87,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return StringLitNode(str_val, ctx)
     }
 
-    override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node? {
+    override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
         val id = visit(ctx.assignLHS()) as LHS_Node
         val value = visit(ctx.assignRHS()) as RHS_Node
         return AssignNode(id, value, ctx)

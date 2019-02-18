@@ -47,7 +47,7 @@ class SymbolTable (val parent: SymbolTable?){
     }
 
     /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : Node, errors: ErrorLogger) {
+    fun boolExprCheck(expr : ExprNode, errors: ErrorLogger) {
         var tempExpr: Node = expr
 
         if(tempExpr is ParenNode){

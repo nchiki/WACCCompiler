@@ -13,7 +13,7 @@ import main.kotlin.Utils.LitTypes
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (lhs.getType() == LitTypes.IdentWacc) {
+        if (lhs.getBaseType() == LitTypes.IdentWacc) {
 
             var value = table.lookupSymbol(lhs.id)
 
@@ -33,7 +33,7 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
                 }
             }
         } else {
-            if (lhs.getType() != LitTypes.CharWacc && lhs.getType() != LitTypes.IntWacc) {
+            if (lhs.getBaseType() != LitTypes.CharWacc && lhs.getBaseType() != LitTypes.IntWacc) {
                 errors.addError(IncompatibleTypes(ctx, "CHAR or INT", lhs, table))
             }
         }
