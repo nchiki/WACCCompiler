@@ -5,6 +5,7 @@ import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
+import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
@@ -32,9 +33,12 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 if(expr is ArrayElemNode) {
                     return table.lookupSymbol(expr.identifier.id)?.getBaseType()
                 }
-            val exprId = expr as IdentNode
-            val value = exprId.getValueType(table)?.getBaseType()
-            return value
+                if (expr is BinaryOpNode) {
+                    return expr.getBaseType()
+                }
+                val exprId = expr as IdentNode
+                val value = expr.getValueType(table)?.getBaseType()
+                return value
             } else {
                 return expr.getBaseType()
             }
