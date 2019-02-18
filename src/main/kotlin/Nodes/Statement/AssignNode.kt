@@ -1,6 +1,7 @@
 package main.kotlin.Nodes.Statement
 
 import Nodes.PairType.PairNode
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
@@ -14,6 +15,12 @@ import src.main.kotlin.Nodes.ArrayElemNode
 
 class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ctx : BasicParser.AssignContext) : Node {
 
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     fun getType() : LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

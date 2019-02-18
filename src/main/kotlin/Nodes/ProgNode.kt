@@ -6,9 +6,32 @@ import main.kotlin.Errors.GlobalReturn
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
+import main.kotlin.CodeGeneration
+import main.kotlin.Utils.Register
+
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
+
+
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        codeGeneration.pushToStack(Register.lr)
+        codeGeneration.loadPC()
+        for (func in funcDefs) {
+            func.generateCode(codeGeneration)
+        }
+        stats!!.generateCode(codeGeneration)
+
+        codeGeneration.loadToReg(0, Register.r0)
+
+
+
+        // returned strings or list of instructions from generateCode will be passed to
+        // codeGeneration.translateCode(instructions)
+    }
 
     var children : MutableList<SymbolTable> = mutableListOf()
 

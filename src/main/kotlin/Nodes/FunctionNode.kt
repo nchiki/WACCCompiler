@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 import Nodes.ParamListNode
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
@@ -14,6 +15,12 @@ import kotlin.system.exitProcess
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
                     override val ctx: BasicParser.FuncContext) : ExprNode {
 
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getBaseType() : LitTypes {
         return fun_type

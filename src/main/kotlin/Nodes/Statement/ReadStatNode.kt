@@ -1,8 +1,10 @@
 package main.kotlin.Nodes.Statement
 
+import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.Instruction
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.LHS_Node
 import main.kotlin.Nodes.Node
@@ -11,6 +13,28 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
+
+
+
+    override val weight: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+
+    fun generateCode(codeGeneration: CodeGeneration, table: SymbolTable) {
+        var instrs = arrayListOf<Instruction>()
+        if (lhs.getBaseType() == LitTypes.BoolWacc) {
+            //instrs.add(LoadInstr()) //need to add constructor and add params here
+        } else if (lhs.getBaseType() == LitTypes.IntWacc) {
+            //instrs.add(LoadInstr())
+        } else { // ??
+        }
+    }
+
+
+    override fun generateCode(codeGeneration: CodeGeneration) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         if (lhs.getBaseType() == LitTypes.IdentWacc) {
