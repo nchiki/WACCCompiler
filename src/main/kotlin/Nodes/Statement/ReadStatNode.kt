@@ -20,6 +20,7 @@ import main.kotlin.Instructions.MovInstr
 
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
 
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -27,9 +28,9 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
     fun generateCode(codeGeneration: CodeGeneration, table: SymbolTable) {
         var instrs = arrayListOf<Instruction>()
         if (lhs.getBaseType() == LitTypes.BoolWacc) {
-            instrs.add(LoadInstr()) //need to add constructor and add params here
+            //instrs.add(LoadInstr()) //need to add constructor and add params here
         } else if (lhs.getBaseType() == LitTypes.IntWacc) {
-            instrs.add(LoadInstr())
+            //instrs.add(LoadInstr())
         } else { // ??
         }
     }

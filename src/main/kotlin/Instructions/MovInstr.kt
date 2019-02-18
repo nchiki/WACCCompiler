@@ -1,9 +1,12 @@
 package main.kotlin.Instructions
 
-class MovInstr : Instruction{
-    override fun getString() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class MovInstr(val value1 : Any, val dest : Any) : Instruction{
+
+    override fun getString() : String {
+        return "MOV ${value1.toString()} ${dest.toString()}"
+
     }
 
     //add code here
+
 }

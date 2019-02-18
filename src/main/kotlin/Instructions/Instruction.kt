@@ -2,6 +2,6 @@ package main.kotlin.Instructions
 
 interface Instruction {
 
-    fun getString()
+    fun getString(): String
 
 }

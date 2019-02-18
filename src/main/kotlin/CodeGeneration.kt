@@ -8,31 +8,31 @@ import main.kotlin.Instructions.Instruction
 class CodeGeneration {
 
     var stack = Stack<String>()
-    var registers = HashMap<Register, String>()
+    var registers = HashMap<Register, Any>()
 
-    fun pushToStack(value:String) {
+    fun pushToStack(value: Any) {
         // increment PC by 4 bytes
-        registers.replace(Register.r15, this.getPC()?.plus(4).toString())
+        registers.replace(Register.r15, (this.getPC() as Int).plus(4))
 
-        stack.push(value)
+        //stack.push(value)
     }
 
-    fun popFromStack() : String{
+    /*fun popFromStack() : String{
         // decrement PC by 4 bytes
-        registers.replace(Register.r15, this.getPC()!!.minus(4).toString())
+        registers.replace(Register.r15, (this.getPC()!! as Int).minus(4))
 
-        return stack.pop()
-    }
+        //return stack.pop()
+    }*/
 
     fun loadPC() {
-        registers.put(Register.r15, "0")
+        registers.put(Register.r15, 0)
     }
 
-    fun getPC() : Int? {
-        return registers[Register.r15]?.toInt()
+    fun getPC() : Any? {
+        return registers[Register.r15]
     }
 
-    fun loadToReg(value : String, reg : Register) {
+    fun loadToReg(value : Any, reg : Register) {
         registers.replace(reg, value)
     }
 
