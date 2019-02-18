@@ -1,12 +1,12 @@
 package main.kotlin.Nodes.Expressions
 
+
+import Nodes.PairType.PairNode
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Nodes.ArrayLitNode
-import main.kotlin.Nodes.ArrayTypeNode
-import main.kotlin.Nodes.IdentNode
-import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
@@ -38,6 +38,9 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         /* Get left value from symbol table */
         if (left is IdentNode) {
             val leftValue = table.lookupSymbol(left.id)
+            if (leftValue is PairNode) {
+                errors.addError(InvalidOperandTypes(ctx))
+            }
 
             if (leftValue == null) {
                 errors.addError(UndefinedVariable(ctx, left.id))
