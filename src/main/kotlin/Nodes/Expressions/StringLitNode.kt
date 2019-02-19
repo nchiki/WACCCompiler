@@ -7,14 +7,17 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class StringLitNode(str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
+class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val msg = codeGenerator.data.size
+        codeGenerator.data.put("msg_$msg", str)
+        codeGenerator.data.put("msg_${msg+1}", "%.*s\\0")
     }
+
     override fun getBaseType(): LitTypes {
         return LitTypes.StringWacc
     }
