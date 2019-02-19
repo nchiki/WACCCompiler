@@ -1,16 +1,19 @@
 package main.kotlin.Nodes.Expressions
 
 
+import main.kotlin.Instructions.AddInstr
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
@@ -23,13 +26,39 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if(comparison > 0) {
             left.generateCode(codeGenerator)
             right.generateCode(codeGenerator)
-            
+            val reg1 = codeGenerator.regsNotInUse.get(0)
+            val reg2 = codeGenerator.regsNotInUse.get(1)
+            codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
 
         } else {
             right.generateCode(codeGenerator)
             left.generateCode(codeGenerator)
+            val reg2 = codeGenerator.regsNotInUse.get(0)
+            val reg1 = codeGenerator.regsNotInUse.get(1)
+            codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
 
         }
+        codeGenerator.regsNotInUse.removeAt(0)
+        //MAYBE WE JUST NEED TO REMOVE THE ONE THAT HOLDS THE RESULT
+        //codeGenerator.regsNotInUse.removeAt(1)
+    }
+
+    fun getInstruction(reg1: Register, reg2:Register) : Instruction{
+        if (operator.MULT() != null){
+            return MultInstr(reg1, reg2)
+            // CHECK FOR OVERFLOW
+        }else if (operator.DIV() != null) {
+            return BLInstr("__aeabi_idiv")
+        } else if(operator.MOD() != null) {
+            return BLInstr("__aeabi_idivmod")
+        }else if(operator.MINUS() != null) {
+            return SubInstr(reg1, reg2)
+        }else if(operator.PLUS() != null) {
+            return AddInstr(reg1, reg1, reg2)
+        } else {
+            return CmpInstr(reg1, reg2)
+        }
+
     }
 
     //differs between a Boolean expression or calculation of two operands
