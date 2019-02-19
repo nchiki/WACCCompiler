@@ -11,6 +11,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -33,9 +34,11 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse.get(0))
         codeGenerator.curLabel = "LO"
         ifTrueStat!!.generateCode(codeGenerator)
+        codeGenerator.addInstruction("L0", LoadInstr(Register.r0, 0))
         codeGenerator.addInstruction("L0", PopInstr())
         codeGenerator.curLabel = "L1"
         elseStat!!.generateCode(codeGenerator)
+        codeGenerator.addInstruction("L1", LoadInstr(Register.r0, 0))
         codeGenerator.addInstruction("L1", PopInstr())
 
     }
