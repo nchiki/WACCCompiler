@@ -3,7 +3,7 @@ package main.kotlin.Instructions
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.Register
 
-class MovInstr(val value1 : Any, val dest : Register, val cond : Condition?) : Instruction{
+class MovInstr(val value1 : Any, val dest : Any, val cond : Condition?) : Instruction{
 
     override fun getString() : String {
         if (cond != null) {

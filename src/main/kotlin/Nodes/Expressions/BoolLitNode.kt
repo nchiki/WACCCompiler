@@ -16,9 +16,11 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         if(bool_val == "false") {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.regsNotInUse.get(0), "#0"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.regsNotInUse.get(0), "#0",
+                    null))
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.regsNotInUse.get(0), "#1"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.regsNotInUse.get(0), "#1",
+                    null))
         }
     }
     override fun getBaseType() : LitTypes {
