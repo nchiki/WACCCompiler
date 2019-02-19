@@ -1,6 +1,5 @@
 package src.main.kotlin
 
-import Instructions.PopInstr
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -33,10 +32,9 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse.get(0))
         codeGenerator.curLabel = "LO"
         ifTrueStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction("L0", PopInstr())
         codeGenerator.curLabel = "L1"
         elseStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction("L1", PopInstr())
+
 
     }
 

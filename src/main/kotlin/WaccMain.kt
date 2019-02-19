@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                        "/valid/if/ifBasic.wacc"))
+                        "/valid/basic/exit/exitBasic.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))
@@ -49,7 +49,6 @@ fun main(args: Array<String>) {
         val codeGen = CodeGenerator()
         codeGen.initRegs()
         progNode.generateCode(codeGen)
-        codeGen.writeToFile("ifBasic.s")
-        //codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 }
 
