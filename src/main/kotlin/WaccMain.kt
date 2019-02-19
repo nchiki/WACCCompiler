@@ -49,7 +49,6 @@ fun main(args: Array<String>) {
         val codeGen = CodeGenerator()
         codeGen.initRegs()
         progNode.generateCode(codeGen)
-        codeGen.writeToFile("exit.s")
-        //codeGen.writeToFile(args[0].replace(".wacc", ".s"))
+        codeGen.writeToFile(args[0].replace(".wacc", ".s"))
 }
 
