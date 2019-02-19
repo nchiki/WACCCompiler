@@ -45,4 +45,22 @@ class CodeGenerator {
         }
     }
 
+    fun loadRegs() {
+        regsNotInUse.add(Register.r12)
+        regsNotInUse.add(Register.r11)
+        regsNotInUse.add(Register.r10)
+        regsNotInUse.add(Register.r9)
+        regsNotInUse.add(Register.r8)
+        regsNotInUse.add(Register.r7)
+        regsNotInUse.add(Register.r6)
+        regsNotInUse.add(Register.r5)
+        regsNotInUse.add(Register.r4)
+        regsNotInUse.add(Register.r3)
+        regsNotInUse.add(Register.r2)
+        regsNotInUse.add(Register.r1)
+        regsNotInUse.add(Register.r0)
+
+
+    }
+
 }
