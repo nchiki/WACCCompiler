@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
         val codeGen = CodeGenerator()
         codeGen.initRegs()
         progNode.generateCode(codeGen)
-        codeGen.writeToFile("basicSeq.s")
-        //codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        //codeGen.writeToFile("basicSeq.s")
+        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 }
 
