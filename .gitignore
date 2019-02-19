@@ -5,6 +5,7 @@ target
 
 #ignore Java class files
 *.class
+*.s
 
 *.tex
 *.pdf

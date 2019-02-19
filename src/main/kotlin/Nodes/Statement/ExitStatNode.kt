@@ -1,6 +1,6 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.IdentNode
@@ -16,19 +16,21 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
 
-        if (expr is IntLitNode) {
-            codeGeneration.loadToReg(expr.int_val, Register.r4)
+        /*if (expr is IntLitNode) {
+            codeGenerator.loadToReg(expr.int_val, Register.r4)
         } else if (expr is IdentNode) {
             expr.generateCode(codeGeneration)
+            codeGeneration
             // SUB sp, sp, #4
             // LDR r4, ={expr.int_val}
             // STR r4, [sp]
             // LDR r4, [sp]
         }
         // MOV r0, r4
-        // BL exit
+        // BL exit*/
+        TODO()
     }
 
 

@@ -1,3 +1,4 @@
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.CharStreams
@@ -10,7 +11,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "/invalid/semanticErr/expressions/mixedOpTypeErr.wacc"))
+                        "/valid/basic/skip/skip.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))
@@ -43,8 +44,11 @@ fun main(args: Array<String>) {
         for (error in errorLogger.errorList) {
                 println(error.printError())
         }
-        if(errorLogger.errorList.count() > 0) {
+        if (errorLogger.errorList.count() > 0) {
                 exitProcess(200)
         }
+        val codeGen = CodeGenerator()
+        progNode.generateCode(codeGen)
+        codeGen.writeToFile("skip.s")
 }
 

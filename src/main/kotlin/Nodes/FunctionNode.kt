@@ -1,7 +1,7 @@
 package main.kotlin.Nodes
 
 import Nodes.ParamListNode
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
@@ -18,7 +18,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

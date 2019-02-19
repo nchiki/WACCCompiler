@@ -2,7 +2,7 @@ package main.kotlin.Nodes.Expressions
 
 
 import Nodes.PairType.PairNode
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.InvalidOperandTypes
@@ -18,7 +18,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
