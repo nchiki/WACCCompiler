@@ -11,6 +11,11 @@ class CodeGenerator {
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
 
+    fun initRegs() {
+        regsNotInUse.addAll(listOf(Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
+                Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
+    }
+
     fun addLabel(label : String) {
         labels.put(label, ArrayList())
     }
