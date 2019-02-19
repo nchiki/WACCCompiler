@@ -50,6 +50,10 @@ class CodeGenerator {
         }
     }
 
+    fun compareWeights(weight1 : Int, weight2 : Int) : Int {
+        return (weight1-weight2)
+    }
+
     fun loadRegs() {
         regsNotInUse.add(Register.r12)
         regsNotInUse.add(Register.r11)

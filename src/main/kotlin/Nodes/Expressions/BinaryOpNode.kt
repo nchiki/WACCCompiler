@@ -16,10 +16,20 @@ import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val comparison = codeGenerator.compareWeights(left.weight, right.weight)
+        if(comparison > 0) {
+            left.generateCode(codeGenerator)
+            right.generateCode(codeGenerator)
+            
+
+        } else {
+            right.generateCode(codeGenerator)
+            left.generateCode(codeGenerator)
+
+        }
     }
 
     //differs between a Boolean expression or calculation of two operands
