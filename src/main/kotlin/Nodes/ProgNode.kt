@@ -1,6 +1,5 @@
 package main.kotlin.Nodes
 
-import Instructions.PopInstr
 import Instructions.PushInstr
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.FunctionDoubleDeclare
@@ -10,6 +9,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
 import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.PopInstr
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
