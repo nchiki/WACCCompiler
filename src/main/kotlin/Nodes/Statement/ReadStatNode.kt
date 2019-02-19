@@ -1,6 +1,6 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
@@ -20,7 +20,7 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
 
-    fun generateCode(codeGeneration: CodeGeneration, table: SymbolTable) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
         var instrs = arrayListOf<Instruction>()
         if (lhs.getBaseType() == LitTypes.BoolWacc) {
             //instrs.add(LoadInstr()) //need to add constructor and add params here
@@ -28,11 +28,6 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
             //instrs.add(LoadInstr())
         } else { // ??
         }
-    }
-
-
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

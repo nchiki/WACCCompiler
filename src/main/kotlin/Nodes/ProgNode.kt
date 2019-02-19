@@ -1,12 +1,15 @@
 package main.kotlin.Nodes
 
+import Instructions.PopInstr
+import Instructions.PushInstr
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.FunctionDoubleDeclare
 import main.kotlin.Errors.GlobalReturn
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
+import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Utils.Register
 
 
@@ -17,8 +20,16 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
-        codeGeneration.pushToStack(Register.lr)
+    override fun generateCode(codeGenerator: CodeGenerator) {
+        codeGenerator.addLabel("main:")
+        codeGenerator.addInstruction("main:", PushInstr())
+        for (func in funcDefs) {
+            func.generateCode(codeGenerator)
+        }
+        codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction("main", PopInstr())
+
+        /*codeGeneration.pushToStack(Register.lr)
         codeGeneration.loadPC()
         for (func in funcDefs) {
             func.generateCode(codeGeneration)
@@ -27,7 +38,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
         codeGeneration.loadToReg(0, Register.r0)
 
-
+*/
 
         // returned strings or list of instructions from generateCode will be passed to
         // codeGeneration.translateCode(instructions)
