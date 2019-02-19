@@ -6,7 +6,7 @@ import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.test.currentStackTrace
+
 
 
 class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
