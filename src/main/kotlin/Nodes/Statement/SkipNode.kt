@@ -18,7 +18,7 @@ class SkipNode(override val ctx: BasicParser.SkipContext): Node{
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
     }

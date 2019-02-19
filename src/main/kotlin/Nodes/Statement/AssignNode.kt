@@ -29,7 +29,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

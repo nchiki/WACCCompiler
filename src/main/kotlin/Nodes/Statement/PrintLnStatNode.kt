@@ -18,7 +18,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

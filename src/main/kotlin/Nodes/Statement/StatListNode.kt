@@ -17,7 +17,7 @@ class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: Basic
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

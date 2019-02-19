@@ -25,7 +25,7 @@ class IfCondNode(// condition (should evaluate to boolean val
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

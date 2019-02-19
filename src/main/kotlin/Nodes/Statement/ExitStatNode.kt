@@ -35,7 +35,7 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

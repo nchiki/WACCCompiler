@@ -17,7 +17,7 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 

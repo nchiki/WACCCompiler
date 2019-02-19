@@ -22,7 +22,7 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
 
-        if(table.currentExecutionPathHasReturn){
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 
