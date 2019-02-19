@@ -11,6 +11,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Utils.Register
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
@@ -21,8 +22,9 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addLabel("main:")
-        codeGenerator.addInstruction("main:", PushInstr())
+        codeGenerator.addLabel("main")
+        codeGenerator.curLabel = "main"
+        codeGenerator.addInstruction("main", PushInstr())
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }

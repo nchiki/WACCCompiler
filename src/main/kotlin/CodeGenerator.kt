@@ -3,18 +3,13 @@ package main.kotlin
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.Register
 import java.io.File
-import java.io.PrintWriter
 
 class CodeGenerator {
 
     val data = HashMap<String, String>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
-    val regsInUse = HashSet<Register>()
-
-    fun newFunction(identifier : String) {
-
-    }
-
+    val regsNotInUse = ArrayList<Register>() //load all registers in this initially
+    var curLabel: String = String()
 
     fun addLabel(label : String) {
         labels.put(label, ArrayList())
@@ -23,7 +18,6 @@ class CodeGenerator {
     fun addInstruction(label : String, instr : Instruction) {
         labels.get(label)!!.add(instr)
     }
-
 
     fun writeToFile(fileName : String) {
         var file = File(fileName)
@@ -35,7 +29,6 @@ class CodeGenerator {
         }
        if (!data.isEmpty()) {
             file.appendText(".data\n")
-            file.appendText("wacc")
             for (entry in data) {
                 file.appendText(entry.value + ":")
                 file.appendText("\t.word " + entry.key.length)
