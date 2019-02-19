@@ -8,7 +8,7 @@ class CodeGenerator {
 
     val data= LinkedHashMap<String, String>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
-    val helperFuncs = HashMap<String, ArrayList<Instruction>>()
+    val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
 
@@ -60,6 +60,10 @@ class CodeGenerator {
             }
         }
         for (helper in helperFuncs.entries) {
+            file.appendText(helper.key + ":\n")
+            for (instruction in helper.value) {
+                file.appendText("\t" + instruction.getString() + "\n")
+            }
         }
     }
 

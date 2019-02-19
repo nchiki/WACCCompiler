@@ -13,9 +13,7 @@ class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val msg = codeGenerator.data.size
-        codeGenerator.data.put("msg_$msg", str)
-        codeGenerator.data.put("msg_${msg+1}", "%.*s\\0")
+        TODO()
     }
 
     override fun getBaseType(): LitTypes {
