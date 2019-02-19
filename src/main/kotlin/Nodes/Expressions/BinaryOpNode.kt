@@ -12,6 +12,7 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import org.antlr.v4.runtime.ParserRuleContext
@@ -22,22 +23,26 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        var reg1 : Register
+        var reg2 : Register
+
         val comparison = codeGenerator.compareWeights(left.weight, right.weight)
+        // evaluates expression that needs more registers first
         if(comparison > 0) {
             left.generateCode(codeGenerator)
             right.generateCode(codeGenerator)
-            val reg1 = codeGenerator.regsNotInUse.get(0)
-            val reg2 = codeGenerator.regsNotInUse.get(1)
-            codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
-
+            reg1 = codeGenerator.regsNotInUse.get(0)
+            reg2 = codeGenerator.regsNotInUse.get(1)
         } else {
             right.generateCode(codeGenerator)
             left.generateCode(codeGenerator)
-            val reg2 = codeGenerator.regsNotInUse.get(0)
-            val reg1 = codeGenerator.regsNotInUse.get(1)
-            codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
-
+            reg2 = codeGenerator.regsNotInUse.get(0)
+            reg1 = codeGenerator.regsNotInUse.get(1)
+            }
+        if(getBaseType() == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg1, reg2))
         }
+        codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
         codeGenerator.regsNotInUse.removeAt(0)
         //MAYBE WE JUST NEED TO REMOVE THE ONE THAT HOLDS THE RESULT
         //codeGenerator.regsNotInUse.removeAt(1)
@@ -55,8 +60,20 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             return SubInstr(reg1, reg2)
         }else if(operator.PLUS() != null) {
             return AddInstr(reg1, reg1, reg2)
+        } else if (operator.GREAT() != null){
+            return MovInstr("#1", reg1, Condition.GT)
+            //IDK if maybe we need to add case for notgreater?
+        } else if (operator.GREAT_EQ() != null) {
+            return MovInstr("#1", reg1, Condition.GE)
+        } else if(operator.LESS_EQ() != null) {
+            return MovInstr("#1", reg1, Condition.LE)
+        } else if(operator.LESS() != null) {
+            return MovInstr("#1", reg1, Condition.LT)
+        } else if(operator.EQ() != null) {
+            return MovInstr("#1", reg1, Condition.EQ)
         } else {
-            return CmpInstr(reg1, reg2)
+            //can only be not equal now
+            return MovInstr("#1", reg1, Condition.NE)
         }
 
     }
