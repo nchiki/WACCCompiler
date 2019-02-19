@@ -13,7 +13,7 @@ class SkipNode(override val ctx: BasicParser.SkipContext): Node{
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //nothing to do here
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {}

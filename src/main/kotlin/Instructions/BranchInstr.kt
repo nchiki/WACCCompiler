@@ -7,7 +7,7 @@ class BranchInstr(val label : String, val cond : Condition = Condition.NULL) : I
 
 
     override fun getString(): String {
-        return "B${cond.toString()} $label"
+        return "B${cond.s} $label"
     }
 
 }
