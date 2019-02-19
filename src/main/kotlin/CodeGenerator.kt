@@ -11,6 +11,7 @@ class CodeGenerator {
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
+    private var maxLabelNum: Int = 0
 
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
@@ -19,11 +20,21 @@ class CodeGenerator {
     }
 
     fun addLabel(label : String) {
-        labels.put(label, ArrayList())
+        labels[label] = ArrayList()
+    }
+
+    fun getNewLabel() : String {
+        var label = "L$maxLabelNum"
+        while (labels.containsKey(label)) {
+            maxLabelNum++
+            label = "L$maxLabelNum"
+        }
+        maxLabelNum++
+        return label
     }
 
     fun addInstruction(label : String, instr : Instruction) {
-        labels.get(label)!!.add(instr)
+        labels[label]!!.add(instr)
     }
 
     fun addHelper(label : String) {
