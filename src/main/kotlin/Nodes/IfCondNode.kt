@@ -1,6 +1,6 @@
 package src.main.kotlin
 
-import Instructions.PopInstr
+import main.kotlin.Instructions.PopInstr
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes

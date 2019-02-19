@@ -10,7 +10,11 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
+<<<<<<< HEAD
                         "/valid/sequence/basicSeq.wacc"))
+=======
+                        "/valid/basic/exit/exitBasic.wacc"))
+>>>>>>> e85a5483369ae4439590843dad8154297957c310
 
         } else {
                 System.setIn(FileInputStream(args[0]))
