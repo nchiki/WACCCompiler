@@ -10,6 +10,7 @@ class CodeGenerator {
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
+    private var maxLabelNum: Int = 0
 
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
@@ -17,11 +18,21 @@ class CodeGenerator {
     }
 
     fun addLabel(label : String) {
-        labels.put(label, ArrayList())
+        labels[label] = ArrayList()
+    }
+
+    fun getNewLabel() : String {
+        var label = "L$maxLabelNum"
+        while (labels.containsKey(label)) {
+            maxLabelNum++
+            label = "L$maxLabelNum"
+        }
+        maxLabelNum++
+        return label
     }
 
     fun addInstruction(label : String, instr : Instruction) {
-        labels.get(label)!!.add(instr)
+        labels[label]!!.add(instr)
     }
 
     fun writeToFile(fileName : String) {
@@ -64,8 +75,6 @@ class CodeGenerator {
         regsNotInUse.add(Register.r2)
         regsNotInUse.add(Register.r1)
         regsNotInUse.add(Register.r0)
-
-
     }
 
 }
