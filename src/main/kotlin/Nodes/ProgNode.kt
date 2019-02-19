@@ -1,6 +1,6 @@
 package main.kotlin.Nodes
 
-import Instructions.PushInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.FunctionDoubleDeclare
 import main.kotlin.Errors.GlobalReturn
@@ -11,7 +11,6 @@ import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.PopInstr
 import main.kotlin.Utils.Register
-import src.main.kotlin.Nodes.Literals.IntLitNode
 
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
@@ -23,7 +22,6 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addLabel("main")
-        codeGenerator.loadRegs()
         codeGenerator.curLabel = "main"
         codeGenerator.addInstruction("main", PushInstr())
         for (func in funcDefs) {
