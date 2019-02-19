@@ -10,6 +10,7 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.system.exitProcess
 
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
 
@@ -33,6 +34,13 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn){
+            exitProcess(100)
+        }
+
+        table.currentExecutionPathHasReturn = true
+
         if (expr.getBaseType() != LitTypes.IntWacc) {
             if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode

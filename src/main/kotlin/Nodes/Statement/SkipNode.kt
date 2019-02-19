@@ -4,6 +4,7 @@ import main.kotlin.CodeGeneration
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import kotlin.system.exitProcess
 
 class SkipNode(override val ctx: BasicParser.SkipContext): Node{
 
@@ -16,7 +17,11 @@ class SkipNode(override val ctx: BasicParser.SkipContext): Node{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {}
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        if(table.currentExecutionPathHasReturn){
+            exitProcess(100)
+        }
+    }
 }
 
 

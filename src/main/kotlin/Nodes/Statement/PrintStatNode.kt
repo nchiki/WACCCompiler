@@ -5,6 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
 
@@ -15,6 +16,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn){
+            exitProcess(100)
+        }
         expr.semanticCheck(errors, table)
     }
 }

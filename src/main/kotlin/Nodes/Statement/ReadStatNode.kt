@@ -11,6 +11,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import kotlin.system.exitProcess
 
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
 
@@ -37,6 +38,11 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn){
+            exitProcess(100)
+        }
+
         if (lhs.getBaseType() == LitTypes.IdentWacc) {
 
             var value = table.lookupSymbol(lhs.id)
