@@ -68,10 +68,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }
 
         if(realLeft is PairNode || realRight is PairNode){
-            if(realLeft is PairNode && realRight is PairNode && operator.EQ() != null){
+            if(operator.EQ() == null && operator.NOTEQ() == null){
+                errors.addError(InvalidOperandTypes(ctx))
                 return
             }
-            errors.addError(InvalidOperandTypes(ctx))
             return
         }
 
