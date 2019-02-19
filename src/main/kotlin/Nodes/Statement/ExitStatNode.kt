@@ -31,7 +31,8 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
         }
         // MOV r0, r4
         // BL exit*/
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.regsNotInUse.get(0), expr))
+        val reg = codeGenerator.regsNotInUse.get(0)
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, expr.generateCode(codeGenerator)))
         codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse.get(0))
 
     }
