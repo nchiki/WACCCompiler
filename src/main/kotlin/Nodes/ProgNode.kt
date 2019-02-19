@@ -21,8 +21,9 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addLabel("main:")
-        codeGenerator.addInstruction("main:", PushInstr())
+        codeGenerator.addLabel("main")
+        codeGenerator.curLabel = "main"
+        codeGenerator.addInstruction("main", PushInstr())
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }

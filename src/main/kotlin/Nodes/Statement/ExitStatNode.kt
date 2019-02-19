@@ -3,6 +3,7 @@ package main.kotlin.Nodes.Statement
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -30,7 +31,9 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
         }
         // MOV r0, r4
         // BL exit*/
-        TODO()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.regsNotInUse.get(0), expr))
+        codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse.get(0))
+
     }
 
 
