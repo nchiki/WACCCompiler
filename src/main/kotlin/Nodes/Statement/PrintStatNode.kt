@@ -23,18 +23,28 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         val msg = codeGenerator.data.size
         var label = ""
         val str = "msg_$msg"
+        val strApp = "msg_${msg+1}"
         if (expr is StringLitNode) {
             codeGenerator.data.put(str, expr.str)
-            codeGenerator.data.put("msg_${msg+1}", "%.*s\\0")
+            codeGenerator.data.put(strApp, "\"%.*s\\0\"")
             label = "p_print_string"
             codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, str)
+            addPrintInstr(codeGenerator, label, strApp)
         }
         if (expr is IntLitNode) {
             label = "p_print_int"
             codeGenerator.addHelper("p_print_int")
-            addPrintInstr(codeGenerator, label, str)
+            addPrintInstr(codeGenerator, label, strApp)
         }
+        var index = 0
+        var reg = codeGenerator.regsNotInUse.get(index)
+        codeGenerator.regsNotInUse.remove(reg)
+        while(reg < Register.r4) {
+            reg = codeGenerator.regsNotInUse.get(index++)
+        }
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
     }
 
