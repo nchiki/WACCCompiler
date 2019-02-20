@@ -47,7 +47,7 @@ class CodeGenerator {
             file.appendText(".data\n")
             for (entry in data) {
                 file.appendText(entry.key + ":")
-                file.appendText("\t.word ${entry.value.length-3}\n")
+                file.appendText("\t.word ${entry.value.length}\n")
                 file.appendText("\t.ascii ${entry.value} \n")
             }
        }

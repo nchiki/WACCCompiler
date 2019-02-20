@@ -38,6 +38,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         }
         var index = 0
         var reg = codeGenerator.regsNotInUse.get(index)
+        codeGenerator.regsNotInUse.remove(reg)
         while(reg < Register.r4) {
             reg = codeGenerator.regsNotInUse.get(index++)
         }
