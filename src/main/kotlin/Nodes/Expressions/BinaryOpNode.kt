@@ -19,8 +19,16 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
+    override val size: Int
+        get() {
+            return when(getBaseType()) {
+                LitTypes.BoolWacc -> 1
+                else -> 4
+            }
+        }
+
     override val weight: Int
-        get() = left.weight + right.weight + 1
+        get() =left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         var reg1 : Register

@@ -12,6 +12,8 @@ class ParamNode(
         val id: String,
         val type: ExprNode, override val ctx: BasicParser.ParamContext) : ExprNode {
 
+    override val size: Int
+        get() = type.size
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
