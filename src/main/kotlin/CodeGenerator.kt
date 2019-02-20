@@ -1,12 +1,12 @@
 package main.kotlin
 
 import main.kotlin.Instructions.Instruction
-import main.kotlin.Utils.Register
+import main.kotlin.Utils.*
 import java.io.File
 
 class CodeGenerator {
 
-    val data= LinkedHashMap<String, String>()
+    val data= LinkedHashMap<String, LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -69,8 +69,8 @@ class CodeGenerator {
             file.appendText(".data\n")
             for (entry in data) {
                 file.appendText(entry.key + ":")
-                file.appendText("\t.word ${entry.value.length}\n")
-                file.appendText("\t.ascii ${entry.value} \n")
+                file.appendText("\t.word ${entry.value.getLength()}\n")
+                file.appendText("\t.ascii ${entry.value.getString()} \n")
             }
        }
         file.appendText(".text\n")
@@ -88,7 +88,6 @@ class CodeGenerator {
             }
         }
     }
-
 
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
         return (weight1-weight2)

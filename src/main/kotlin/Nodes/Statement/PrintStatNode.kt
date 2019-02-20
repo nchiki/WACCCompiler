@@ -11,6 +11,8 @@ import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Register
+import main.kotlin.Utils.StringAppendDef
+import main.kotlin.Utils.StringLitDef
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
@@ -25,8 +27,8 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         val str = "msg_$msg"
         val strApp = "msg_${msg+1}"
         if (expr is StringLitNode) {
-            codeGenerator.data.put(str, expr.str)
-            codeGenerator.data.put(strApp, "\"%.*s\\0\"")
+            codeGenerator.data.put(str, StringLitDef(expr.str))
+            codeGenerator.data.put(strApp, StringAppendDef("\"%.*s\\0\""))
             label = "p_print_string"
             codeGenerator.addHelper(label)
             addPrintInstr(codeGenerator, label, strApp)
