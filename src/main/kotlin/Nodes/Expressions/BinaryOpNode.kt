@@ -39,9 +39,11 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             reg2 = codeGenerator.regsNotInUse.get(0)
             reg1 = codeGenerator.regsNotInUse.get(1)
             }
+        // if its a boolean operation, we need an extra instruction for comparing both expressions
         if(getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg1, reg2))
         }
+        // gets the correct instruction depending on the operator and adds it to codeGenerator
         codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
         codeGenerator.regsNotInUse.removeAt(0)
         //MAYBE WE JUST NEED TO REMOVE THE ONE THAT HOLDS THE RESULT
