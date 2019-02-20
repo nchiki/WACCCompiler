@@ -2,16 +2,18 @@ package main.kotlin.Instructions
 
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.Register
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class MovInstr(val value1 : Any, val dest : Any, val cond : Condition?) : Instruction{
 
     override fun getString() : String {
-        if (cond != null) {
-            return "MOV${cond.toString()} ${value1.toString()}, ${dest.toString()}"
+        if (dest is Int || dest is IntLitNode) {
+            return "MOV$cond $value1, #$dest"
         }
-        return "MOV ${value1.toString()}, ${dest.toString()}"
-
-
+        if (cond != null) {
+            return "MOV$cond $value1, $dest"
+        }
+        return "MOV $value1, $dest"
     }
 
     //add code here

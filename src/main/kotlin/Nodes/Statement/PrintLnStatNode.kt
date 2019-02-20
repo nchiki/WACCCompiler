@@ -5,7 +5,10 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.NewLineDef
 import main.kotlin.Utils.Register
+import main.kotlin.Utils.StringAppendDef
+import main.kotlin.Utils.StringLitDef
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
@@ -20,8 +23,8 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         val str = "msg_$msg"
         val strApp = "msg_${msg+1}"
         if (expr is StringLitNode) {
-            codeGenerator.data.put(str, expr.str)
-            codeGenerator.data.put(strApp, "\"%.*s\\0\"")
+            codeGenerator.data.put(str, StringLitDef(expr.str))
+            codeGenerator.data.put(strApp, StringAppendDef("\"%.*s\\0\""))
             label = "p_print_string"
             codeGenerator.addHelper(label)
             addPrintInstr(codeGenerator, label, strApp)
@@ -37,13 +40,15 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         while(reg < Register.r4) {
             reg = codeGenerator.regsNotInUse.get(index++)
         }
+
+
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
         codeGenerator.addHelper("p_print_ln")
         val ln = "msg_${msg+2}"
-        codeGenerator.data.put(ln, "\"\\0\"")
+        codeGenerator.data.put(ln, NewLineDef("\"\\0\""))
         addPrintLn(codeGenerator, ln)
     }
 
