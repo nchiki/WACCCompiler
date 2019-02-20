@@ -13,12 +13,16 @@ class CodeGenerator {
     var curLabel: String = String()
     private var maxLabelNum: Int = 0
     val regsInUse = ArrayList<Register>() //registers being used
+    var sp = 0
+    val idsAddresses = LinkedHashMap<String, Int>()
 
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
                 Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
                 Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
     }
+
+
 
     fun removeUsedReg() {
         val reg = regsNotInUse[0]
@@ -91,6 +95,14 @@ class CodeGenerator {
 
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
         return (weight1-weight2)
+    }
+
+    fun saveOffset(id : String, address : Int) {
+        idsAddresses.put(id, address)
+    }
+
+    fun returnOffset(id :String) : Int?{
+        return idsAddresses.get(id)
     }
 
 
