@@ -61,19 +61,19 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }else if(operator.PLUS() != null) {
             return AddInstr(reg1, reg1, reg2)
         } else if (operator.GREAT() != null){
-            return MovInstr("#1", reg1, Condition.GT)
+            return MovInstr(reg1,"#1", Condition.GT)
             //IDK if maybe we need to add case for notgreater?
         } else if (operator.GREAT_EQ() != null) {
-            return MovInstr("#1", reg1, Condition.GE)
+            return MovInstr(reg1,"#1", Condition.GE)
         } else if(operator.LESS_EQ() != null) {
-            return MovInstr("#1", reg1, Condition.LE)
+            return MovInstr(reg1, "#1", Condition.LE)
         } else if(operator.LESS() != null) {
-            return MovInstr("#1", reg1, Condition.LT)
+            return MovInstr(reg1, "#1", Condition.LT)
         } else if(operator.EQ() != null) {
-            return MovInstr("#1", reg1, Condition.EQ)
+            return MovInstr(reg1, "#1", Condition.EQ)
         } else {
             //can only be not equal now
-            return MovInstr("#1", reg1, Condition.NE)
+            return MovInstr(reg1, "#1", Condition.NE)
         }
 
     }
