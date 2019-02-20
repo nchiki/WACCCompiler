@@ -1,6 +1,5 @@
 package main.kotlin.Instructions
 
-import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.Register
 
 class AddInstr(val destination : Register, val operand1 : Any, val operand2 : Any) : Instruction {
