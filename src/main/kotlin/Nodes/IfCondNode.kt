@@ -43,13 +43,13 @@ class IfCondNode(// condition (should evaluate to boolean val
         // Add true body to first label, as well as load + pop instructions
         codeGenerator.curLabel = firstLabel
         ifTrueStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction(firstLabel, LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction(firstLabel, LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction(firstLabel, PopInstr())
 
         // Add false body to second label, as well as load + pop instructions
         codeGenerator.curLabel = secondLabel
         elseStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction(secondLabel, LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction(secondLabel, LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction(secondLabel, PopInstr())
     }
 
