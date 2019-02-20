@@ -21,17 +21,25 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when(type){
+            RHS_type.expr -> expr!!.generateCode(codeGenerator)
+            RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
+            // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
+            // RHS_type.newpair -> return LitTypes.PairWacc
+            RHS_type.pair_elem ->  PairLit!!.generateCode(codeGenerator)
+            else -> return
+        }
+
     }
     override fun getBaseType(): LitTypes {
-        when(type){
+        when(type) {
             RHS_type.expr -> return expr!!.getBaseType()
             RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> return PairLit!!.getBaseType()
+            else -> return LitTypes.NonLitWacc
         }
-        return LitTypes.NonLitWacc
     }
 
     fun returnIdentType(table: SymbolTable): LitTypes?{

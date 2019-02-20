@@ -2,6 +2,8 @@ package main.kotlin.Nodes
 
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
@@ -14,7 +16,7 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNo
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
     override fun getBaseType() : LitTypes {
         when(type){

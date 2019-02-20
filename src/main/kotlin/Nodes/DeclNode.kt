@@ -6,9 +6,11 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -20,7 +22,16 @@ class DeclNode(// var name
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val label = codeGenerator.curLabel
+        codeGenerator.sp -= 4
+        codeGenerator.saveOffset(id, codeGenerator.sp)
+        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#4"))
+        rhs.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
+        val offset = 0 - codeGenerator.returnOffset(id)!!
+        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
+        codeGenerator.sp += 4
+
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
