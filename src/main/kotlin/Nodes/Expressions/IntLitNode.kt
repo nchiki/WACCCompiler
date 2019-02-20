@@ -15,7 +15,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val reg = codeGenerator.regsNotInUse.get(0)
-        codeGenerator.regsNotInUse.remove(reg)
+        codeGenerator.removeUsedReg()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this))
     }
     override fun getBaseType(): LitTypes {
