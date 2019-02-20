@@ -8,7 +8,11 @@ class MovInstr(val value1 : Any, val dest : Any, val cond : Condition?) : Instru
 
     override fun getString() : String {
         if (dest is Int || dest is IntLitNode) {
-            return "MOV$cond $value1, #$dest"
+            if (cond == null) {
+                return "MOV $value1, #$dest"
+            } else {
+                return "MOV$cond $value1, #$dest"
+            }
         }
         if (cond != null) {
             return "MOV$cond $value1, $dest"
