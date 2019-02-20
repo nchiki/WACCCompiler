@@ -12,6 +12,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNode {
 
+    override val size: Int
+        get() = 4
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

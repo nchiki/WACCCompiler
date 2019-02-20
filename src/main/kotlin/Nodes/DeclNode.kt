@@ -23,14 +23,14 @@ class DeclNode(// var name
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
-        codeGenerator.sp -= 4
-        codeGenerator.saveOffset(id, codeGenerator.sp)
-        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#4"))
+        val offset = rhs.getSizeOfOffset()
+        codeGenerator.sp -= offset
+        codeGenerator.saveOffset(id, offset)
+        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset"))
         rhs.generateCode(codeGenerator)
         codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
-        val offset = 0 - codeGenerator.returnOffset(id)!!
         codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
-        codeGenerator.sp += 4
+        codeGenerator.sp += offset
 
     }
 

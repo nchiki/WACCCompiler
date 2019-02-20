@@ -10,6 +10,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
 
+    override val size = 4
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
