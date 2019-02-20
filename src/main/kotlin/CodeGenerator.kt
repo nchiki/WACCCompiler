@@ -11,6 +11,7 @@ class CodeGenerator {
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
+    private var maxLabelNum: Int = 0
 
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
@@ -19,11 +20,21 @@ class CodeGenerator {
     }
 
     fun addLabel(label : String) {
-        labels.put(label, ArrayList())
+        labels[label] = ArrayList()
+    }
+
+    fun getNewLabel() : String {
+        var label = "L$maxLabelNum"
+        while (labels.containsKey(label)) {
+            maxLabelNum++
+            label = "L$maxLabelNum"
+        }
+        maxLabelNum++
+        return label
     }
 
     fun addInstruction(label : String, instr : Instruction) {
-        labels.get(label)!!.add(instr)
+        labels[label]!!.add(instr)
     }
 
     fun addHelper(label : String) {
@@ -67,20 +78,10 @@ class CodeGenerator {
         }
     }
 
-    /*fun loadRegs() {
-        regsNotInUse.add(Register.r12)
-        regsNotInUse.add(Register.r11)
-        regsNotInUse.add(Register.r10)
-        regsNotInUse.add(Register.r9)
-        regsNotInUse.add(Register.r8)
-        regsNotInUse.add(Register.r7)
-        regsNotInUse.add(Register.r6)
-        regsNotInUse.add(Register.r5)
-        regsNotInUse.add(Register.r4)
-        regsNotInUse.add(Register.r3)
-        regsNotInUse.add(Register.r2)
-        regsNotInUse.add(Register.r1)
-        regsNotInUse.add(Register.r0)
-    }*/
+
+    fun compareWeights(weight1 : Int, weight2 : Int) : Int {
+        return (weight1-weight2)
+    }
+
 
 }

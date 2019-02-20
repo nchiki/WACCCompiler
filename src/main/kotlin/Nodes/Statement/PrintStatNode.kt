@@ -1,8 +1,8 @@
 package main.kotlin.Nodes.Statement
 
-import Instructions.AddInstr
-import Instructions.PopInstr
-import Instructions.PushInstr
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.PopInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.BLInstr

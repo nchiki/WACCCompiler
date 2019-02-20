@@ -1,5 +1,6 @@
 package src.main.kotlin
 
+import main.kotlin.Instructions.PopInstr
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -10,6 +11,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -23,19 +25,32 @@ class IfCondNode(// condition (should evaluate to boolean val
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+
         expr!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse.get(0), "#0"))
-        codeGenerator.addLabel("L0")
-        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr("L0", Condition.EQ))
-        codeGenerator.addLabel("L1")
-        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr("L1", Condition.NULL))
-        codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse.get(0))
-        codeGenerator.curLabel = "LO"
+
+        val firstLabel = codeGenerator.getNewLabel()
+        codeGenerator.addLabel(firstLabel)
+        val secondLabel = codeGenerator.getNewLabel()
+        codeGenerator.addLabel(secondLabel)
+
+        // Add compare and branch instructions to original label
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse[0], "#0"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(secondLabel))
+
+        codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse[0])
+
+        // Add true body to first label, as well as load + pop instructions
+        codeGenerator.curLabel = firstLabel
         ifTrueStat!!.generateCode(codeGenerator)
-        codeGenerator.curLabel = "L1"
+        codeGenerator.addInstruction(firstLabel, LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction(firstLabel, PopInstr())
+
+        // Add false body to second label, as well as load + pop instructions
+        codeGenerator.curLabel = secondLabel
         elseStat!!.generateCode(codeGenerator)
-
-
+        codeGenerator.addInstruction(secondLabel, LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction(secondLabel, PopInstr())
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
