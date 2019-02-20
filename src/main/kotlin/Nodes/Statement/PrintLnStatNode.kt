@@ -34,13 +34,14 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             codeGenerator.addHelper("p_print_int")
             addPrintInstr(codeGenerator, label, strApp)
         }
+
         var index = 0
         var reg = codeGenerator.regsNotInUse.get(index)
         codeGenerator.regsNotInUse.remove(reg)
         while(reg < Register.r4) {
             reg = codeGenerator.regsNotInUse.get(index++)
         }
-
+        expr.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))

@@ -39,13 +39,13 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if(comparison > 0) {
             left.generateCode(codeGenerator)
             right.generateCode(codeGenerator)
-            reg1 = codeGenerator.regsNotInUse.get(0)
-            reg2 = codeGenerator.regsNotInUse.get(1)
+            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
+            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
         } else {
             right.generateCode(codeGenerator)
             left.generateCode(codeGenerator)
-            reg2 = codeGenerator.regsNotInUse.get(0)
-            reg1 = codeGenerator.regsNotInUse.get(1)
+            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
+            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
             }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
         if(getBaseType() == LitTypes.BoolWacc) {
