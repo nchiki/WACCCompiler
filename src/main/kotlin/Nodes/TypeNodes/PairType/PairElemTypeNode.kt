@@ -9,6 +9,11 @@ import src.main.kotlin.Nodes.ExprNode
 
 open class PairElemTypeNode(val type: ExprNode?, val pair : String?, override val ctx: BasicParser.PairElemTypeContext) : ExprNode {
 
+    override val size: Int
+        get() {
+            if(type != null) { return type.size} else {return  8}
+        }
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

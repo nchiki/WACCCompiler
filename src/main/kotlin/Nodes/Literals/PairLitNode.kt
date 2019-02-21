@@ -8,6 +8,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
 
+    override val size: Int
+        get() = 8
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

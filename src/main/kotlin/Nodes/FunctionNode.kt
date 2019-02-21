@@ -14,6 +14,8 @@ import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
                     override val ctx: BasicParser.FuncContext) : ExprNode {
+    override val size: Int
+        get() = 4
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
