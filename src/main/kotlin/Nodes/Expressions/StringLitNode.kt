@@ -21,10 +21,9 @@ class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContex
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
-        //entries for data section
-        codeGenerator.data.add(StringLitDef(str))
-        val msg = "msg_${codeGenerator.data.size-1}"
-        codeGenerator.dataAppendices.add(StringAppendDef())
+        //entries for data
+        val msg = "msg_${codeGenerator.data.size}"
+        codeGenerator.data.put(msg, StringLitDef(str))
 
         //instructions for main
         val reg = codeGenerator.getParamReg()

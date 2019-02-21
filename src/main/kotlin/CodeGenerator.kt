@@ -5,11 +5,11 @@ import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class CodeGenerator {
 
-    val data= LinkedList<LiteralDefs>() //data section to be printed before main
-    val dataAppendices = LinkedList<LiteralDefs>()
+    val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -28,11 +28,9 @@ class CodeGenerator {
                 Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
     }
 
-
-
     fun freeReg(reg : Register) {
-        regsNotInUse.add(reg)
-        regsInUse.remove(reg)
+        regsInUse.add(reg)
+        regsNotInUse.remove(reg)
     }
 
     fun removeUsedReg() {
@@ -109,8 +107,19 @@ class CodeGenerator {
         }
         if (!data.isEmpty()) {
             file.appendText(".data\n")
-            var ind = 0
 
+            checkPrints()
+
+            //print all strings and appendices
+            for (entry in data.entries) {
+                val str = entry.value
+                file.appendText(entry.key)
+                file.appendText("\t.word ${str.getLength()}\n")
+                file.appendText("\t.ascii ${str.getString()}\n")
+            }
+
+
+            /*
             //print all strings
             for (str in data) {
                 file.appendText("msg_$ind")
@@ -120,6 +129,10 @@ class CodeGenerator {
             }
             if (!data.isEmpty()) {
                 Print().addPrintInstrString(this, "p_print_string", "msg_$ind")
+            }
+
+            if (helperFuncs.containsKey("p_print_bool")) {
+                Print().addBool(this)
             }
 
             //print all appendices
@@ -136,7 +149,7 @@ class CodeGenerator {
                 file.appendText("msg_$ind")
                 file.appendText("\t.word 1\n")
                 file.appendText("\t.ascii \"\\0\"\n")
-            }
+            }*/
 
         }
 
@@ -159,6 +172,31 @@ class CodeGenerator {
         }
     }
 
+    fun checkPrints() {
+        if (helperFuncs.containsKey("p_print_string")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, StringAppendDef())
+            Print().addPrintInstrString(this, "p_print_string", msg)
+        }
+        if (helperFuncs.containsKey("p_print_int")) {
+            val msg = "msg_${data.size}"
+            data.put("msg_${data.size}", IntAppendDef())
+            Print().addPrintInstrInt(this, "p_print_int", msg)
+        }
+        if (helperFuncs.containsKey("p_print_bool")) {
+            val msg = "msg_${data.size}"
+            val trueInd = data.size
+            data.put(msg, TrueDef())
+            data.put("msg_${data.size}", FalseDef())
+            Print().addPrintInstrBool(this, "p_print_bool", trueInd)
+        }
+        if (helperFuncs.containsKey("p_print_ln")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, NewLineDef())
+            Print().addPrintLn(this, msg)
+        }
+    }
+
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
         return (weight1-weight2)
     }
@@ -170,6 +208,5 @@ class CodeGenerator {
     fun returnOffset(id :String) : Int?{
         return idsAddresses.get(id)
     }
-
 
 }

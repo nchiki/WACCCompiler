@@ -29,7 +29,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     }
 
     fun checkType(codeGenerator: CodeGenerator) : String{
-        val str = "msg_${codeGenerator.dataAppendices.size-1}"
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
@@ -41,7 +40,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         if (expr is IntLitNode) {
             val label = "p_print_int"
             codeGenerator.addHelper(label)
-            Print().addPrintInstrString(codeGenerator, label, str)
+            //Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Bool
