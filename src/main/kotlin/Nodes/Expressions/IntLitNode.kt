@@ -27,6 +27,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
         //add intvalue to data section
         codeGenerator.dataAppendices.add(IntAppendDef())
     }
+    
     override fun getBaseType(): LitTypes {
         return LitTypes.IntWacc
     }
