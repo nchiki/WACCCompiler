@@ -148,13 +148,8 @@ class CodeGenerator {
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
-<<<<<<< HEAD
             data.put(msg, IntAppendDef())
             Print_Read().addPrintInstrInt(this, "p_print_int", msg)
-=======
-            data.put("msg_${data.size}", IntAppendDef())
-            Print().addPrintInstrInt(this, "p_print_int", msg)
->>>>>>> 202b7cacb9b471fda670b1cfdadac1ea15ccb3bb
         }
         if (helperFuncs.containsKey("p_print_bool")) {
             val msg = "msg_${data.size}"

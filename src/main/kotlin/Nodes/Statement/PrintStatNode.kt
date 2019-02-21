@@ -29,6 +29,14 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     }
 
     fun checkType(codeGenerator: CodeGenerator) : String{
+        if (expr is CharLitNode) {
+            if (expr is StringLitNode) {
+                val label = "p_print_string"
+                codeGenerator.addHelper(label)
+                // Print().addPrintInstrString(codeGenerator, label, str)
+                return label
+            }
+        }
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
