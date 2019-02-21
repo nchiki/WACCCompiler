@@ -38,7 +38,7 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
-        return lastUsedReg
+        return regsInUse.get(regsInUse.count()-1)
     }
 
     fun getParamReg() : Register {
@@ -49,6 +49,7 @@ class CodeGenerator {
         }
         lastUsedReg = reg
         regsInUse.add(lastUsedReg)
+        regsNotInUse.remove(lastUsedReg)
         //freeReg(reg)
         return reg
     }
