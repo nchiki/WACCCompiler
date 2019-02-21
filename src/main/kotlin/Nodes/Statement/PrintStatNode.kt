@@ -29,27 +29,30 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
     fun checkType(codeGenerator: CodeGenerator) : String{
         val str = "msg_${codeGenerator.dataAppendices.size-1}"
+        //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, str, false)
+            // Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
+        //print Integer
         if (expr is IntLitNode) {
             val label = "p_print_int"
             codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, str, false)
+            Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Bool
         if (expr is BoolLitNode) {
             val label = "p_print_bool"
             codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, str, true)
             return label
         }
         return ""
     }
+
+    /*
     //needs to be called in CodeGenerator in the end when msg are fixed
     fun addPrintInstr(codeGenerator: CodeGenerator, label : String, msg : String, bool : Boolean?) {
         codeGenerator.addToHelper(label, PushInstr())
@@ -71,6 +74,8 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         codeGenerator.addToHelper(label, BLInstr("fflush"))
         codeGenerator.addToHelper(label, PopInstr())
     }
+    */
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }
