@@ -12,7 +12,7 @@ import kotlin.system.exitProcess
 
 class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
 
-    override val size: Int
+    val size: Int
         get() = expr.size
 
     override val weight: Int
