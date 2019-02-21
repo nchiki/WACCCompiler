@@ -1,11 +1,8 @@
 package main.kotlin
 
 import main.kotlin.Instructions.Instruction
-import main.kotlin.Nodes.Statement.PrintLnStatNode
 import main.kotlin.Utils.*
 import java.io.File
-import java.util.*
-import main.kotlin.Utils.Print
 
 class CodeGenerator {
 
@@ -63,12 +60,6 @@ class CodeGenerator {
         helperFuncs.get(label)!!.add(instr)
     }
 
-    fun addInstrToHelper(label : String, instrs : List<Instruction>) {
-        for (instr in instrs) {
-            addToHelper(label, instr)
-        }
-    }
-
     fun writeToFile(fileName : String) {
         var file = File(fileName)
         val created = file.createNewFile()
@@ -80,35 +71,11 @@ class CodeGenerator {
        if (!data.isEmpty()) {
            //need to fix these prints
             file.appendText(".data\n")
-           var ind = 0
-
-           //print all strings
-           for (str in data) {
-               file.appendText("msg_$ind")
-               file.appendText("\t.word ${str.getLength()}\n")
-               file.appendText("\t.ascii ${str.getString()}\n")
-               ind++
-           }
-           if (!data.isEmpty()) {
-               Print().addPrintInstrString(this, "p_print_string", "msg_$ind")
-           }
-
-           //print all appendices
-           for (app in dataAppendices.distinctBy {it -> it.javaClass}) {
-               file.appendText("msg_$ind")
-               if (app is TrueDef) {
-                   Print().addPrintInstrBool(this, "p_print_bool", ind)
-               }
-               file.appendText("\t.word ${app.getLength()}\n")
-               file.appendText("\t.ascii ${app.getString()}\n")
-               ind++
-           }
-           if (helperFuncs.contains("p_print_ln")) {
-               file.appendText("msg_$ind")
-               file.appendText("\t.word 1\n")
-               file.appendText("\t.ascii \"\\0\"\n")
-           }
-
+            for (entry in data) {
+                file.appendText(entry.key + ":")
+                file.appendText("\t.word ${entry.value.getLength()}\n")
+                file.appendText("\t.ascii ${entry.value.getString()} \n")
+            }
        }
         file.appendText(".text\n")
         file.appendText(".global main\n")
