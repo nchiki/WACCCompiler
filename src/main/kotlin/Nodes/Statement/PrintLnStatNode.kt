@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.NewLineDef
 import main.kotlin.Utils.Register
@@ -18,34 +19,16 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val msg = codeGenerator.data.size
-        var label = ""
-        val str = "msg_$msg"
-        val strApp = "msg_${msg+1}"
-        if (expr is StringLitNode) {
-            codeGenerator.data.put(str, StringLitDef(expr.str))
-            codeGenerator.data.put(strApp, StringAppendDef("\"%.*s\\0\""))
-            label = "p_print_string"
-            codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, strApp)
-        }
-        if (expr is IntLitNode) {
-            label = "p_print_int"
-            codeGenerator.addHelper("p_print_int")
-            addPrintInstr(codeGenerator, label, strApp)
-        }
 
-        var index = 0
-        var reg = codeGenerator.regsNotInUse.get(index)
-        codeGenerator.regsNotInUse.remove(reg)
-        while(reg < Register.r4) {
-            reg = codeGenerator.regsNotInUse.get(index++)
-        }
+        //load expr into register
         expr.generateCode(codeGenerator)
 
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))
+        val label = checkType(codeGenerator)
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
+                codeGenerator.getLastUsedReg(), null))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 
         codeGenerator.addHelper("p_print_ln")
         val ln = "msg_${msg+2}"
@@ -57,7 +40,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0))
         codeGenerator.addToHelper(label, AddInstr(Register.r2, Register.r0, 4))
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
         codeGenerator.addToHelper(label, BLInstr("printf"))
         codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))
@@ -67,13 +50,12 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     fun addPrintLn(codeGen : CodeGenerator, msg : String) {
         codeGen.addToHelper("p_print_ln", PushInstr())
-        codeGen.addToHelper("p_print_ln", LoadInstr(Register.r0, msg))
+        codeGen.addToHelper("p_print_ln", LoadInstr(Register.r0, msg, null))
         codeGen.addToHelper("p_print_ln", AddInstr(Register.r0, Register.r0, 4))
         codeGen.addToHelper("p_print_ln", BLInstr("puts"))
         codeGen.addToHelper("p_print_ln", MovInstr(Register.r0, 0, null))
         codeGen.addToHelper("p_print_ln", BLInstr("fflush"))
         codeGen.addToHelper("p_print_ln", PopInstr())
-
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

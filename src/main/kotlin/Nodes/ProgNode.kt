@@ -28,7 +28,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             func.generateCode(codeGenerator)
         }
         stats!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0))
+        codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction("main", PopInstr())
 
         /*codeGeneration.pushToStack(Register.lr)
