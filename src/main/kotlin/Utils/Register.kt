@@ -18,5 +18,4 @@ enum class Register(s: String) {
     lr("lr"),
     pc("PC"),
     r16("CPSR"),
-    sp("sp")
 }

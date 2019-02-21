@@ -6,11 +6,9 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -22,20 +20,7 @@ class DeclNode(// var name
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val label = codeGenerator.curLabel
-        var offset = rhs.getSizeOfOffset() //gets size of the data type
-        codeGenerator.sp -= offset // subtract offset from stack pointer
-        codeGenerator.saveOffset(id, codeGenerator.sp) // saves position of the variable
-        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
-        rhs.generateCode(codeGenerator) // generates code of rhs
-        if(offset > 0) {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp, #${-codeGenerator.sp}]"))
-        } else {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
-        }
-        //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
-        //codeGenerator.sp += offset
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
