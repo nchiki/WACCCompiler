@@ -6,10 +6,12 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.FalseDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Utils.Print
+import main.kotlin.Utils.TrueDef
 
 class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
 
@@ -29,12 +31,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 
         codeGenerator.addHelper("p_print_ln")
-        val ln = "msg_${codeGenerator.dataAppendices.size-1}"
-        Print().addPrintLn(codeGenerator, ln)
     }
 
     fun checkType(codeGenerator: CodeGenerator) : String{
-        val str = "msg_${codeGenerator.dataAppendices.size-1}"
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
@@ -46,11 +45,12 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         if (expr is IntLitNode) {
             val label = "p_print_int"
             codeGenerator.addHelper(label)
-            Print().addPrintInstrString(codeGenerator, label, str)
+            //Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Bool
         if (expr is BoolLitNode) {
+            //add to data section
             val label = "p_print_bool"
             codeGenerator.addHelper(label)
             return label
