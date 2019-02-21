@@ -13,7 +13,6 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
-
     override val size: Int
         get() = str.length
 

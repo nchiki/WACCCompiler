@@ -43,7 +43,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
 
     override fun visitFunc(@NotNull ctx: BasicParser.FuncContext): FunctionNode {
-
         val returnType = getType(ctx.type().text)
         val id = ctx.IDENT().text
         val stat = visit(ctx.stat())
@@ -331,7 +330,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitReturn(@NotNull ctx: BasicParser.ReturnContext): Node {
         val expr = visit(ctx.expr()) as ExprNode
-        return ReturnStatNode(expr, ctx, null)
+        return ReturnStatNode(expr, ctx)
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext): Node {

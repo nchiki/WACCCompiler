@@ -24,7 +24,7 @@ stat:
 | IF expr THEN stat ELSE stat FI    #IfCond
 | WHILE expr DO stat DONE           #While
 | BEGIN stat END                    #Statement
-| stat SEMICOLON stat #StatList
+| stat SEMICOLON stat               #StatList
 ;
 
 assignLHS:

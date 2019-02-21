@@ -10,6 +10,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParser.WhileContext): Node {
 
@@ -20,7 +21,13 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
     override fun generateCode(codeGenerator: CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
+
         val childTable = SymbolTable(table)
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)

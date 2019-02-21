@@ -17,7 +17,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
         get() = 4
 
             override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
@@ -28,6 +28,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
         //add intvalue to data section
         codeGenerator.dataAppendices.add(IntAppendDef())
     }
+
     override fun getBaseType(): LitTypes {
         return LitTypes.IntWacc
     }

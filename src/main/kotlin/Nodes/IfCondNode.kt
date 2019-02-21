@@ -13,6 +13,7 @@ import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 
 class IfCondNode(// condition (should evaluate to boolean val
@@ -55,15 +56,29 @@ class IfCondNode(// condition (should evaluate to boolean val
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
-        // check whether the expr evaluates to boolean value
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
         if(expr?.getBaseType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
+
+        val ifChildTable = SymbolTable(table)
+        val elseChildTable = SymbolTable(table)
+
+        ifChildTable.currentFunction = table.currentFunction
+        elseChildTable.currentFunction = table.currentFunction
+
         //checks both statements
-        ifTrueStat?.semanticCheck(errors, table)
-        elseStat?.semanticCheck(errors, table)
+        ifTrueStat?.semanticCheck(errors, ifChildTable)
+
+        elseStat?.semanticCheck(errors, elseChildTable)
+
+        if(ifChildTable.currentExecutionPathHasReturn && elseChildTable.currentExecutionPathHasReturn){
+            table.currentExecutionPathHasReturn = true
+        }
 
     }
 
