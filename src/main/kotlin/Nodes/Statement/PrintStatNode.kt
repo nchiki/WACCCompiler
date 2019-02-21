@@ -1,18 +1,12 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.Instructions.AddInstr
-import main.kotlin.Instructions.PopInstr
-import main.kotlin.Instructions.PushInstr
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Register
-import main.kotlin.Utils.StringAppendDef
-import main.kotlin.Utils.StringLitDef
+import main.kotlin.Utils.*
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
@@ -37,9 +31,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         val str = "msg_${codeGenerator.dataAppendices.size-1}"
         //print String
         if (expr is StringLitNode) {
-            codeGenerator.data.put(str, StringLitDef(expr.str))
-            codeGenerator.data.put(strApp, StringAppendDef("\"%.*s\\0\""))
-            label = "p_print_string"
+            val label = "p_print_string"
             codeGenerator.addHelper(label)
             // Print().addPrintInstrString(codeGenerator, label, str)
             return label
@@ -57,19 +49,25 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
             codeGenerator.addHelper(label)
             return label
         }
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
-
+        return ""
     }
 
     /*
     //needs to be called in CodeGenerator in the end when msg are fixed
     fun addPrintInstr(codeGenerator: CodeGenerator, label : String, msg : String, bool : Boolean?) {
         codeGenerator.addToHelper(label, PushInstr())
-        codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0))
+        if (bool!!) {
+            val trueDef = codeGenerator.dataAppendices.distinctBy { it is TrueDef }.get(0)
+            val trueMsg = "msg_${codeGenerator.dataAppendices.indexOf(trueDef)+codeGenerator.data.size}"
+            val falseMsg = "msg_${codeGenerator.dataAppendices.indexOf(trueDef)+codeGenerator.data.size+1}"
+            codeGenerator.addToHelper(label, CmpInstr(Register.r0, 0))
+            codeGenerator.addToHelper(label, LoadInstr(Register.r0, trueMsg, Condition.NE))
+            codeGenerator.addToHelper(label, LoadInstr(Register.r0, falseMsg, Condition.EQ))
+        } else {
+            codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0, null))
+        }
         codeGenerator.addToHelper(label, AddInstr(Register.r2, Register.r0, 4))
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
         codeGenerator.addToHelper(label, BLInstr("printf"))
         codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))

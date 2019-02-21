@@ -10,8 +10,6 @@ import src.main.kotlin.Nodes.ExprNode
 
 class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int, override val ctx: BasicParser.AssignLHSContext) : ExprNode {
 
-    override val size: Int
-        get() = 4
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

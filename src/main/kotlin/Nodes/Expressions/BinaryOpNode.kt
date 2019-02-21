@@ -19,16 +19,8 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
-    override val size: Int
-        get() {
-            return when(getBaseType()) {
-                LitTypes.BoolWacc -> 1
-                else -> 4
-            }
-        }
-
     override val weight: Int
-        get() =left.weight + right.weight + 1
+        get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         var reg1 : Register
@@ -39,13 +31,13 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         if(comparison > 0) {
             left.generateCode(codeGenerator)
             right.generateCode(codeGenerator)
-            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
-            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
+            reg1 = codeGenerator.regsNotInUse.get(0)
+            reg2 = codeGenerator.regsNotInUse.get(1)
         } else {
             right.generateCode(codeGenerator)
             left.generateCode(codeGenerator)
-            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
-            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
+            reg2 = codeGenerator.regsNotInUse.get(0)
+            reg1 = codeGenerator.regsNotInUse.get(1)
             }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
         if(getBaseType() == LitTypes.BoolWacc) {
