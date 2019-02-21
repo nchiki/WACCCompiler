@@ -19,7 +19,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = expr.weight
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()

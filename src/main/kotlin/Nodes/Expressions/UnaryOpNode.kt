@@ -17,7 +17,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
     override val size = operand.size
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 1 + operand.weight
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel

@@ -28,7 +28,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }
 
     override val weight: Int
-        get() =left.weight + right.weight + 1
+        get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         var reg1 : Register

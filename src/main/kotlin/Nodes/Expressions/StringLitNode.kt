@@ -17,7 +17,7 @@ class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContex
         get() = str.length
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
