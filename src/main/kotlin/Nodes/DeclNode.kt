@@ -28,10 +28,18 @@ class DeclNode(// var name
         codeGenerator.saveOffset(id, codeGenerator.sp) // saves position of the variable
         codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
         rhs.generateCode(codeGenerator) // generates code of rhs
-        if(offset > 0) {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp, #${-codeGenerator.sp}]"))
+        val address = codeGenerator.sp +offset
+        var inMemory  = ""
+        if(address > 0) {
+            inMemory = "[sp, #$address]"
         } else {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
+            inMemory = "[sp]"
+        }
+
+        if(rhs.type == RHS_type.expr && rhs.expr is CharLitNode) {
+            codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
         //codeGenerator.sp += offset
