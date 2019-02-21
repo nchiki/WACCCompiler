@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "/valid/variables/_VarNames.wacc"))
+                        "/valid/variables/boolDeclaration2.wacc"))
 
 
         } else {
