@@ -9,6 +9,8 @@ interface Node {
     val ctx : ParserRuleContext?
     val weight : Int
 
+    var symbolTable: SymbolTable?
+
     fun semanticCheck(errors : ErrorLogger, table : SymbolTable)
 
     fun generateCode(codeGenerator : CodeGenerator)

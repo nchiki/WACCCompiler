@@ -9,6 +9,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: ExprNode): ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -23,7 +25,7 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
     }
 
     override fun equals(other: Any?): Boolean {

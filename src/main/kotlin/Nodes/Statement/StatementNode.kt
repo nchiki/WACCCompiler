@@ -9,6 +9,8 @@ import kotlin.system.exitProcess
 
 class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext): Node {
 
+    override var symbolTable: SymbolTable? = null
+
     override val weight: Int
         get() = stat.weight
 
@@ -22,7 +24,7 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
         codeGenerator.recoverSp()
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

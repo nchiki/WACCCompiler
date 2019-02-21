@@ -19,6 +19,9 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() {
             return when(getBaseType()) {
@@ -103,6 +106,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         //check the semantics of both operands
         left.semanticCheck(errors, table)
         right.semanticCheck(errors, table)

@@ -11,6 +11,8 @@ import main.kotlin.Utils.LitTypes
 
 class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -25,6 +27,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         for (expr in exprs) {
             expr.semanticCheck(errors, table)
 

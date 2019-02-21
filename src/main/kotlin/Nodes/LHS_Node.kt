@@ -15,6 +15,8 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
+    override var symbolTable: SymbolTable? = null
+
     override fun generateCode(codeGenerator: CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -29,6 +31,7 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         val value = table.lookupSymbol(id)
 
         if( value == null || value is FunctionNode) {

@@ -9,6 +9,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode1: ExprNode, val exprNode2: ExprNode) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -32,6 +34,6 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed for NewPairNode
+        this.symbolTable = table
     }
 }

@@ -9,6 +9,8 @@ import kotlin.system.exitProcess
 
 class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: BasicParser.StatListContext) : Node{
 
+    override var symbolTable: SymbolTable? = null
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -18,7 +20,7 @@ class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: Basic
         }
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

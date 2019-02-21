@@ -20,6 +20,9 @@ class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
         val rhs: RHS_Node, override val ctx : BasicParser.DeclContext) : Node {
+
+    override var symbolTable: SymbolTable? = null
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -49,7 +52,7 @@ class DeclNode(// var name
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

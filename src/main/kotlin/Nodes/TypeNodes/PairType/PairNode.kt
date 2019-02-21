@@ -10,6 +10,8 @@ import src.main.kotlin.Nodes.ExprNode
 class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
                override val ctx: BasicParser.Pair_typeContext) : ExprNode, Node {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -24,7 +26,7 @@ class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed
+        this.symbolTable = table
     }
 
     fun returnElemNode(i: Int): LitTypes {

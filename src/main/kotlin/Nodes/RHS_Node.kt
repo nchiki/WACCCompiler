@@ -17,6 +17,8 @@ import src.main.kotlin.Nodes.ExprNode
 class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
                val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 4
 
@@ -83,7 +85,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if (type == RHS_type.call) {
             val funNode = table.getFunction(funId!!)
             val parameters = funNode!!.params
