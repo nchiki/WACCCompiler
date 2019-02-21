@@ -3,10 +3,12 @@ package main.kotlin
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
+import java.util.*
 
 class CodeGenerator {
 
-    val data= LinkedHashMap<String, LiteralDefs>()
+    val data= LinkedList<LiteralDefs>() //data section to be printed before main
+    val dataAppendices = LinkedList<LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -16,6 +18,9 @@ class CodeGenerator {
     var sp = 0
     val idsAddresses = LinkedHashMap<String, Int>()
 
+    private var lastUsedReg: Register = Register.r0
+
+
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
                 Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
@@ -24,6 +29,11 @@ class CodeGenerator {
 
 
 
+    fun freeReg(reg : Register) {
+        regsNotInUse.add(reg)
+        regsInUse.remove(reg)
+    }
+
     fun removeUsedReg() {
         val reg = regsNotInUse[0]
         regsInUse.add(reg)
@@ -31,7 +41,18 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
-        return regsInUse.get(regsInUse.count()-1)
+        return lastUsedReg
+    }
+
+    fun getParamReg() : Register {
+        var reg = regsNotInUse.get(0)
+        var index = 1
+        while(reg < Register.r4) {
+            reg = regsNotInUse.get(index++)
+        }
+        lastUsedReg = reg
+        freeReg(reg)
+        return reg
     }
 
     fun addLabel(label : String) {
@@ -60,6 +81,12 @@ class CodeGenerator {
         helperFuncs.get(label)!!.add(instr)
     }
 
+    fun addInstrToHelper(label : String, instrs : List<Instruction>) {
+        for (instr in instrs) {
+            addToHelper(label, instr)
+        }
+    }
+
     fun writeToFile(fileName : String) {
         var file = File(fileName)
         val created = file.createNewFile()
@@ -68,15 +95,40 @@ class CodeGenerator {
             file = File(fileName)
             file.createNewFile()
         }
-       if (!data.isEmpty()) {
-           //need to fix these prints
+        if (!data.isEmpty()) {
             file.appendText(".data\n")
-            for (entry in data) {
-                file.appendText(entry.key + ":")
-                file.appendText("\t.word ${entry.value.getLength()}\n")
-                file.appendText("\t.ascii ${entry.value.getString()} \n")
+            var ind = 0
+
+            //print all strings
+            for (str in data) {
+                file.appendText("msg_$ind")
+                file.appendText("\t.word ${str.getLength()}\n")
+                file.appendText("\t.ascii ${str.getString()}\n")
+                ind++
             }
-       }
+            if (!data.isEmpty()) {
+                Print().addPrintInstrString(this, "p_print_string", "msg_$ind")
+            }
+
+            //print all appendices
+            for (app in dataAppendices.distinctBy {it -> it.javaClass}) {
+                file.appendText("msg_$ind")
+                if (app is TrueDef) {
+                    Print().addPrintInstrBool(this, "p_print_bool", ind)
+                }
+                file.appendText("\t.word ${app.getLength()}\n")
+                file.appendText("\t.ascii ${app.getString()}\n")
+                ind++
+            }
+            if (helperFuncs.contains("p_print_ln")) {
+                file.appendText("msg_$ind")
+                file.appendText("\t.word 1\n")
+                file.appendText("\t.ascii \"\\0\"\n")
+            }
+
+        }
+
+        //print main
         file.appendText(".text\n")
         file.appendText(".global main\n")
         for (label in labels.asIterable()) {
@@ -85,6 +137,8 @@ class CodeGenerator {
                 file.appendText("\t" + instruction.getString() + "\n")
             }
         }
+
+        //print helper methods
         for (helper in helperFuncs.entries) {
             file.appendText(helper.key + ":\n")
             for (instruction in helper.value) {
