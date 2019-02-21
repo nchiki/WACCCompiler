@@ -39,16 +39,15 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
             leftReg = codeGenerator.getLastUsedReg()
         }
 
-        // gets the correct instruction depending on the operator and adds it to codeGenerator
-
-
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
+        /* Compare the two expression results */
 
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg))
 
         if(operator.AND() != null){
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.EQ))
         }else if(operator.OR() != null){
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.NE))
         }
 
