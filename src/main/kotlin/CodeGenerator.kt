@@ -120,40 +120,6 @@ class CodeGenerator {
                 file.appendText("\t.word ${str.getLength()}\n")
                 file.appendText("\t.ascii ${str.getString()}\n")
             }
-
-
-            /*
-            //print all strings
-            for (str in data) {
-                file.appendText("msg_$ind")
-                file.appendText("\t.word ${str.getLength()}\n")
-                file.appendText("\t.ascii ${str.getString()}\n")
-                ind++
-            }
-            if (!data.isEmpty()) {
-                Print().addPrintInstrString(this, "p_print_string", "msg_$ind")
-            }
-
-            if (helperFuncs.containsKey("p_print_bool")) {
-                Print().addBool(this)
-            }
-
-            //print all appendices
-            for (app in dataAppendices.distinctBy {it -> it.javaClass}) {
-                file.appendText("msg_$ind")
-                if (app is TrueDef) {
-                    Print().addPrintInstrBool(this, "p_print_bool", ind)
-                }
-                file.appendText("\t.word ${app.getLength()}\n")
-                file.appendText("\t.ascii ${app.getString()}\n")
-                ind++
-            }
-            if (helperFuncs.contains("p_print_ln")) {
-                file.appendText("msg_$ind")
-                file.appendText("\t.word 1\n")
-                file.appendText("\t.ascii \"\\0\"\n")
-            }*/
-
         }
 
         //print main
@@ -179,24 +145,34 @@ class CodeGenerator {
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())
-            Print().addPrintInstrString(this, "p_print_string", msg)
+            Print_Read().addPrintInstrString(this, "p_print_string", msg)
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
-            data.put("msg_${data.size}", IntAppendDef())
-            Print().addPrintInstrInt(this, "p_print_int", msg)
+            data.put(msg, IntAppendDef())
+            Print_Read().addPrintInstrInt(this, "p_print_int", msg)
         }
         if (helperFuncs.containsKey("p_print_bool")) {
             val msg = "msg_${data.size}"
             val trueInd = data.size
             data.put(msg, TrueDef())
             data.put("msg_${data.size}", FalseDef())
-            Print().addPrintInstrBool(this, "p_print_bool", trueInd)
+            Print_Read().addPrintInstrBool(this, "p_print_bool", trueInd)
         }
         if (helperFuncs.containsKey("p_print_ln")) {
             val msg = "msg_${data.size}"
             data.put(msg, NewLineDef())
-            Print().addPrintLn(this, msg)
+            Print_Read().addPrintLn(this, msg)
+        }
+        if (helperFuncs.containsKey("p_read_int")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadIntApp())
+            Print_Read().addRead(this, "p_read_int", msg)
+        }
+        if (helperFuncs.containsKey("p_read_char")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadCharApp())
+            Print_Read().addRead(this, "p_read_char", msg)
         }
     }
 

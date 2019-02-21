@@ -6,13 +6,11 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.FalseDef
+import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import main.kotlin.Utils.Print
-import main.kotlin.Utils.TrueDef
 
 class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
 
@@ -28,7 +26,11 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        if (expr.getBaseType() == LitTypes.CharWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        }
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 
         codeGenerator.addHelper("p_print_ln")
