@@ -6,13 +6,10 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.FalseDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import main.kotlin.Utils.Print
-import main.kotlin.Utils.TrueDef
 
 class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
 

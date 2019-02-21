@@ -3,7 +3,7 @@ package main.kotlin.Utils
 import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.*
 
-class Print {
+class Print_Read {
 
     fun addPrintInstrString(codeGenerator: CodeGenerator,label : String, msg : String) {
 
@@ -61,5 +61,14 @@ class Print {
         codeGen.addToHelper("p_print_ln", BLInstr("fflush"))
         codeGen.addToHelper("p_print_ln", PopInstr())
     }
+
+    fun addRead(codeGenerator: CodeGenerator, label : String, msg : String) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg))
+        codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
+        codeGenerator.addToHelper(label, BLInstr("scanf"))
+        codeGenerator.addToHelper(label, PopInstr())
+    }
+
 
 }
