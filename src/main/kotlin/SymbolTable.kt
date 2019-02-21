@@ -12,11 +12,12 @@ import src.main.kotlin.Nodes.ExprNode
 
 class SymbolTable (val parent: SymbolTable?){
 
-    private val children = listOf<SymbolTable>()
-    private val parentT = parent
     var table = HashMap<String, ExprNode>()
     var functions = HashMap<String, FunctionNode>()
     var errors = ErrorLogger()
+
+    var currentFunction: FunctionNode? = null
+    var currentExecutionPathHasReturn = false
 
     fun addToFunctions(funcs : List<FunctionNode>) {
         for (func in funcs) {

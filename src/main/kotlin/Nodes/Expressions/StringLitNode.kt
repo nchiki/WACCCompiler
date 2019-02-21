@@ -13,7 +13,6 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
-
     override val size: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
