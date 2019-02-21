@@ -1,6 +1,6 @@
 package main.kotlin.Nodes.Statement
 
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
@@ -12,10 +12,13 @@ import kotlin.system.exitProcess
 
 class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
 
+    override val size: Int
+        get() = expr.size
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGeneration: CodeGeneration) {
+    override fun generateCode(codeGenerator : CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

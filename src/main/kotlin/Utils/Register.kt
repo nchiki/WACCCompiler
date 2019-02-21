@@ -1,7 +1,7 @@
 package main.kotlin.Utils
 
 enum class Register(s: String) {
-    r0(""),
+    r0(""), //used for passing and returning arguments (r0 - r3)
     r1(""),
     r2(""),
     r3(""),
@@ -18,7 +18,5 @@ enum class Register(s: String) {
     lr("lr"),
     pc("PC"),
     r16("CPSR"),
-    r17(""), r18(""), r19(""), r20(""), r21(""),
-    r22(""), r23(""), r24(""), r25(""), r26(""), r27(""), r28(""),
-    r29(""), r30(""), r31(""), r32(""), r33(""), r34(""), r35("")
+    sp("sp")
 }

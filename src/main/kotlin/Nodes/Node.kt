@@ -1,9 +1,8 @@
 package main.kotlin.Nodes
 
-import main.kotlin.CodeGeneration
+import main.kotlin.CodeGenerator
 import main.kotlin.SymbolTable
 import main.kotlin.ErrorLogger
-import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
 
 interface Node {
@@ -12,6 +11,6 @@ interface Node {
 
     fun semanticCheck(errors : ErrorLogger, table : SymbolTable)
 
-    fun generateCode(codeGeneration: CodeGeneration)
+    fun generateCode(codeGenerator : CodeGenerator)
 
 }
