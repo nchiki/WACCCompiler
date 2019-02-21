@@ -113,7 +113,7 @@ class CodeGenerator {
             //print all strings and appendices
             for (entry in data.entries) {
                 val str = entry.value
-                file.appendText(entry.key+":\n")
+                file.appendText(entry.key)
                 file.appendText("\t.word ${str.getLength()}\n")
                 file.appendText("\t.ascii ${str.getString()}\n")
             }
@@ -180,7 +180,7 @@ class CodeGenerator {
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
-            data.put(msg, IntAppendDef())
+            data.put("msg_${data.size}", IntAppendDef())
             Print().addPrintInstrInt(this, "p_print_int", msg)
         }
         if (helperFuncs.containsKey("p_print_bool")) {
