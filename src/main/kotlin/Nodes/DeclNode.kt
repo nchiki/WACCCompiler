@@ -12,6 +12,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 
 class DeclNode(// var name
@@ -28,10 +29,18 @@ class DeclNode(// var name
         codeGenerator.saveOffset(id, codeGenerator.sp) // saves position of the variable
         codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
         rhs.generateCode(codeGenerator) // generates code of rhs
-        if(offset > 0) {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp, #${-codeGenerator.sp}]"))
+        val address = codeGenerator.sp +offset
+        var inMemory  = ""
+        if(address > 0) {
+            inMemory = "[sp, #$address]"
         } else {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
+            inMemory = "[sp]"
+        }
+
+        if(rhs.type == RHS_type.expr && rhs.expr is CharLitNode) {
+            codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
         //codeGenerator.sp += offset
@@ -39,6 +48,10 @@ class DeclNode(// var name
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
 
         // looks up the id in the symbol table
         val value = table.lookupLocal(id)

@@ -12,8 +12,9 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.system.exitProcess
 import main.kotlin.Instructions.BLInstr
-
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
 
     override val weight: Int
@@ -27,6 +28,13 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
+
+        table.currentExecutionPathHasReturn = true
+
         if (expr.getBaseType() != LitTypes.IntWacc) {
             if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val idexpr = expr as IdentNode

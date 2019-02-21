@@ -17,8 +17,7 @@ class CharLitNode(val char : String, override val ctx: BasicParser.CharLitContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val reg = codeGenerator.regsNotInUse.get(0)
-        codeGenerator.removeUsedReg()
+        val reg = codeGenerator.getParamReg()
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
     }
     override fun getBaseType(): LitTypes {
@@ -28,4 +27,5 @@ class CharLitNode(val char : String, override val ctx: BasicParser.CharLitContex
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         //not needed for Literal
     }
+
 }

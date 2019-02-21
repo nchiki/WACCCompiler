@@ -9,6 +9,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.FalseDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Utils.Print
 import main.kotlin.Utils.TrueDef
@@ -99,6 +100,11 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 */
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
+
         expr.semanticCheck(errors, table)
     }
 }

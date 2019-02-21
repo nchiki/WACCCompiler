@@ -9,6 +9,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContext) : Node {
 
@@ -19,6 +20,11 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
+
         if (expr.getBaseType() != LitTypes.PairWacc) {
             if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val IdExpr = expr as IdentNode
