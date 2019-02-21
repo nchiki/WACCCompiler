@@ -8,6 +8,7 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
@@ -77,6 +78,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     */
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
         expr.semanticCheck(errors, table)
     }
 }

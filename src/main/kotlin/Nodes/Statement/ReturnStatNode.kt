@@ -3,13 +3,14 @@ package main.kotlin.Nodes.Statement
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
-class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext, var type_return: LitTypes?) : ExprNode{
+class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
 
     override val size: Int
         get() = expr.size
@@ -20,42 +21,32 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     override fun generateCode(codeGenerator : CodeGenerator) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-    override fun getBaseType(): LitTypes {
-        if(type_return != null) {
-            return type_return!!
-        } else {
-            return LitTypes.Null
-        }
-    }
 
-    fun setFunctionReturn(type : LitTypes) {
-        this.type_return = type
-    }
-
-    //need to add actual lines and positions
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if (type_return != (expr.getBaseType())) {
+        expr.semanticCheck(errors, table)
 
-            if(expr is IdentNode) {
-                val idexpr = expr as IdentNode
-                val value = table.lookupSymbol(expr.id)
-
-                if (value?.getBaseType() != type_return) {
-
-                    errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
-                }
-            } /*else if (expr is UnaryOpNode) {
-                val value = table.lookupSymbol(expr.operand.toString())
-                if (value?.getType() != type_return) {
-                    println("adding error1")
-                    errors.addError(IncompatibleTypes(ctx, type_return.toString(), value!!, table))
-                }
-            } else if (expr is BinaryOpNode) {
-                val value = table.lookupSymbol()*/
-            else {
-
-                errors.addError(IncompatibleTypes(ctx, type_return.toString(), expr, table))
-            }
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
         }
+
+        var realExpr = expr
+        if (expr is IdentNode){
+            val exprVal = table.lookupSymbol(expr.id)
+            if(exprVal == null){
+                errors.addError(UndefinedVariable(ctx, expr.id))
+                return
+            }
+            realExpr = exprVal
+        }
+
+        if(table.currentFunction == null){
+            exitProcess(100)
+        }
+
+        if(realExpr.getBaseType() != table.currentFunction?.getBaseType()){
+            errors.addError(IncompatibleTypes(ctx, table.currentFunction?.getBaseType().toString(), realExpr, table))
+        }
+
+        table.currentExecutionPathHasReturn = true
     }
 }

@@ -12,6 +12,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.system.exitProcess
 
 
 class DeclNode(// var name
@@ -39,6 +40,10 @@ class DeclNode(// var name
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+
+        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+            exitProcess(100)
+        }
 
         // looks up the id in the symbol table
         val value = table.lookupLocal(id)

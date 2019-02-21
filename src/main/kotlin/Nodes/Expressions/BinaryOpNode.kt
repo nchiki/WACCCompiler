@@ -112,9 +112,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         /* Get left value from symbol table */
         if (left is IdentNode) {
             val leftValue = table.lookupSymbol(left.id)
-            if (leftValue is PairNode) {
-                errors.addError(InvalidOperandTypes(ctx))
-            }
 
             if (leftValue == null) {
                 errors.addError(UndefinedVariable(ctx, left.id))
@@ -134,6 +131,14 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             }
 
             realRight = rightValue
+        }
+
+        if(realLeft is PairNode || realRight is PairNode){
+            if(operator.EQ() == null && operator.NOTEQ() == null){
+                errors.addError(InvalidOperandTypes(ctx))
+                return
+            }
+            return
         }
 
         if(realLeft is ArrayTypeNode || realLeft is ArrayLitNode){
