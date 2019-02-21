@@ -23,9 +23,7 @@ class CodeGenerator {
 
 
     fun initRegs() {
-        regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
-                Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
-                Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
+        regsNotInUse.addAll(Register.values())
     }
 
     fun freeReg(reg : Register) {
@@ -73,8 +71,12 @@ class CodeGenerator {
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
         if(sp < 0) {
-            val value = 0 - sp
+            var value = 0 - sp
             sp += value
+            while(value > 1024) {
+                addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
+                value -= 1024
+            }
             addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
         }
     }
@@ -146,8 +148,13 @@ class CodeGenerator {
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
+<<<<<<< HEAD
             data.put(msg, IntAppendDef())
             Print_Read().addPrintInstrInt(this, "p_print_int", msg)
+=======
+            data.put("msg_${data.size}", IntAppendDef())
+            Print().addPrintInstrInt(this, "p_print_int", msg)
+>>>>>>> 202b7cacb9b471fda670b1cfdadac1ea15ccb3bb
         }
         if (helperFuncs.containsKey("p_print_bool")) {
             val msg = "msg_${data.size}"

@@ -14,10 +14,10 @@ import src.main.kotlin.Nodes.ExprNode
 
 class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContext) : ExprNode {
     override val size: Int
-        get() = str.length
+        get() = 4
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 

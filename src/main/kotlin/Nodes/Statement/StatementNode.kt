@@ -10,10 +10,16 @@ import kotlin.system.exitProcess
 class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext): Node {
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = stat.weight
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val label = codeGenerator.getNewLabel()
+
+        codeGenerator.addLabel(label)
+        codeGenerator.curLabel = label
+        stat.generateCode(codeGenerator)
+
+        codeGenerator.recoverSp()
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
