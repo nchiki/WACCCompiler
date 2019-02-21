@@ -7,7 +7,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext): ExprNode {
-
+    override val size = expr.size
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 

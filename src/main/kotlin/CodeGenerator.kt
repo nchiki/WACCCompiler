@@ -9,17 +9,15 @@ import main.kotlin.Utils.Print
 
 class CodeGenerator {
 
-    val data= LinkedList<LiteralDefs>() //data section to be printed before main
-    val dataAppendices = LinkedList<LiteralDefs>()
+    val data= LinkedHashMap<String, LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
     private var maxLabelNum: Int = 0
     val regsInUse = ArrayList<Register>() //registers being used
-
-    private var lastUsedReg: Register = Register.r0
-
+    var sp = 0
+    val idsAddresses = LinkedHashMap<String, Int>()
 
     fun initRegs() {
         regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
@@ -27,10 +25,7 @@ class CodeGenerator {
                 Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
     }
 
-    fun freeReg(reg : Register) {
-        regsNotInUse.add(reg)
-        regsInUse.remove(reg)
-    }
+
 
     fun removeUsedReg() {
         val reg = regsNotInUse[0]
@@ -39,18 +34,7 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
-        return lastUsedReg
-    }
-
-    fun getParamReg() : Register {
-        var reg = regsNotInUse.get(0)
-        var index = 1
-        while(reg < Register.r4) {
-            reg = regsNotInUse.get(index++)
-        }
-        lastUsedReg = reg
-        freeReg(reg)
-        return reg
+        return regsInUse.get(regsInUse.count()-1)
     }
 
     fun addLabel(label : String) {
@@ -94,6 +78,7 @@ class CodeGenerator {
             file.createNewFile()
         }
        if (!data.isEmpty()) {
+           //need to fix these prints
             file.appendText(".data\n")
            var ind = 0
 
@@ -125,8 +110,6 @@ class CodeGenerator {
            }
 
        }
-
-        //print main
         file.appendText(".text\n")
         file.appendText(".global main\n")
         for (label in labels.asIterable()) {
@@ -135,8 +118,6 @@ class CodeGenerator {
                 file.appendText("\t" + instruction.getString() + "\n")
             }
         }
-
-        //print helper methods
         for (helper in helperFuncs.entries) {
             file.appendText(helper.key + ":\n")
             for (instruction in helper.value) {
@@ -147,6 +128,14 @@ class CodeGenerator {
 
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
         return (weight1-weight2)
+    }
+
+    fun saveOffset(id : String, address : Int) {
+        idsAddresses.put(id, address)
+    }
+
+    fun returnOffset(id :String) : Int?{
+        return idsAddresses.get(id)
     }
 
 
