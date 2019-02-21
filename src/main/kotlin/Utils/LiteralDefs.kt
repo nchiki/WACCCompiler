@@ -33,6 +33,16 @@ class TrueDef : LiteralDefs {
     override fun getLength(): Int {
         return 5
     }
+}
+
+class NewLineDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 1
+    }
 
 }
 

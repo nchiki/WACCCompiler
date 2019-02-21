@@ -31,10 +31,6 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#1",
                     null))
         }
-
-        //add to data section
-        codeGenerator.dataAppendices.add(TrueDef())
-        codeGenerator.dataAppendices.add(FalseDef())
     }
     override fun getBaseType() : LitTypes {
         return LitTypes.BoolWacc
