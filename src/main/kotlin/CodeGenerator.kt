@@ -23,9 +23,7 @@ class CodeGenerator {
 
 
     fun initRegs() {
-        regsNotInUse.addAll(listOf(Register.r0, Register.r1, Register.r2, Register.r3,
-                Register.r4, Register.r5, Register.r6, Register.r7, Register.r8, Register.r9,
-                Register.r10, Register.r11, Register.r12, Register.r13, Register.lr, Register.pc, Register.r16))
+        regsNotInUse.addAll(Register.values())
     }
 
     fun freeReg(reg : Register) {
