@@ -22,7 +22,7 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         expr.generateCode(codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r4, Register.r0, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, Register.r4,null))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("exit"))
     }
 

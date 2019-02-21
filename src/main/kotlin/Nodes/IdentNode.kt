@@ -18,8 +18,14 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = codeGenerator.returnOffset(id)!!
-        codeGenerator.addInstruction(codeGenerator.curLabel,
-                LoadInstr(codeGenerator.regsNotInUse.get(0), "[sp, #${-offset}]", null))
+        val value = codeGenerator.sp - offset
+        if(value < 0) {
+            codeGenerator.addInstruction(codeGenerator.curLabel,
+                    LoadInstr(codeGenerator.getParamReg(), "[sp, #${-offset}]", null))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel,
+                    LoadInstr(codeGenerator.getParamReg(), "[sp]", null))
+        }
         codeGenerator.removeUsedReg()
     }
 
