@@ -76,6 +76,7 @@ class CodeGenerator {
         // sp has decreased, and adds the offset to the sp
         if(sp < 0) {
             val value = 0 - sp
+            sp += value
             addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
         }
     }
