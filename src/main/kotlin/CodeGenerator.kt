@@ -1,5 +1,6 @@
 package main.kotlin
 
+import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
@@ -51,7 +52,8 @@ class CodeGenerator {
             reg = regsNotInUse.get(index++)
         }
         lastUsedReg = reg
-        freeReg(reg)
+        regsInUse.add(lastUsedReg)
+        //freeReg(reg)
         return reg
     }
 
@@ -67,6 +69,15 @@ class CodeGenerator {
         }
         maxLabelNum++
         return label
+    }
+
+    fun recoverSp() {
+        //checks if we have loaded any variable to memory in current scope so
+        // sp has decreased, and adds the offset to the sp
+        if(sp < 0) {
+            val value = 0 - sp
+            addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
+        }
     }
 
     fun addInstruction(label : String, instr : Instruction) {
