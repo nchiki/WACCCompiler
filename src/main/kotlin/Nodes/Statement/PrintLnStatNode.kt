@@ -28,7 +28,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        if(label != "") {
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        }
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 
         codeGenerator.addHelper("p_print_ln")
