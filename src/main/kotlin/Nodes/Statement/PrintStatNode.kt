@@ -22,27 +22,40 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val msg = codeGenerator.data.size
-        var label = ""
-        val str = "msg_$msg"
-        val strApp = "msg_${msg+1}"
+        //load expr into register
+        expr.generateCode(codeGenerator)
+
+        val label = checkType(codeGenerator)
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
+                codeGenerator.getLastUsedReg(), null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+
+    }
+
+    fun checkType(codeGenerator: CodeGenerator) : String{
+        val str = "msg_${codeGenerator.dataAppendices.size-1}"
+        //print String
         if (expr is StringLitNode) {
             codeGenerator.data.put(str, StringLitDef(expr.str))
             codeGenerator.data.put(strApp, StringAppendDef("\"%.*s\\0\""))
             label = "p_print_string"
             codeGenerator.addHelper(label)
-            addPrintInstr(codeGenerator, label, strApp)
+            // Print().addPrintInstrString(codeGenerator, label, str)
+            return label
         }
+        //print Integer
         if (expr is IntLitNode) {
-            label = "p_print_int"
-            codeGenerator.addHelper("p_print_int")
-            addPrintInstr(codeGenerator, label, strApp)
+            val label = "p_print_int"
+            codeGenerator.addHelper(label)
+            Print().addPrintInstrString(codeGenerator, label, str)
+            return label
         }
-        var index = 0
-        var reg = codeGenerator.regsNotInUse.get(index)
-        codeGenerator.regsNotInUse.remove(reg)
-        while(reg < Register.r4) {
-            reg = codeGenerator.regsNotInUse.get(index++)
+        //print Bool
+        if (expr is BoolLitNode) {
+            val label = "p_print_bool"
+            codeGenerator.addHelper(label)
+            return label
         }
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, str))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg, null))
@@ -50,7 +63,9 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
     }
 
-    fun addPrintInstr(codeGenerator: CodeGenerator, label : String, msg : String) {
+    /*
+    //needs to be called in CodeGenerator in the end when msg are fixed
+    fun addPrintInstr(codeGenerator: CodeGenerator, label : String, msg : String, bool : Boolean?) {
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0))
         codeGenerator.addToHelper(label, AddInstr(Register.r2, Register.r0, 4))
@@ -61,6 +76,8 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         codeGenerator.addToHelper(label, BLInstr("fflush"))
         codeGenerator.addToHelper(label, PopInstr())
     }
+    */
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         expr.semanticCheck(errors, table)
     }
