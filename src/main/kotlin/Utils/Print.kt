@@ -1,65 +1,10 @@
-package main.kotlin.Nodes.Statement
+package main.kotlin.Utils
 
 import main.kotlin.CodeGenerator
-import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
-import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.SymbolTable
-import main.kotlin.Utils.Register
-import src.main.kotlin.Nodes.ExprNode
-import src.main.kotlin.Nodes.Literals.IntLitNode
-import main.kotlin.Utils.Print
 
-class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
+class Print {
 
-    override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-    override fun generateCode(codeGenerator: CodeGenerator) {
-
-        //load expr into register
-        expr.generateCode(codeGenerator)
-
-        val label = checkType(codeGenerator)
-
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
-                codeGenerator.getLastUsedReg(), null))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
-
-        codeGenerator.addHelper("p_print_ln")
-        val ln = "msg_${codeGenerator.dataAppendices.size-1}"
-        Print().addPrintLn(codeGenerator, ln)
-    }
-
-    fun checkType(codeGenerator: CodeGenerator) : String{
-        val str = "msg_${codeGenerator.dataAppendices.size-1}"
-        //print String
-        if (expr is StringLitNode) {
-            val label = "p_print_string"
-            codeGenerator.addHelper(label)
-            // Print().addPrintInstrString(codeGenerator, label, str)
-            return label
-        }
-        //print Integer
-        if (expr is IntLitNode) {
-            val label = "p_print_int"
-            codeGenerator.addHelper(label)
-            Print().addPrintInstrString(codeGenerator, label, str)
-            return label
-        }
-        //print Bool
-        if (expr is BoolLitNode) {
-            val label = "p_print_bool"
-            codeGenerator.addHelper(label)
-            return label
-        }
-        return ""
-    }
-
-    /*
-    //needs to be called in the end in CodeGenerator when iterating over helperFuncs
     fun addPrintInstrString(codeGenerator: CodeGenerator, label : String, msg : String) {
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0, null))
@@ -97,8 +42,5 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGen.addToHelper("p_print_ln", BLInstr("fflush"))
         codeGen.addToHelper("p_print_ln", PopInstr())
     }
-*/
-    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        expr.semanticCheck(errors, table)
-    }
+
 }
