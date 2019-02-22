@@ -22,7 +22,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
         val address = symbolTable?.getValueAddress(id)!!
         val reg = codeGenerator.getParamReg()
 
-        val offset = address - codeGenerator.sp
+        val offset = codeGenerator.sp - offset
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
     }
 
