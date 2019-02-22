@@ -28,7 +28,7 @@ class DeclNode(// var name
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
-        var offset = rhs.getSizeOfOffset() //gets size of the data type
+        val offset = rhs.getSizeOfOffset() //gets size of the data type
 
         codeGenerator.sp += offset // subtract offset from stack pointer
         codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
