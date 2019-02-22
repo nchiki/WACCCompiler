@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
 
-                        "/valid/IO/print/printFalse.wacc"))
+                        "/valid/expressions/lessCharExpr.wacc"))
 
 
         } else {

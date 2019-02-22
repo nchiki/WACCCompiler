@@ -43,6 +43,7 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
+        lhs.semanticCheck(errors, table)
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

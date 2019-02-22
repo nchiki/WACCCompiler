@@ -36,8 +36,9 @@ class Print_Read {
 
 
     fun addPrintInstrInt(codeGenerator: CodeGenerator, label : String, msg : String) {
-        val trueMsg = "msg_$msg"
-        val falseMsg = "msg_${msg+1}"
+        val trueMsg = msg
+        val falseInt = msg.substring(4).toInt()+1
+        val falseMsg = "msg_$falseInt"
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, 0))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, trueMsg, Condition.NE))

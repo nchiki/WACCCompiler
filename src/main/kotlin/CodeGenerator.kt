@@ -108,18 +108,16 @@ class CodeGenerator {
             file = File(fileName)
             file.createNewFile()
         }
-        if (!data.isEmpty()) {
-            file.appendText(".data\n")
+        file.appendText(".data\n")
 
-            checkPrints()
+        checkPrints()
 
-            //print all strings and appendices
-            for (entry in data.entries) {
-                val str = entry.value
-                file.appendText(entry.key+":\n")
-                file.appendText("\t.word ${str.getLength()}\n")
-                file.appendText("\t.ascii ${str.getString()}\n")
-            }
+        //print all strings and appendices
+        for (entry in data.entries) {
+            val str = entry.value
+            file.appendText(entry.key+":\n")
+            file.appendText("\t.word ${str.getLength()}\n")
+            file.appendText("\t.ascii ${str.getString()}\n")
         }
 
         //print main
