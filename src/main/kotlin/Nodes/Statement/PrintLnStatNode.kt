@@ -5,6 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
+import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -43,7 +44,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         if (expr is BaseNode) {
             return checkBaseType(codeGenerator, expr)
         }
-        if (expr is IdentNode) {
+        if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
             return checkType(codeGenerator, type!!)
         }
@@ -62,7 +63,8 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             return label
         }
         //print Bool
-        if (expr is BoolLitNode || expr is BinaryOpNode && expr.getBaseType() == LitTypes.BoolWacc) {
+        if (expr is BoolLitNode || expr is BinaryOpNode && expr.getBaseType() == LitTypes.BoolWacc
+                || expr is BoolOpNode) {
             //add to data section
             val label = "p_print_bool"
             codeGenerator.addHelper(label)
