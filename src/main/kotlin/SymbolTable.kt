@@ -1,18 +1,17 @@
 package main.kotlin
 
-import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Errors.GenericError
-import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Nodes.Expressions.BinaryOpNode
 import src.main.kotlin.Nodes.ExprNode
 
 
 class SymbolTable (val parent: SymbolTable?){
 
     var table = HashMap<String, ExprNode>()
+
+    val addressMap = HashMap<String, Int>()
+
     var functions = HashMap<String, FunctionNode>()
     var errors = ErrorLogger()
 
@@ -26,6 +25,26 @@ class SymbolTable (val parent: SymbolTable?){
             }
             functions.put(func.id, func)
         }
+    }
+
+    /* Declares variable at the address */
+    fun declareVariable(identifier: String, size: Int, address: Int) {
+        if(!table.containsKey(identifier)){
+            parent!!.declareVariable(identifier, size, address)
+            return
+        }
+        addressMap[identifier] = address
+    }
+
+    /* Returns the address of the value,
+     if the (address <= sp) then value is in stack, otherwise it's in the heap
+     */
+    fun getValueAddress(identifier: String) : Int {
+        if(!table.containsKey(identifier)){
+            return parent!!.getValueAddress(identifier)
+        }
+
+        return addressMap[identifier]!!
     }
 
     fun printFunctions() {

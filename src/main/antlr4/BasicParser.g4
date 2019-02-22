@@ -60,9 +60,18 @@ pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHES
 
 pairElemType: base_type | type | PAIR ;
 
+addSub: PLUS | MINUS;
+multDiv: MULT | DIV | MOD;
+eq_Op: GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ;
+boolOp: AND | OR ;
+
+
 expr:
-    expr binaryOper expr                    #BinOper
+    expr multDiv expr                       #MultDivOp
+| expr addSub expr                          #AddSubOp
+| expr eq_Op expr                           #EqOp
 | unaryOper expr                            #UnOp
+| expr boolOp expr                          #BoolOper
 | INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
 | CHAR_LIT                                  #CharLit
@@ -71,17 +80,12 @@ expr:
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
 | unaryOper expr                            #UnOp
-| expr boolOp expr                          #BoolOper
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 
 ident : IDENT ;
 
 unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
-
-boolOp: AND | OR ;
-
-binaryOper:  MULT | DIV |  MOD | PLUS | MINUS | GREAT | GREAT_EQ | LESS | LESS_EQ | EQ | NOTEQ ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 

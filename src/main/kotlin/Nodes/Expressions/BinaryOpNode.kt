@@ -20,7 +20,9 @@ import src.main.kotlin.Nodes.ExprNode
 import main.kotlin.Errors.OverflowError
 import main.kotlin.Utils.LiteralDefs
 
-class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
+class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicParser.AddSubContext?,
+                   val mulDiv: BasicParser.MultDivContext?, val eqOp: BasicParser.Eq_OpContext?,
+                   override val ctx: ParserRuleContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -65,59 +67,45 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         //codeGenerator.regsNotInUse.removeAt(1)
     }
 
-    fun checkErrorTypes(codeGenerator: CodeGenerator) : String? {
-        if (getBaseType() == LitTypes.IntWacc) {
-            codeGenerator.addError(OverflowError)
-            return "p_throw_overflow_error"
-        }
-        return ""
-    }
-
-    fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
-        val errorLabel = checkErrorTypes(codeGenerator)
-        if (operator.MULT() != null){
-            codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
-            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
-            if (errorLabel != "") {
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.NE))
+    fun getInstruction(reg1: Register, reg2:Register) : Instruction{
+        if (mulDiv != null) {
+            if (mulDiv.MULT() != null) {
+                return MultInstr(reg1, reg2)
+                // CHECK FOR OVERFLOW
+            } else if (mulDiv.DIV() != null) {
+                return BLInstr("__aeabi_idiv")
+            } else if (mulDiv.MOD() != null) {
+                return BLInstr("__aeabi_idivmod")
             }
-        }else if (operator.DIV() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
-        } else if(operator.MOD() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
-        }else if(operator.MINUS() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2))
-        }else if(operator.PLUS() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
-            if (errorLabel != "") {
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.VS))
-            }
-        } else if (operator.GREAT() != null){
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GT))
-            //IDK if maybe we need to add case for notgreater?
-        } else if (operator.GREAT_EQ() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GE))
-        } else if(operator.LESS_EQ() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LE))
-        } else if(operator.LESS() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LT))
-        } else if(operator.EQ() != null) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.EQ))
-        } else {
-            //can only be not equal now
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
         }
-
+        else if (addSub != null) {
+            if (addSub.MINUS() != null) {
+                return SubInstr(reg1, reg2)
+            } else if (addSub.PLUS() != null) {
+                return AddInstr(reg1, reg1, reg2)
+            }
+        }
+        else if (eqOp != null) {
+            if (eqOp.GREAT() != null) {
+                return MovInstr(reg1, "#1", Condition.GT)
+                //IDK if maybe we need to add case for notgreater?
+            } else if (eqOp.GREAT_EQ() != null) {
+                return MovInstr(reg1, "#1", Condition.GE)
+            } else if (eqOp.LESS_EQ() != null) {
+                return MovInstr(reg1, "#1", Condition.LE)
+            } else if (eqOp.LESS() != null) {
+                return MovInstr(reg1, "#1", Condition.LT)
+            } else if (eqOp.EQ() != null) {
+                return MovInstr(reg1, "#1", Condition.EQ)
+            }
+        }
+        //can only be not equal now
+        return MovInstr(reg1, "#1", Condition.NE)
     }
 
     //differs between a Boolean expression or calculation of two operands
     override fun getBaseType(): LitTypes {
-        if(operator.MULT() != null
-                || operator.DIV() != null
-                || operator.MOD() != null
-                || operator.MINUS() != null
-                || operator.PLUS() != null)
-        {
+        if (mulDiv != null || addSub != null) {
             return LitTypes.IntWacc
         } else {
             return LitTypes.BoolWacc
@@ -157,7 +145,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         }
 
         if(realLeft is PairNode || realRight is PairNode){
-            if(operator.EQ() == null && operator.NOTEQ() == null){
+            if (eqOp == null || eqOp.EQ() == null && eqOp.NOTEQ() == null) {
                 errors.addError(InvalidOperandTypes(ctx))
                 return
             }

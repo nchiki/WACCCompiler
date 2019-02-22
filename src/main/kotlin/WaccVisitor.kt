@@ -207,7 +207,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return ArrayLitNode(exprList, ctx)
     }
 
-    override fun visitBinOper(ctx: BasicParser.BinOperContext): Node {
+   /* override fun visitBinOper(ctx: BasicParser.BinOperContext): Node {
         val left = visit(ctx.expr(0)) as ExprNode
         val right = visit(ctx.expr(1)) as ExprNode
 
@@ -220,6 +220,51 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         }
 
         return BinaryOpNode(left, right, operator, ctx)
+    }*/
+
+    override fun visitAddSubOp(@NotNull ctx: BasicParser.AddSubOpContext): Node {
+        val left = visit(ctx.expr(0)) as ExprNode
+        val right = visit(ctx.expr(1)) as ExprNode
+
+        val operator = ctx.addSub()
+
+        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
+                    "position ${ctx.start.charPositionInLine}")
+            exitProcess(100)
+        }
+
+        return BinaryOpNode(left, right, operator, null, null, ctx)
+    }
+
+    override fun visitMultDivOp(@NotNull ctx: BasicParser.MultDivOpContext): Node {
+        val left = visit(ctx.expr(0)) as ExprNode
+        val right = visit(ctx.expr(1)) as ExprNode
+
+        val operator = ctx.multDiv()
+
+        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
+                    "position ${ctx.start.charPositionInLine}")
+            exitProcess(100)
+        }
+
+        return BinaryOpNode(left, right, null, operator, null, ctx)
+    }
+
+    override fun visitEqOp(@NotNull ctx: BasicParser.EqOpContext): Node {
+        val left = visit(ctx.expr(0)) as ExprNode
+        val right = visit(ctx.expr(1)) as ExprNode
+
+        val operator = ctx.eq_Op()
+
+        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+            println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
+                    "position ${ctx.start.charPositionInLine}")
+            exitProcess(100)
+        }
+
+        return BinaryOpNode(left, right, null, null, operator, ctx)
     }
 
     override fun visitBoolOper(ctx: BasicParser.BoolOperContext?): Node {
