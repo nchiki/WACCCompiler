@@ -1,6 +1,5 @@
 package main.kotlin.Utils
 
-
 interface LiteralDefs {
     fun getString() : String
     fun getLength() : Int
@@ -25,6 +24,7 @@ class FalseDef : LiteralDefs {
         return 6
     }
 }
+
 class TrueDef : LiteralDefs {
     override fun getString(): String {
         return "\"true\\0\""
@@ -43,7 +43,26 @@ class NewLineDef : LiteralDefs {
     override fun getLength(): Int {
         return 1
     }
+}
 
+class ReadIntApp : LiteralDefs {
+    override fun getString(): String {
+        return "\"%d\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 3
+    }
+}
+
+class ReadCharApp : LiteralDefs {
+    override fun getString(): String {
+        return "\"%c\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 4
+    }
 }
 
 class IntAppendDef : LiteralDefs {

@@ -45,11 +45,13 @@ class DeclNode(// var name
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
 
-
         codeGenerator.regsNotInUse.add(0, codeGenerator.getLastUsedReg())
         if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
             codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
         }
+
+        //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
+        //codeGenerator.sp += offset
 
     }
 
