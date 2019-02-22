@@ -14,6 +14,8 @@ import src.main.kotlin.Nodes.ExprNode
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size = operand.size
 
     override val weight: Int
@@ -50,6 +52,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         var op = operand
 
         //get type of operand from Symboltable
@@ -72,5 +75,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
             errors.addError(InvalidOperandTypes(ctx))
         }
+
+        operand.semanticCheck(errors, table)
     }
 }

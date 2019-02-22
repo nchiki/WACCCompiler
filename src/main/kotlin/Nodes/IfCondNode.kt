@@ -25,6 +25,8 @@ class IfCondNode(// condition (should evaluate to boolean val
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
+    override var symbolTable: SymbolTable? = null
+
     override fun generateCode(codeGenerator: CodeGenerator) {
 
         expr!!.generateCode(codeGenerator)
@@ -35,7 +37,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.addLabel(secondLabel)
 
         // Add compare and branch instructions to original label
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse[0], "#0"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse[0], 0, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(secondLabel))
 
@@ -55,7 +57,7 @@ class IfCondNode(// condition (should evaluate to boolean val
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
@@ -72,8 +74,8 @@ class IfCondNode(// condition (should evaluate to boolean val
         elseChildTable.currentFunction = table.currentFunction
 
         //checks both statements
+        expr.semanticCheck(errors, table)
         ifTrueStat?.semanticCheck(errors, ifChildTable)
-
         elseStat?.semanticCheck(errors, elseChildTable)
 
         if(ifChildTable.currentExecutionPathHasReturn && elseChildTable.currentExecutionPathHasReturn){

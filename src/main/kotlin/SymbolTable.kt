@@ -1,18 +1,17 @@
 package main.kotlin
 
-import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Errors.GenericError
-import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Nodes.Expressions.BinaryOpNode
 import src.main.kotlin.Nodes.ExprNode
 
 
 class SymbolTable (val parent: SymbolTable?){
 
     var table = HashMap<String, ExprNode>()
+
+    val addressMap = HashMap<String, Int>()
+
     var functions = HashMap<String, FunctionNode>()
     var errors = ErrorLogger()
 
@@ -26,6 +25,26 @@ class SymbolTable (val parent: SymbolTable?){
             }
             functions.put(func.id, func)
         }
+    }
+
+    /* Declares variable at the address */
+    fun declareVariable(identifier: String, size: Int, address: Int) {
+        if(!table.containsKey(identifier)){
+            parent!!.declareVariable(identifier, size, address)
+            return
+        }
+        addressMap[identifier] = address
+    }
+
+    /* Returns the address of the value,
+     if the (address <= sp) then value is in stack, otherwise it's in the heap
+     */
+    fun getValueAddress(identifier: String) : Int {
+        if(!table.containsKey(identifier)){
+            return parent!!.getValueAddress(identifier)
+        }
+
+        return addressMap[identifier]!!
     }
 
     fun printFunctions() {
@@ -45,54 +64,6 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
         return tab.functions.get(funcId)
-    }
-
-    /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : ExprNode, errors: ErrorLogger) {
-        var tempExpr: Node = expr
-
-        if(tempExpr is ParenNode){
-            tempExpr = evaluateParenNode(tempExpr)
-        }
-
-        if(tempExpr is BoolLitNode){
-            return
-        }
-
-        if(tempExpr is IdentNode){
-            val variable = lookupSymbol(tempExpr.id)
-
-            if(variable == null){
-                errors.addError(UndefinedVariable(tempExpr.ctx!!, tempExpr.id))
-                return
-            }
-
-            boolExprCheck(variable, errors)
-            return
-        }
-
-
-        if(tempExpr is UnaryOpNode){
-            if(tempExpr.operator.equals(BasicParser.NOT)){
-                boolExprCheck(tempExpr.operand, errors)
-                return
-            }
-        }
-
-        if(tempExpr is BinaryOpNode){
-            when(tempExpr.operator.ruleIndex){
-                BasicParser.GREAT -> return
-                BasicParser.GREAT_EQ -> return
-                BasicParser.LESS -> return
-                BasicParser.LESS_EQ -> return
-                BasicParser.EQ -> return
-                BasicParser.NOTEQ -> return
-                BasicParser.AND -> return
-                BasicParser.OR -> return
-            }
-        }
-
-        errors.addError(IncompatibleTypes(tempExpr.ctx!!, "BOOL", expr, this))
     }
 
     fun evaluateParenNode(node_: Node): Node{

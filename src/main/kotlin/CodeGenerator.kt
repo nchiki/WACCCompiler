@@ -1,5 +1,6 @@
 package main.kotlin
 
+import main.kotlin.Errors.OverflowError
 import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
@@ -10,6 +11,7 @@ import kotlin.collections.LinkedHashMap
 class CodeGenerator {
 
     val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+    val errors = LinkedList<LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -94,9 +96,9 @@ class CodeGenerator {
         helperFuncs.get(label)!!.add(instr)
     }
 
-    fun addInstrToHelper(label : String, instrs : List<Instruction>) {
-        for (instr in instrs) {
-            addToHelper(label, instr)
+    fun addError(error : LiteralDefs) {
+        if (!errors.contains(error)) {
+            errors.addLast(error)
         }
     }
 
@@ -108,52 +110,17 @@ class CodeGenerator {
             file = File(fileName)
             file.createNewFile()
         }
-        if (!data.isEmpty()) {
-            file.appendText(".data\n")
+        file.appendText(".data\n")
 
-            checkPrints()
+        checkErrors()
+        checkPrints()
 
-            //print all strings and appendices
-            for (entry in data.entries) {
-                val str = entry.value
-                file.appendText(entry.key+":\n")
-                file.appendText("\t.word ${str.getLength()}\n")
-                file.appendText("\t.ascii ${str.getString()}\n")
-            }
-
-
-            /*
-            //print all strings
-            for (str in data) {
-                file.appendText("msg_$ind")
-                file.appendText("\t.word ${str.getLength()}\n")
-                file.appendText("\t.ascii ${str.getString()}\n")
-                ind++
-            }
-            if (!data.isEmpty()) {
-                Print().addPrintInstrString(this, "p_print_string", "msg_$ind")
-            }
-
-            if (helperFuncs.containsKey("p_print_bool")) {
-                Print().addBool(this)
-            }
-
-            //print all appendices
-            for (app in dataAppendices.distinctBy {it -> it.javaClass}) {
-                file.appendText("msg_$ind")
-                if (app is TrueDef) {
-                    Print().addPrintInstrBool(this, "p_print_bool", ind)
-                }
-                file.appendText("\t.word ${app.getLength()}\n")
-                file.appendText("\t.ascii ${app.getString()}\n")
-                ind++
-            }
-            if (helperFuncs.contains("p_print_ln")) {
-                file.appendText("msg_$ind")
-                file.appendText("\t.word 1\n")
-                file.appendText("\t.ascii \"\\0\"\n")
-            }*/
-
+        //print all strings and appendices
+        for (entry in data.entries) {
+            val str = entry.value
+            file.appendText(entry.key+":\n")
+            file.appendText("\t.word ${str.getLength()}\n")
+            file.appendText("\t.ascii ${str.getString()}\n")
         }
 
         //print main
@@ -175,28 +142,49 @@ class CodeGenerator {
         }
     }
 
+    fun checkErrors() {
+        for (error in errors) {
+            val msg = "msg_${data.size}"
+            data.put(msg, error)
+        }
+    }
+
     fun checkPrints() {
+        if (helperFuncs.containsKey("p_throw_overflow_error")) {
+            val msg = "msg_${data.size}"
+            Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
+        }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())
-            Print().addPrintInstrString(this, "p_print_string", msg)
+            Print_Read().addPrintInstrString(this, "p_print_string", msg)
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
-            data.put("msg_${data.size}", IntAppendDef())
-            Print().addPrintInstrInt(this, "p_print_int", msg)
+            data.put(msg, IntAppendDef())
+            Print_Read().addPrintInstrInt(this, "p_print_int", msg)
         }
         if (helperFuncs.containsKey("p_print_bool")) {
             val msg = "msg_${data.size}"
             val trueInd = data.size
             data.put(msg, TrueDef())
             data.put("msg_${data.size}", FalseDef())
-            Print().addPrintInstrBool(this, "p_print_bool", trueInd)
+            Print_Read().addPrintInstrBool(this, "p_print_bool", trueInd)
         }
         if (helperFuncs.containsKey("p_print_ln")) {
             val msg = "msg_${data.size}"
             data.put(msg, NewLineDef())
-            Print().addPrintLn(this, msg)
+            Print_Read().addPrintLn(this, msg)
+        }
+        if (helperFuncs.containsKey("p_read_int")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadIntApp())
+            Print_Read().addRead(this, "p_read_int", msg)
+        }
+        if (helperFuncs.containsKey("p_read_char")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadCharApp())
+            Print_Read().addRead(this, "p_read_char", msg)
         }
     }
 

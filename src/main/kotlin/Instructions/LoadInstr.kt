@@ -4,7 +4,7 @@ import main.kotlin.Utils.Condition
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class LoadInstr(val arg1 : Register, val arg2: Any, val cond : Condition? = Condition.NULL) : Instruction {
+class LoadInstr(val arg1 : Register, val arg2: Any, val cond : Condition?) : Instruction {
 
     override fun getString(): String {
         var ldr = ""

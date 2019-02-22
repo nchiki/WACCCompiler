@@ -14,6 +14,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 1
 
@@ -37,7 +40,7 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //base types do not need to be checked
+        this.symbolTable = table
     }
 
 }

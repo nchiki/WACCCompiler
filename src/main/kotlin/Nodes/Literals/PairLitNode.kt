@@ -8,6 +8,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -18,7 +20,7 @@ class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed for PairLitNode
+        this.symbolTable = table
     }
 
     override fun getBaseType(): LitTypes {

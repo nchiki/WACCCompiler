@@ -18,6 +18,8 @@ import src.main.kotlin.Nodes.ExprNode
 class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext,
                  override val ctx: ParserRuleContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size = 1
     override val weight: Int
         get() = left.weight + right.weight + 1
@@ -39,23 +41,22 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
             leftReg = codeGenerator.getLastUsedReg()
         }
 
-        // gets the correct instruction depending on the operator and adds it to codeGenerator
+        /* Compare the two expression results */
 
-
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
-
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
 
         if(operator.AND() != null){
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.EQ))
         }else if(operator.OR() != null){
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.NE))
         }
 
         codeGenerator.regsNotInUse.removeAt(0)
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         var realLeft = left
 
         /* Get left value from symbol table */

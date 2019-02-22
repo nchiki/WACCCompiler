@@ -12,6 +12,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 4
 
@@ -21,6 +23,7 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNo
     override fun generateCode(codeGenerator: CodeGenerator) {
 
     }
+
     override fun getBaseType() : LitTypes {
         when(type){
             "int"    -> return LitTypes.IntWacc
@@ -33,7 +36,7 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNo
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed
+        this.symbolTable = table
     }
 
 }

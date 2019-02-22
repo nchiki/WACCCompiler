@@ -10,6 +10,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 
 class CharLitNode(val char : String, override val ctx: BasicParser.CharLitContext) : ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 1
 
@@ -25,7 +28,7 @@ class CharLitNode(val char : String, override val ctx: BasicParser.CharLitContex
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed for Literal
+        this.symbolTable = table
     }
 
 }

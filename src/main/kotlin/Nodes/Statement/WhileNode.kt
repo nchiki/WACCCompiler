@@ -17,6 +17,7 @@ import kotlin.system.exitProcess
 
 class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParser.WhileContext): Node {
 
+    override var symbolTable: SymbolTable? = null
 
     override val weight: Int
         get() = expr.weight
@@ -36,7 +37,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         val reg = codeGenerator.getLastUsedReg()
 
         /* Check if the */
-        codeGenerator.addInstruction(label, CmpInstr(reg, "#1"))
+        codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
 
         stat.generateCode(codeGenerator)
@@ -50,7 +51,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

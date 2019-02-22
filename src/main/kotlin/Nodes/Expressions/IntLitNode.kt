@@ -13,6 +13,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 4
 
@@ -32,6 +34,6 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        //not needed for the Literals
+        this.symbolTable = table
     }
 }

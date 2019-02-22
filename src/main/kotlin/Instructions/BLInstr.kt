@@ -1,9 +1,13 @@
 package main.kotlin.Instructions
 
-class BLInstr(val funcName : String) : Instruction {
+import main.kotlin.Utils.Condition
 
+class BLInstr(val funcName : String, val cond : Condition = Condition.NULL) : Instruction {
 
     override fun getString(): String {
+        if (cond != Condition.NULL) {
+            return "BL$cond $funcName"
+        }
         return "BL $funcName"
     }
 }

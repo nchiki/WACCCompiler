@@ -7,6 +7,9 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext): ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size = expr.size
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -20,6 +23,7 @@ class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext):
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         expr.semanticCheck(errors, table)
     }
 }
