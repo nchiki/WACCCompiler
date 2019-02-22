@@ -57,7 +57,6 @@ class IfCondNode(// condition (should evaluate to boolean val
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        println("semantic check in if")
         this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)

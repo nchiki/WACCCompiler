@@ -130,7 +130,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        println("semantic check is called")
 
         this.symbolTable = table
         //check the semantics of both operands
