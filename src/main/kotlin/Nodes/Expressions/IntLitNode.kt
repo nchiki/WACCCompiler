@@ -18,13 +18,14 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
     override val size: Int
         get() = 4
 
-            override val weight: Int
+    override val weight: Int
         get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
         //add instructions to main
         val reg = codeGenerator.getParamReg()
+
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this, null))
     }
 

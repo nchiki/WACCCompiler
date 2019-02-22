@@ -8,7 +8,8 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
-class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int, override val ctx: BasicParser.AssignLHSContext) : ExprNode {
+class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
+               override val ctx: BasicParser.AssignLHSContext) : ExprNode {
 
     override val size: Int
         get() = 4
@@ -18,8 +19,18 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (getBaseType() == LitTypes.IdentWacc) {
+            val node = symbolTable!!.lookupSymbol(id)
+            node!!.generateCode(codeGenerator)
+        }
+        if (Nodetype is ArrayElemNode) {
+            Nodetype.generateCode(codeGenerator)
+        }
+        if (Nodetype is PairElemNode) {
+            Nodetype.generateCode(codeGenerator)
+        }
     }
+
     override fun getBaseType(): LitTypes {
         if (Nodetype is ArrayElemNode) {
             return Nodetype.getBaseType()
