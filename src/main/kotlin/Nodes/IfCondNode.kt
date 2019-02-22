@@ -74,8 +74,8 @@ class IfCondNode(// condition (should evaluate to boolean val
         elseChildTable.currentFunction = table.currentFunction
 
         //checks both statements
+        expr.semanticCheck(errors, table)
         ifTrueStat?.semanticCheck(errors, ifChildTable)
-
         elseStat?.semanticCheck(errors, elseChildTable)
 
         if(ifChildTable.currentExecutionPathHasReturn && elseChildTable.currentExecutionPathHasReturn){
