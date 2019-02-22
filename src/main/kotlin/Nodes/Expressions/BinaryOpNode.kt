@@ -41,7 +41,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         var reg1 : Register
         var reg2 : Register
 
-
         val comparison = codeGenerator.compareWeights(left.weight, right.weight)
         // evaluates expression that needs more registers first
         if(comparison > 0) {
@@ -67,40 +66,58 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         //codeGenerator.regsNotInUse.removeAt(1)
     }
 
-    fun getInstruction(reg1: Register, reg2:Register) : Instruction{
+    fun checkErrorTypes(codeGenerator: CodeGenerator) : String? {
+        if (getBaseType() == LitTypes.IntWacc) {
+            codeGenerator.addError(OverflowError)
+            return "p_throw_overflow_error"
+        }
+        return ""
+    }
+
+
+
+    fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
+        val errorLabel = checkErrorTypes(codeGenerator)
+
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
-                return MultInstr(reg1, reg2)
-                // CHECK FOR OVERFLOW
+                codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
+                codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
+                if (errorLabel != "") {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.NE))
+                }
             } else if (mulDiv.DIV() != null) {
-                return BLInstr("__aeabi_idiv")
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
             } else if (mulDiv.MOD() != null) {
-                return BLInstr("__aeabi_idivmod")
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
             }
         }
         else if (addSub != null) {
             if (addSub.MINUS() != null) {
-                return SubInstr(reg1, reg2)
+                codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2))
             } else if (addSub.PLUS() != null) {
-                return AddInstr(reg1, reg1, reg2)
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
+                if (errorLabel != "") {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.VS))
+                }
             }
         }
         else if (eqOp != null) {
             if (eqOp.GREAT() != null) {
-                return MovInstr(reg1, "#1", Condition.GT)
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GT))
                 //IDK if maybe we need to add case for notgreater?
             } else if (eqOp.GREAT_EQ() != null) {
-                return MovInstr(reg1, "#1", Condition.GE)
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GE))
             } else if (eqOp.LESS_EQ() != null) {
-                return MovInstr(reg1, "#1", Condition.LE)
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LE))
             } else if (eqOp.LESS() != null) {
-                return MovInstr(reg1, "#1", Condition.LT)
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LT))
             } else if (eqOp.EQ() != null) {
-                return MovInstr(reg1, "#1", Condition.EQ)
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.EQ))
             }
         }
         //can only be not equal now
-        return MovInstr(reg1, "#1", Condition.NE)
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
     }
 
     //differs between a Boolean expression or calculation of two operands

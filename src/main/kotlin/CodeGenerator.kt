@@ -10,6 +10,7 @@ import kotlin.collections.LinkedHashMap
 class CodeGenerator {
 
     val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+    val errors = LinkedList<LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -38,7 +39,7 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
-        return lastUsedReg
+        return regsInUse.get(regsInUse.count()-1)
     }
 
     fun getParamReg() : Register {
@@ -49,6 +50,7 @@ class CodeGenerator {
         }
         lastUsedReg = reg
         regsInUse.add(lastUsedReg)
+        regsNotInUse.remove(lastUsedReg)
         //freeReg(reg)
         return reg
     }
@@ -93,9 +95,9 @@ class CodeGenerator {
         helperFuncs.get(label)!!.add(instr)
     }
 
-    fun addInstrToHelper(label : String, instrs : List<Instruction>) {
-        for (instr in instrs) {
-            addToHelper(label, instr)
+    fun addError(error : LiteralDefs) {
+        if (!errors.contains(error)) {
+            errors.addLast(error)
         }
     }
 
@@ -107,18 +109,17 @@ class CodeGenerator {
             file = File(fileName)
             file.createNewFile()
         }
-        if (!data.isEmpty()) {
-            file.appendText(".data\n")
+        file.appendText(".data\n")
 
-            checkPrints()
+        checkErrors()
+        checkPrints()
 
-            //print all strings and appendices
-            for (entry in data.entries) {
-                val str = entry.value
-                file.appendText(entry.key+":\n")
-                file.appendText("\t.word ${str.getLength()}\n")
-                file.appendText("\t.ascii ${str.getString()}\n")
-            }
+        //print all strings and appendices
+        for (entry in data.entries) {
+            val str = entry.value
+            file.appendText(entry.key+":\n")
+            file.appendText("\t.word ${str.getLength()}\n")
+            file.appendText("\t.ascii ${str.getString()}\n")
         }
 
         //print main
@@ -137,6 +138,13 @@ class CodeGenerator {
             for (instruction in helper.value) {
                 file.appendText("\t" + instruction.getString() + "\n")
             }
+        }
+    }
+
+    fun checkErrors() {
+        for (error in errors) {
+            val msg = "msg_${data.size}"
+            data.put(msg, error)
         }
     }
 
