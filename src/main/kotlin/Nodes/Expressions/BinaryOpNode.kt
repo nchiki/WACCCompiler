@@ -17,6 +17,8 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import main.kotlin.Errors.OverflowError
+import main.kotlin.Utils.LiteralDefs
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BinaryOperContext, override val ctx: ParserRuleContext) : ExprNode {
 
@@ -37,6 +39,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
         var reg1 : Register
         var reg2 : Register
 
+
         val comparison = codeGenerator.compareWeights(left.weight, right.weight)
         // evaluates expression that needs more registers first
         if(comparison > 0) {
@@ -52,41 +55,57 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicP
             }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
         if(getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg1, reg2))
+            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg1, reg2, ""))
         }
         // gets the correct instruction depending on the operator and adds it to codeGenerator
-        codeGenerator.addInstruction(codeGenerator.curLabel, getInstruction(reg1, reg2))
+        getInstruction(reg1, reg2, codeGenerator)
+
         codeGenerator.regsNotInUse.removeAt(0)
         //MAYBE WE JUST NEED TO REMOVE THE ONE THAT HOLDS THE RESULT
         //codeGenerator.regsNotInUse.removeAt(1)
     }
 
-    fun getInstruction(reg1: Register, reg2:Register) : Instruction{
+    fun checkErrorTypes(codeGenerator: CodeGenerator) : String? {
+        if (getBaseType() == LitTypes.IntWacc) {
+            codeGenerator.addError(OverflowError)
+            return "p_throw_overflow_error"
+        }
+        return ""
+    }
+
+    fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
+        val errorLabel = checkErrorTypes(codeGenerator)
         if (operator.MULT() != null){
-            return MultInstr(reg1, reg2)
-            // CHECK FOR OVERFLOW
+            codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
+            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
+            if (errorLabel != "") {
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.NE))
+            }
         }else if (operator.DIV() != null) {
-            return BLInstr("__aeabi_idiv")
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
         } else if(operator.MOD() != null) {
-            return BLInstr("__aeabi_idivmod")
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
         }else if(operator.MINUS() != null) {
-            return SubInstr(reg1, reg2)
+            codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2))
         }else if(operator.PLUS() != null) {
-            return AddInstr(reg1, reg1, reg2)
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
+            if (errorLabel != "") {
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.VS))
+            }
         } else if (operator.GREAT() != null){
-            return MovInstr(reg1,"#1", Condition.GT)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GT))
             //IDK if maybe we need to add case for notgreater?
         } else if (operator.GREAT_EQ() != null) {
-            return MovInstr(reg1,"#1", Condition.GE)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GE))
         } else if(operator.LESS_EQ() != null) {
-            return MovInstr(reg1, "#1", Condition.LE)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LE))
         } else if(operator.LESS() != null) {
-            return MovInstr(reg1, "#1", Condition.LT)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LT))
         } else if(operator.EQ() != null) {
-            return MovInstr(reg1, "#1", Condition.EQ)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.EQ))
         } else {
             //can only be not equal now
-            return MovInstr(reg1, "#1", Condition.NE)
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
         }
 
     }

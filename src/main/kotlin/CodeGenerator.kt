@@ -10,6 +10,7 @@ import kotlin.collections.LinkedHashMap
 class CodeGenerator {
 
     val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+    val errors = LinkedList<LiteralDefs>()
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -94,9 +95,9 @@ class CodeGenerator {
         helperFuncs.get(label)!!.add(instr)
     }
 
-    fun addInstrToHelper(label : String, instrs : List<Instruction>) {
-        for (instr in instrs) {
-            addToHelper(label, instr)
+    fun addError(error : LiteralDefs) {
+        if (!errors.contains(error)) {
+            errors.addLast(error)
         }
     }
 
@@ -110,6 +111,7 @@ class CodeGenerator {
         }
         file.appendText(".data\n")
 
+        checkErrors()
         checkPrints()
 
         //print all strings and appendices
@@ -136,6 +138,13 @@ class CodeGenerator {
             for (instruction in helper.value) {
                 file.appendText("\t" + instruction.getString() + "\n")
             }
+        }
+    }
+
+    fun checkErrors() {
+        for (error in errors) {
+            val msg = "msg_${data.size}"
+            data.put(msg, error)
         }
     }
 

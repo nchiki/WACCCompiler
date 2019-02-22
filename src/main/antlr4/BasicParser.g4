@@ -71,7 +71,6 @@ expr:
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
 | unaryOper expr                            #UnOp
-| expr binaryOper expr                      #BinOper
 | expr boolOp expr                          #BoolOper
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
