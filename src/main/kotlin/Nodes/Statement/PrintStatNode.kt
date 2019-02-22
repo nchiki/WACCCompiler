@@ -13,6 +13,8 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
 
+    override var symbolTable: SymbolTable? = null
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -62,7 +64,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }

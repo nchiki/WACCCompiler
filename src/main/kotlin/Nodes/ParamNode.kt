@@ -12,6 +12,8 @@ class ParamNode(
         val id: String,
         val type: ExprNode, override val ctx: BasicParser.ParamContext) : ExprNode {
 
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = type.size
 
@@ -31,6 +33,7 @@ class ParamNode(
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         // looks up the id in the symbol table
         val value = table.lookupSymbol(id)
 

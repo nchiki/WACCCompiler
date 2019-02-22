@@ -10,6 +10,9 @@ import kotlin.system.exitProcess
 
 class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
                     override val ctx: BasicParser.FuncContext) : ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 4
 
@@ -25,6 +28,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         table.currentFunction = this
         table.currentExecutionPathHasReturn = false
 

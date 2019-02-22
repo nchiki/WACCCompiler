@@ -47,54 +47,6 @@ class SymbolTable (val parent: SymbolTable?){
         return tab.functions.get(funcId)
     }
 
-    /* Ensures that the expression node resolves to a boolean type */
-    fun boolExprCheck(expr : ExprNode, errors: ErrorLogger) {
-        var tempExpr: Node = expr
-
-        if(tempExpr is ParenNode){
-            tempExpr = evaluateParenNode(tempExpr)
-        }
-
-        if(tempExpr is BoolLitNode){
-            return
-        }
-
-        if(tempExpr is IdentNode){
-            val variable = lookupSymbol(tempExpr.id)
-
-            if(variable == null){
-                errors.addError(UndefinedVariable(tempExpr.ctx!!, tempExpr.id))
-                return
-            }
-
-            boolExprCheck(variable, errors)
-            return
-        }
-
-
-        if(tempExpr is UnaryOpNode){
-            if(tempExpr.operator.equals(BasicParser.NOT)){
-                boolExprCheck(tempExpr.operand, errors)
-                return
-            }
-        }
-
-        if(tempExpr is BinaryOpNode){
-            when(tempExpr.operator.ruleIndex){
-                BasicParser.GREAT -> return
-                BasicParser.GREAT_EQ -> return
-                BasicParser.LESS -> return
-                BasicParser.LESS_EQ -> return
-                BasicParser.EQ -> return
-                BasicParser.NOTEQ -> return
-                BasicParser.AND -> return
-                BasicParser.OR -> return
-            }
-        }
-
-        errors.addError(IncompatibleTypes(tempExpr.ctx!!, "BOOL", expr, this))
-    }
-
     fun evaluateParenNode(node_: Node): Node{
         var node = node_
         while(node is ParenNode){

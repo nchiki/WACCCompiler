@@ -16,6 +16,8 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override val weight: Int
         get() =  1
 
+    override var symbolTable: SymbolTable? = null
+
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = codeGenerator.returnOffset(id)!!
         val value = codeGenerator.sp - offset
@@ -38,6 +40,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         if(table.lookupSymbol(id) == null){
             errors.addError(UndefinedVariable(ctx, id))
         }

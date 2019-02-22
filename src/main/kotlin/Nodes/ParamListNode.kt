@@ -9,6 +9,8 @@ import main.kotlin.Utils.LitTypes
 class ParamListNode(// list of parameterNodes
         val listParamNodes: MutableList<ParamNode>, override val ctx: BasicParser.ParamListContext?) : Node {
 
+    override var symbolTable: SymbolTable? = null
+
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
@@ -16,7 +18,7 @@ class ParamListNode(// list of parameterNodes
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-
+        this.symbolTable = table
         // iterates through the list of parameters, checking semantics of each of them
         for (param in listParamNodes) {
             param.semanticCheck(errors, table)

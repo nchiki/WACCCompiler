@@ -8,6 +8,9 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : BasicParser.ArrayLiterContext) : ExprNode {
+
+    override var symbolTable: SymbolTable? = null
+
     override val size: Int
         get() = 8
 
@@ -25,6 +28,7 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         if(exprList.size == 0){
             return
         }

@@ -15,6 +15,7 @@ import main.kotlin.Utils.Register
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
 
+    override var symbolTable: SymbolTable? = null
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -50,6 +51,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     var children : MutableList<SymbolTable> = mutableListOf()
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         table.errors = errors
         for (func in funcDefs) {
             val id = func.id

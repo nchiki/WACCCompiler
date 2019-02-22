@@ -12,6 +12,8 @@ import kotlin.system.exitProcess
 
 class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
 
+    override var symbolTable: SymbolTable? = null
+
     val size: Int
         get() = expr.size
 
@@ -23,6 +25,7 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
         expr.semanticCheck(errors, table)
 
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
