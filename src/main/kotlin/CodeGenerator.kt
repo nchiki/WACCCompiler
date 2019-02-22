@@ -9,7 +9,8 @@ import kotlin.collections.LinkedHashMap
 
 class CodeGenerator {
 
-    val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+    val data = LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
@@ -17,10 +18,8 @@ class CodeGenerator {
     private var maxLabelNum: Int = 0
     val regsInUse = ArrayList<Register>() //registers being used
     var sp = 0
-    val idsAddresses = LinkedHashMap<String, Int>()
 
     private var lastUsedReg: Register = Register.r0
-
 
     fun initRegs() {
         regsNotInUse.addAll(Register.values())
@@ -176,14 +175,6 @@ class CodeGenerator {
 
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
         return (weight1-weight2)
-    }
-
-    fun saveOffset(id : String, address : Int) {
-        idsAddresses.put(id, address)
-    }
-
-    fun returnOffset(id :String) : Int?{
-        return idsAddresses.get(id)
     }
 
 }
