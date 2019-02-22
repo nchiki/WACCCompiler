@@ -21,7 +21,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        println(symbolTable == null)
+        //println(symbolTable == null)
         val address = symbolTable?.getValueAddress(id)!!
         val reg = codeGenerator.getParamReg()
 

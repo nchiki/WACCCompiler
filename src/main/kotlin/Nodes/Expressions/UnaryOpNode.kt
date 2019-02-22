@@ -75,5 +75,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
             errors.addError(InvalidOperandTypes(ctx))
         }
+
+        operand.semanticCheck(errors, table)
     }
 }

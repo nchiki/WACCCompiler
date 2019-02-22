@@ -28,8 +28,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
+        if(label != "") {
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        }
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
