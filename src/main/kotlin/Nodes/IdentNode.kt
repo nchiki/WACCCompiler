@@ -47,6 +47,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        println("semantic check is called in ident")
         this.symbolTable = table
         if(table.lookupSymbol(id) == null){
             errors.addError(UndefinedVariable(ctx, id))
