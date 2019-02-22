@@ -23,7 +23,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
         val reg = codeGenerator.getParamReg()
 
         val offset = codeGenerator.sp - address
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #-$offset]", null))
 
     }
 
