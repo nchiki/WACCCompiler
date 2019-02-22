@@ -37,7 +37,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         //get the node mapped to the identifier from symboltable
         if (expr is IdentNode) {
             println("goes into identNode case")
-            val type = symbolTable!!.table.get(expr.id)
+            val type = symbolTable!!.lookupSymbol(expr.id)
             println(type)
             return checkType(codeGenerator, type!!)
         }

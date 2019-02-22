@@ -43,7 +43,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             return checkBaseType(codeGenerator, expr)
         }
         if (expr is IdentNode) {
-            val type = symbolTable!!.table.get(expr.id)
+            val type = symbolTable!!.lookupSymbol(expr.id)
             return checkType(codeGenerator, type!!)
         }
         //print String

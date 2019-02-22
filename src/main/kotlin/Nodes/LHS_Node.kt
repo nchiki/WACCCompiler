@@ -20,8 +20,8 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         if (getBaseType() == LitTypes.IdentWacc) {
-            Nodetype as IdentNode
-            Nodetype.generateCode(codeGenerator)
+            val node = symbolTable!!.lookupSymbol(id)
+            node!!.generateCode(codeGenerator)
         }
         if (Nodetype is ArrayElemNode) {
             Nodetype.generateCode(codeGenerator)
