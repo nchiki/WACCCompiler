@@ -65,7 +65,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         }
         //print Bool
         if (expr is BoolLitNode || expr is BinaryOpNode && expr.getBaseType() == LitTypes.BoolWacc
-                || expr is BoolOpNodec) {
+                || expr is BoolOpNode) {
             val label = "p_print_bool"
             codeGenerator.addHelper(label)
             return label
