@@ -43,7 +43,7 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         /* Compare the two expression results */
 
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
 
         if(operator.AND() != null){
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))

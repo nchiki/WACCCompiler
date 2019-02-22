@@ -37,7 +37,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         val reg = codeGenerator.getLastUsedReg()
 
         /* Check if the */
-        codeGenerator.addInstruction(label, CmpInstr(reg, "#1"))
+        codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
 
         stat.generateCode(codeGenerator)
