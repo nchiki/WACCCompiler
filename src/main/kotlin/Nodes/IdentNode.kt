@@ -24,6 +24,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
         val offset = codeGenerator.sp - address
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
+
     }
 
     override fun getBaseType() : LitTypes {

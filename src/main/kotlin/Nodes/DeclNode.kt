@@ -28,7 +28,7 @@ class DeclNode(// var name
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
-        var offset = rhs.getSizeOfOffset() //gets size of the data type
+        val offset = rhs.getSizeOfOffset() //gets size of the data type
 
         codeGenerator.sp += offset // subtract offset from stack pointer
         codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
@@ -44,8 +44,12 @@ class DeclNode(// var name
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-        //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
-        //codeGenerator.sp += offset
+
+
+        codeGenerator.regsNotInUse.add(0, codeGenerator.getLastUsedReg())
+        if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
+            codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
+        }
 
     }
 
