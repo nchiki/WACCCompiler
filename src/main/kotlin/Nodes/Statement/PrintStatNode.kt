@@ -22,7 +22,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         //load expr into register
         expr.generateCode(codeGenerator)
 
-        val label = checkType(codeGenerator)
+        val label = checkType(codeGenerator, expr)
 
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
@@ -30,12 +30,22 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
     }
 
-    fun checkType(codeGenerator: CodeGenerator) : String{
+    fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
+        if (expr is BaseNode) {
+           return checkBaseType(codeGenerator, expr)
+        }
+        //get the node mapped to the identifier from symboltable
+        if (expr is IdentNode) {
+            println("goes into identNode case")
+            val type = symbolTable!!.table.get(expr.id)
+            println(type)
+            return checkType(codeGenerator, type!!)
+        }
+
         if (expr is CharLitNode) {
             if (expr is StringLitNode) {
                 val label = "p_print_string"
                 codeGenerator.addHelper(label)
-                // Print().addPrintInstrString(codeGenerator, label, str)
                 return label
             }
         }
@@ -43,19 +53,42 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         if (expr is StringLitNode) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
-            // Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Integer
         if (expr is IntLitNode) {
             val label = "p_print_int"
             codeGenerator.addHelper(label)
-            //Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Bool
         if (expr is BoolLitNode) {
             val label = "p_print_bool"
+            codeGenerator.addHelper(label)
+            return label
+        }
+        return ""
+    }
+
+    fun checkBaseType(codeGenerator: CodeGenerator, expr: BaseNode) : String {
+        val type = expr.getBaseType()
+        if (type == LitTypes.CharWacc) {
+            val label = "p_print_string"
+            codeGenerator.addHelper(label)
+            return label
+        }
+        if (type == LitTypes.IntWacc) {
+            val label = "p_print_int"
+            codeGenerator.addHelper(label)
+            return label
+        }
+        if (type == LitTypes.BoolWacc) {
+            val label = "p_print_bool"
+            codeGenerator.addHelper(label)
+            return label
+        }
+        if (type == LitTypes.StringWacc) {
+            val label = "p_print_string"
             codeGenerator.addHelper(label)
             return label
         }
