@@ -27,7 +27,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         expr.generateCode(codeGenerator)
 
         val label = checkType(codeGenerator, expr)
-
+        //println(expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
 
@@ -43,8 +43,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String{
-        if (expr is BaseNode) {
-            return checkBaseType(codeGenerator, expr)
+
+        if (expr is BaseNode || expr is UnaryOpNode) {
+            return checkBaseType(codeGenerator, expr as ExprNode)
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
@@ -74,8 +75,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
         return ""
     }
-    fun checkBaseType(codeGenerator: CodeGenerator, expr: BaseNode) : String {
+    fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode) : String {
         val type = expr.getBaseType()
+
         if (type == LitTypes.CharWacc) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
