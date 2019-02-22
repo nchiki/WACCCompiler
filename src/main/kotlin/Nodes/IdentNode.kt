@@ -19,16 +19,11 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val offset = codeGenerator.returnOffset(id)!!
-        val value = codeGenerator.sp - offset
-        if(value < 0) {
-            codeGenerator.addInstruction(codeGenerator.curLabel,
-                    LoadInstr(codeGenerator.getParamReg(), "[sp, #${-offset}]", null))
-        } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel,
-                    LoadInstr(codeGenerator.getParamReg(), "[sp]", null))
-        }
-        codeGenerator.removeUsedReg()
+        val address = symbolTable?.getValueAddress(id)!!
+        val reg = codeGenerator.getParamReg()
+
+        val offset = address - codeGenerator.sp
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
     }
 
     override fun getBaseType() : LitTypes {
