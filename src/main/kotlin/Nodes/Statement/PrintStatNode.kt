@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
@@ -62,7 +63,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
             return label
         }
         //print Bool
-        if (expr is BoolLitNode) {
+        if (expr is BoolLitNode || expr is BinaryOpNode && expr.getBaseType() == LitTypes.BoolWacc) {
             val label = "p_print_bool"
             codeGenerator.addHelper(label)
             return label
