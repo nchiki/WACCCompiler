@@ -30,10 +30,12 @@ class DeclNode(// var name
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
 
-        codeGenerator.sp += offset // subtract offset from stack pointer
-        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
-
         symbolTable?.declareVariable(id, offset, codeGenerator.sp) //Save variable location in symbol table
+
+        codeGenerator.sp += offset // subtract offset from stack pointer
+
+        //codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) // subtracts offset from sp
+
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
