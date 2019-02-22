@@ -18,6 +18,21 @@ class Print_Read {
         codeGenerator.addToHelper(label, PopInstr())
     }
 
+    fun addPrintOverflowError(codeGenerator: CodeGenerator, label: String, msg: String) {
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error"))
+        addRuntimeError(codeGenerator)
+    }
+
+    fun addRuntimeError(codeGenerator: CodeGenerator) {
+        val label = "p_throw_runtime_error"
+        codeGenerator.addHelper(label)
+        codeGenerator.addToHelper(label, BLInstr("p_print_string"))
+        codeGenerator.addToHelper(label, MovInstr(Register.r0, -1))
+        codeGenerator.addToHelper(label, BLInstr("exit"))
+
+    }
+
     fun addPrintInstrBool(codeGenerator: CodeGenerator, label : String, msg : Int) {
         val trueMsg = "msg_$msg"
         val falseMsg = "msg_${msg+1}"
@@ -65,7 +80,7 @@ class Print_Read {
 
     fun addRead(codeGenerator: CodeGenerator, label : String, msg : String) {
         codeGenerator.addToHelper(label, PushInstr())
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
         codeGenerator.addToHelper(label, BLInstr("scanf"))
         codeGenerator.addToHelper(label, PopInstr())

@@ -1,5 +1,6 @@
 package main.kotlin
 
+import main.kotlin.Errors.OverflowError
 import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
@@ -149,6 +150,10 @@ class CodeGenerator {
     }
 
     fun checkPrints() {
+        if (helperFuncs.containsKey("p_throw_overflow_error")) {
+            val msg = "msg_${data.size}"
+            Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
+        }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())

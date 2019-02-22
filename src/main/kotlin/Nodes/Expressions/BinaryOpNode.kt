@@ -78,7 +78,9 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
     fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
         val errorLabel = checkErrorTypes(codeGenerator)
-
+        if (errorLabel != "") {
+            codeGenerator.addHelper(errorLabel!!)
+        }
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
