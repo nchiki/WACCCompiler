@@ -28,6 +28,9 @@ class Print_Read {
         val label = "p_throw_runtime_error"
         codeGenerator.addHelper(label)
         codeGenerator.addToHelper(label, BLInstr("p_print_string"))
+        if(!codeGenerator.helperFuncs.containsKey("p_print_string")) {
+            codeGenerator.addHelper("p_print_string")
+        }
         codeGenerator.addToHelper(label, MovInstr(Register.r0, -1))
         codeGenerator.addToHelper(label, BLInstr("exit"))
 
