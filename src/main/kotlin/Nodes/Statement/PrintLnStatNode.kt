@@ -34,8 +34,10 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         if (expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
         } else {
+            if(label != "") {
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+            }
         }
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 

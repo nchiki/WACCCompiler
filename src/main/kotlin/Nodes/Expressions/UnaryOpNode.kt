@@ -5,6 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.EORInstr
 import main.kotlin.Instructions.MovInstr
 import main.kotlin.Instructions.SubInstr
 import main.kotlin.SymbolTable
@@ -27,7 +28,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
         operand.generateCode(codeGenerator)
         when (operator.text) {
             //negation not implemented yet
-            "!" -> codeGenerator.addInstruction(label, MovInstr("", "", null))
+            "!" -> codeGenerator.addInstruction(label, EORInstr(codeGenerator.getLastUsedReg(), 1))
             "ord" -> codeGenerator.addInstruction(label, BLInstr("putchar"))
             "len" -> return // loop iterating through the chars and incrementing a counter?
             "chr" -> codeGenerator.addInstruction(label,BLInstr("putchar"))

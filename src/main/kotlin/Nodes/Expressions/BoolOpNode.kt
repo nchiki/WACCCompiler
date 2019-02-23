@@ -94,6 +94,9 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
             errors.addError(IncompatibleTypes(ctx, LitTypes.BoolWacc.toString(), realRight, table))
         }
 
+        left.semanticCheck(errors, table)
+        right.semanticCheck(errors, table)
+
     }
 
 
