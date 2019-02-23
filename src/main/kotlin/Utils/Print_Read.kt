@@ -55,6 +55,14 @@ class Print_Read {
         val falseInt = msg.substring(4).toInt()+1
         val falseMsg = "msg_$falseInt"
         codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, MovInstr(Register.r1, Register.r0, null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
+        codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
+        codeGenerator.addToHelper(label, BLInstr("printf"))
+        codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))
+        codeGenerator.addToHelper(label, BLInstr("fflush"))
+        codeGenerator.addToHelper(label, PopInstr())
+        /*codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, 0, ""))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, trueMsg, Condition.NE))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, falseMsg, Condition.EQ))
@@ -64,8 +72,9 @@ class Print_Read {
         codeGenerator.addToHelper(label, BLInstr("printf"))
         codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))
         codeGenerator.addToHelper(label, BLInstr("fflush"))
-        codeGenerator.addToHelper(label, PopInstr())
+        codeGenerator.addToHelper(label, PopInstr())*/
         //add intvalue to data section
+
     }
 
     fun addPrintLn(codeGen : CodeGenerator, msg : String) {
