@@ -46,7 +46,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String{
 
-        if (expr is BaseNode || expr is UnaryOpNode) {
+        if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(codeGenerator, expr as ExprNode)
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
