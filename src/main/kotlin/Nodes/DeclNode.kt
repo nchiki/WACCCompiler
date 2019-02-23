@@ -11,6 +11,7 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Offset
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
@@ -36,7 +37,7 @@ class DeclNode(// var name
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
-        val inMemory = "[sp, #-$offset]"
+        val inMemory = Offset(Register.sp, -offset)
 
         if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
