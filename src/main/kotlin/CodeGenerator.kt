@@ -20,8 +20,9 @@ class CodeGenerator {
     val regsInUse = ArrayList<Register>() //registers being used
     var sp = 0
     val idsAddresses = LinkedHashMap<String, Int>()
+    val resultReg = Register.r0
 
-    private var lastUsedReg: Register = Register.r0
+    private var lastUsedReg: Register = resultReg
 
 
     fun initRegs() {

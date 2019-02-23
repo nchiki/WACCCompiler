@@ -2,6 +2,8 @@
 bin
 src/main.kotlin.antlr
 target
+gen
+lib
 
 #ignore Java class files
 *.class
