@@ -43,7 +43,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
         val comparison = codeGenerator.compareWeights(left.weight, right.weight)
         // evaluates expression that needs more registers first
-        if(comparison > 0) {
+        if(comparison >= 0) {
             left.generateCode(codeGenerator)
             right.generateCode(codeGenerator)
             reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
@@ -100,7 +100,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             } else if (addSub.PLUS() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
                 if (errorLabel != "") {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.VS))
+                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel, Condition.VS))
                 }
             }
         }
@@ -117,9 +117,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             } else if (eqOp.EQ() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.EQ))
             }
+        } else {
+            //can only be not equal now
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
         }
-        //can only be not equal now
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
     }
 
     //differs between a Boolean expression or calculation of two operands
