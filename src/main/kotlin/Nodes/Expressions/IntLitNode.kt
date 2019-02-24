@@ -25,7 +25,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
 
         //add instructions to main
         val reg = codeGenerator.getParamReg()
-
+        println(reg)
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this, null))
     }
 
