@@ -46,11 +46,10 @@ class CodeGenerator {
     fun getParamReg() : Register {
         var reg = regsNotInUse.get(0)
         var index = 1
-        while(reg < Register.r4) {
+        while(reg == Register.r0 || reg == Register.r1 || reg == Register.r2 ||
+                reg == Register.r3 || reg == Register.r16 || reg == Register.pc) {
             index++
-            if(index >= regsNotInUse.count()) {
-                println(index)
-            }
+
             reg = regsNotInUse.get(index)
         }
 
