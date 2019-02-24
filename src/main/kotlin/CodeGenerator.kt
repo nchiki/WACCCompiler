@@ -26,6 +26,10 @@ class CodeGenerator {
 
     fun initRegs() {
         regsNotInUse.addAll(Register.values())
+        regsNotInUse.remove(Register.pc)
+        regsNotInUse.remove(Register.sp)
+        regsNotInUse.remove(Register.r16)
+        regsNotInUse.remove(Register.lr)
     }
 
     fun freeReg(reg : Register) {
@@ -77,6 +81,7 @@ class CodeGenerator {
     fun recoverSp() {
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
+
         if(sp < 0) {
             var value = 0 - sp
             sp += value
