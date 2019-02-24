@@ -6,13 +6,16 @@ import main.kotlin.Utils.Condition
 class MovInstr(val dest : Any, val val1 : Any, val cond : Condition? = Condition.NULL) : Instruction{
 
     override fun getString() : String {
-
-        if(val1 is Int ) {
-            return "MOV $dest, #$val1"
-        } else if(val1 is CharLitNode) {
-            return "MOV $dest, #${val1.char}"
+        var condition = ""
+        if(cond != null && cond != Condition.NULL) {
+            condition = cond.s
         }
-        return "MOV $dest, $val1"
+        if(val1 is Int ) {
+            return "MOV$condition $dest, #$val1"
+        } else if(val1 is CharLitNode) {
+            return "MOV$condition $dest, #${val1.char}"
+        }
+        return "MOV$condition $dest, $val1"
 
     }
 

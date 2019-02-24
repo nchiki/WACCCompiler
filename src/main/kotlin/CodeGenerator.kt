@@ -200,4 +200,11 @@ class CodeGenerator {
         return idsAddresses.get(id)
     }
 
+    fun restoreLastReg() {
+        while(!regsInUse.isEmpty()) {
+            regsNotInUse.add(getLastUsedReg().name.substring(1).toInt(), getLastUsedReg())
+            regsInUse.remove(getLastUsedReg())
+        }
+    }
+
 }
