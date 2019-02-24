@@ -47,8 +47,13 @@ class CodeGenerator {
         var reg = regsNotInUse.get(0)
         var index = 1
         while(reg < Register.r4) {
-            reg = regsNotInUse.get(index++)
+            index++
+            if(index >= regsNotInUse.count()) {
+                println(index)
+            }
+            reg = regsNotInUse.get(index)
         }
+
         lastUsedReg = reg
         regsInUse.add(lastUsedReg)
         regsNotInUse.remove(lastUsedReg)
