@@ -3,8 +3,13 @@ package main.kotlin.Nodes
 import Nodes.ParamListNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.PopInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
@@ -20,7 +25,29 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val label = "f_$id"
+        codeGenerator.addLabel(label)
+        codeGenerator.curLabel = label
+        addFunInstructions(codeGenerator, label)
+
+    }
+
+    fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
+        codeGenerator.addInstruction(label, PushInstr())
+        stat.generateCode(codeGenerator)
+        /*if (params != null && !params.listParamNodes.isEmpty()) {
+            for (param in params.listParamNodes) {
+                param.generateCode(codeGenerator)
+            }
+        } else {
+            codeGenerator.addInstruction(label, LoadInstr(reg, 0, null))
+        }
+        stat.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, MovInstr(Register.r0, reg))
+        */
+
+        codeGenerator.addInstruction(label, PopInstr())
+        codeGenerator.addInstruction(label, PopInstr())
     }
 
     override fun getBaseType() : LitTypes {
