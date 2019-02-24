@@ -5,11 +5,13 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.LoadBInstr
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.LoadSBInstr
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import kotlin.math.exp
 
 class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
     override val size: Int
@@ -29,8 +31,10 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
         val expr = symbolTable!!.lookupSymbol(id)
 
-        if(expr is CharLitNode || expr is BoolLitNode) {
+        if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(reg, "[sp, #-$offset]"))
+        }else if (expr is ExprNode && expr.getBaseType() == LitTypes.CharWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[sp, #-$offset]"))
         }else{
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #-$offset]", null))
         }

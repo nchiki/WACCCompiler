@@ -12,7 +12,7 @@ class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext):
 
     override val size = expr.size
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = expr.weight
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         expr.generateCode(codeGenerator)

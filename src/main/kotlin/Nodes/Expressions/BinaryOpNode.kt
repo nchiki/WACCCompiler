@@ -61,7 +61,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         // gets the correct instruction depending on the operator and adds it to codeGenerator
         getInstruction(reg1, reg2, codeGenerator)
 
-        codeGenerator.regsNotInUse.removeAt(0)
+        //codeGenerator.regsNotInUse.removeAt(0)
         //MAYBE WE JUST NEED TO REMOVE THE ONE THAT HOLDS THE RESULT
         //codeGenerator.regsNotInUse.removeAt(1)
     }
@@ -121,6 +121,11 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             //can only be not equal now
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
         }
+        //moves result to r0
+        //codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg()))
+        //adds reg1 as last reg used
+        codeGenerator.regsInUse.remove(reg1)
+        codeGenerator.regsInUse.add(reg1)
     }
 
     //differs between a Boolean expression or calculation of two operands
