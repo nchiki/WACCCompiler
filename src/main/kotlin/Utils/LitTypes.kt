@@ -50,7 +50,6 @@ enum class LitTypes(s: String) {
             else -> LitTypes.NonLitWacc
         }
     }
-}
 
 fun getTypeSize(type : LitTypes) : Int {
     return when (type) {
