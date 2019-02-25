@@ -23,32 +23,25 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addLabel("main")
+        codeGenerator.addLabel("main", null)
+
         codeGenerator.curLabel = "main"
+        codeGenerator.curScope = "main"
 
         codeGenerator.addInstruction("main", PushInstr())
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }
         stats!!.generateCode(codeGenerator)
-        //println(codeGenerator.sp)
         this.statTable!!.recoverSp(codeGenerator)
-        codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0, null))
-        codeGenerator.addInstruction("main", PopInstr())
 
-        /*codeGeneration.pushToStack(Register.lr)
-        codeGeneration.loadPC()
-        for (func in funcDefs) {
-            func.generateCode(codeGeneration)
-        }
-        stats!!.generateCode(codeGeneration)
+        /* Get the last label for this scope */
+        val mainLabels = codeGenerator.scopedLabels.get("main")
+        val lastLabel = mainLabels!![mainLabels.size - 1]
 
-        codeGeneration.loadToReg(0, Register.r0)
+        codeGenerator.addInstruction(lastLabel, LoadInstr(Register.r0, 0, null))
+        codeGenerator.addInstruction(lastLabel, PopInstr())
 
-*/
-
-        // returned strings or list of instructions from generateCode will be passed to
-        // codeGeneration.translateCode(instructions)
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()

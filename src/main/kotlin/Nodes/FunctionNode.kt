@@ -26,8 +26,9 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = "f_$id"
-        codeGenerator.addLabel(label)
+        codeGenerator.addLabel(label, null)
         codeGenerator.curLabel = label
+        codeGenerator.curScope = label
         addFunInstructions(codeGenerator, label)
 
     }
