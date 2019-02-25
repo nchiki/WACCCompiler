@@ -86,10 +86,10 @@ class CodeGenerator {
             var value = 0 - sp
             sp += value
             while(value > 1024) {
-                addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
+                //addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
                 value -= 1024
             }
-            addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
+            //addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
         }
     }
 
