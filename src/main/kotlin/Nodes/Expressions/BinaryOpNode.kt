@@ -89,9 +89,15 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
                     codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.NE))
                 }
             } else if (mulDiv.DIV() != null) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
             } else if (mulDiv.MOD() != null) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
             }
         }
         else if (addSub != null) {
@@ -107,22 +113,31 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         else if (eqOp != null) {
             if (eqOp.GREAT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GT))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.LE))
                 //IDK if maybe we need to add case for notgreater?
             } else if (eqOp.GREAT_EQ() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1,"#1", Condition.GE))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.LT))
             } else if (eqOp.LESS_EQ() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LE))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.GT))
             } else if (eqOp.LESS() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.LT))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.GE))
             } else if (eqOp.EQ() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.EQ))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.NE))
             }
         } else {
             //can only be not equal now
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.NE))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.EQ))
         }
         //moves result to r0
         //codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg()))
+
+        codeGenerator.regsInUse.remove(reg2)
+        codeGenerator.regsNotInUse.add(reg2)
         //adds reg1 as last reg used
         codeGenerator.regsInUse.remove(reg1)
         codeGenerator.regsInUse.add(reg1)

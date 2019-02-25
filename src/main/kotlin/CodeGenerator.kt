@@ -26,6 +26,10 @@ class CodeGenerator {
 
     fun initRegs() {
         regsNotInUse.addAll(Register.values())
+        regsNotInUse.remove(Register.pc)
+        regsNotInUse.remove(Register.sp)
+        regsNotInUse.remove(Register.r16)
+        regsNotInUse.remove(Register.lr)
     }
 
     fun freeReg(reg : Register) {
@@ -46,9 +50,13 @@ class CodeGenerator {
     fun getParamReg() : Register {
         var reg = regsNotInUse.get(0)
         var index = 1
-        while(reg < Register.r4) {
-            reg = regsNotInUse.get(index++)
+        while(reg == Register.r0 || reg == Register.r1 || reg == Register.r2 ||
+                reg == Register.r3 || reg == Register.r16 || reg == Register.pc) {
+            index++
+
+            reg = regsNotInUse.get(index)
         }
+
         lastUsedReg = reg
         regsInUse.add(lastUsedReg)
         regsNotInUse.remove(lastUsedReg)
@@ -73,15 +81,16 @@ class CodeGenerator {
     fun recoverSp() {
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
+
         if(sp < 0) {
             println("in recoverSp")
             var value = 0 - sp
             sp += value
             while(value > 1024) {
-                addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
+                //addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
                 value -= 1024
             }
-            addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
+            //addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
         }
     }
 
