@@ -145,44 +145,43 @@ class CodeGenerator {
     }
 
     fun checkPrints() {
-        for (func in helperFuncs) {
-            if (func.key.equals("p_throw_overflow_error")) {
-                val msg = "msg_${data.size}"
-                Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
-            }
-            if (func.key.equals("p_print_string")) {
-                val msg = "msg_${data.size}"
-                data.put(msg, StringAppendDef())
-                Print_Read().addPrintInstrString(this, "p_print_string", msg)
-            }
-            if (func.key.equals("p_print_int")) {
-                val msg = "msg_${data.size}"
-                data.put(msg, IntAppendDef())
-                Print_Read().addPrintInstrInt(this, "p_print_int", msg)
-            }
-            if (func.key.equals("p_print_bool")) {
-                val msg = "msg_${data.size}"
-                val trueInd = data.size
-                data.put(msg, TrueDef())
-                data.put("msg_${data.size}", FalseDef())
-                Print_Read().addPrintInstrBool(this, "p_print_bool", trueInd)
-            }
-            if (func.key.equals("p_print_ln")) {
-                val msg = "msg_${data.size}"
-                data.put(msg, NewLineDef())
-                Print_Read().addPrintLn(this, msg)
-            }
-            if (func.key.equals("p_read_int")) {
-                val msg = "msg_${data.size}"
-                data.put(msg, ReadIntApp())
-                Print_Read().addRead(this, "p_read_int", msg)
-            }
-            if (func.key.equals("p_read_char")) {
-                val msg = "msg_${data.size}"
-                data.put(msg, ReadCharApp())
-                Print_Read().addRead(this, "p_read_char", msg)
-            }
+        if (helperFuncs.containsKey("p_throw_overflow_error")) {
+            val msg = "msg_${data.size}"
+            Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
         }
+        if (helperFuncs.containsKey("p_print_string")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, StringAppendDef())
+            Print_Read().addPrintInstrString(this, "p_print_string", msg)
+        }
+        if (helperFuncs.containsKey("p_print_int")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, IntAppendDef())
+            Print_Read().addPrintInstrInt(this, "p_print_int", msg)
+        }
+        if (helperFuncs.containsKey("p_print_bool")) {
+            val msg = "msg_${data.size}"
+            val trueInd = data.size
+            data.put(msg, TrueDef())
+            data.put("msg_${data.size}", FalseDef())
+            Print_Read().addPrintInstrBool(this, "p_print_bool", trueInd)
+        }
+        if (helperFuncs.containsKey("p_print_ln")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, NewLineDef())
+            Print_Read().addPrintLn(this, msg)
+        }
+        if (helperFuncs.containsKey("p_read_int")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadIntApp())
+            Print_Read().addRead(this, "p_read_int", msg)
+        }
+        if (helperFuncs.containsKey("p_read_char")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, ReadCharApp())
+            Print_Read().addRead(this, "p_read_char", msg)
+        }
+
     }
 
     fun compareWeights(weight1 : Int, weight2 : Int) : Int {
