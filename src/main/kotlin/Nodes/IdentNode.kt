@@ -24,7 +24,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
     override fun generateCode(codeGenerator: CodeGenerator) {
          //println(symbolTable == null)
-        val offset = symbolTable?.getValueAddress(id)!!
+        val offset = symbolTable?.getValueOffset(id, codeGenerator)
         val reg = codeGenerator.getParamReg()
 
         val expr = symbolTable!!.lookupSymbol(id)
