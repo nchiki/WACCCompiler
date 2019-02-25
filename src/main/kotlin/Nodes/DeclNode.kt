@@ -44,7 +44,7 @@ class DeclNode(// var name
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-
+        //println(codeGenerator.sp)
         codeGenerator.regsNotInUse.add(0, codeGenerator.getLastUsedReg())
         if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
             codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
