@@ -30,13 +30,13 @@ class DeclNode(// var name
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
 
-        symbolTable?.declareVariable(id, offset, codeGenerator.sp) //Save variable location in symbol table
+        codeGenerator.sp -= offset // add offset to stack pointer
 
-        codeGenerator.sp += offset // add offset to stack pointer
+        symbolTable?.declareVariable(id, codeGenerator.sp, codeGenerator.sp) //Save variable location in symbol table
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
-        val inMemory = "[sp, #-${codeGenerator.sp}]"
+        val inMemory = "[sp, #${codeGenerator.sp}]"
 
         if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
