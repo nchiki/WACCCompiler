@@ -12,6 +12,7 @@ import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.Utils.getString
 import kotlin.system.exitProcess
 
 class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
@@ -24,22 +25,23 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         lhs.generateCode(codeGenerator)
+        val type = symbolTable!!.lookupSymbol(lhs.id)!!.getBaseType()
+        val label = "p_read_${getString(type)}"
+        codeGenerator.addHelper(label)
+        addInstructions(codeGenerator, type, label)
+
     }
 
-    fun checkType(codeGenerator: CodeGenerator) : String {
-        if (lhs.getBaseType() == LitTypes.IntWacc) {
-            val label = "p_read_int"
-            codeGenerator.addHelper(label)
-            return label
+    fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {
+        val reg = codeGenerator.getParamReg()
+        val label = codeGenerator.curLabel
+        codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", 0))
+        codeGenerator.addInstruction(label, MovInstr(Register.r0, reg, null))
+        codeGenerator.addInstruction(label, BLInstr(printLabel))
+        if (type == LitTypes.CharWacc) {
+            codeGenerator.addInstruction(label, BLInstr("putchar"))
         }
-        if (lhs.getBaseType() == LitTypes.CharWacc) {
-            val label = "p_read_char"
-            codeGenerator.addHelper(label)
-            return label
-        }
-        return ""
     }
-
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

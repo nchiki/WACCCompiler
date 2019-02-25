@@ -92,6 +92,7 @@ class Print_Read {
 
     fun addRead(codeGenerator: CodeGenerator, label : String, msg : String) {
         codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, MovInstr(Register.r1, Register.r0, null))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
         codeGenerator.addToHelper(label, BLInstr("scanf"))
