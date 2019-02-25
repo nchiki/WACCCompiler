@@ -54,8 +54,8 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
             codeGenerator.regsNotInUse.add(cur , secondReg)
         }
         codeGenerator.addInstruction(curLabel, LoadInstr(secondReg, exprList.size, null))
-        println(codeGenerator.regsInUse)
-        println(codeGenerator.regsNotInUse)
+        //println(codeGenerator.regsInUse)
+        //println(codeGenerator.regsNotInUse)
     }
 
     override fun getBaseType() : LitTypes {
