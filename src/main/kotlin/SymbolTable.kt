@@ -28,23 +28,23 @@ class SymbolTable (val parent: SymbolTable?){
     }
 
     /* Declares variable at the address */
-    fun declareVariable(identifier: String, sp: Int) {
+    fun declareVariable(identifier: String, size: Int, address: Int) {
         if(!table.containsKey(identifier)){
-            parent!!.declareVariable(identifier, sp)
+            parent!!.declareVariable(identifier, size, address)
             return
         }
-        addressMap[identifier] = sp
+        addressMap[identifier] = address
     }
 
     /* Returns the address of the value,
      if the (address <= sp) then value is in stack, otherwise it's in the heap
      */
-    fun getValueOffset(identifier: String, codeGenerator: CodeGenerator) : Int {
+    fun getValueAddress(identifier: String) : Int {
         if(!table.containsKey(identifier)){
-            return parent!!.getValueOffset(identifier, codeGenerator)
+            return parent!!.getValueAddress(identifier)
         }
 
-        return codeGenerator.sp - addressMap[identifier]!!
+        return addressMap[identifier]!!
     }
 
     fun printFunctions() {
