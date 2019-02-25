@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Nodes.BaseNode
@@ -24,10 +25,14 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
+
+        val oldScope = codeGenerator.curScope
         val endLabel = codeGenerator.getNewLabel()
 
-        codeGenerator.addLabel(label)
-        codeGenerator.addLabel(endLabel)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label, Condition.AL))
+
+        codeGenerator.addLabel(label, null)
+        codeGenerator.addLabel(endLabel, oldScope)
 
         codeGenerator.curLabel = label
 
@@ -36,7 +41,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
         val reg = codeGenerator.getLastUsedReg()
 
-        /* Check if the */
+
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
 
@@ -45,6 +50,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         codeGenerator.addInstruction(label, BranchInstr(label, Condition.AL))
 
         codeGenerator.curLabel = endLabel
+        codeGenerator.curScope = oldScope
 
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
