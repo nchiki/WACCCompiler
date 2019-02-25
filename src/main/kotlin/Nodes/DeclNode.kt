@@ -37,7 +37,7 @@ class DeclNode(// var name
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
-        val inMemory = "[sp, #-${codeGenerator.sp}]"
+        val inMemory = "[sp, #${codeGenerator.sp}]"
 
         if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
