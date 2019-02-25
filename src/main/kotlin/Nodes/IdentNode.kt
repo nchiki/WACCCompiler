@@ -37,7 +37,6 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
         }
 
-
     }
 
     override fun getBaseType() : LitTypes {
