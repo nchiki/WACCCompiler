@@ -24,17 +24,19 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //println(symbolTable == null)
-        val offset = symbolTable?.getValueAddress(id)!!
+        val address = symbolTable?.getValueAddress(id)!!
         val reg = codeGenerator.getParamReg()
+
+        val offset = codeGenerator.sp - address
 
         val expr = symbolTable!!.lookupSymbol(id)
 
         if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(reg, "[sp, #$offset]"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(reg, "[sp, #-$offset]"))
         }else if (expr is ExprNode && expr.getBaseType() == LitTypes.CharWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[sp, #$offset]"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[sp, #-$offset]"))
         }else{
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]", null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #-$offset]", null))
         }
 
 
