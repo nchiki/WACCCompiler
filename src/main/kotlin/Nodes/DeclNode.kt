@@ -30,14 +30,14 @@ class DeclNode(// var name
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
 
-        symbolTable?.declareVariable(id, codeGenerator.sp) //Save variable location in symbol table
+       codeGenerator.sp -= offset // add offset to stack pointer
 
-        codeGenerator.sp += offset // add offset to stack pointer
-        codeGenerator.addInstruction(label, SubInstr(Register.sp, "sp, #$offset")) //Subtract stack pointer
+        symbolTable?.declareVariable(id, codeGenerator.sp, codeGenerator.sp) //Save variable location in symbol table
+
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
-        val inMemory = "[sp, ${symbolTable?.getValueOffset(id, codeGenerator)}]"
+        val inMemory = "[sp, #${codeGenerator.sp}]"
 
         if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
@@ -49,6 +49,10 @@ class DeclNode(// var name
         if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
             codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
         }
+
+        //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
+        //codeGenerator.sp += offset
+
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
