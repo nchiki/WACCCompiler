@@ -198,7 +198,7 @@ class CodeGenerator {
 
     fun restoreLastReg() {
         while(!regsInUse.isEmpty()) {
-            regsNotInUse.add(getLastUsedReg().name.substring(1).toInt(), getLastUsedReg())
+            regsNotInUse.add(getLastUsedReg())
             regsInUse.remove(getLastUsedReg())
         }
     }
