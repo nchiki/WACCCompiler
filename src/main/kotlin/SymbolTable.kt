@@ -108,7 +108,6 @@ class SymbolTable (val parent: SymbolTable?){
     fun recoverSp(codeGenerator: CodeGenerator) {
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
-
         if(sp > 0) {
             //println("in recoverSp")
             var value = sp

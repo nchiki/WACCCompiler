@@ -29,7 +29,6 @@ class DeclNode(// var name
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
-
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
 
         symbolTable!!.sp += offset // add offset to stack pointer
@@ -46,11 +45,12 @@ class DeclNode(// var name
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-        //println(codeGenerator.sp)
+
         codeGenerator.regsNotInUse.add(0, codeGenerator.getLastUsedReg())
         if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
             codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
         }
+
 
     }
 

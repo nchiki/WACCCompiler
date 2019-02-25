@@ -16,6 +16,7 @@ import main.kotlin.Utils.Register
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
 
     override var symbolTable: SymbolTable? = null
+    var statTable : SymbolTable? = null
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -24,13 +25,14 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addLabel("main")
         codeGenerator.curLabel = "main"
+
         codeGenerator.addInstruction("main", PushInstr())
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }
         stats!!.generateCode(codeGenerator)
         //println(codeGenerator.sp)
-        symbolTable!!.recoverSp(codeGenerator)
+        this.statTable!!.recoverSp(codeGenerator)
         codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction("main", PopInstr())
 
@@ -68,7 +70,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             func.semanticCheck(errors, funcTable)
         }
 
-        val statTable = SymbolTable(table)
+        this.statTable = SymbolTable(table)
         if (stats is StatListNode) {
             for (node in stats.listStatNodes) {
                 if (node is ReturnStatNode) {
@@ -77,7 +79,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             }
         }
         if (errors.errorList.size == 0) {
-            stats!!.semanticCheck(errors, statTable)
+            stats!!.semanticCheck(errors, statTable!!)
         }
     }
 }
