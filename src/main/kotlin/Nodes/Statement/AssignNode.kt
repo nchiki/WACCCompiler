@@ -30,7 +30,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             inMemory = "[sp, #${offset}]"
         }
 
-        if(RHS_Node.type == RHS_type.expr && (RHS_Node.expr is CharLitNode || RHS_Node.expr is BoolLitNode)) {
+        if(RHS_Node.type == RHS_type.expr && (RHS_Node.expr!!.getBaseType() == LitTypes.CharWacc || RHS_Node.expr!!.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))

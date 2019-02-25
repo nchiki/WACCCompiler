@@ -40,7 +40,7 @@ class DeclNode(// var name
         if(offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
-        if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
+        if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
