@@ -29,8 +29,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         val oldScope = codeGenerator.curScope
         val endLabel = codeGenerator.getNewLabel()
 
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label, Condition.AL))
-
         codeGenerator.addLabel(label, null)
         codeGenerator.addLabel(endLabel, oldScope)
 
