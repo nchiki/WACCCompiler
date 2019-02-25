@@ -32,7 +32,14 @@ class DeclNode(// var name
 
         symbolTable?.declareVariable(id, offset, codeGenerator.sp) //Save variable location in symbol table
 
-        codeGenerator.sp += offset // add offset to stack pointer
+        //codeGenerator.sp += offset // add offset to stack pointer
+        if(rhs.type == RHS_type.expr && (rhs.expr is CharLitNode || rhs.expr is BoolLitNode)) {
+            codeGenerator.addInstruction(label, SubInstr("sp", "#1"))
+            codeGenerator.sp-= 1
+        } else {
+            codeGenerator.addInstruction(label, SubInstr("sp", "#4"))
+            codeGenerator.sp-= 4
+        }
 
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
@@ -50,7 +57,7 @@ class DeclNode(// var name
         }
 
         //codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp,"#$offset"))
-        //codeGenerator.sp += offset
+        //codeGenerator.sp -= offset
 
     }
 
