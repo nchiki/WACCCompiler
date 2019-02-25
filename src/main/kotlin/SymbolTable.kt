@@ -28,12 +28,12 @@ class SymbolTable (val parent: SymbolTable?){
     }
 
     /* Declares variable at the address */
-    fun declareVariable(identifier: String, offset: Int) {
+    fun declareVariable(identifier: String, offset: Int, size: Int) {
         if(!table.containsKey(identifier)){
-            parent!!.declareVariable(identifier, offset)
+            parent!!.declareVariable(identifier, offset, size)
             return
         }
-        addressMap[identifier] = offset
+        addressMap[identifier] = offset + size
     }
 
     /* Returns the address of the value,
