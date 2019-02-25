@@ -5,10 +5,10 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Nodes.LHS_Node
-import main.kotlin.Nodes.Node
-import main.kotlin.Nodes.PairElemNode
-import main.kotlin.Nodes.RHS_Node
+import main.kotlin.Instructions.StoreInstr
+import main.kotlin.Instructions.StrBInstr
+import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -22,7 +22,20 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        RHS_Node.generateCode(codeGenerator)
+        val id = LHS_Node.id
+        val offset = symbolTable?.getValueOffset(id, codeGenerator)
+        var inMemory = "[sp]"
+        if(offset != 0) {
+            inMemory = "[sp, #${offset}]"
+        }
+
+        if(RHS_Node.type == RHS_type.expr && (RHS_Node.expr is CharLitNode || RHS_Node.expr is BoolLitNode)) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+        }
+
     }
 
     fun getType() : LitTypes {

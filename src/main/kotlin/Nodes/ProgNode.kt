@@ -30,7 +30,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         }
         stats!!.generateCode(codeGenerator)
         //println(codeGenerator.sp)
-        codeGenerator.recoverSp()
+        symbolTable!!.recoverSp(codeGenerator)
         codeGenerator.addInstruction("main", LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction("main", PopInstr())
 

@@ -18,7 +18,6 @@ class CodeGenerator {
     var curLabel: String = String()
     private var maxLabelNum: Int = 0
     val regsInUse = ArrayList<Register>() //registers being used
-    var sp = 0
     val idsAddresses = LinkedHashMap<String, Int>()
 
     private var lastUsedReg: Register = Register.r0
@@ -78,21 +77,7 @@ class CodeGenerator {
         return label
     }
 
-    fun recoverSp() {
-        //checks if we have loaded any variable to memory in current scope so
-        // sp has decreased, and adds the offset to the sp
 
-        if(sp > 0) {
-            //println("in recoverSp")
-            var value = sp
-            sp += value
-            while(value > 1024) {
-                addInstruction(curLabel, AddInstr(Register.sp, Register.sp, 1024))
-                value -= 1024
-            }
-            addInstruction(curLabel, AddInstr(Register.sp, Register.sp, value))
-        }
-    }
 
     fun addInstruction(label : String, instr : Instruction) {
         labels[label]!!.add(instr)
@@ -218,5 +203,8 @@ class CodeGenerator {
             regsInUse.remove(getLastUsedReg())
         }
     }
+
+
+
 
 }

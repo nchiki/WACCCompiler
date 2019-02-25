@@ -21,7 +21,7 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
         codeGenerator.curLabel = label
         stat.generateCode(codeGenerator)
 
-        codeGenerator.recoverSp()
+        symbolTable!!.recoverSp(codeGenerator)
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

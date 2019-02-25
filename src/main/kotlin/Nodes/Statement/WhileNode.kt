@@ -47,7 +47,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         codeGenerator.curLabel = endLabel
 
         /* Restore stack pointer here */
-        codeGenerator.recoverSp()
+        symbolTable!!.recoverSp(codeGenerator)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

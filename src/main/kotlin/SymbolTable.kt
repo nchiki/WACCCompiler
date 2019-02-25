@@ -3,6 +3,8 @@ package main.kotlin
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Errors.GenericError
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -17,6 +19,7 @@ class SymbolTable (val parent: SymbolTable?){
 
     var currentFunction: FunctionNode? = null
     var currentExecutionPathHasReturn = false
+    var sp = 0
 
     fun addToFunctions(funcs : List<FunctionNode>) {
         for (func in funcs) {
@@ -44,7 +47,7 @@ class SymbolTable (val parent: SymbolTable?){
             return parent!!.getValueOffset(identifier, codeGenerator)
         }
 
-        return codeGenerator.sp - addressMap[identifier]!!
+        return sp - addressMap[identifier]!!
     }
 
     fun printFunctions() {
@@ -100,6 +103,22 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         return parent.lookupSymbol(identifier)
+    }
+
+    fun recoverSp(codeGenerator: CodeGenerator) {
+        //checks if we have loaded any variable to memory in current scope so
+        // sp has decreased, and adds the offset to the sp
+
+        if(sp > 0) {
+            //println("in recoverSp")
+            var value = sp
+            sp += value
+            while(value > 1024) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, 1024))
+                value -= 1024
+            }
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, value))
+        }
     }
 
     /* Returns false if declaration failed */
