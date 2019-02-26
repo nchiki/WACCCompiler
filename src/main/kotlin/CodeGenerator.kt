@@ -157,6 +157,10 @@ class CodeGenerator {
     }
 
     fun checkPrints() {
+        if (helperFuncs.containsKey("p_check_divide_by_zero")) {
+            val msg = "msg_${data.size}"
+            Print_Read().addDivZeroError(this, msg)
+        }
         if (helperFuncs.containsKey("p_throw_overflow_error")) {
             val msg = "msg_${data.size}"
             Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
