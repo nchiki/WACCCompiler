@@ -21,8 +21,12 @@ class ParamNode(
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val offset = type.size //gets size of the data type
+        symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
+
+        symbolTable!!.sp += offset // add offset to stack pointer
     }
+
     override fun getBaseType() : LitTypes{
         var v = type
         while (v is ArrayTypeNode) {

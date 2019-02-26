@@ -138,7 +138,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
         codeGenerator.regsInUse.remove(reg2)
         codeGenerator.regsNotInUse.add(reg2)
-        //adds reg1 as last reg used
+        //adds leftReg as last reg used in order to get the result of the operation
         codeGenerator.regsInUse.remove(reg1)
         codeGenerator.regsInUse.add(reg1)
     }

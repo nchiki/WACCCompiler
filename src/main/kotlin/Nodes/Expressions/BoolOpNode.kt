@@ -4,8 +4,10 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.AndInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.OrInstr
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
@@ -29,6 +31,7 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
         var leftReg: Register? = null
         var rightReg: Register? = null
 
+
         if(left.weight > right.weight){
             left.generateCode(codeGenerator)
             leftReg = codeGenerator.getLastUsedReg()
@@ -43,17 +46,22 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         /* Compare the two expression results */
 
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
+        //codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
 
         if(operator.AND() != null){
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.EQ))
+            codeGenerator.addInstruction(codeGenerator.curLabel, AndInstr(leftReg, rightReg))
+
         }else if(operator.OR() != null){
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#0", Condition.AL))
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(leftReg, "#1", Condition.NE))
+            codeGenerator.addInstruction(codeGenerator.curLabel, OrInstr(leftReg, rightReg))
+
         }
 
-        codeGenerator.regsNotInUse.removeAt(0)
+
+        codeGenerator.regsInUse.remove(rightReg)
+        codeGenerator.regsNotInUse.add(rightReg)
+        //adds leftReg as last reg used in order to get the result of the operation
+        codeGenerator.regsInUse.remove(leftReg)
+        codeGenerator.regsInUse.add(leftReg)
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

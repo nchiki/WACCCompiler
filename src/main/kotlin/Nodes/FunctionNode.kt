@@ -26,14 +26,18 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = "f_$id"
-        codeGenerator.addLabel(label)
+        codeGenerator.addLabel(label, null)
         codeGenerator.curLabel = label
+        codeGenerator.curScope = label
         addFunInstructions(codeGenerator, label)
 
     }
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
         codeGenerator.addInstruction(label, PushInstr())
+        if (params != null) {
+            params.generateCode(codeGenerator)
+        }
         stat.generateCode(codeGenerator)
         /*if (params != null && !params.listParamNodes.isEmpty()) {
             for (param in params.listParamNodes) {
@@ -48,6 +52,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
         codeGenerator.addInstruction(label, PopInstr())
         codeGenerator.addInstruction(label, PopInstr())
+        codeGenerator.curLabel = "main"
     }
 
     override fun getBaseType() : LitTypes {

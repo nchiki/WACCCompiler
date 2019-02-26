@@ -26,7 +26,7 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
         expr.generateCode(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-        codeGenerator.curLabel = "main"
+        codeGenerator.curScope = "main"
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

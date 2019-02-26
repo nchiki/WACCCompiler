@@ -1,7 +1,5 @@
 package main.kotlin
 
-import main.kotlin.Errors.OverflowError
-import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
@@ -12,7 +10,12 @@ class CodeGenerator {
 
     val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
     val errors = LinkedList<LiteralDefs>()
+
+    val scopedLabels: LinkedHashMap<String, ArrayList<String>> = LinkedHashMap()
+    var curScope: String? = null
+
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
+
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = ArrayList<Register>() //load all registers in this initially
     var curLabel: String = String()
@@ -43,6 +46,9 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
+        if (regsInUse.isEmpty()) {
+            return lastUsedReg
+        }
         return regsInUse.get(regsInUse.count()-1)
     }
 
@@ -63,7 +69,13 @@ class CodeGenerator {
         return reg
     }
 
-    fun addLabel(label : String) {
+    fun addLabel(label : String, scope: String?) {
+        if(scope == null){
+            scopedLabels.put(label, ArrayList())
+            scopedLabels.get(label)?.add(label)
+        }else{
+            scopedLabels.get(scope)?.add(label)
+        }
         labels[label] = ArrayList()
     }
 
@@ -198,7 +210,7 @@ class CodeGenerator {
 
     fun restoreLastReg() {
         while(!regsInUse.isEmpty()) {
-            regsNotInUse.add(getLastUsedReg().name.substring(1).toInt(), getLastUsedReg())
+            regsNotInUse.add(getLastUsedReg())
             regsInUse.remove(getLastUsedReg())
         }
     }
