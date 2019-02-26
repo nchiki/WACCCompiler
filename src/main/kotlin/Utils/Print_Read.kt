@@ -33,7 +33,17 @@ class Print_Read {
         }
         codeGenerator.addToHelper(label, MovInstr(Register.r0, -1))
         codeGenerator.addToHelper(label, BLInstr("exit"))
+    }
 
+    fun addDivZeroError(codeGenerator: CodeGenerator, msg: String) {
+        val label = "p_check_divide_by_zero"
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, CmpInstr(Register.r1, "#0", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error", Condition.EQ))
+        codeGenerator.addToHelper(label, PopInstr())
+        codeGenerator.addHelper("p_throw_runtime_error")
+        addRuntimeError(codeGenerator)
     }
 
     fun addPrintInstrBool(codeGenerator: CodeGenerator, label : String, msg : Int) {
@@ -43,8 +53,6 @@ class Print_Read {
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, 0, ""))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, trueMsg, Condition.NE))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, falseMsg, Condition.EQ))
-        //codeGenerator.addToHelper(label, AddInstr(Register.r2, Register.r0, 4))
-        //codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
         codeGenerator.addToHelper(label, BLInstr("printf"))
         codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))

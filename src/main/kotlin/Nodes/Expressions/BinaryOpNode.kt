@@ -12,13 +12,10 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
-import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import main.kotlin.Errors.OverflowError
-import main.kotlin.Utils.LiteralDefs
+import main.kotlin.Utils.*
 
 class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicParser.AddSubContext?,
                    val mulDiv: BasicParser.MultDivContext?, val eqOp: BasicParser.Eq_OpContext?,
@@ -66,38 +63,32 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         //codeGenerator.regsNotInUse.removeAt(1)
     }
 
-    fun checkErrorTypes(codeGenerator: CodeGenerator) : String? {
-        if (getBaseType() == LitTypes.IntWacc) {
-            codeGenerator.addError(OverflowError)
-            return "p_throw_overflow_error"
-        }
-        return ""
-    }
-
 
 
     fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
-        val errorLabel = checkErrorTypes(codeGenerator)
-        if (errorLabel != "") {
-            codeGenerator.addHelper(errorLabel!!)
-        }
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
-                if (errorLabel != "") {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel!!, Condition.NE))
-                }
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error",
+                        Condition.NE))
+                codeGenerator.addHelper("p_throw_overflow_error")
             } else if (mulDiv.DIV() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_divide_by_zero"))
+                codeGenerator.addError(DivZeroDef())
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
+                codeGenerator.addHelper("p_check_divide_by_zero")
             } else if (mulDiv.MOD() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_divide_by_zero"))
+                codeGenerator.addError(DivZeroDef())
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r1))
+                codeGenerator.addHelper("p_check_divide_by_zero")
             }
         }
         else if (addSub != null) {
@@ -105,9 +96,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
                 codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2))
             } else if (addSub.PLUS() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
-                if (errorLabel != "") {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(errorLabel, Condition.VS))
-                }
+                codeGenerator.addError(OverflowDef())
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error",
+                        Condition.VS))
+                codeGenerator.addHelper("p_throw_overflow_error")
             }
         }
         else if (eqOp != null) {
