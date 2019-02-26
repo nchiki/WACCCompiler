@@ -6,8 +6,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
@@ -43,9 +42,39 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
+        val spValue = symbolTable!!.sp
+        val list = symbolTable!!.addressMap.keys
+        for( id in list) {
+            val reg = codeGenerator.getFreeRegister()
+            val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
+            var inMemory = "[sp]"
+            if(offset != 0) {
+                inMemory = "[sp, #${offset}]"
+            }
+            val node = symbolTable!!.lookupSymbol(id)
+            if(node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+            }else if (node is ExprNode && node.getBaseType() == LitTypes.CharWacc) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+            }else{
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+            }
+
+            val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
+            inMemory = "[sp, #-$spValue]"
+            if(value != 0) {
+               inMemory = "[sp, #-$value]"
+            }
+            if(node?.getBaseType() == LitTypes.CharWacc || node?.getBaseType() == LitTypes.BoolWacc) {
+                codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+            } else {
+                codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+            }
+        }
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
-        args!!.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
+
     }
 
     override fun getBaseType(): LitTypes {

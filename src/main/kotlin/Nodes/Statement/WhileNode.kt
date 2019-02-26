@@ -39,10 +39,10 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
         val reg = codeGenerator.getLastUsedReg()
 
-
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
 
+        codeGenerator.freeReg(reg)
         stat.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, BranchInstr(label, Condition.AL))
@@ -55,12 +55,15 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = table
+        this.symbolTable = SymbolTable(table)
+
+        expr.semanticCheck(errors, table)
+        stat.semanticCheck(errors, this.symbolTable!!)
+
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 
-        val childTable = SymbolTable(table)
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
@@ -75,10 +78,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if (!expr.getBaseType().equals(BaseNode("bool", null).getBaseType())) {
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
-        expr.semanticCheck(errors, table)
-        stat.semanticCheck(errors, childTable)
-
-
     }
 
 }
