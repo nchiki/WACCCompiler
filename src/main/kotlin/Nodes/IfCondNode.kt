@@ -33,6 +33,7 @@ class IfCondNode(// condition (should evaluate to boolean val
 
         val firstLabel = codeGenerator.getNewLabel()
         codeGenerator.addLabel(firstLabel, null)
+
         val secondLabel = codeGenerator.getNewLabel()
         codeGenerator.addLabel(secondLabel, null)
 
@@ -44,18 +45,19 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 0, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
 
+
         // If it doesn't jump to first label, execute else statement and it will jump to the
         // second label(empty), continuing afterwards with the main program, that will pop pc
         // in case of the if being the last statement
         elseStat!!.generateCode(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(secondLabel))
 
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-
         // Add true body to first label, as well as load + pop instructions
         codeGenerator.curLabel = firstLabel
         codeGenerator.curScope = firstLabel
         ifTrueStat!!.generateCode(codeGenerator)
+
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
         // Add false body to second label, as well as load + pop instructions
         /*codeGenerator.curLabel = secondLabel
