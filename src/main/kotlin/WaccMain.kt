@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                        "/valid/expressions/intExpr1.wacc"))
+                        "/valid/if/ifBasic.wacc"))
 
         } else {
                 System.setIn(FileInputStream(args[0]))
