@@ -76,7 +76,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         val zeroLabel = "p_check_divide_by_zero"
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(reg1, reg2))
+                codeGenerator.addInstruction(codeGenerator.curLabel, SMultInstr(reg1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.NE))
                 codeGenerator.addError(OverflowDef)
