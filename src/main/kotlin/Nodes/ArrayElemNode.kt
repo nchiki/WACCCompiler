@@ -4,12 +4,12 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.AddInstr
-import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Instructions.MultInstr
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
@@ -29,8 +29,18 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         for(expr in exprs){
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+            val tempReg = codeGenerator.getFreeRegister()
+            if(expr.size == 1){
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+            }else{
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(tempReg, "#${expr.size}"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(exprReg, tempReg))
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+            }
+
+            codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
         }
 
