@@ -16,7 +16,7 @@ class StringLitDef(val str : String) : LiteralDefs {
     }
 }
 
-class OverflowDef : LiteralDefs {
+object OverflowDef : LiteralDefs {
     override fun getString(): String {
         return "\"OverflowError: the result is too small/large to store in a 4-byte signed-integer.\\n\""
     }
@@ -26,7 +26,7 @@ class OverflowDef : LiteralDefs {
     }
 }
 
-class DivZeroDef : LiteralDefs {
+object DivZeroDef : LiteralDefs {
     override fun getString(): String {
         return "\"DivideByZeroError: divide or modulo by zero\\n\\0\""
     }
