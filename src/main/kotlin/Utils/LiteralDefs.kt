@@ -1,40 +1,18 @@
 package main.kotlin.Utils
 
-
 interface LiteralDefs {
     fun getString() : String
     fun getLength() : Int
 }
 
 //type of a literal string to be printed in data section
-class StringLitDef(val str : String) : LiteralDefs {
+class StringLitDef(val str : String) : LiteralDefs{
     override fun getLength() : Int{
         return str.replace("\\", "").replace("\"", "").length
     }
     override fun getString() : String{
         return str
     }
-}
-
-class OverflowDef : LiteralDefs {
-    override fun getString(): String {
-        return "\"OverflowError: the result is too small/large to store in a 4-byte signed-integer.\\n\""
-    }
-
-    override fun getLength(): Int {
-        return 82
-    }
-}
-
-class DivZeroDef : LiteralDefs {
-    override fun getString(): String {
-        return "\"DivideByZeroError: divide or modulo by zero\\n\\0\""
-    }
-
-    override fun getLength(): Int {
-        return 45
-    }
-
 }
 
 class FalseDef : LiteralDefs {
