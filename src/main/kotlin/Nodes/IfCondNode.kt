@@ -42,7 +42,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.addLabel(endLabel, oldScope)
 
         // Add compare and branch instructions to original label
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 0, ""))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 1, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
 
 
