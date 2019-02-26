@@ -35,7 +35,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
     }
 
     fun getType() : LitTypes {
