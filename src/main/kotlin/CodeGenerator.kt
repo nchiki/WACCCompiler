@@ -143,15 +143,16 @@ class CodeGenerator {
     fun checkErrors() {
         for (error in errors) {
             val msg = "msg_${data.size}"
+            if (error is OverflowDef) {
+                Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
+            } else if (error is DivZeroDef) {
+                Print_Read().addDivZeroError(this, "p_check_divide_by_zero", msg)
+            }
             data.put(msg, error)
         }
     }
 
     fun checkPrints() {
-        if (helperFuncs.containsKey("p_throw_overflow_error")) {
-            val msg = "msg_${data.size}"
-            Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
-        }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())
