@@ -3,11 +3,16 @@ import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Instructions.CmpInstr
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.NullReferDef
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
@@ -19,8 +24,10 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        codeGenerator.addHelper("p_free_pair")
+        codeGenerator.addError(NullReferDef)
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){

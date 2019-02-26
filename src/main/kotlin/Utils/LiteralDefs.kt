@@ -1,5 +1,6 @@
 package main.kotlin.Utils
 
+
 interface LiteralDefs {
     fun getString() : String
     fun getLength() : Int
@@ -13,6 +14,17 @@ class StringLitDef(val str : String) : LiteralDefs{
     override fun getString() : String{
         return str
     }
+}
+
+object NullReferDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"NullReferenceError: dereference a null reference\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 50
+    }
+
 }
 
 
