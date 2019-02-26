@@ -34,6 +34,15 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         codeGenerator.addInstruction(curLabel, BLInstr("malloc"))
         codeGenerator.addInstruction(curLabel, MovInstr(baseReg, Register.r0))
 
+        if(exprList.size == 0){
+            /* Store 0 as size of array and be done */
+            val tempReg = codeGenerator.getFreeRegister()
+            codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size, null))
+            codeGenerator.addInstruction(curLabel, StoreInstr(tempReg, "[$baseReg]"))
+            codeGenerator.freeReg(tempReg)
+            return
+        }
+
         /* Add each element to the array*/
         val size = getTypeSize(exprList[0].getBaseType())
         for (i in 0 until exprList.size) {

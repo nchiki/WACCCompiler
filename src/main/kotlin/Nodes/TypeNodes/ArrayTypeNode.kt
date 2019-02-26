@@ -18,8 +18,9 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Function need not be called")
     }
+
     override fun getBaseType() : LitTypes {
         return type.getBaseType()
     }
