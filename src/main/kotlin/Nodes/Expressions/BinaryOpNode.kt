@@ -136,8 +136,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         //moves result to r0
         //codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg()))
 
-        codeGenerator.regsInUse.remove(reg2)
-        codeGenerator.regsNotInUse.add(reg2)
         //adds leftReg as last reg used in order to get the result of the operation
         codeGenerator.regsInUse.remove(reg1)
         codeGenerator.regsInUse.add(reg1)
