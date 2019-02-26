@@ -46,10 +46,7 @@ class DeclNode(// var name
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
 
-        codeGenerator.regsNotInUse.add(0, codeGenerator.getLastUsedReg())
-        if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
-            codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
-        }
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

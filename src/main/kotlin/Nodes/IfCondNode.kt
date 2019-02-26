@@ -41,11 +41,11 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.addLabel(endLabel, oldScope)
 
         // Add compare and branch instructions to original label
-        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse[0], 0, ""))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 0, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(secondLabel))
 
-        codeGenerator.regsNotInUse.remove(codeGenerator.regsNotInUse[0])
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
         // Add true body to first label, as well as load + pop instructions
         codeGenerator.curLabel = firstLabel

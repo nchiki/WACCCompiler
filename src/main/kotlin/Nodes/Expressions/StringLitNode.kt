@@ -3,11 +3,8 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
-import main.kotlin.Utils.StringAppendDef
 import main.kotlin.Utils.StringLitDef
 import src.main.kotlin.Nodes.ExprNode
 
@@ -29,7 +26,7 @@ class StringLitNode(val str : String, override val ctx: BasicParser.StrLitContex
         codeGenerator.data.put(msg, StringLitDef(str))
 
         //instructions for main
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg, null))
     }
 

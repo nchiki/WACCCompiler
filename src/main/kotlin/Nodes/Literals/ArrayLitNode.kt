@@ -8,7 +8,6 @@ import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.MovInstr
 import main.kotlin.Instructions.StoreInstr
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import main.kotlin.Utils.getTypeSize
@@ -26,40 +25,33 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
 
     override fun generateCode(codeGenerator : CodeGenerator) {
         val curLabel = codeGenerator.curLabel
-        codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, 4 + (exprList.size * 4), null))
 
-        val baseReg = codeGenerator.getParamReg()
+        /* The register with the address of the array */
+        val baseReg = codeGenerator.getFreeRegister()
+
         // Call the malloc function to allocate the necessary memory
+        codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, 4 + (exprList.size * 4), null))
         codeGenerator.addInstruction(curLabel, BLInstr("malloc"))
         codeGenerator.addInstruction(curLabel, MovInstr(baseReg, Register.r0))
 
-        val secondReg = codeGenerator.getParamReg()
-        codeGenerator.regsInUse.remove(secondReg)
-        var cur = 0
-        while (secondReg > codeGenerator.regsNotInUse[cur]) {
-            cur++
-        }
-        codeGenerator.regsNotInUse.add(cur, secondReg)
+        /* Add each element to the array*/
         val size = getTypeSize(exprList[0].getBaseType())
         for (i in 0 until exprList.size) {
-//            println(codeGenerator.regsNotInUse)
-//            println(codeGenerator.regsInUse)
             exprList[i].generateCode(codeGenerator)
-            codeGenerator.addInstruction(curLabel, StoreInstr(secondReg, "[$baseReg, #${4 + size * i}]"))
-            codeGenerator.regsInUse.remove(baseReg)
-            var cur = 0
-            while (secondReg > codeGenerator.regsNotInUse[cur]) {
-                cur++
-            }
-            codeGenerator.regsNotInUse.add(cur , secondReg)
+            val valReg = codeGenerator.getLastUsedReg()
+            codeGenerator.addInstruction(curLabel, StoreInstr(valReg, "[$baseReg, #${4 + size * i}]"))
+            codeGenerator.freeReg(valReg)
         }
-        codeGenerator.addInstruction(curLabel, LoadInstr(secondReg, exprList.size, null))
-        //println(codeGenerator.regsInUse)
-        //println(codeGenerator.regsNotInUse)
+
+        /* Store the size of the array */
+        val tempReg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size, null))
+        codeGenerator.addInstruction(curLabel, StoreInstr(tempReg, "[$baseReg]"))
+        codeGenerator.freeReg(tempReg)
     }
 
     override fun getBaseType() : LitTypes {
-        if (exprList.size > 0) {
+            if (exprList.size > 0) {
             return exprList[0].getBaseType()
         }
         return LitTypes.ArrayLit
