@@ -33,9 +33,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.restoreLastReg()
 
         if (expr.getBaseType() == LitTypes.CharWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
         } else {
-            if(label != "") {
+            if(label != "" ) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
             }
@@ -45,7 +45,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.addHelper("p_print_ln")
     }
 
-    fun checkType(codeGenerator: CodeGenerator, expr : Node) : String{
+    fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
 
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(codeGenerator, expr as ExprNode)
@@ -82,9 +82,10 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         val type = expr.getBaseType()
 
         if (type == LitTypes.CharWacc) {
-            val label = "p_print_string"
+            return "putchar"
+            /*val label = "p_print_string"
             codeGenerator.addHelper(label)
-            return label
+            return label*/
         }
         if (type == LitTypes.IntWacc) {
             val label = "p_print_int"
