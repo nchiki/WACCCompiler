@@ -31,7 +31,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             "!" -> codeGenerator.addInstruction(label, EORInstr(codeGenerator.getLastUsedReg(), 1))
             "ord" -> return //codeGenerator.addInstruction(label, BLInstr("putchar"))
             "len" -> return // loop iterating through the chars and incrementing a counter?
-            "chr" -> codeGenerator.addInstruction(label,BLInstr("putchar"))
+            "chr" -> return //codeGenerator.addInstruction(label,BLInstr("putchar"))
             // A negative number is the same as 0 - positive number. For that, we need to access the register that
             // has just been allocated in lastUsedReg.
             "-" -> {codeGenerator.addInstruction(label, MovInstr(codeGenerator.regsNotInUse.get(0),codeGenerator.getLastUsedReg(),null))
