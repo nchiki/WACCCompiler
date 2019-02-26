@@ -44,7 +44,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         // Add compare and branch instructions to original label
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 1, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
-
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
         // If it doesn't jump to first label, execute else statement and it will jump to the
         // second label(empty), continuing afterwards with the main program, that will pop pc
