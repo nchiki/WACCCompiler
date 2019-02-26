@@ -1,13 +1,12 @@
 package main.kotlin.Utils
 
-
 interface LiteralDefs {
     fun getString() : String
     fun getLength() : Int
 }
 
 //type of a literal string to be printed in data section
-class StringLitDef(val str : String) : LiteralDefs {
+class StringLitDef(val str : String) : LiteralDefs{
     override fun getLength() : Int{
         return str.replace("\\", "").replace("\"", "").length
     }
