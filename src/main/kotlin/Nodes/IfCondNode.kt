@@ -32,9 +32,13 @@ class IfCondNode(// condition (should evaluate to boolean val
         expr!!.generateCode(codeGenerator)
 
         val firstLabel = codeGenerator.getNewLabel()
-        codeGenerator.addLabel(firstLabel)
+        codeGenerator.addLabel(firstLabel, null)
         val secondLabel = codeGenerator.getNewLabel()
-        codeGenerator.addLabel(secondLabel)
+        codeGenerator.addLabel(secondLabel, null)
+
+        val endLabel = codeGenerator.getNewLabel()
+        val oldScope = codeGenerator.curScope
+        codeGenerator.addLabel(endLabel, oldScope)
 
         // Add compare and branch instructions to original label
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.regsNotInUse[0], 0, ""))
@@ -45,15 +49,20 @@ class IfCondNode(// condition (should evaluate to boolean val
 
         // Add true body to first label, as well as load + pop instructions
         codeGenerator.curLabel = firstLabel
+        codeGenerator.curScope = firstLabel
         ifTrueStat!!.generateCode(codeGenerator)
         codeGenerator.addInstruction(firstLabel, LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction(firstLabel, PopInstr())
 
         // Add false body to second label, as well as load + pop instructions
         codeGenerator.curLabel = secondLabel
+        codeGenerator.curScope = secondLabel
         elseStat!!.generateCode(codeGenerator)
         codeGenerator.addInstruction(secondLabel, LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction(secondLabel, PopInstr())
+
+        codeGenerator.curLabel = endLabel
+        codeGenerator.curScope = oldScope
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
