@@ -19,7 +19,7 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
