@@ -55,12 +55,11 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = table
+        this.symbolTable = SymbolTable(table)
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
 
-        val childTable = SymbolTable(table)
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
@@ -76,7 +75,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
         expr.semanticCheck(errors, table)
-        stat.semanticCheck(errors, childTable)
+        stat.semanticCheck(errors, this.symbolTable!!)
 
 
     }
