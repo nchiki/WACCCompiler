@@ -4,11 +4,9 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.EORInstr
-import main.kotlin.Instructions.MovInstr
-import main.kotlin.Instructions.SubInstr
+import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
@@ -30,7 +28,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             //negation not implemented yet
             "!" -> codeGenerator.addInstruction(label, EORInstr(codeGenerator.getLastUsedReg(), 1))
             "ord" -> return //codeGenerator.addInstruction(label, BLInstr("putchar"))
-            "len" -> return // loop iterating through the chars and incrementing a counter?
+            "len" -> codeGenerator.addInstruction(label, LoadInstr(codeGenerator.getLastUsedReg(), "[${codeGenerator.getLastUsedReg()}]", Condition.AL))
             "chr" -> return //codeGenerator.addInstruction(label,BLInstr("putchar"))
             // A negative number is the same as 0 - positive number. For that, we need to access the register that
             // has just been allocated in lastUsedReg.
@@ -42,6 +40,10 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             codeGenerator.freeReg(otherReg)}
             else -> return //for the add instruction we dont need to do anything since its a positive number
         }
+
+    }
+
+    fun lenOperator(codeGenerator: CodeGenerator){
 
     }
 
