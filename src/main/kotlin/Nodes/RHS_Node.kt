@@ -44,21 +44,28 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         val label = codeGenerator.curLabel
         val spValue = symbolTable!!.sp
         val list = symbolTable!!.addressMap.keys
+
+        args?.generateCode(codeGenerator)
         for( id in list) {
             val reg = codeGenerator.getFreeRegister()
             val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
             var inMemory = "[sp]"
+            val node = symbolTable!!.lookupSymbol(id)
+
             if(offset != 0) {
                 inMemory = "[sp, #${offset}]"
+
+                if (node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+                } else if (node is ExprNode && node.getBaseType() == LitTypes.CharWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+                } else {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+                }
+            } else {
+                expr?.generateCode(codeGenerator)
             }
-            val node = symbolTable!!.lookupSymbol(id)
-            if(node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-            }else if (node is ExprNode && node.getBaseType() == LitTypes.CharWacc) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-            }else{
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
-            }
+
 
             val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
             inMemory = "[sp, #-$spValue]"
@@ -159,7 +166,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         } else if (type == RHS_type.pair_elem) {
             PairLit!!.semanticCheck(errors, table)
         }
-
+        args?.semanticCheck(errors, table)
     }
 
     fun getSizeOfOffset(): Int {

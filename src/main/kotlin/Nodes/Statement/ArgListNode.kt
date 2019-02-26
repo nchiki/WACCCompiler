@@ -18,15 +18,8 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
-        for (expr in exprs) {
-            println(expr)
-            if (expr is IdentNode) {
-                val type = symbolTable?.lookupSymbol(expr.id)
-                println(type)
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, type!!.size))
-            } else {
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, expr.size))
-            }
+        for(expr in exprs) {
+            expr.generateCode(codeGenerator)
         }
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
