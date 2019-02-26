@@ -18,6 +18,15 @@ class Print_Read {
         codeGenerator.addToHelper(label, PopInstr())
     }
 
+    fun addDivZeroError(codeGenerator: CodeGenerator, label : String, msg: String) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, CmpInstr(Register.r1, "'0", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error", Condition.EQ))
+        codeGenerator.addToHelper(label, PopInstr())
+        addRuntimeError(codeGenerator)
+    }
+
     fun addPrintOverflowError(codeGenerator: CodeGenerator, label: String, msg: String) {
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error"))
