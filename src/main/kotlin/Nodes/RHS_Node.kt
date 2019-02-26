@@ -44,6 +44,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
+        args!!.generateCode(codeGenerator)
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
     }
 
