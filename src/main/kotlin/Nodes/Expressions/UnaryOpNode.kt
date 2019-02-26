@@ -29,7 +29,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
         when (operator.text) {
             //negation not implemented yet
             "!" -> codeGenerator.addInstruction(label, EORInstr(codeGenerator.getLastUsedReg(), 1))
-            "ord" -> codeGenerator.addInstruction(label, BLInstr("putchar"))
+            "ord" -> return //codeGenerator.addInstruction(label, BLInstr("putchar"))
             "len" -> return // loop iterating through the chars and incrementing a counter?
             "chr" -> codeGenerator.addInstruction(label,BLInstr("putchar"))
             // A negative number is the same as 0 - positive number. For that, we need to access the register that
