@@ -7,7 +7,7 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 class CmpInstr(val operand1 :Any, val operand2 : Any, val constant : String?) : Instruction {
 
     override fun getString(): String {
-        if (!constant.equals(null)) {
+        if (!constant.equals("") && constant != null) {
             return "CMP $operand1, $operand2, $constant"
         }
         if (operand2 is Int || operand2 is IntLitNode) {
