@@ -12,6 +12,7 @@ fun main(args: Array<String>) {
                 System.setIn(FileInputStream("../wacc_examples/" +
                         "/valid/if/if2.wacc"))
 
+
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
