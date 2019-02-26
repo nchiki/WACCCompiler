@@ -50,8 +50,6 @@ class DeclNode(// var name
         if(codeGenerator.regsInUse.contains(codeGenerator.getLastUsedReg())) {
             codeGenerator.regsInUse.remove(codeGenerator.getLastUsedReg())
         }
-
-
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

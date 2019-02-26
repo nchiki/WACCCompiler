@@ -23,7 +23,6 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-         //println(symbolTable == null)
         val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
         var inMemory = "[sp]"
         if(offset != 0) {

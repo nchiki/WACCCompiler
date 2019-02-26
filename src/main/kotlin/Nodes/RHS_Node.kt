@@ -6,11 +6,14 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
@@ -27,6 +30,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {
+            RHS_type.call -> callGenerateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
             // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
@@ -35,6 +39,12 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             else -> return
         }
 
+    }
+
+    fun callGenerateCode(codeGenerator: CodeGenerator) {
+        val label = codeGenerator.curLabel
+        codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
+        codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
     }
 
     override fun getBaseType(): LitTypes {
