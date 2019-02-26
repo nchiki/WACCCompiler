@@ -56,6 +56,10 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = SymbolTable(table)
+
+        expr.semanticCheck(errors, table)
+        stat.semanticCheck(errors, this.symbolTable!!)
+
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
@@ -74,10 +78,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if (!expr.getBaseType().equals(BaseNode("bool", null).getBaseType())) {
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
-        expr.semanticCheck(errors, table)
-        stat.semanticCheck(errors, this.symbolTable!!)
-
-
     }
 
 }
