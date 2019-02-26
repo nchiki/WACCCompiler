@@ -37,17 +37,17 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             RHS_type.pair_elem -> PairLit!!.generateCode(codeGenerator)
             else -> return
         }
-
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
+
         val label = codeGenerator.curLabel
         val spValue = symbolTable!!.sp
         val list = symbolTable!!.addressMap.keys
-
         args?.generateCode(codeGenerator)
+
         for( id in list) {
-            val reg = codeGenerator.getFreeRegister()
+            val reg = codeGenerator.getLastUsedReg()
             val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
             var inMemory = "[sp]"
             val node = symbolTable!!.lookupSymbol(id)
@@ -62,10 +62,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
                 }
-            } else {
-                expr?.generateCode(codeGenerator)
             }
-
 
             val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
             inMemory = "[sp, #-$spValue]"
