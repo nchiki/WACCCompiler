@@ -213,7 +213,6 @@ class CodeGenerator {
         while(!regsInUse.isEmpty()) {
             regsNotInUse.add(getLastUsedReg().name.substring(1).toInt(), getLastUsedReg())
             regsInUse.remove(getLastUsedReg())
-
         }
     }
 
