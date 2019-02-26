@@ -3,15 +3,12 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.LoadBInstr
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
-import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.math.exp
 
 class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
     override val size: Int
@@ -29,7 +26,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
             inMemory = "[sp, #${offset}]"
         }
 
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
 
         val expr = symbolTable!!.lookupSymbol(id)
 

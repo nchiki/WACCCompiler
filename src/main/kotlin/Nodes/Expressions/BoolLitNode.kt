@@ -2,13 +2,9 @@ package main.kotlin.Nodes.Literals
 
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.FalseDef
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
-import main.kotlin.Utils.TrueDef
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -25,7 +21,7 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //add instructions to main
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
         //add instructions to label
         if(bool_val == "false") {
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#0",
