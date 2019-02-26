@@ -67,7 +67,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
     fun checkErrorTypes(codeGenerator: CodeGenerator) : String? {
         if (getBaseType() == LitTypes.IntWacc) {
-            codeGenerator.addError(OverflowError)
+            codeGenerator.addError(OverflowDef)
             return "p_throw_overflow_error"
         }
         return ""
