@@ -9,7 +9,7 @@ class AddInstr(val destination : Register, val operand1 : Any, val operand2 : An
         if (operand2 is Int || operand2 is IntLitNode) {
             return "ADD $destination, $operand1, #$operand2"
         }
-        return "ADD $destination, $operand1, $operand2"
+        return "ADDS $destination, $operand1, $operand2"
     }
 
 }
