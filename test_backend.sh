@@ -15,7 +15,7 @@ find $DIRECTORY -name "*.wacc" | (
     FAILED=0
     while read fname; do
         sh compile $fname > /dev/null 2>&1
-        SHORTENED=${fname::-6}
+        SHORTENED=echo ${fname:0:$((${#fname} - 0 - 5))}
         sh arm-linux-gnueabi-gcc -o $SHORTENED -mcpu=arm1176jzf-s -mtune=arm1176jzf-s "$SHORTENED.s"
         sh qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED
         if [[ !($(sh qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED) -eq $(sh ruby refCompile fname -x)) ]]
