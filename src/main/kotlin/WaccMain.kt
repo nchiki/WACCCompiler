@@ -10,7 +10,8 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-                        "/valid/if/ifBasic.wacc"))
+                        "/valid/if/if2.wacc"))
+
 
         } else {
                 System.setIn(FileInputStream(args[0]))
@@ -43,8 +44,8 @@ fun main(args: Array<String>) {
         codeGen.initRegs()
         progNode.generateCode(codeGen)
 
-        //codeGen.writeToFile("print.s")
-        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile("print.s")
+        //codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
 
