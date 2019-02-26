@@ -43,6 +43,9 @@ class CodeGenerator {
     }
 
     fun getLastUsedReg() : Register {
+        if (regsInUse.isEmpty()) {
+            return lastUsedReg
+        }
         return regsInUse.get(regsInUse.count()-1)
     }
 
