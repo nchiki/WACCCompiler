@@ -4,8 +4,11 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 
 
@@ -20,7 +23,17 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        TODO()
+        identifier.generateCode(codeGenerator)
+        val elemReg = codeGenerator.getLastUsedReg()
+
+        for(expr in exprs){
+            expr.generateCode(codeGenerator)
+            val exprReg = codeGenerator.getLastUsedReg()
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+            codeGenerator.freeReg(exprReg)
+        }
+
     }
 
     override fun getBaseType(): LitTypes {
@@ -29,6 +42,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
+        identifier.semanticCheck(errors, table)
         for (expr in exprs) {
             expr.semanticCheck(errors, table)
 
