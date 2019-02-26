@@ -33,7 +33,7 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
     }
 
     fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
         val label = codeGenerator.curLabel
         codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", 0))
         codeGenerator.addInstruction(label, MovInstr(Register.r0, reg, null))

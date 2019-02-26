@@ -2,9 +2,7 @@ package main.kotlin.Nodes
 
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.MovInstr
-import main.kotlin.Instructions.SubInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
@@ -21,7 +19,7 @@ class CharLitNode(val char : String, override val ctx: BasicParser.CharLitContex
         get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
     }
     override fun getBaseType(): LitTypes {

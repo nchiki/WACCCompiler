@@ -34,29 +34,39 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        var reg1 : Register
-        var reg2 : Register
+        var leftReg : Register
+        var rightReg : Register
+
+        var lastReg : Register
 
         val comparison = codeGenerator.compareWeights(left.weight, right.weight)
         // evaluates expression that needs more registers first
         if(comparison >= 0) {
             left.generateCode(codeGenerator)
+            leftReg = codeGenerator.getLastUsedReg()
             right.generateCode(codeGenerator)
-            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
-            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
+            rightReg = codeGenerator.getLastUsedReg()
+            lastReg = rightReg
         } else {
             right.generateCode(codeGenerator)
+            rightReg = codeGenerator.getLastUsedReg()
             left.generateCode(codeGenerator)
-            reg2 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-2)
-            reg1 = codeGenerator.regsInUse.get(codeGenerator.regsInUse.count()-1)
-            }
+            leftReg = codeGenerator.getLastUsedReg()
+            lastReg = leftReg
+        }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
         if(getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg1, reg2, ""))
+            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
         }
-        // gets the correct instruction depending on the operator and adds it to codeGenerator
-        getInstruction(reg1, reg2, codeGenerator)
 
+        getInstruction(leftReg, rightReg, codeGenerator)
+
+        /* Results are stored in the left register, so we need to move the result into the correct register */
+        if(lastReg == leftReg){
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(rightReg, leftReg, Condition.AL))
+        }
+
+        codeGenerator.freeReg(lastReg)
     }
 
 

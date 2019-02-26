@@ -3,11 +3,8 @@ package src.main.kotlin.Nodes.Literals
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.IntAppendDef
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -24,7 +21,7 @@ class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext
     override fun generateCode(codeGenerator: CodeGenerator) {
 
         //add instructions to main
-        val reg = codeGenerator.getParamReg()
+        val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this, null))
     }
 

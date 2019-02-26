@@ -17,10 +17,11 @@ class CodeGenerator {
     val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
 
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
-    val regsNotInUse = ArrayList<Register>() //load all registers in this initially
+    val regsNotInUse = PriorityQueue<Register>() //load all registers in this initially
     var curLabel: String = String()
     private var maxLabelNum: Int = 0
-    val regsInUse = ArrayList<Register>() //registers being used
+
+    val regsInUse = PriorityQueue<Register>()
     val idsAddresses = LinkedHashMap<String, Int>()
 
     private var lastUsedReg: Register = Register.r0
@@ -28,44 +29,34 @@ class CodeGenerator {
 
     fun initRegs() {
         regsNotInUse.addAll(Register.values())
+        regsNotInUse.remove(Register.r0)
+        regsNotInUse.remove(Register.r1)
+        regsNotInUse.remove(Register.r2)
+        regsNotInUse.remove(Register.r3)
         regsNotInUse.remove(Register.pc)
         regsNotInUse.remove(Register.sp)
         regsNotInUse.remove(Register.r16)
         regsNotInUse.remove(Register.lr)
     }
 
+    /* Frees the register */
     fun freeReg(reg : Register) {
-        regsInUse.add(reg)
-        regsNotInUse.remove(reg)
+        regsInUse.remove(reg)
+        regsNotInUse.add(reg)
     }
 
-    fun removeUsedReg() {
-        val reg = regsNotInUse[0]
-        regsInUse.add(reg)
-        regsNotInUse.removeAt(0)
-    }
-
+    /* Returns the last used register */
     fun getLastUsedReg() : Register {
         if (regsInUse.isEmpty()) {
             return lastUsedReg
         }
-        return regsInUse.get(regsInUse.count()-1)
+        return regsInUse.reversed()[0]
     }
 
-    fun getParamReg() : Register {
-        var reg = regsNotInUse.get(0)
-        var index = 1
-        while(reg == Register.r0 || reg == Register.r1 || reg == Register.r2 ||
-                reg == Register.r3 || reg == Register.r16 || reg == Register.pc) {
-            index++
-
-            reg = regsNotInUse.get(index)
-        }
-
-        lastUsedReg = reg
-        regsInUse.add(lastUsedReg)
-        regsNotInUse.remove(lastUsedReg)
-        //freeReg(reg)
+    /* Returns a free register and marks it as used */
+    fun getFreeRegister() : Register {
+        val reg = regsNotInUse.poll()
+        regsInUse.add(reg)
         return reg
     }
 
@@ -211,9 +202,8 @@ class CodeGenerator {
 
     fun restoreLastReg() {
         while(!regsInUse.isEmpty()) {
-            regsNotInUse.add(getLastUsedReg().name.substring(1).toInt(), getLastUsedReg())
+            regsNotInUse.add(getLastUsedReg())
             regsInUse.remove(getLastUsedReg())
-
         }
     }
 
