@@ -29,8 +29,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     fun addInstructions(codeGenerator: CodeGenerator, label : String) {
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 8, null))
-
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
         exprNode1.generateCode(codeGenerator)
@@ -49,8 +48,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
             codeGenerator.addInstruction(label, StoreInstr(lastReg, Register.r0))
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
-        codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
-
+        codeGenerator.addInstruction(label, StoreInstr(reg, "[sp]"))
     }
 
     override fun getBaseType(): LitTypes {
