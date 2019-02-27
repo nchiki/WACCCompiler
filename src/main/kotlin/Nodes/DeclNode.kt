@@ -27,6 +27,7 @@ class DeclNode(// var name
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
@@ -36,7 +37,6 @@ class DeclNode(// var name
         if (type is PairNode) {
             type.generateCode(codeGenerator)
         }
-        rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
         val offsetSp = symbolTable?.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {

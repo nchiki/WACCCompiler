@@ -24,7 +24,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-
         //load expr into register
         expr.generateCode(codeGenerator)
 
@@ -58,6 +57,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
 
         codeGenerator.addHelper("p_print_ln")
+
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
@@ -77,7 +77,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             return label
         }
         //print Integer
-        if (expr is IntLitNode) {
+        if (expr is IntLitNode || (expr is ExprNode && expr.getBaseType() == LitTypes.IntWacc)) {
             val label = "p_print_int"
             codeGenerator.addHelper(label)
             //Print().addPrintInstrString(codeGenerator, label, str)
@@ -95,7 +95,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
     fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode) : String {
         val type = expr.getBaseType()
-
         if (type == LitTypes.CharWacc) {
             return "putchar"
             /*val label = "p_print_string"
