@@ -1,6 +1,7 @@
 package main.kotlin.Nodes.Statement
 
 import Nodes.Literals.PairLitNode
+import Nodes.PairType.PairElemTypeNode
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -27,7 +28,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         //load expr into register
         expr.generateCode(codeGenerator)
-
 
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
