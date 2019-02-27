@@ -26,7 +26,10 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        lhs.generateCode(codeGenerator)
+        if (lhs.Nodetype is IdentNode) {
+            lhs.generateCode(codeGenerator)
+
+        }
         var label = ""
         var type = symbolTable!!.lookupSymbol(lhs.id)
         if (lhs.Nodetype is PairElemNode) {
@@ -54,10 +57,11 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
         val label = codeGenerator.curLabel
         codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", 0))
         codeGenerator.addInstruction(label, MovInstr(Register.r0, reg, null))
+        codeGenerator.freeReg(reg)
         codeGenerator.addInstruction(label, BLInstr(printLabel))
-        if (type == LitTypes.CharWacc) {
-            codeGenerator.addInstruction(label, BLInstr("putchar"))
-        }
+        //if (type == LitTypes.CharWacc) {
+          //  codeGenerator.addInstruction(label, BLInstr("putchar"))
+        //}
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

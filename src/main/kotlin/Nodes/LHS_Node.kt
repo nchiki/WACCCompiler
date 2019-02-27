@@ -3,8 +3,9 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -20,13 +21,18 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
     override var symbolTable: SymbolTable? = null
 
+    /* Puts the address of the variable into a register */
     override fun generateCode(codeGenerator: CodeGenerator) {
         if (getBaseType() == LitTypes.IdentWacc) {
-            val node = symbolTable!!.lookupSymbol(id)
-            node!!.generateCode(codeGenerator)
+            val addressReg = codeGenerator.getFreeRegister()
+
+            val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
+
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(addressReg, "sp", "#$offset"))
+
         }
         if (Nodetype is ArrayElemNode) {
-            Nodetype.generateCode(codeGenerator)
+            Nodetype.resolveToAddress(codeGenerator)
         }
         if (Nodetype is PairElemNode) {
            Nodetype.generateCode(codeGenerator)
@@ -49,6 +55,17 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
         if( value == null || value is FunctionNode) {
             errors.addError(UndefinedVariable(ctx, id))
+        }
+
+        if(Nodetype is IdentNode){
+            Nodetype.semanticCheck(errors, table)
+        }
+
+        if (Nodetype is ArrayElemNode) {
+            Nodetype.semanticCheck(errors, table)
+        }
+        if (Nodetype is PairElemNode) {
+            Nodetype.semanticCheck(errors, table)
         }
     }
 

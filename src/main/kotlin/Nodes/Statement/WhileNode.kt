@@ -41,6 +41,8 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
+
+        codeGenerator.freeReg(reg)
         
         stat.generateCode(codeGenerator)
 
