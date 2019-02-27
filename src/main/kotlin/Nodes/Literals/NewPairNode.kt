@@ -49,7 +49,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
         codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
         codeGenerator.addInstruction(label, LoadInstr(reg, Register.r4, null))
         codeGenerator.addInstruction(label, MovInstr(Register.r0, reg))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        //codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
     }
 
