@@ -12,13 +12,8 @@ import src.main.kotlin.Nodes.ExprNode
 
 class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
     override val size: Int
-        get() {
-            if (symbolTable == null) {
-                return 0
-            } else {
-                return symbolTable!!.lookupSymbol(id)!!.size
-            }
-        }
+        get() = this.symbolTable?.lookupSymbol(id)?.size!!
+
     override val weight: Int
         get() =  1
 
