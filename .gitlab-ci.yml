@@ -1,24 +1,85 @@
 stages:
     - build
-    - test
+    - frontend-test
+    - backend-test
 build:
   stage: build
   script: 'make'
   artifacts:
     paths:
     - 'target/'
-valid-tests:
-  stage: test
-  script: 'bash test.sh valid'
-  dependencies:
-  - 'build'
 syntax-tests:
-  stage: test
+  stage: frontend-test
   script: 'bash test.sh syntax_err'
   dependencies:
   - 'build'
 semantic-tests:
-  stage: test
+  stage: frontend-test
   script: 'bash test.sh semantic_err'
   dependencies:
   - 'build'
+basic-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh basic'
+  dependencies:
+  - 'build'
+seqeuence-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh sequence'
+  dependencies:
+    - 'build'
+print-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh print'
+  dependencies:
+    - 'build'
+variable-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh variable'
+  dependencies:
+    - 'build'
+expression-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh expression'
+  dependencies:
+    - 'build'
+array-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh array'
+  dependencies:
+    - 'build'
+conditional-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh conditional'
+  dependencies:
+    - 'build'
+loop-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh loop'
+  dependencies:
+    - 'build'
+scope-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh scope'
+  dependencies:
+    - 'build'
+simple-function-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh simple-function'
+  dependencies:
+    - 'build'
+nested-function-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh nested-function'
+  dependencies:
+    - 'build'
+runtime-error-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh runtime-error'
+  dependencies:
+    - 'build'
+pair-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh pair'
+  dependencies:
+    - 'build'
