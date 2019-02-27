@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -11,6 +12,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import main.kotlin.Utils.getString
 import kotlin.system.exitProcess
@@ -25,11 +27,26 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         lhs.generateCode(codeGenerator)
-        val type = symbolTable!!.lookupSymbol(lhs.id)!!.getBaseType()
-        val label = "p_read_${getString(type)}"
+        var label = ""
+        var type = symbolTable!!.lookupSymbol(lhs.id)
+        if (lhs.Nodetype is PairElemNode) {
+            type as PairNode
+            var elemPair = type.fstNode
+            if (lhs.Nodetype.elem == 1) {
+                elemPair = type.sndNode
+            }
+            label = "p_read_${getString(elemPair.type?.getBaseType()!!)}"
+        } else {
+            val type = symbolTable!!.lookupSymbol(lhs.id)!!.getBaseType()
+            label = "p_read_${getString(type)}"
+        }
         codeGenerator.addHelper(label)
-        addInstructions(codeGenerator, type, label)
-
+        if (type == null) {
+            codeGenerator.addError(NullReferDef)
+        }
+        if (type != null) {
+            addInstructions(codeGenerator, type.getBaseType(), label)
+        }
     }
 
     fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {

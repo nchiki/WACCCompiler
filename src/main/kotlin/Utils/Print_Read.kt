@@ -74,6 +74,15 @@ class Print_Read {
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
         codeGenerator.addToHelper(label, BranchInstr("p_throw_runtime_error", Condition.EQ))
+        codeGenerator.addToHelper(label, PopInstr())
+        addRuntimeError(codeGenerator)
+    }
+
+    fun addNullDerefPairError(codeGenerator: CodeGenerator, label : String, msg : String) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
+        codeGenerator.addToHelper(label, BranchInstr("p_throw_runtime_error", Condition.EQ))
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[r0]", null))
         codeGenerator.addToHelper(label, BLInstr("free"))
