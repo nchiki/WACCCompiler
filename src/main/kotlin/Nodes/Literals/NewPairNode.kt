@@ -48,7 +48,9 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
             codeGenerator.addInstruction(label, StoreInstr(lastReg, Register.r0))
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
-        codeGenerator.addInstruction(label, StoreInstr(reg, "[sp]"))
+        codeGenerator.freeReg(lastReg)
+        //codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
+
     }
 
     override fun getBaseType(): LitTypes {

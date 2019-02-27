@@ -9,6 +9,7 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -27,8 +28,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         //load expr into register
         println(expr)
         expr.generateCode(codeGenerator)
-
-
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
@@ -44,7 +43,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         if (expr is IdentNode) {
             var type = symbolTable?.lookupSymbol(expr.id)
-            if (type is PairElemNode || type is PairNode || type is PairLitNode) {
+            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
                 val label = codeGenerator.curLabel
                 codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
                 codeGenerator.addHelper("p_print_reference")
@@ -75,8 +74,14 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
-            return checkType(codeGenerator, type!!)
+            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
+                codeGenerator.addHelper("p_print_reference")
+                return "p_print_reference"
+            } else {
+                return checkType(codeGenerator, type!!)
+            }
         }
+
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
