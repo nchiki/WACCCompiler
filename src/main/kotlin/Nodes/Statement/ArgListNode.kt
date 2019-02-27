@@ -3,6 +3,8 @@ package main.kotlin.Nodes.Statement
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.StoreInstr
+import main.kotlin.Instructions.StrBInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -18,8 +20,33 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
+        val label = codeGenerator.curLabel
+        val spValue = symbolTable!!.sp
         for(expr in exprs) {
             expr.generateCode(codeGenerator)
+
+            var inMemory : String
+            val value = expr.size
+
+            inMemory = "[sp, #-$spValue]"
+            if(value != 0) {
+                inMemory = "[sp, #-$value]"
+            }
+            if(expr.getBaseType() == LitTypes.IdentWacc) {
+                val type = symbolTable!!.lookupSymbol((expr as IdentNode).id)!!.getBaseType()
+                if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
+                    codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+                } else {
+                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+                }
+            } else {
+                if (expr.getBaseType() == LitTypes.CharWacc || expr.getBaseType() == LitTypes.BoolWacc) {
+                    codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+                } else {
+                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+                }
+            }
+
         }
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
