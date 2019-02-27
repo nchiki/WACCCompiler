@@ -23,7 +23,7 @@ class ParamNode(
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = type.size //gets size of the data type
 
-        symbolTable?.declareVariable(id, symbolTable!!.sp,offset-4) //Save variable location in symbol table
+        symbolTable?.declareVariable(id, symbolTable!!.sp,offset) //Save variable location in symbol table
         symbolTable!!.sp += offset // add offset to stack pointer
 
     }
