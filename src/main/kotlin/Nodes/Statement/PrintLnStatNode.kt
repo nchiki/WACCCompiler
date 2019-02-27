@@ -12,6 +12,7 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.Utils.StringLitDef
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
@@ -26,7 +27,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     override fun generateCode(codeGenerator: CodeGenerator) {
         //load expr into register
         expr.generateCode(codeGenerator)
-
 
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
