@@ -49,7 +49,7 @@ class DeclNode(// var name
             type.generateCode(codeGenerator)
         }*/
         
-        val offsetSp = symbolTable?.getValueOffset(id, codeGenerator)
+        val offsetSp = - symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
