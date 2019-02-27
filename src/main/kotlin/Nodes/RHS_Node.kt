@@ -42,10 +42,9 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
         val sp = symbolTable!!.sp
-        val funNode = symbolTable!!.getFunction(funId!!)
+
         val label = codeGenerator.curLabel
-        val spValue = symbolTable!!.sp
-        val list = symbolTable!!.addressMap.keys
+
         args?.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
