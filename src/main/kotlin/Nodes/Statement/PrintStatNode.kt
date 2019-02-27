@@ -11,6 +11,7 @@ import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
@@ -30,7 +31,13 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-
+        if (expr is ArrayElemNode) {
+            val label = "p_check_array_bounds"
+            codeGenerator.addError(ArrayBoundNegativeDef)
+            codeGenerator.addError(ArrayBoundsLargeDef)
+            codeGenerator.addHelper(label)
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
+        }
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode) {
             println(expr)
             val label = codeGenerator.curLabel
