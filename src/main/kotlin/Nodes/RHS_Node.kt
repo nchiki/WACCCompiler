@@ -1,7 +1,6 @@
 package main.kotlin.Nodes
 
 
-import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -42,15 +41,14 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
-        val sp = symbolTable!!.sp
-
         val label = codeGenerator.curLabel
-
+        val before = symbolTable!!.sp
         args?.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
-        symbolTable!!.sp -= (symbolTable!!.sp - sp)
-        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
+        val after = symbolTable!!.sp
+        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after-before))
+        symbolTable!!.sp -= after-before
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
 
     }
@@ -141,8 +139,11 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun getSizeOfOffset(): Int {
-        if (expr is PairLitNode && PairLit == null) {
-            return 0
+
+        if (expr != null) {
+            if (expr.getBaseType() == LitTypes.PairWacc) {
+                return 4
+            }
         }
         when (type) {
             RHS_type.expr -> return expr!!.size

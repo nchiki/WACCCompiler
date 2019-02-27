@@ -18,6 +18,20 @@ class Print_Read {
         codeGenerator.addToHelper(label, PopInstr())
     }
 
+    fun addArrayCheck(codeGenerator: CodeGenerator, label : String, msg : Int) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, "msg_$msg", Condition.LT))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error", Condition.LT))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r1, "[r1]", null))
+        codeGenerator.addToHelper(label, CmpInstr(Register.r0, Register.r1, null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, "msg_${msg+1}", Condition.CS))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error", Condition.CS))
+        codeGenerator.addToHelper(label, PopInstr())
+        addRuntimeError(codeGenerator)
+
+    }
+
     fun addDivZeroError(codeGenerator: CodeGenerator, label : String, msg: String) {
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, CmpInstr(Register.r1, "#0", null))
