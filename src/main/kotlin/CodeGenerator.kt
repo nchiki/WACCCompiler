@@ -155,6 +155,8 @@ class CodeGenerator {
                     label = "p_check_null_pointer"
                 }
                 Print_Read().addNullDerefError(this, label, msg)
+            } else if (error is ArrayBoundNegativeDef) {
+                Print_Read().addArrayCheck(this, "p_check_array_bounds", data.size)
             }
             data.put(msg, error)
         }
