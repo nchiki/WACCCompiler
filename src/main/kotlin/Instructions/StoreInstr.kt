@@ -9,6 +9,9 @@ class StoreInstr(val arg1 : Register, val arg2: Any, val inFun : Boolean? = fals
         if(inFun != null && inFun) {
             return "STR ${arg1.toString()}, ${arg2.toString()}!"
         }
+        if (arg2 is Register) {
+            return "STR ${arg1}, [${arg2}]"
+        }
         return "STR ${arg1.toString()}, ${arg2.toString()}"
     }
 }
