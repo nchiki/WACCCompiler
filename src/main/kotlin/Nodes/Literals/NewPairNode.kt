@@ -32,7 +32,6 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     fun addInstructions(codeGenerator: CodeGenerator, label : String) {
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(label, LoadInstr(Register.r0, size, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
         exprNode1.generateCode(codeGenerator)
