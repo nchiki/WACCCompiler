@@ -26,7 +26,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //load expr into register
-        println(expr)
+
         expr.generateCode(codeGenerator)
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
@@ -45,6 +45,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             var type = symbolTable?.lookupSymbol(expr.id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
                 val label = codeGenerator.curLabel
+                println("print2")
                 codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
                 codeGenerator.addHelper("p_print_reference")
             }
@@ -74,12 +75,13 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
-            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
+            /*if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
+                println("print1")
                 codeGenerator.addHelper("p_print_reference")
                 return "p_print_reference"
-            } else {
+            } else {*/
                 return checkType(codeGenerator, type!!)
-            }
+            //}
         }
 
         //print String
