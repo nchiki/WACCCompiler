@@ -30,19 +30,20 @@ class DeclNode(// var name
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
-
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
-
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
-        if (rhs.PairLit == null) {
+
+        if (rhs.ArrayLit == null) {
             symbolTable!!.sp += offset // add offset to stack pointer
             codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
+        } else {
+            symbolTable!!.sp += offset // add offset to stack pointer
         }
-        
-        if (type is PairNode) {
-            type.generateCode(codeGenerator)
+
+        if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
         }
-        
+
         val offsetSp = - symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {

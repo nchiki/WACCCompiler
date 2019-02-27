@@ -27,6 +27,26 @@ class PairDef : LiteralDefs {
 
 }
 
+object ArrayBoundsLargeDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"ArrayIndexOutOfBoundsError: index too large\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 45
+    }
+}
+
+object ArrayBoundNegativeDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"ArrayIndexOutOfBoundsError: negative index\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 44
+    }
+}
+
 object NullReferDef : LiteralDefs {
     override fun getString(): String {
         return "\"NullReferenceError: dereference a null reference\\n\\0\""
