@@ -6,8 +6,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
@@ -30,6 +29,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {
+            RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.call -> callGenerateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
@@ -43,8 +43,17 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
+        val before = symbolTable!!.sp
+        args?.generateCode(codeGenerator)
+
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
+        val after = symbolTable!!.sp
+        if (after-before != 0) {
+            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
+            symbolTable!!.sp -= after - before
+        }
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
+
     }
 
     override fun getBaseType(): LitTypes {
@@ -128,13 +137,22 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
             PairLit!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.newpair) {
+            newPairNode!!.semanticCheck(errors, table)
         }
-
+        args?.semanticCheck(errors, table)
     }
 
     fun getSizeOfOffset(): Int {
+
+        if (expr != null) {
+            if (expr.getBaseType() == LitTypes.PairWacc) {
+                return 4
+            }
+        }
         when (type) {
             RHS_type.expr -> return expr!!.size
+            RHS_type.newpair -> return newPairNode!!.size
             /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc

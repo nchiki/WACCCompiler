@@ -32,7 +32,7 @@ class SymbolTable (val parent: SymbolTable?){
 
     /* Declares variable at the address */
     fun declareVariable(identifier: String, offset: Int, size: Int) {
-        if(!table.containsKey(identifier)){
+        if(!table.containsKey(identifier) && parent != null){
             parent!!.declareVariable(identifier, offset, size)
             return
         }
@@ -111,7 +111,7 @@ class SymbolTable (val parent: SymbolTable?){
         if(sp > 0) {
             //println("in recoverSp")
             var value = sp
-            sp += value
+            sp -= value
             while(value > 1024) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, 1024))
                 value -= 1024

@@ -1,5 +1,6 @@
 package main.kotlin.Utils
 
+
 interface LiteralDefs {
     fun getString() : String
     fun getLength() : Int
@@ -8,11 +9,53 @@ interface LiteralDefs {
 //type of a literal string to be printed in data section
 class StringLitDef(val str : String) : LiteralDefs{
     override fun getLength() : Int{
-        return str.replace("\\", "").replace("\"", "").length
+        return str.replace("\"", "").length
     }
     override fun getString() : String{
         return str
     }
+}
+
+class PairDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"%p\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 3
+    }
+
+}
+
+object ArrayBoundsLargeDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"ArrayIndexOutOfBoundsError: index too large\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 45
+    }
+}
+
+object ArrayBoundNegativeDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"ArrayIndexOutOfBoundsError: negative index\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 44
+    }
+}
+
+object NullReferDef : LiteralDefs {
+    override fun getString(): String {
+        return "\"NullReferenceError: dereference a null reference\\n\\0\""
+    }
+
+    override fun getLength(): Int {
+        return 50
+    }
+
 }
 
 

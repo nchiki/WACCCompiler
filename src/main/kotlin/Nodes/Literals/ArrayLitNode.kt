@@ -3,10 +3,7 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
-import main.kotlin.Instructions.StoreInstr
+import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
@@ -29,6 +26,7 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         /* The register with the address of the array */
         val baseReg = codeGenerator.getFreeRegister()
 
+        codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(Register.sp, "#$size"))
         // Call the malloc function to allocate the necessary memory
         codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, 4 + (exprList.size * 4), null))
         codeGenerator.addInstruction(curLabel, BLInstr("malloc"))

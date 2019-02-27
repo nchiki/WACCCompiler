@@ -8,11 +8,12 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Literals.BoolLitNode
+
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+
 import kotlin.system.exitProcess
 
 
@@ -29,24 +30,33 @@ class DeclNode(// var name
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
-        symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
-
-        symbolTable!!.sp += offset // add offset to stack pointer
-        codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
-
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
-        val offsetSp = symbolTable?.getValueOffset(id, codeGenerator)
+        symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
+        if (rhs.ArrayLit == null) {
+            symbolTable!!.sp += offset // add offset to stack pointer
+            codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
+        } else {
+            symbolTable!!.sp += offset // add offset to stack pointer
+        }
+
+        if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
+        }
+
+        val offsetSp = - symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
-        if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
+        if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
+                        || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
-        } else {
+        } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc){
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        println(symbolTable!!.addressMap.toString())
+
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -123,6 +133,7 @@ class DeclNode(// var name
 
         /* Types don't match */
         errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs, table))
+
     }
 
     fun checkType(table:SymbolTable, id: String, node: ExprNode) :LitTypes {

@@ -3,10 +3,11 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.NullReferDef
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
@@ -37,7 +38,7 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             Nodetype.resolveToAddress(codeGenerator)
         }
         if (Nodetype is PairElemNode) {
-            Nodetype.generateCode(codeGenerator)
+           Nodetype.generateCode(codeGenerator)
         }
     }
 

@@ -10,7 +10,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Instructions.MultInstr
-import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Utils.Register
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
@@ -34,7 +34,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             val tempReg = codeGenerator.getFreeRegister()
             if(identifier.size == 1){
                 /* Skip past array size */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
                 /* Byte access */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
@@ -45,7 +45,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
                 //codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             }else{
                 /* Skip past array size */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
                 /* Add index and multiply it by 4 (4 bytes per index) */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))

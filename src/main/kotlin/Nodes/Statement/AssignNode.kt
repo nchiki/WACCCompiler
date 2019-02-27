@@ -5,10 +5,12 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.StoreInstr
 import main.kotlin.Instructions.StrBInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -27,8 +29,11 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
         RHS_Node.generateCode(codeGenerator)
 
-        if(RHS_Node.type == RHS_type.expr && (RHS_Node.expr!!.getBaseType() == LitTypes.CharWacc || RHS_Node.expr!!.getBaseType() == LitTypes.BoolWacc)) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), "[$inMemory]"))
+        if(RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
+                        || RHS_Node.returnIdentType(symbolTable!!) == LitTypes.BoolWacc) ) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), "[$inMemory]"))
         }
