@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
@@ -24,18 +25,31 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
     /* Puts the address of the variable into a register */
     override fun generateCode(codeGenerator: CodeGenerator) {
         if (getBaseType() == LitTypes.IdentWacc) {
-            val addressReg = codeGenerator.getFreeRegister()
+            //val addressReg = codeGenerator.getFreeRegister()
 
-            val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
+            //val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
 
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(addressReg, "sp", "#$offset"))
+            //codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(addressReg, "sp", "#$offset"))
 
         }
         if (Nodetype is ArrayElemNode) {
             Nodetype.resolveToAddress(codeGenerator)
         }
         if (Nodetype is PairElemNode) {
-           Nodetype.generateCode(codeGenerator)
+            val offset = symbolTable?.getValueOffset((Nodetype.expr as IdentNode).id, codeGenerator)!!
+            var inMemory = "[sp]"
+            if (offset != 0) {
+                inMemory = "[sp, #${offset}]"
+            }
+            val reg = codeGenerator.getFreeRegister()
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+            if (Nodetype.elem == 0) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
+            } else {
+                val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.sndNode.size}]", null))
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
+            }
         }
     }
 
