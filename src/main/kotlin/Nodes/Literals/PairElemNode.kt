@@ -19,7 +19,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
-        //expr.generateCode(codeGenerator)
+        expr.generateCode(codeGenerator)
     }
 
     override fun getBaseType() : LitTypes {
