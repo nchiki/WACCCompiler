@@ -35,9 +35,13 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
         codeGenerator.addInstruction(label, PushInstr())
+        //symbolTable!!.sp += 4 // because we push lr
         if (params != null) {
             params.generateCode(codeGenerator)
         }
+        println("SP: ${symbolTable!!.sp}")
+        println(symbolTable!!.addressMap.toString())
+
         stat.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, PopInstr())
