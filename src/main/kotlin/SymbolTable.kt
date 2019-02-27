@@ -111,7 +111,7 @@ class SymbolTable (val parent: SymbolTable?){
         if(sp > 0) {
             //println("in recoverSp")
             var value = sp
-            sp += value
+            sp -= value
             while(value > 1024) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, 1024))
                 value -= 1024
