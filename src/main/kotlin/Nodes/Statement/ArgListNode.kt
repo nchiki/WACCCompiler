@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.AddInstr
@@ -21,13 +22,13 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
 
     override fun generateCode(codeGenerator : CodeGenerator) {
         val label = codeGenerator.curLabel
-        val spValue = symbolTable!!.sp
         for(expr in exprs) {
             expr.generateCode(codeGenerator)
 
             var inMemory : String
             val value = expr.size
-
+            symbolTable!!.sp += value
+            val spValue = symbolTable!!.sp
             inMemory = "[sp, #-$spValue]"
             if(value != 0) {
                 inMemory = "[sp, #-$value]"
