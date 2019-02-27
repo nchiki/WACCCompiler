@@ -32,7 +32,6 @@ class DeclNode(// var name
         val offset = rhs.getSizeOfOffset() //gets size of the data type
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
-
         if (rhs.ArrayLit == null) {
             symbolTable!!.sp += offset // add offset to stack pointer
             codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
@@ -56,6 +55,7 @@ class DeclNode(// var name
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        println(symbolTable!!.addressMap.toString())
 
     }
 
@@ -133,6 +133,7 @@ class DeclNode(// var name
 
         /* Types don't match */
         errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs, table))
+
     }
 
     fun checkType(table:SymbolTable, id: String, node: ExprNode) :LitTypes {

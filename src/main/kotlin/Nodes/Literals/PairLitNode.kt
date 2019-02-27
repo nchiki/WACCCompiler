@@ -12,7 +12,7 @@ class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 8
+        get() = 4
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.

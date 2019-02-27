@@ -2,10 +2,7 @@ package main.kotlin.Nodes.Literals
 
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.BLInstr
-import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
-import main.kotlin.Instructions.StoreInstr
+import main.kotlin.Instructions.*
 import main.kotlin.Nodes.CharLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.StringLitNode
@@ -20,7 +17,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 8
+        get() = 4
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -32,6 +29,8 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     fun addInstructions(codeGenerator: CodeGenerator, label : String) {
         val reg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 8, null))
+
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
         exprNode1.generateCode(codeGenerator)
@@ -44,12 +43,13 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
         codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode2.size, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         val lastReg = codeGenerator.getLastUsedReg()
-        codeGenerator.addInstruction(label, StoreInstr(lastReg, Register.r0))
+        if(exprNode2.getBaseType() == LitTypes.CharWacc || exprNode2.getBaseType() == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(label, StrBInstr(lastReg, Register.r0))
+        } else {
+            codeGenerator.addInstruction(label, StoreInstr(lastReg, Register.r0))
+        }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
         codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
-        codeGenerator.addInstruction(label, LoadInstr(reg, Register.r4, null))
-        codeGenerator.addInstruction(label, MovInstr(Register.r0, reg))
-        //codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
     }
 
