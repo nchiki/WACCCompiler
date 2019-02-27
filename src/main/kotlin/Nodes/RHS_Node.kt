@@ -1,6 +1,7 @@
 package main.kotlin.Nodes
 
 
+import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -140,11 +141,8 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun getSizeOfOffset(): Int {
-        println(expr?.getBaseType())
-        if (expr != null) {
-            if (expr.getBaseType() == LitTypes.PairWacc) {
-                return 4
-            }
+        if (expr is PairLitNode && PairLit == null) {
+            return 0
         }
         when (type) {
             RHS_type.expr -> return expr!!.size
