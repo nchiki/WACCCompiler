@@ -125,9 +125,20 @@ class CodeGenerator {
         file.appendText(".text\n")
         file.appendText(".global main\n")
         for (label in labels.asIterable()) {
-            file.appendText(label.key + ":\n")
-            for (instruction in label.value) {
-                file.appendText("\t" + instruction.getString() + "\n")
+            if (label.key.get(0) == 'L' || label.key.get(0) == 'm') {
+                file.appendText(label.key + ":\n")
+                for (instruction in label.value) {
+                    file.appendText("\t" + instruction.getString() + "\n")
+                }
+            }
+        }
+
+        for (label in labels.asIterable()) {
+            if (label.key.get(0) == 'f') {
+                file.appendText(label.key + ":\n")
+                for (instruction in label.value) {
+                    file.appendText("\t" + instruction.getString() + "\n")
+                }
             }
         }
 
