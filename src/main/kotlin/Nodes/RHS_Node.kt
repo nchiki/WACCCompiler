@@ -28,7 +28,9 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        println(type)
         when (type) {
+            RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.call -> callGenerateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)

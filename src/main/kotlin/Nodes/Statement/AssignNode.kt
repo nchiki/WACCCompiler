@@ -9,6 +9,7 @@ import main.kotlin.Instructions.StoreInstr
 import main.kotlin.Instructions.StrBInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -23,6 +24,7 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         RHS_Node.generateCode(codeGenerator)
+        println(RHS_Node)
         val id = LHS_Node.id
         val offset = symbolTable?.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
