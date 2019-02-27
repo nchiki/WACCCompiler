@@ -15,7 +15,16 @@ class BaseNode(val type : String, override val ctx: ParserRuleContext?) : ExprNo
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 4
+        get() {
+            when(type){
+                "int"    -> return 4
+                "char"   -> return 1
+                "bool"   -> return 1
+                "string" -> return 4
+                "pair"   -> return 4
+            }
+            return 0
+        }
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.

@@ -47,35 +47,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         val list = symbolTable!!.addressMap.keys
         args?.generateCode(codeGenerator)
 
-        for( id in list) {
-            val reg = codeGenerator.getLastUsedReg()
-            val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
-            var inMemory = "[sp]"
-            val node = symbolTable!!.lookupSymbol(id)
-
-            /*if(offset != 0) {
-                inMemory = "[sp, #${offset}]"
-
-                if (node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-                } else if (node is ExprNode && node.getBaseType() == LitTypes.CharWacc) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-                } else {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
-                }
-            }*/
-
-            val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
-            inMemory = "[sp, #-$spValue]"
-            if(value != 0) {
-               inMemory = "[sp, #-$value]"
-            }
-            if(node?.getBaseType() == LitTypes.CharWacc || node?.getBaseType() == LitTypes.BoolWacc) {
-                codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
-            } else {
-                codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
-            }
-        }
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
         codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
