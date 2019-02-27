@@ -34,7 +34,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
 
-                /* Byte access */ar
+                /* Byte access */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             }else{
