@@ -161,6 +161,11 @@ class CodeGenerator {
     }
 
     fun checkPrints() {
+        if (helperFuncs.containsKey("p_print_reference")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, PairDef())
+            Print_Read().addPrintReference(this, "p_print_reference", msg)
+        }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())

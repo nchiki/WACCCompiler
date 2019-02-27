@@ -39,16 +39,6 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
             params.generateCode(codeGenerator)
         }
         stat.generateCode(codeGenerator)
-        /*if (params != null && !params.listParamNodes.isEmpty()) {
-            for (param in params.listParamNodes) {
-                param.generateCode(codeGenerator)
-            }
-        } else {
-            codeGenerator.addInstruction(label, LoadInstr(reg, 0, null))
-        }
-        stat.generateCode(codeGenerator)
-        codeGenerator.addInstruction(label, MovInstr(Register.r0, reg))
-        */
 
         codeGenerator.addInstruction(label, PopInstr())
         codeGenerator.addInstruction(label, PopInstr())

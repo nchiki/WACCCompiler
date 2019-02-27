@@ -29,6 +29,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {
+            RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.call -> callGenerateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
@@ -40,7 +41,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
-
+        val funNode = symbolTable!!.getFunction(funId!!)
         val label = codeGenerator.curLabel
         val spValue = symbolTable!!.sp
         val list = symbolTable!!.addressMap.keys
@@ -52,7 +53,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             var inMemory = "[sp]"
             val node = symbolTable!!.lookupSymbol(id)
 
-            if(offset != 0) {
+            /*if(offset != 0) {
                 inMemory = "[sp, #${offset}]"
 
                 if (node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
@@ -62,7 +63,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
                 }
-            }
+            }*/
 
             val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
             inMemory = "[sp, #-$spValue]"

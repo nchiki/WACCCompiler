@@ -5,10 +5,12 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.StoreInstr
 import main.kotlin.Instructions.StrBInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ArrayElemNode
