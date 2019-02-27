@@ -61,6 +61,10 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             errors.addError(UndefinedVariable(ctx, id))
         }
 
+        if(Nodetype is IdentNode){
+            Nodetype.semanticCheck(errors, table)
+        }
+
         if (Nodetype is ArrayElemNode) {
             Nodetype.semanticCheck(errors, table)
         }

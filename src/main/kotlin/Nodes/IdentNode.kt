@@ -11,8 +11,14 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
+
     override val size: Int
-        get() = this.symbolTable?.lookupSymbol(id)?.size!!
+        get() {
+            if (symbolTable == null) {
+                return 0
+            }
+            return symbolTable!!.lookupSymbol(id)!!.size
+        }
 
     override val weight: Int
         get() =  1
