@@ -125,9 +125,20 @@ class CodeGenerator {
         file.appendText(".text\n")
         file.appendText(".global main\n")
         for (label in labels.asIterable()) {
-            file.appendText(label.key + ":\n")
-            for (instruction in label.value) {
-                file.appendText("\t" + instruction.getString() + "\n")
+            if (label.key.get(0) == 'L' || label.key.get(0) == 'm') {
+                file.appendText(label.key + ":\n")
+                for (instruction in label.value) {
+                    file.appendText("\t" + instruction.getString() + "\n")
+                }
+            }
+        }
+
+        for (label in labels.asIterable()) {
+            if (label.key.get(0) == 'f') {
+                file.appendText(label.key + ":\n")
+                for (instruction in label.value) {
+                    file.appendText("\t" + instruction.getString() + "\n")
+                }
             }
         }
 
@@ -155,6 +166,8 @@ class CodeGenerator {
                     label = "p_check_null_pointer"
                 }
                 Print_Read().addNullDerefError(this, label, msg)
+            } else if (error is ArrayBoundNegativeDef) {
+                Print_Read().addArrayCheck(this, "p_check_array_bounds", data.size)
             }
             data.put(msg, error)
         }
