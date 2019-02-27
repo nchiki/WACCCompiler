@@ -3,10 +3,12 @@ package main.kotlin.Nodes
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
@@ -31,6 +33,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
+
         val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         var inMemory = "[sp]"
         if(offset != 0) {
@@ -48,6 +51,16 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         }
         //val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         //expr.generateCode(codeGenerator)
+
+        if (expr is IdentNode) {
+            val node = symbolTable?.lookupSymbol(expr.id)
+            if (node == null) {
+                codeGenerator.addError(NullReferDef)
+                codeGenerator.addHelper("p_check_null_pointer")
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+            }
+        }
+
     }
 
     override fun getBaseType() : LitTypes {

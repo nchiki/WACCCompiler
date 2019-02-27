@@ -9,7 +9,7 @@ interface LiteralDefs {
 //type of a literal string to be printed in data section
 class StringLitDef(val str : String) : LiteralDefs{
     override fun getLength() : Int{
-        return str.replace("\\", "").replace("\"", "").length
+        return str.replace("\"", "").length
     }
     override fun getString() : String{
         return str
