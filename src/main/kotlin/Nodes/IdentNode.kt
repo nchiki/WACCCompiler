@@ -25,10 +25,11 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
         if(offset != 0) {
             inMemory = "[sp, #${offset}]"
         }
-
         val reg = codeGenerator.getFreeRegister()
 
         val expr = symbolTable!!.lookupSymbol(id)
+
+        println(expr)
 
         if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))

@@ -12,7 +12,6 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
@@ -32,32 +31,17 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         when (type) {
             RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.call -> callGenerateCode(codeGenerator)
-            RHS_type.expr -> exprGenerateCode(codeGenerator)
+            RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
             // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
             // RHS_type.newpair -> return LitTypes.PairWacc
-            RHS_type.pair_elem -> pairGenerateCode(codeGenerator)
+            RHS_type.pair_elem -> PairLit!!.generateCode(codeGenerator)
             else -> return
         }
     }
 
-    fun exprGenerateCode(codeGenerator: CodeGenerator) {
-        if (expr is IdentNode) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-            codeGenerator.addHelper("p_check_null_pointer")
-            codeGenerator.addError(NullReferDef)
-        }
-        expr!!.generateCode(codeGenerator)
-    }
-
-    fun pairGenerateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-        codeGenerator.addHelper("p_check_null_pointer")
-        codeGenerator.addError(NullReferDef)
-        PairLit!!.generateCode(codeGenerator)
-    }
-
     fun callGenerateCode(codeGenerator: CodeGenerator) {
+        val funNode = symbolTable!!.getFunction(funId!!)
         val label = codeGenerator.curLabel
         val spValue = symbolTable!!.sp
         val list = symbolTable!!.addressMap.keys
@@ -69,7 +53,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             var inMemory = "[sp]"
             val node = symbolTable!!.lookupSymbol(id)
 
-            if(offset != 0) {
+            /*if(offset != 0) {
                 inMemory = "[sp, #${offset}]"
 
                 if (node is ExprNode && node.getBaseType() == LitTypes.BoolWacc) {
@@ -79,8 +63,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
                 }
-
-            }
+            }*/
 
             val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
             inMemory = "[sp, #-$spValue]"
@@ -185,9 +168,14 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun getSizeOfOffset(): Int {
+        println(expr?.getBaseType())
+        if (expr != null) {
+            if (expr.getBaseType() == LitTypes.PairWacc) {
+                return 4
+            }
+        }
         when (type) {
             RHS_type.expr -> return expr!!.size
-            RHS_type.newpair -> return newPairNode!!.size
             /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc

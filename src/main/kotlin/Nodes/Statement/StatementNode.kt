@@ -16,7 +16,6 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
-
         codeGenerator.addLabel(label, null)
         codeGenerator.curLabel = label
         codeGenerator.curScope = label

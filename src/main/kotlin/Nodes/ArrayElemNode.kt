@@ -31,12 +31,18 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
             if(expr.size == 1){
+                /* Skip past array size */
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
+
+                /* Byte access */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             }else{
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(tempReg, "#${expr.size}"))
-                codeGenerator.addInstruction(codeGenerator.curLabel, MultInstr(exprReg, tempReg))
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
+                /* Skip past array size */
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
+
+                /* Add index and multiply it by 4 (4 bytes per index) */
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
             }
 
