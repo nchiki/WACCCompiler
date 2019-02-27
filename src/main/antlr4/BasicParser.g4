@@ -67,7 +67,8 @@ boolOp: AND | OR ;
 
 
 expr:
-    expr multDiv expr                       #MultDivOp
+unaryOper expr                            #UnOp
+| expr multDiv expr                       #MultDivOp
 | expr addSub expr                          #AddSubOp
 | expr eq_Op expr                           #EqOp
 | unaryOper expr                            #UnOp
@@ -79,7 +80,6 @@ expr:
 | pair_Lit                                  #PairLit
 | ident                                     #Id
 | arrayElem                                 #Array_Elem
-| unaryOper expr                            #UnOp
 | OPEN_PARENTHESES expr CLOSE_PARENTHESES   #Paren
 ;
 

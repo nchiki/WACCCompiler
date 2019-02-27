@@ -27,6 +27,17 @@ class Print_Read {
         addRuntimeError(codeGenerator)
     }
 
+    fun addPrintReference(codeGenerator: CodeGenerator, label : String, msg : String) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, MovInstr(Register.r1, Register.r0))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
+        codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
+        codeGenerator.addToHelper(label, BLInstr("printf"))
+        codeGenerator.addToHelper(label, MovInstr(Register.r0, 0))
+        codeGenerator.addToHelper(label, BLInstr("fflush"))
+        codeGenerator.addToHelper(label, PopInstr())
+    }
+
     fun addPrintOverflowError(codeGenerator: CodeGenerator, label: String, msg: String) {
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
         codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error"))
@@ -37,13 +48,30 @@ class Print_Read {
         val label = "p_throw_runtime_error"
         codeGenerator.addHelper(label)
         codeGenerator.addToHelper(label, BLInstr("p_print_string"))
-        if(!codeGenerator.helperFuncs.containsKey("p_print_string")) {
+        if (!codeGenerator.helperFuncs.containsKey("p_print_string")) {
             codeGenerator.addHelper("p_print_string")
         }
         codeGenerator.addToHelper(label, MovInstr(Register.r0, -1))
         codeGenerator.addToHelper(label, BLInstr("exit"))
-
     }
+
+    fun addNullDerefError(codeGenerator: CodeGenerator, label : String, msg : String) {
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
+        codeGenerator.addToHelper(label, BranchInstr("p_throw_runtime_error", Condition.EQ))
+        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[r0]", null))
+        codeGenerator.addToHelper(label, BLInstr("free"))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[sp]", null))
+        codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[r0, #4]", null))
+        codeGenerator.addToHelper(label, BLInstr("free"))
+        codeGenerator.addToHelper(label, PopInstr(Register.r0))
+        codeGenerator.addToHelper(label, BLInstr("free"))
+        codeGenerator.addToHelper(label, PopInstr())
+        addRuntimeError(codeGenerator)
+    }
+
 
     fun addPrintInstrBool(codeGenerator: CodeGenerator, label : String, msg : Int) {
         val trueMsg = "msg_$msg"
@@ -74,19 +102,6 @@ class Print_Read {
         codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))
         codeGenerator.addToHelper(label, BLInstr("fflush"))
         codeGenerator.addToHelper(label, PopInstr())
-        /*codeGenerator.addToHelper(label, PushInstr())
-        codeGenerator.addToHelper(label, CmpInstr(Register.r0, 0, ""))
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, trueMsg, Condition.NE))
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, falseMsg, Condition.EQ))
-        codeGenerator.addToHelper(label, AddInstr(Register.r2, Register.r0, 4))
-        codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, null))
-        codeGenerator.addToHelper(label, AddInstr(Register.r0, Register.r0, 4))
-        codeGenerator.addToHelper(label, BLInstr("printf"))
-        codeGenerator.addToHelper(label, MovInstr(Register.r0, 0, null))
-        codeGenerator.addToHelper(label, BLInstr("fflush"))
-        codeGenerator.addToHelper(label, PopInstr())*/
-        //add intvalue to data section
-
     }
 
     fun addPrintLn(codeGen : CodeGenerator, msg : String) {

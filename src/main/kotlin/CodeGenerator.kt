@@ -147,12 +147,25 @@ class CodeGenerator {
                 Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
             } else if (error is DivZeroDef) {
                 Print_Read().addDivZeroError(this, "p_check_divide_by_zero", msg)
+            } else if (error is NullReferDef) {
+                var label = ""
+                if (helperFuncs.contains("p_free_pair")) {
+                    label = "p_free_pair"
+                } else if (helperFuncs.contains("p_check_null_pointer")) {
+                    label = "p_check_null_pointer"
+                }
+                Print_Read().addNullDerefError(this, label, msg)
             }
             data.put(msg, error)
         }
     }
 
     fun checkPrints() {
+        if (helperFuncs.containsKey("p_print_reference")) {
+            val msg = "msg_${data.size}"
+            data.put(msg, PairDef())
+            Print_Read().addPrintReference(this, "p_print_reference", msg)
+        }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())
