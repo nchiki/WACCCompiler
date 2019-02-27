@@ -10,6 +10,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Instructions.MultInstr
+import main.kotlin.Nodes.ArrayTypeNode
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
@@ -22,33 +23,55 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGenerator: CodeGenerator) {
+    fun resolveToAddress(codeGenerator: CodeGenerator){
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
-        for(expr in exprs){
+        for(i in (0 until exprs.size)){
+            val expr = exprs[i]
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
-            if(expr.size == 1){
+            if(identifier.size == 1){
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
 
                 /* Byte access */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+
+                if(i < exprs.size - 1) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+                }
+                //codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             }else{
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "#4"))
 
                 /* Add index and multiply it by 4 (4 bytes per index) */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+
+                if(i < exprs.size - 1) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+                }
             }
 
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
         }
+    }
+
+    override fun generateCode(codeGenerator: CodeGenerator) {
+        resolveToAddress(codeGenerator)
+
+        val elemReg = codeGenerator.getLastUsedReg()
+
+        /* Load byte into memory */
+        if(identifier.size == 1){
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+            return
+        }
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
 
     }
 
