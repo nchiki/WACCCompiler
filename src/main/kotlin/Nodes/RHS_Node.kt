@@ -58,7 +58,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
-
         val label = codeGenerator.curLabel
         val spValue = symbolTable!!.sp
         val list = symbolTable!!.addressMap.keys
@@ -80,6 +79,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
                 }
+
             }
 
             val value= spValue - symbolTable!!.getValueOffset(id, codeGenerator)
