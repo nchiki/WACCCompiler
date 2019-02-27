@@ -24,26 +24,21 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        //LHS_Node.generateCode(codeGenerator)
-        //val inMemory = codeGenerator.getLastUsedReg()
-
-        RHS_Node.generateCode(codeGenerator)
-        val regRHS = codeGenerator.getLastUsedReg()
         LHS_Node.generateCode(codeGenerator)
         val inMemory = codeGenerator.getLastUsedReg()
+
+        RHS_Node.generateCode(codeGenerator)
+
         if(RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), "[$inMemory]"))
         } else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
                         || RHS_Node.returnIdentType(symbolTable!!) == LitTypes.BoolWacc) ) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
-        } else if (LHS_Node.Nodetype is PairElemNode) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
-
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(codeGenerator.getLastUsedReg(), "[$inMemory]"))
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), "[$inMemory]"))
         }
         codeGenerator.freeReg(inMemory)
-        codeGenerator.freeReg(regRHS)
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
     }
 
     fun getType() : LitTypes {
