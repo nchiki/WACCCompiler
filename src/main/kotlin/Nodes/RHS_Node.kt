@@ -38,6 +38,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             RHS_type.pair_elem -> PairLit!!.generateCode(codeGenerator)
             else -> return
         }
+
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
@@ -47,8 +48,10 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
         val after = symbolTable!!.sp
-        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after-before))
-        symbolTable!!.sp -= after-before
+        if (after-before != 0) {
+            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
+            symbolTable!!.sp -= after - before
+        }
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
 
     }
@@ -134,6 +137,8 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             ArrayLit!!.semanticCheck(errors, table)
         } else if (type == RHS_type.pair_elem) {
             PairLit!!.semanticCheck(errors, table)
+        } else if (type == RHS_type.newpair) {
+            newPairNode!!.semanticCheck(errors, table)
         }
         args?.semanticCheck(errors, table)
     }
@@ -147,6 +152,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         }
         when (type) {
             RHS_type.expr -> return expr!!.size
+            RHS_type.newpair -> return newPairNode!!.size
             /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc

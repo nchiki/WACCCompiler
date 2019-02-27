@@ -32,7 +32,7 @@ class SymbolTable (val parent: SymbolTable?){
 
     /* Declares variable at the address */
     fun declareVariable(identifier: String, offset: Int, size: Int) {
-        if(!table.containsKey(identifier)){
+        if(!table.containsKey(identifier) && parent != null){
             parent!!.declareVariable(identifier, offset, size)
             return
         }
