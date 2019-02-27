@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
