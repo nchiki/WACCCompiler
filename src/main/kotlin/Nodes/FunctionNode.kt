@@ -39,8 +39,6 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         if (params != null) {
             params.generateCode(codeGenerator)
         }
-        println("SP: ${symbolTable!!.sp}")
-        println(symbolTable!!.addressMap.toString())
 
         stat.generateCode(codeGenerator)
 

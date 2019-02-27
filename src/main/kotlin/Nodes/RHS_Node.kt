@@ -41,14 +41,12 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
-        val sp = symbolTable!!.sp
-
         val label = codeGenerator.curLabel
 
         args?.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
-        symbolTable!!.sp -= (symbolTable!!.sp - sp)
+
         codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
 
