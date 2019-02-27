@@ -48,6 +48,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
 
         codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
+        symbolTable!!.sp= 0
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
 
     }
