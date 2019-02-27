@@ -21,8 +21,7 @@ class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val label = codeGenerator.curLabel
-        codeGenerator.addInstruction(label, LoadInstr(Register.r0, fstNode.size+sndNode.size, null))
+
     }
     override fun getBaseType() : LitTypes {
         return LitTypes.PairWacc
