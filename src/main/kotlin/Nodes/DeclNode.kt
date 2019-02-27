@@ -40,10 +40,10 @@ class DeclNode(// var name
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
 
-        if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
+        /*if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
         }
-
+*/
         val offsetSp = - symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {
