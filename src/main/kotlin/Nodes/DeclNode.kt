@@ -41,19 +41,22 @@ class DeclNode(// var name
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
 
-        /*if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
+        if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
         }
-*/
+
         val offsetSp = - symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
+
         if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
                         || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc){
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else if(rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
