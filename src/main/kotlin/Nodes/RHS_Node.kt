@@ -35,7 +35,9 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
             // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
             // RHS_type.newpair -> return LitTypes.PairWacc
-            RHS_type.pair_elem -> PairLit!!.generateCode(codeGenerator)
+            RHS_type.pair_elem -> {
+                PairLit!!.generateCode(codeGenerator)
+            }
             else -> return
         }
 
@@ -153,10 +155,10 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         when (type) {
             RHS_type.expr -> return expr!!.size
             RHS_type.newpair -> return newPairNode!!.size
+            RHS_type.pair_elem -> return PairLit!!.size
             /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
             RHS_type.call -> return LitTypes.FuncWacc
             RHS_type.newpair -> return LitTypes.PairWacc
-            RHS_type.pair_elem -> return PairLit!!.getBaseType()
             else -> return LitTypes.NonLitWacc*/
             else -> return 4
         }
