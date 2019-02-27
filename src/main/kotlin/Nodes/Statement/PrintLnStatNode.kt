@@ -1,5 +1,7 @@
 package main.kotlin.Nodes.Statement
 
+import Nodes.Literals.PairLitNode
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
@@ -27,10 +29,16 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         expr.generateCode(codeGenerator)
 
         val label = checkType(codeGenerator, expr)
-        //println(expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        if (expr is PairElemNode || expr is PairNode || expr is PairLitNode) {
+            println(expr)
+            val label = codeGenerator.curLabel
+            codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
+            codeGenerator.addHelper("p_print_reference")
+        }
 
         if (expr.getBaseType() == LitTypes.CharWacc) {
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))

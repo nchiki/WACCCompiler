@@ -33,7 +33,9 @@ class DeclNode(// var name
 
         symbolTable!!.sp += offset // add offset to stack pointer
         codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
-        type.generateCode(codeGenerator)
+        if (type is PairNode) {
+            type.generateCode(codeGenerator)
+        }
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
         val offsetSp = symbolTable?.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
