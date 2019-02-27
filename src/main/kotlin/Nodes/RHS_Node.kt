@@ -11,6 +11,7 @@ import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -40,7 +41,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             }
             else -> return
         }
-
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
