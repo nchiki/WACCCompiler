@@ -1,6 +1,5 @@
 package Nodes
 
-import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -9,11 +8,12 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Literals.BoolLitNode
+
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+
 import kotlin.system.exitProcess
 
 
@@ -56,6 +56,7 @@ class DeclNode(// var name
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

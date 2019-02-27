@@ -39,6 +39,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
         }
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode) {
+            println(expr)
             val label = codeGenerator.curLabel
             codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
             codeGenerator.addHelper("p_print_reference")
