@@ -35,21 +35,26 @@ class DeclNode(// var name
 
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
 
-        symbolTable!!.sp += offset // add offset to stack pointer
+        if (rhs.PairLit == null) {
+            symbolTable!!.sp += offset // add offset to stack pointer
+            codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
+        }
+        
         if (type is PairNode) {
             type.generateCode(codeGenerator)
         }
+        
         val offsetSp = symbolTable?.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if(offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
-        if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
+        if(rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
+                        || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
-        } else {
+        } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc){
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
     }
 
