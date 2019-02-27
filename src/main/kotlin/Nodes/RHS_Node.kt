@@ -140,7 +140,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun getSizeOfOffset(): Int {
-        println(expr?.getBaseType())
+
         if (expr != null) {
             if (expr.getBaseType() == LitTypes.PairWacc) {
                 return 4
