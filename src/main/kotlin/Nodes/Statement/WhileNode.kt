@@ -30,7 +30,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         val endLabel = codeGenerator.getNewLabel()
 
         codeGenerator.addLabel(label, null)
-        codeGenerator.addLabel(endLabel, oldScope)
 
         codeGenerator.curLabel = label
 
@@ -38,15 +37,15 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         expr.generateCode(codeGenerator)
 
         val reg = codeGenerator.getLastUsedReg()
-
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
 
         codeGenerator.freeReg(reg)
-        
+
         stat.generateCode(codeGenerator)
 
-        codeGenerator.addInstruction(label, BranchInstr(label, Condition.AL))
+        codeGenerator.addLabel(endLabel, oldScope)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(label, Condition.AL))
 
         codeGenerator.curLabel = endLabel
         codeGenerator.curScope = oldScope
