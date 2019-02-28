@@ -29,11 +29,8 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = "f_$id"
-        codeGenerator.addLabel(label, null)
-        codeGenerator.curLabel = label
-        codeGenerator.curScope = label
+        codeGenerator.switchFunctions(label)
         addFunInstructions(codeGenerator, label)
-
     }
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
@@ -50,10 +47,6 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         if(difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }
-        codeGenerator.addInstruction(label, PopInstr())
-        codeGenerator.addInstruction(label, PopInstr())
-        codeGenerator.curLabel = "main"
-
     }
 
     override fun getBaseType() : LitTypes {

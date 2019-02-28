@@ -15,9 +15,21 @@ import src.main.kotlin.Nodes.ExprNode
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
 
+    override val size: Int
+        get() {
+            when (operator.text) {
+                //negation not implemented yet
+                "!" -> return 4
+                "ord" -> return 4
+                "len" -> return 4
+                "chr" -> return 1
+                "-" -> return 4
+                else -> return 4
+            }
+        }
     override var symbolTable: SymbolTable? = null
 
-    override val size = operand.size
+
 
     override val weight: Int
         get() = 1 + operand.weight
