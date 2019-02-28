@@ -35,7 +35,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
-
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, Register.pc))
         val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         var inMemory = "[sp]"
         if(offset != 0) {
@@ -44,6 +44,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
         codeGenerator.addHelper("p_check_null_pointer")
         codeGenerator.addError(NullReferDef)
         if(elem == 0) {
@@ -58,15 +59,16 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         //val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         //expr.generateCode(codeGenerator)
 
-        if (expr is IdentNode) {
-            val node = symbolTable?.lookupSymbol(expr.id)
-            if (node == null) {
-                codeGenerator.addError(NullReferDef)
-                codeGenerator.addHelper("p_check_null_pointer")
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-
-            }
-        }
+//        if (expr is IdentNode) {
+//            val node = symbolTable?.lookupSymbol(expr.id)
+//            if (node == null) {
+//                codeGenerator.addError(NullReferDef)
+//                codeGenerator.addHelper("p_check_null_pointer")
+//                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+//                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("tttttttttttttttttttttttttt"))
+//
+//            }
+//        }
 
     }
 
