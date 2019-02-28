@@ -12,6 +12,7 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
@@ -36,6 +37,12 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
             // RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> {
+                val reg = codeGenerator.getFreeRegister()
+                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+                codeGenerator.addHelper("p_check_null_pointer")
+                codeGenerator.addError(NullReferDef)
+                codeGenerator.freeReg(reg)
                 PairLit!!.generateCode(codeGenerator)
             }
             else -> return
