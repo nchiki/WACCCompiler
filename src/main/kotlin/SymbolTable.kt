@@ -43,10 +43,11 @@ class SymbolTable (val parent: SymbolTable?){
      if the (address <= sp) then value is in stack, otherwise it's in the heap
      */
     fun getValueOffset(identifier: String, codeGenerator: CodeGenerator) : Int {
-        if(!table.containsKey(identifier)){
+        if(!addressMap.containsKey(identifier)){
             return parent!!.getValueOffset(identifier, codeGenerator)
         }
-
+        println(table)
+        println(addressMap)
         return sp - addressMap[identifier]!!
     }
 
