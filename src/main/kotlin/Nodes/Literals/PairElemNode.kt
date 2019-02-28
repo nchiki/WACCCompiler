@@ -44,7 +44,6 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer", Condition.NULL))
         codeGenerator.addHelper("p_check_null_pointer")
         codeGenerator.addError(NullReferDef)
         if(elem == 0) {
@@ -65,6 +64,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
                 codeGenerator.addError(NullReferDef)
                 codeGenerator.addHelper("p_check_null_pointer")
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+
             }
         }
 
