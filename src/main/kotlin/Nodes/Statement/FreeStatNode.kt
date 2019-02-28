@@ -3,6 +3,7 @@ import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.PushInstr
@@ -24,6 +25,7 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+//        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr)
         codeGenerator.addHelper("p_free_pair")
         codeGenerator.addError(NullReferDef)
     }
