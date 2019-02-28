@@ -28,12 +28,15 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
         val regRHS = codeGenerator.getLastUsedReg()
 
         if(Nodetype is ArrayElemNode){
+
+            val type = symbolTable?.lookupSymbol(Nodetype.identifier.id)?.getBaseType()!!
+
             /* Resolve the address of the array element and put it into a register */
             Nodetype.resolveToAddress(codeGenerator)
             val addressReg = codeGenerator.getLastUsedReg()
 
             /* Store RHS value into the address of the array element */
-            if(getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+            if(type.equals(LitTypes.CharWacc) || type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.StringWacc)) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
             } else {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))

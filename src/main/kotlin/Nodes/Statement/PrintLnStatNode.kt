@@ -72,7 +72,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
 
         //print String
-        if (expr is StringLitNode) {
+        if (expr is StringLitNode || (expr is ArrayTypeNode && expr.getBaseType().equals(LitTypes.CharWacc)) ) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
 
