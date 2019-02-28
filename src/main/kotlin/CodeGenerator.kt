@@ -55,7 +55,10 @@ class CodeGenerator {
 
     /* Returns a free register and marks it as used */
     fun getFreeRegister() : Register {
-        val reg = regsNotInUse.poll()
+        var reg = regsNotInUse.poll()
+        while (reg == Register.r0 || reg == Register.r1 || reg == Register.r2 || reg == Register.r3) {
+            reg = regsNotInUse.poll()
+        }
         regsInUse.add(reg)
         return reg
     }
