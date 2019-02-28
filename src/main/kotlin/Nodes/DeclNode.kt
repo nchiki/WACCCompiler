@@ -66,16 +66,8 @@ class DeclNode(// var name
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
                 }
             } else {
-                if(rhs.expr!! is IdentNode) {
-                    val type = symbolTable!!.lookupSymbol((rhs.expr!! as IdentNode).id)!!.getBaseType()
-                    if (type == LitTypes.BoolWacc || type == LitTypes.CharWacc) {
-                        codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
-                    } else {
-                        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
-                    }
-                } else {
-                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
-                }
+                codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+
             }
         } else if(rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
