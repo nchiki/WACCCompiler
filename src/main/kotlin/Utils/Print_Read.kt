@@ -73,7 +73,7 @@ class Print_Read {
         codeGenerator.addToHelper(label, PushInstr())
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
-        codeGenerator.addToHelper(label, BranchInstr("p_throw_runtime_error", Condition.EQ))
+        codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error", Condition.EQ))
         codeGenerator.addToHelper(label, PopInstr())
         addRuntimeError(codeGenerator)
     }
@@ -83,7 +83,7 @@ class Print_Read {
         codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0", null))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg, Condition.EQ))
         codeGenerator.addToHelper(label, BranchInstr("p_throw_runtime_error", Condition.EQ))
-        codeGenerator.addToHelper(label, PushInstr())
+        codeGenerator.addToHelper(label, PushInstr(Register.r0))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[r0]", null))
         codeGenerator.addToHelper(label, BLInstr("free"))
         codeGenerator.addToHelper(label, LoadInstr(Register.r0, "[sp]", null))

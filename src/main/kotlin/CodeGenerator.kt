@@ -165,10 +165,11 @@ class CodeGenerator {
                 var label = ""
                 if (helperFuncs.contains("p_free_pair")) {
                     label = "p_free_pair"
+                    Print_Read().addNullDerefPairError(this, label, msg)
                 } else if (helperFuncs.contains("p_check_null_pointer")) {
                     label = "p_check_null_pointer"
+                    Print_Read().addNullDerefError(this, label, msg)
                 }
-                Print_Read().addNullDerefError(this, label, msg)
             } else if (error is ArrayBoundNegativeDef) {
                 Print_Read().addArrayCheck(this, "p_check_array_bounds", data.size)
             }
