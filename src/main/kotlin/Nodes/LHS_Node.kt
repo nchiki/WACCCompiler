@@ -9,6 +9,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
@@ -48,9 +49,60 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             } else {
                 val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
-                //codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
             }
         }
+    }
+
+    fun generateStoreFunc(regRHS : Register, inMemory: Register, codeGenerator: CodeGenerator) {
+        var type = getBaseType()
+        if(type == LitTypes.IdentWacc) {
+            type = symbolTable!!.lookupSymbol(id)!!.getBaseType()
+        }
+        if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
+        }
+
+        /*if(RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
+            if (RHS_Node.type == RHS_type.pair_elem) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+            } else {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+            }
+        }else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
+                        || RHS_Node.returnIdentType(symbolTable!!) == LitTypes.BoolWacc) ) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+        } else if (LHS_Node.Nodetype is PairElemNode) {
+            if(RHS_Node.getBaseType() == LitTypes.IdentWacc) {
+                val type = symbolTable!!.lookupSymbol((RHS_Node.expr!! as IdentNode).id)!!.getBaseType()
+                if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+                }
+            } else {
+                if (RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+                } else {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
+                }
+            }
+        } else {
+            if(RHS_Node.type == RHS_type.pair_elem && (RHS_Node.PairLit!!.getBaseType() == LitTypes.CharWacc||
+                            RHS_Node.PairLit!!.getBaseType() == LitTypes.BoolWacc)) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+                /*}else if(RHS_Node.type == RHS_type.pair_elem && RHS_Node.PairLit!!.getBaseType() == LitTypes.IdentWacc) {
+                            symbolTable.*/
+            } else {
+
+                if(LHS_Node.getBaseType() == LitTypes.IdentWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
+                } else {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+                }
+            }
+        }*/
+        codeGenerator.freeReg(inMemory)
+        codeGenerator.freeReg(regRHS)
     }
 
     override fun getBaseType(): LitTypes {

@@ -55,7 +55,11 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
     fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {
         val reg = codeGenerator.getFreeRegister()
         val label = codeGenerator.curLabel
-        codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", 0))
+        var offset = 0
+        if(lhs.getBaseType() == LitTypes.IdentWacc) {
+            offset = symbolTable!!.getValueOffset(lhs.id, codeGenerator)
+        }
+        codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", offset))
         codeGenerator.addInstruction(label, MovInstr(Register.r0, reg, null))
         codeGenerator.freeReg(reg)
         codeGenerator.addInstruction(label, BLInstr(printLabel))
