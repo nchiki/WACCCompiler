@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
