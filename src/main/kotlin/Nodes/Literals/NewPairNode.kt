@@ -70,5 +70,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
+        exprNode1.semanticCheck(errors,table)
+        exprNode2.semanticCheck(errors, table)
     }
 }

@@ -43,13 +43,18 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
 
         } else {
+
             if(RHS_Node.type == RHS_type.pair_elem && (RHS_Node.PairLit!!.getBaseType() == LitTypes.CharWacc||
                             RHS_Node.PairLit!!.getBaseType() == LitTypes.BoolWacc)) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
             /*}else if(RHS_Node.type == RHS_type.pair_elem && RHS_Node.PairLit!!.getBaseType() == LitTypes.IdentWacc) {
                         symbolTable.*/
             } else {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+                if(LHS_Node.getBaseType() == LitTypes.IdentWacc) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
+                } else {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+                }
             }
         }
         codeGenerator.freeReg(inMemory)
