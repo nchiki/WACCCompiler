@@ -37,11 +37,12 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
                     val otherReg = codeGenerator.getFreeRegister()
                     codeGenerator.addInstruction(label, MovInstr(otherReg, reg,null))
                     codeGenerator.addInstruction(label, MovInstr(reg, "#0",null))
-                    codeGenerator.addInstruction(label, SubInstr(reg, otherReg))
+                    codeGenerator.addInstruction(label, SubInstr(reg, otherReg, "S"))
                     codeGenerator.addInstruction(label, BLInstr("p_throw_overflow_error", Condition.VS))
                     codeGenerator.addHelper("p_throw_overflow_error")
                     codeGenerator.addError(OverflowDef)
-                    codeGenerator.freeReg(otherReg)}
+                    codeGenerator.freeReg(otherReg)
+            }
             else -> return //for the add instruction we dont need to do anything since its a positive number
         }
 

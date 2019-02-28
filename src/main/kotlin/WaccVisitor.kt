@@ -275,6 +275,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitUnOp(ctx: BasicParser.UnOpContext): Node {
+        println(ctx.expr().javaClass)
+        val ex = ctx.expr()
+        if (ex is BasicParser.IntLitContext) {
+            return IntLitNode(ex.INT_LIT().text.toLong(), ex)
+        }
         val operand = visit(ctx.expr()) as ExprNode
         val operator = ctx.unaryOper()
         return UnaryOpNode(operand, operator!!, operand.getBaseType(), ctx)
