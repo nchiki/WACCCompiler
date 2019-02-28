@@ -35,7 +35,6 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator : CodeGenerator) {
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, Register.pc))
         val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         var inMemory = "[sp]"
         if(offset != 0) {
