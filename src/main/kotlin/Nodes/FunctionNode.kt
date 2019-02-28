@@ -32,15 +32,16 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
         codeGenerator.addInstruction(label, PushInstr())
-
         if (params != null) {
             params.generateCode(codeGenerator)
         }
+        val afterParams = symbolTable!!.sp
         symbolTable!!.sp += 4
         stat.generateCode(codeGenerator)
         symbolTable!!.sp -= 4
-        if(symbolTable!!.sp > 0) {
-            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
+        val difference = symbolTable!!.sp - afterParams
+        if(difference > 0) {
+            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }
         codeGenerator.addInstruction(label, PopInstr())
         codeGenerator.addInstruction(label, PopInstr())
