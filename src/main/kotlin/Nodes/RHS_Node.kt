@@ -37,12 +37,13 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
             // RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> {
-                val reg = codeGenerator.getFreeRegister()
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-                codeGenerator.addHelper("p_check_null_pointer")
-                codeGenerator.addError(NullReferDef)
-                codeGenerator.freeReg(reg)
+//                val reg = codeGenerator.getFreeRegister()
+//                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
+//                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+//                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+//                codeGenerator.addHelper("p_check_null_pointer")
+//                codeGenerator.addError(NullReferDef)
+//                codeGenerator.freeReg(reg)
                 PairLit!!.generateCode(codeGenerator)
             }
             else -> return
