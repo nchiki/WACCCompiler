@@ -29,10 +29,11 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
         if (lhs.Nodetype is IdentNode) {
             lhs.generateCode(codeGenerator)
         }
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.regsNotInUse.peek(), "[sp]", null))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
-        //codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-        //codeGenerator.addHelper("p_check_null_pointer")
-        //codeGenerator.addError(NullReferDef)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
+        codeGenerator.addHelper("p_check_null_pointer")
+        codeGenerator.addError(NullReferDef)
         val label: String
         var type = symbolTable!!.lookupSymbol(lhs.id)
         if (lhs.Nodetype is PairElemNode) {
