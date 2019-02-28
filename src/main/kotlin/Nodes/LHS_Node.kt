@@ -47,8 +47,8 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
             } else {
                 val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.sndNode.size}]", null))
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
+                //codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
             }
         }
     }

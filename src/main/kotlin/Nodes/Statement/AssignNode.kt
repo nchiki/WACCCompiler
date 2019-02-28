@@ -26,21 +26,31 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
     override fun generateCode(codeGenerator: CodeGenerator) {
         //LHS_Node.generateCode(codeGenerator)
         //val inMemory = codeGenerator.getLastUsedReg()
-
         RHS_Node.generateCode(codeGenerator)
         val regRHS = codeGenerator.getLastUsedReg()
         LHS_Node.generateCode(codeGenerator)
         val inMemory = codeGenerator.getLastUsedReg()
         if(RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
-        } else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
+            if (RHS_Node.type == RHS_type.pair_elem) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+            } else {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+            }
+        }else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
                         || RHS_Node.returnIdentType(symbolTable!!) == LitTypes.BoolWacc) ) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
         } else if (LHS_Node.Nodetype is PairElemNode) {
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
 
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+            if(RHS_Node.type == RHS_type.pair_elem && (RHS_Node.PairLit!!.getBaseType() == LitTypes.CharWacc||
+                            RHS_Node.PairLit!!.getBaseType() == LitTypes.BoolWacc)) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
+            /*}else if(RHS_Node.type == RHS_type.pair_elem && RHS_Node.PairLit!!.getBaseType() == LitTypes.IdentWacc) {
+                        symbolTable.*/
+            } else {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
+            }
         }
         codeGenerator.freeReg(inMemory)
         codeGenerator.freeReg(regRHS)
