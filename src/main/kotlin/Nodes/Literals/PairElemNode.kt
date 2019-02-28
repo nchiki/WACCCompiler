@@ -6,7 +6,9 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
@@ -41,6 +43,10 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         }
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer", Condition.NULL))
+        codeGenerator.addHelper("p_check_null_pointer")
+        codeGenerator.addError(NullReferDef)
         if(elem == 0) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
 

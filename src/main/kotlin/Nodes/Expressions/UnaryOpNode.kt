@@ -8,6 +8,7 @@ import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.OverflowDef
 import src.main.kotlin.Nodes.ExprNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
@@ -33,11 +34,15 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             // A negative number is the same as 0 - positive number. For that, we need to access the register that
             // has just been allocated in lastUsedReg.
             "-" -> {val reg = codeGenerator.getLastUsedReg()
-                val otherReg = codeGenerator.getFreeRegister()
-                codeGenerator.addInstruction(label, MovInstr(otherReg, reg,null))
-            codeGenerator.addInstruction(label, MovInstr(reg, "#0",null))
-            codeGenerator.addInstruction(label, SubInstr(reg, otherReg))
-            codeGenerator.freeReg(otherReg)}
+                    val otherReg = codeGenerator.getFreeRegister()
+                    codeGenerator.addInstruction(label, MovInstr(otherReg, reg,null))
+                    codeGenerator.addInstruction(label, MovInstr(reg, "#0",null))
+                    codeGenerator.addInstruction(label, SubInstr(reg, otherReg, "S"))
+                    codeGenerator.addInstruction(label, BLInstr("p_throw_overflow_error", Condition.VS))
+                    codeGenerator.addHelper("p_throw_overflow_error")
+                    codeGenerator.addError(OverflowDef)
+                    codeGenerator.freeReg(otherReg)
+            }
             else -> return //for the add instruction we dont need to do anything since its a positive number
         }
 

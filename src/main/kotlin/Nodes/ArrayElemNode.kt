@@ -10,6 +10,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Instructions.MultInstr
+import main.kotlin.Utils.ArrayBoundNegativeDef
 import main.kotlin.Utils.Register
 
 
@@ -31,6 +32,12 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, exprReg))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, elemReg))
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_array_bounds"))
+            codeGenerator.addHelper("p_check_array_bounds")
+            codeGenerator.addError(ArrayBoundNegativeDef)
             if(identifier.size == 1){
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
