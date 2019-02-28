@@ -24,6 +24,9 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     fun resolveToAddress(codeGenerator: CodeGenerator){
+
+        val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
+
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
         for(i in (0 until exprs.size)){
@@ -31,7 +34,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
-            if(identifier.size == 1){
+            if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
@@ -41,7 +44,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
                 if(i < exprs.size - 1) {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
                 }
-                //codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             }else{
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
@@ -65,12 +67,16 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
         val elemReg = codeGenerator.getLastUsedReg()
 
+        val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
+
         /* Load byte into memory */
-        if(identifier.size == 1){
+        if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
+
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
         }
 
+        println("type: $type")
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
 
     }
