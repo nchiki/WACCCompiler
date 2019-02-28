@@ -35,7 +35,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         if (expr is IdentNode) {
             var type = symbolTable?.lookupSymbol(expr.id)
-            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode || type is ArrayTypeNode) {
+            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
                 val label = codeGenerator.curLabel
 
                 codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
