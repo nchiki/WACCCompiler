@@ -13,6 +13,9 @@ class MovInstr(val dest : Any, val val1 : Any, val cond : Condition? = Condition
         if(val1 is Int ) {
             return "MOV$condition $dest, #$val1"
         } else if(val1 is CharLitNode) {
+            if(val1.char == "'\\0'") {
+                return "MOV$condition $dest, #0"
+            }
             return "MOV$condition $dest, #${val1.char}"
         }
         return "MOV$condition $dest, $val1"

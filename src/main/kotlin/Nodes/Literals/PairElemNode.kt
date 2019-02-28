@@ -47,7 +47,7 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
         } else {
             val node = symbolTable?.lookupSymbol((expr as IdentNode).id) as PairNode
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #4]", null))
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
         }
         //val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
