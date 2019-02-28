@@ -7,11 +7,8 @@ import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
-import main.kotlin.Utils.LitTypes
 import main.kotlin.Instructions.MultInstr
-import main.kotlin.Utils.ArrayBoundNegativeDef
-import main.kotlin.Utils.Register
+import main.kotlin.Utils.*
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
@@ -30,11 +27,13 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
+
         for(i in (0 until exprs.size)){
             val expr = exprs[i]
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
+            addArrayCheck(codeGenerator, codeGenerator.curLabel, elemReg, exprReg)
             if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
 //            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", null))
 //            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, exprReg))
@@ -62,11 +61,19 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
                 }
             }
-
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
             //codeGenerator.freeReg(elemReg)
         }
+    }
+
+    fun addArrayCheck(codeGenerator: CodeGenerator, label : String, exprReg : Register, tempReg : Register) {
+        codeGenerator.addInstruction(label, MovInstr(Register.r0, tempReg))
+        codeGenerator.addInstruction(label, MovInstr(Register.r1, exprReg))
+        codeGenerator.addInstruction(label, BLInstr("p_check_array_bounds"))
+        codeGenerator.addHelper("p_check_array_bounds")
+        codeGenerator.addError(ArrayBoundNegativeDef)
+        codeGenerator.addError(ArrayBoundsLargeDef)
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
@@ -83,7 +90,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             return
         }
 
-        println("type: $type")
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
 
     }
