@@ -268,7 +268,6 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             if (ctx.text[0] == '=') {
                 return IntLitNode(-ex.INT_LIT().text.toLong(), ex)
             }
-            return IntLitNode(ex.INT_LIT().text.toLong(), ex)
         }
         val operand = visit(ctx.expr()) as ExprNode
         val operator = ctx.unaryOper()
