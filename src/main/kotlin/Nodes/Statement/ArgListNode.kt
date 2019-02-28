@@ -52,7 +52,7 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
                 }
             }
             if(codeGenerator.getLastUsedReg() != Register.r0) {
-                codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+                //codeGenerator.freeReg(codeGenerator.getLastUsedReg())
             }
         }
     }

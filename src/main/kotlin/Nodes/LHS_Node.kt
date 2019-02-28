@@ -26,7 +26,6 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
     /* Puts the address of the variable into a register */
     override fun generateCode(codeGenerator: CodeGenerator) {
         val regRHS = codeGenerator.getLastUsedReg()
-
         if(Nodetype is ArrayElemNode){
 
             val type = symbolTable?.lookupSymbol(Nodetype.identifier.id)?.getBaseType()!!
@@ -43,7 +42,9 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             }
 
             codeGenerator.freeReg(addressReg)
-            codeGenerator.freeReg(regRHS)
+            if(regRHS != Register.r0) {
+                codeGenerator.freeReg(regRHS)
+            }
             return
         }
 
@@ -71,7 +72,9 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
                 }
 
                 codeGenerator.freeReg(addressReg)
-                codeGenerator.freeReg(regRHS)
+                if(regRHS != Register.r0) {
+                    codeGenerator.freeReg(regRHS)
+                }
                 return
             } else {
                 val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
@@ -84,7 +87,9 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
                 }
 
                 codeGenerator.freeReg(addressReg)
-                codeGenerator.freeReg(regRHS)
+                if(regRHS != Register.r0) {
+                    codeGenerator.freeReg(regRHS)
+                }
                 return
             }
         }
@@ -105,8 +110,9 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, inMemory))
         }
-
-        codeGenerator.freeReg(regRHS)
+        if(regRHS != Register.r0) {
+            codeGenerator.freeReg(regRHS)
+        }
     }
 
     override fun getBaseType(): LitTypes {

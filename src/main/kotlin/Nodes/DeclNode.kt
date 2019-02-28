@@ -58,13 +58,32 @@ class DeclNode(// var name
                         || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc){
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+            if(rhs.type == RHS_type.call) {
+                val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                if(funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
+                    codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+                } else {
+                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+                }
+            } else {
+                if(rhs.expr!! is IdentNode) {
+                    val type = symbolTable!!.lookupSymbol((rhs.expr!! as IdentNode).id)!!.getBaseType()
+                    if (type == LitTypes.BoolWacc || type == LitTypes.CharWacc) {
+                        codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
+                    } else {
+                        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+                    }
+                } else {
+                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+                }
+            }
         } else if(rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         if(codeGenerator.getLastUsedReg() != Register.r0) {
+
             codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         }
 

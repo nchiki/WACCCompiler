@@ -9,14 +9,27 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.OverflowDef
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
 
+    override val size: Int
+        get() {
+            when (operator.text) {
+                //negation not implemented yet
+                "!" -> return 4
+                "ord" -> return 4
+                "len" -> return 4
+                "chr" -> return 1
+                "-" -> return 4
+                else -> return 4
+            }
+        }
     override var symbolTable: SymbolTable? = null
 
-    override val size = operand.size
+
 
     override val weight: Int
         get() = 1 + operand.weight
@@ -41,7 +54,9 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
                     codeGenerator.addInstruction(label, BLInstr("p_throw_overflow_error", Condition.VS))
                     codeGenerator.addHelper("p_throw_overflow_error")
                     codeGenerator.addError(OverflowDef)
+                if(otherReg != Register.r0) {
                     codeGenerator.freeReg(otherReg)
+                }
             }
             else -> return //for the add instruction we dont need to do anything since its a positive number
         }

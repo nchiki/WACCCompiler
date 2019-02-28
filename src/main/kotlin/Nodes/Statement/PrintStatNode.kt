@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Statement
 
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
+import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
@@ -27,11 +28,13 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     override fun generateCode(codeGenerator: CodeGenerator) {
         //load expr into register
         expr.generateCode(codeGenerator)
-
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        if(codeGenerator.getLastUsedReg() != Register.r0) {
+            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        }
 
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode || expr is NewPairNode) {
             val label = codeGenerator.curLabel
@@ -50,6 +53,14 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
+        if(expr is ArrayTypeNode) {
+            codeGenerator.addHelper("p_print_reference")
+            return "p_print_reference"
+        }
+
+        if(expr is ParamNode) {
+            return checkType(codeGenerator, expr.type)
+        }
 
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(codeGenerator, expr as ExprNode)

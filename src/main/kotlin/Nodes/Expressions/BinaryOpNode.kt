@@ -65,8 +65,9 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         if(lastReg == leftReg){
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(rightReg, leftReg, Condition.AL))
         }
-
-        codeGenerator.freeReg(lastReg)
+        if(lastReg != Register.r0) {
+            codeGenerator.freeReg(lastReg)
+        }
     }
 
 

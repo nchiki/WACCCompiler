@@ -26,11 +26,14 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     override fun generateCode(codeGenerator : CodeGenerator) {
         expr.generateCode(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
+
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
         symbolTable?.recoverSp(codeGenerator)
 
         codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
+        codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
+
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
