@@ -25,10 +25,9 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
 
         /* The register with the address of the array */
         val baseReg = codeGenerator.getFreeRegister()
-
         codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(Register.sp, "#$size"))
         // Call the malloc function to allocate the necessary memory
-        codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, 4 + (exprList.size * 4), null))
+        codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size + (exprList[0].size * exprList.count()), null))
         codeGenerator.addInstruction(curLabel, BLInstr("malloc"))
         codeGenerator.addInstruction(curLabel, MovInstr(baseReg, Register.r0))
 
@@ -46,7 +45,11 @@ class ArrayLitNode(val exprList : MutableList<ExprNode>, override val ctx : Basi
         for (i in 0 until exprList.size) {
             exprList[i].generateCode(codeGenerator)
             val valReg = codeGenerator.getLastUsedReg()
-            codeGenerator.addInstruction(curLabel, StoreInstr(valReg, "[$baseReg, #${4 + size * i}]"))
+            if(getBaseType() == LitTypes.BoolWacc || getBaseType() == LitTypes.CharWacc) {
+                codeGenerator.addInstruction(curLabel, StrBInstr(valReg, "[$baseReg, #${4 + size * i}]"))
+            } else {
+                codeGenerator.addInstruction(curLabel, StoreInstr(valReg, "[$baseReg, #${4 + size * i}]"))
+            }
             codeGenerator.freeReg(valReg)
         }
 

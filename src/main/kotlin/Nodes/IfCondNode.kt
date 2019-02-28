@@ -31,40 +31,27 @@ class IfCondNode(// condition (should evaluate to boolean val
 
         expr!!.generateCode(codeGenerator)
 
-        val firstLabel = codeGenerator.getNewLabel()
-        codeGenerator.addLabel(firstLabel, null)
-
-        val secondLabel = codeGenerator.getNewLabel()
-        codeGenerator.addLabel(secondLabel, null)
+        val elseLabel = codeGenerator.getNewLabel()
 
         val endLabel = codeGenerator.getNewLabel()
         val oldScope = codeGenerator.curScope
-        codeGenerator.addLabel(endLabel, oldScope)
 
-        // Add compare and branch instructions to original label
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 1, ""))
-        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(firstLabel, Condition.EQ))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(elseLabel, Condition.NE))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
-        // If it doesn't jump to first label, execute else statement and it will jump to the
-        // second label(empty), continuing afterwards with the main program, that will pop pc
-        // in case of the if being the last statement
-        elseStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(secondLabel))
-
-        // Add true body to first label, as well as load + pop instructions
-        codeGenerator.curLabel = firstLabel
-        codeGenerator.curScope = firstLabel
         ifTrueStat!!.generateCode(codeGenerator)
+        ifTrueStat.symbolTable?.recoverSp(codeGenerator)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(endLabel, Condition.NULL))
 
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        codeGenerator.addLabel(elseLabel, null)
 
-        // Add false body to second label, as well as load + pop instructions
-        /*codeGenerator.curLabel = secondLabel
-        codeGenerator.curScope = secondLabel
+        codeGenerator.curScope = elseLabel
+        codeGenerator.curLabel = elseLabel
         elseStat!!.generateCode(codeGenerator)
-        codeGenerator.addInstruction(secondLabel, LoadInstr(Register.r0, 0, null))
-        codeGenerator.addInstruction(secondLabel, PopInstr())*/
+        elseStat.symbolTable?.recoverSp(codeGenerator)
+        
+        codeGenerator.addLabel(endLabel, oldScope)
 
         codeGenerator.curLabel = endLabel
         codeGenerator.curScope = oldScope

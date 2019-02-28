@@ -16,7 +16,13 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 4
+        get() {
+            when(fun_type) {
+                LitTypes.CharWacc -> return 1
+                LitTypes.BoolWacc -> return 1
+                else -> return 4
+            }
+        }
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -32,14 +38,15 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
         codeGenerator.addInstruction(label, PushInstr())
+        symbolTable!!.sp += 4
         if (params != null) {
             params.generateCode(codeGenerator)
         }
         val afterParams = symbolTable!!.sp
-        symbolTable!!.sp += 4
+        symbolTable!!.sp = 0
         stat.generateCode(codeGenerator)
-        symbolTable!!.sp -= 4
-        val difference = symbolTable!!.sp - afterParams
+        //symbolTable!!.sp -= 4
+        val difference = symbolTable!!.sp //- afterParams
         if(difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }

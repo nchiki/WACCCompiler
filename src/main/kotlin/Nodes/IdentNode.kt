@@ -34,8 +34,9 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
         val reg = codeGenerator.getFreeRegister()
 
         val expr = symbolTable!!.lookupSymbol(id)
-
-        if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
+        if(expr is ArrayTypeNode) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+        } else if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
         }else if (expr is ExprNode && expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))

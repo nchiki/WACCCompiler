@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Statement
 
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
+import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
@@ -26,7 +27,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //load expr into register
-
         expr.generateCode(codeGenerator)
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
@@ -61,13 +61,20 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
+        if(expr is ArrayTypeNode) {
+            codeGenerator.addHelper("p_print_reference")
+            return "p_print_reference"
+        }
+
+        if(expr is ParamNode) {
+            return checkType(codeGenerator, expr.type)
+        }
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(codeGenerator, expr as ExprNode)
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
-
-                return checkType(codeGenerator, type!!)
+            return checkType(codeGenerator, type!!)
 
         }
 
@@ -110,6 +117,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             codeGenerator.addHelper(label)
             return label
         }
+
         return ""
     }
     fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode) : String {

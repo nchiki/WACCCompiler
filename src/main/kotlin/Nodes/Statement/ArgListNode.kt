@@ -6,6 +6,8 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.StoreInstr
 import main.kotlin.Instructions.StrBInstr
+import main.kotlin.Nodes.ArrayLitNode
+import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -36,19 +38,22 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
             }
             if(expr.getBaseType() == LitTypes.IdentWacc) {
                 val type = symbolTable!!.lookupSymbol((expr as IdentNode).id)!!.getBaseType()
-                if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
+                if((type == LitTypes.CharWacc || type == LitTypes.BoolWacc)
+                        && symbolTable!!.lookupSymbol((expr as IdentNode).id) !is ArrayTypeNode) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 }
             } else {
-                if (expr.getBaseType() == LitTypes.CharWacc || expr.getBaseType() == LitTypes.BoolWacc) {
+                if ((expr.getBaseType() == LitTypes.CharWacc || expr.getBaseType() == LitTypes.BoolWacc)&& expr !is ArrayLitNode) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 }
             }
-
+            if(codeGenerator.getLastUsedReg() != Register.r0) {
+                codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+            }
         }
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
