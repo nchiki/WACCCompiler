@@ -60,6 +60,20 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
             /* Store the first element of the pair */
             if (Nodetype.elem == 0) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, addressReg, null))
+                if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
+                } else {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
+                }
+
+                codeGenerator.freeReg(addressReg)
+                codeGenerator.freeReg(regRHS)
+                return
+            } else {
+                val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, "[$addressReg, #4]", null))
+                /* Store the second element of the pair */
                 if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
                     codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
                 } else {
@@ -70,17 +84,6 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
                 codeGenerator.freeReg(regRHS)
                 return
             }
-
-            /* Store the second element of the pair */
-            if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg, #4]"))
-            } else {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg, #4]"))
-            }
-
-            codeGenerator.freeReg(addressReg)
-            codeGenerator.freeReg(regRHS)
-            return
         }
 
         /* LHS can only be an identifier now */
