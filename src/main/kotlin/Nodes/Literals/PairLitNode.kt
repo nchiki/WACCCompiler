@@ -17,8 +17,7 @@ class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
         get() = 4
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
+        get() = 1
     override fun generateCode(codeGenerator : CodeGenerator) {
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 0, null))

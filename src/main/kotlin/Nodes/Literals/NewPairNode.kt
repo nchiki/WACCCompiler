@@ -17,7 +17,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 4
+        get() = 8
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -29,7 +29,8 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     fun addInstructions(codeGenerator: CodeGenerator, label : String) {
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 8, null))
+
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
         exprNode1.generateCode(codeGenerator)
@@ -49,6 +50,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
         codeGenerator.freeReg(lastReg)
+
         //codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
 
     }
@@ -68,5 +70,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
+        exprNode1.semanticCheck(errors,table)
+        exprNode2.semanticCheck(errors, table)
     }
 }

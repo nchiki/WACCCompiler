@@ -32,6 +32,9 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        /*
+        array checks should be earlier
         if (expr is ArrayElemNode) {
             val label = "p_check_array_bounds"
             codeGenerator.addError(ArrayBoundNegativeDef)
@@ -39,6 +42,8 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
             codeGenerator.addHelper(label)
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
         }
+
+        */
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode || expr is NewPairNode) {
             val label = codeGenerator.curLabel
             codeGenerator.addInstruction(label, BLInstr("p_print_reference"))

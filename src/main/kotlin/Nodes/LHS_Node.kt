@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
@@ -35,7 +36,20 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             Nodetype.resolveToAddress(codeGenerator)
         }
         if (Nodetype is PairElemNode) {
-           Nodetype.generateCode(codeGenerator)
+            val offset = symbolTable?.getValueOffset((Nodetype.expr as IdentNode).id, codeGenerator)!!
+            var inMemory = "[sp]"
+            if (offset != 0) {
+                inMemory = "[sp, #${offset}]"
+            }
+            val reg = codeGenerator.getFreeRegister()
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+            if (Nodetype.elem == 0) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
+            } else {
+                val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
+                //codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
+            }
         }
     }
 

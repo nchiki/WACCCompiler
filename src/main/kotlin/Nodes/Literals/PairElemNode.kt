@@ -52,8 +52,9 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
 
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[r4, #4]", null))
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[r4]"))
+            val node = symbolTable?.lookupSymbol((expr as IdentNode).id) as PairNode
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, "[$reg]"))
         }
         //val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
         //expr.generateCode(codeGenerator)
@@ -70,6 +71,16 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
     }
 
     override fun getBaseType() : LitTypes {
+        if(expr is IdentNode) {
+            val node = symbolTable!!.lookupSymbol(expr.id)
+            if (node is PairNode) {
+                if (elem == 0) {
+                    return node.fstNode.getBaseType()
+                } else {
+                    return node.sndNode.getBaseType()
+                }
+            }
+        }
         return expr.getBaseType()
     }
 
