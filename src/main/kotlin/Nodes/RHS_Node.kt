@@ -157,8 +157,9 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             RHS_type.expr -> return expr!!.size
             RHS_type.newpair -> return newPairNode!!.size
             RHS_type.pair_elem -> return PairLit!!.size
+            RHS_type.call -> return symbolTable!!.getFunction(funId!!)!!.size
             /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
-            RHS_type.call -> return LitTypes.FuncWacc
+
             RHS_type.newpair -> return LitTypes.PairWacc
             else -> return LitTypes.NonLitWacc*/
             else -> return 4
