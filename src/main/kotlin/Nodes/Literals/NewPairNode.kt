@@ -17,7 +17,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 4
+        get() = 8
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
