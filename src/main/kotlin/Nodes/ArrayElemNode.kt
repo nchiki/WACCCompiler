@@ -56,7 +56,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
-            codeGenerator.freeReg(elemReg)
+            //codeGenerator.freeReg(elemReg)
         }
     }
 
