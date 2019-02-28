@@ -43,10 +43,9 @@ class SymbolTable (val parent: SymbolTable?){
      if the (address <= sp) then value is in stack, otherwise it's in the heap
      */
     fun getValueOffset(identifier: String, codeGenerator: CodeGenerator) : Int {
-        if(!table.containsKey(identifier)){
+        if(!addressMap.containsKey(identifier)){
             return parent!!.getValueOffset(identifier, codeGenerator)
         }
-
         return sp - addressMap[identifier]!!
     }
 
@@ -109,7 +108,7 @@ class SymbolTable (val parent: SymbolTable?){
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
         if(sp > 0) {
-            //println("in recoverSp")
+
             var value = sp
             sp -= value
             while(value > 1024) {

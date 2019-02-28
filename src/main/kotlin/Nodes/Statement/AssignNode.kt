@@ -41,11 +41,9 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         LHS_Node.semanticCheck(errors, table)
         RHS_Node.semanticCheck(errors, table)
 
-
         /* Attempting to assign to a pair */
         if (LHS_Node.Nodetype is PairElemNode) {
             val elem = LHS_Node.Nodetype.elem
-            //println(LHS_Node.id)
             val node = (table.lookupSymbol(LHS_Node.id) as PairNode).returnElemNode(elem)
             if (RHS_Node.getBaseType() == LitTypes.IdentWacc) {
                 if (node != RHS_Node.returnIdentType(table)) {

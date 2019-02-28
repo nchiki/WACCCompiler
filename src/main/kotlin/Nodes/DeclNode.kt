@@ -32,7 +32,6 @@ class DeclNode(// var name
         val offset = rhs.getSizeOfOffset() //gets size of the data type
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
         if (rhs.ArrayLit == null) {
-
             symbolTable!!.sp += offset // add offset to stack pointer
             codeGenerator.addInstruction(label, SubInstr(Register.sp, "#$offset")) //Subtract stack pointer
         } else {
@@ -60,6 +59,8 @@ class DeclNode(// var name
         } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc){
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else if(rhs.type == RHS_type.newpair) {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())

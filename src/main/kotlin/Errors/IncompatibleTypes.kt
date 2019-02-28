@@ -9,12 +9,9 @@ class IncompatibleTypes(ctx : ParserRuleContext, private val expected : String, 
 
     override fun printError(): String {
         var newExpr = expr
-//        println(expected)
-//        println(1)
+
         if (expr is IdentNode) {
-//            println(2)
-//            println(symbolTable.lookupSymbol(expr.id))
-            newExpr = symbolTable.lookupSymbol(expr.id)!!
+           newExpr = symbolTable.lookupSymbol(expr.id)!!
         }
         return super.printError() + "Incompatible type (expected: ${expected.toUpperCase().replace("WACC", "")}, actual: ${newExpr.getBaseType().toString().toUpperCase().replace("WACC", "")})"
     }
