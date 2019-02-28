@@ -23,16 +23,13 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addLabel("main", null)
-
-        codeGenerator.curLabel = "main"
-        codeGenerator.curScope = "main"
         codeGenerator.addInstruction("main", PushInstr())
+        stats!!.generateCode(codeGenerator)
+        this.statTable!!.recoverSp(codeGenerator)
+
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }
-        stats!!.generateCode(codeGenerator)
-        this.statTable!!.recoverSp(codeGenerator)
 
         /* Get the last label for this scope */
         val mainLabels = codeGenerator.scopedLabels.get("main")
