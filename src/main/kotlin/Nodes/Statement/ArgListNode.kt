@@ -27,7 +27,6 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
         val exprsRev = exprs.reversed()
         for(expr in exprsRev) {
             expr.generateCode(codeGenerator)
-
             var inMemory : String
             val value = expr.size
             symbolTable!!.sp += value
@@ -39,7 +38,7 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
             if(expr.getBaseType() == LitTypes.IdentWacc) {
                 val type = symbolTable!!.lookupSymbol((expr as IdentNode).id)!!.getBaseType()
                 if((type == LitTypes.CharWacc || type == LitTypes.BoolWacc)
-                        && symbolTable!!.lookupSymbol((expr as IdentNode).id) !is ArrayTypeNode) {
+                        && symbolTable!!.lookupSymbol((expr).id) !is ArrayTypeNode) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
@@ -51,9 +50,7 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 }
             }
-            if(codeGenerator.getLastUsedReg() != Register.r0) {
-                //codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-            }
+
         }
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

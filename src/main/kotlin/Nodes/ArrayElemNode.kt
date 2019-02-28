@@ -35,12 +35,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             val tempReg = codeGenerator.getFreeRegister()
             addArrayCheck(codeGenerator, codeGenerator.curLabel, elemReg, exprReg)
             if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
-//            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", null))
-//            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, exprReg))
-//            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, elemReg))
-//            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_array_bounds"))
-//            codeGenerator.addHelper("p_check_array_bounds")
-//            codeGenerator.addError(ArrayBoundNegativeDef)
+
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
