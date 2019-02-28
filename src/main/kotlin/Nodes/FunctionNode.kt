@@ -3,10 +3,7 @@ package main.kotlin.Nodes
 import Nodes.ParamListNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.MovInstr
-import main.kotlin.Instructions.PopInstr
-import main.kotlin.Instructions.PushInstr
+import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
@@ -41,10 +38,14 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         }
         symbolTable!!.sp += 4
         stat.generateCode(codeGenerator)
-
+        symbolTable!!.sp -= 4
+        if(symbolTable!!.sp > 0) {
+            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, symbolTable!!.sp))
+        }
         codeGenerator.addInstruction(label, PopInstr())
         codeGenerator.addInstruction(label, PopInstr())
         codeGenerator.curLabel = "main"
+
     }
 
     override fun getBaseType() : LitTypes {

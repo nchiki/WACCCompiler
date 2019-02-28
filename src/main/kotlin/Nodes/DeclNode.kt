@@ -63,7 +63,9 @@ class DeclNode(// var name
         } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        if(codeGenerator.getLastUsedReg() != Register.r0) {
+            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        }
 
     }
 
