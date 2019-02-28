@@ -55,7 +55,10 @@ class CodeGenerator {
 
     /* Returns a free register and marks it as used */
     fun getFreeRegister() : Register {
-        val reg = regsNotInUse.poll()
+        var reg = regsNotInUse.poll()
+        while (reg == Register.r0 || reg == Register.r1 || reg == Register.r2 || reg == Register.r3) {
+            reg = regsNotInUse.poll()
+        }
         regsInUse.add(reg)
         return reg
     }
@@ -116,7 +119,7 @@ class CodeGenerator {
         //print all strings and appendices
         for (entry in data.entries) {
             val str = entry.value
-            file.appendText(entry.key+":\n")
+            file.appendText("${entry.key}:\n")
             file.appendText("\t.word ${str.getLength()}\n")
             file.appendText("\t.ascii ${str.getString()}\n")
         }

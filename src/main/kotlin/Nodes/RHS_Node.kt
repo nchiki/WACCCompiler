@@ -40,7 +40,6 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             }
             else -> return
         }
-
     }
 
     fun callGenerateCode(codeGenerator: CodeGenerator) {
@@ -59,13 +58,13 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     override fun getBaseType(): LitTypes {
-        when (type) {
-            RHS_type.expr -> return expr!!.getBaseType()
-            RHS_type.array_lit -> return ArrayLit!!.getBaseType()
-            RHS_type.call -> return LitTypes.FuncWacc
-            RHS_type.newpair -> return LitTypes.PairWacc
-            RHS_type.pair_elem -> return PairLit!!.getBaseType()
-            else -> return LitTypes.NonLitWacc
+        return when (type) {
+            RHS_type.expr -> expr!!.getBaseType()
+            RHS_type.array_lit -> ArrayLit!!.getBaseType()
+            RHS_type.call -> LitTypes.FuncWacc
+            RHS_type.newpair -> LitTypes.PairWacc
+            RHS_type.pair_elem -> PairLit!!.getBaseType()
+            else -> LitTypes.NonLitWacc
         }
     }
 
@@ -78,9 +77,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 if (expr is BinaryOpNode) {
 
                 }
-                val exprId = expr as IdentNode
-                val value = expr.getValueType(table)?.getBaseType()
-                return value
+                return (expr as IdentNode).getValueType(table)?.getBaseType()
             } else {
                 return expr.getBaseType()
             }
@@ -97,9 +94,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
             }
         } else if (type == RHS_type.call) {
-            val value = table.getFunction(funId!!)!!.getBaseType()
-
-            return value
+            return table.getFunction(funId!!)!!.getBaseType()
         }
         return null
     }
@@ -118,8 +113,7 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                         val actual = args.exprs[i]
                         val expected = parameters.listParamNodes[i]
                         if (actual.getBaseType() == LitTypes.IdentWacc) {
-                            val actIdent = actual as IdentNode
-                            val actType = table.lookupSymbol(actual.id)
+                            val actType = table.lookupSymbol((actual as IdentNode).id)
                             if (expected.getBaseType() != actType!!.getBaseType()) {
                                 errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                             }
