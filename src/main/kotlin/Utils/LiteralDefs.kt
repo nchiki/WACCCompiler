@@ -122,7 +122,7 @@ class ReadIntApp : LiteralDefs {
 
 class ReadCharApp : LiteralDefs {
     override fun getString(): String {
-        return "\"%c\\0\""
+        return "\" %c\\0\""
     }
 
     override fun getLength(): Int {

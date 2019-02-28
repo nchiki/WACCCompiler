@@ -17,7 +17,7 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 8
+        get() = 4
 
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
@@ -29,14 +29,18 @@ class NewPairNode(override val ctx:BasicParser.AssignR_PairContext, val exprNode
 
     fun addInstructions(codeGenerator: CodeGenerator, label : String) {
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 8, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8, null))
 
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
         exprNode1.generateCode(codeGenerator)
         codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode1.size, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
-        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), Register.r0))
+        if(exprNode1.getBaseType() == LitTypes.CharWacc || exprNode1.getBaseType() == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), Register.r0))
+        } else {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), Register.r0))
+        }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, reg))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         exprNode2.generateCode(codeGenerator)
