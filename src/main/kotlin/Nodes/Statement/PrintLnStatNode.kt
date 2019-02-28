@@ -33,19 +33,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
                 codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
-
-        /*    array checks should be earlier
-        if (expr is ArrayElemNode) {
-            val label = "p_check_array_bounds"
-            codeGenerator.addError(ArrayBoundNegativeDef)
-            codeGenerator.addError(ArrayBoundsLargeDef)
-            codeGenerator.addHelper(label)
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
-        }*/
-
         if (expr is IdentNode) {
             var type = symbolTable?.lookupSymbol(expr.id)
-            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
+            if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode || type is ArrayTypeNode) {
                 val label = codeGenerator.curLabel
                 println("print2")
                 codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
@@ -71,7 +61,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
-
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(codeGenerator, expr as ExprNode)
         }
@@ -92,6 +81,23 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             codeGenerator.addHelper(label)
             // Print().addPrintInstrString(codeGenerator, label, str)
             return label
+        }
+
+        if(expr is ArrayElemNode){
+            val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
+            if(identifierType.equals(LitTypes.IntWacc)){
+                val label = "p_print_int"
+                codeGenerator.addHelper(label)
+                //Print().addPrintInstrString(codeGenerator, label, str)
+                return label
+            }else if(identifierType.equals(LitTypes.CharWacc)){
+                return "putchar"
+            }else if(identifierType.equals(LitTypes.BoolWacc)){
+                val label = "p_print_bool"
+                codeGenerator.addHelper(label)
+                return label
+            }
+
         }
         //print Integer
         if (expr is IntLitNode || (expr is ExprNode && expr.getBaseType() == LitTypes.IntWacc)) {
