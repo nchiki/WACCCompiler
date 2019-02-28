@@ -39,10 +39,9 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         if (params != null) {
             params.generateCode(codeGenerator)
         }
-        val afterParams = symbolTable!!.sp
         symbolTable!!.sp = 0
         stat.generateCode(codeGenerator)
-        //symbolTable!!.sp -= 4
+
         val difference = symbolTable!!.sp //- afterParams
         if(difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
