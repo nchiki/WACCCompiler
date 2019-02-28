@@ -24,13 +24,8 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        //LHS_Node.generateCode(codeGenerator)
-        //val inMemory = codeGenerator.getLastUsedReg()
         RHS_Node.generateCode(codeGenerator)
-        val regRHS = codeGenerator.getLastUsedReg()
         LHS_Node.generateCode(codeGenerator)
-        val inMemory = codeGenerator.getLastUsedReg()
-        LHS_Node.generateStoreFunc(regRHS, inMemory, codeGenerator)
     }
 
     fun getType() : LitTypes {
