@@ -31,7 +31,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        if(codeGenerator.getLastUsedReg() != Register.r0) {
+            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        }
 
         if (expr is IdentNode) {
             var type = symbolTable?.lookupSymbol(expr.id)

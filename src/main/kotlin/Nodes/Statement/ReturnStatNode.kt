@@ -25,7 +25,9 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     override fun generateCode(codeGenerator : CodeGenerator) {
         expr.generateCode(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        if(codeGenerator.getLastUsedReg() != Register.r0) {
+            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        }
         codeGenerator.curScope = "main"
     }
 

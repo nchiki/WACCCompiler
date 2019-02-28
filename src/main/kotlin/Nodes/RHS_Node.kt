@@ -42,7 +42,9 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
                 codeGenerator.addHelper("p_check_null_pointer")
                 codeGenerator.addError(NullReferDef)
-                codeGenerator.freeReg(reg)
+                if(reg != Register.r0) {
+                    codeGenerator.freeReg(reg)
+                }
                 PairLit!!.generateCode(codeGenerator)
             }
             else -> return

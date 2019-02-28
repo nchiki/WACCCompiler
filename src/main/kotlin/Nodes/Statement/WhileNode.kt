@@ -13,6 +13,7 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
@@ -39,8 +40,9 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         val reg = codeGenerator.getLastUsedReg()
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
-
-        codeGenerator.freeReg(reg)
+        if(reg != Register.r0) {
+            codeGenerator.freeReg(reg)
+        }
 
         stat.generateCode(codeGenerator)
 

@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream("../wacc_examples/" +
-          "/valid/array/arrayEmpty.wacc"))
+          "/valid/function/simple_functions/asciiTable.wacc"))
 
 
         } else {
@@ -44,8 +44,8 @@ fun main(args: Array<String>) {
         codeGen.initRegs()
         progNode.generateCode(codeGen)
 
-        //codeGen.writeToFile("print.s")
-        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile("print.s")
+        //codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
 

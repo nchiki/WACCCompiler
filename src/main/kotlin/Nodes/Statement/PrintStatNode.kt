@@ -31,7 +31,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        if(codeGenerator.getLastUsedReg() != Register.r0) {
+            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        }
 
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode || expr is NewPairNode) {
             val label = codeGenerator.curLabel

@@ -24,8 +24,6 @@ class AssignNode(val LHS_Node: LHS_Node, val RHS_Node: RHS_Node, override val ct
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        println(RHS_Node)
-        println(LHS_Node)
         RHS_Node.generateCode(codeGenerator)
         LHS_Node.generateCode(codeGenerator)
     }
