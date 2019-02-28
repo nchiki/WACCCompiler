@@ -116,7 +116,7 @@ class CodeGenerator {
         //print all strings and appendices
         for (entry in data.entries) {
             val str = entry.value
-            file.appendText(entry.key+":\n")
+            file.appendText("${entry.key}:\n")
             file.appendText("\t.word ${str.getLength()}\n")
             file.appendText("\t.ascii ${str.getString()}\n")
         }
