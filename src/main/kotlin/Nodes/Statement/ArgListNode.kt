@@ -22,7 +22,8 @@ class ArgListNode(val exprs : List<ExprNode>, override val ctx: BasicParser.ArgL
 
     override fun generateCode(codeGenerator : CodeGenerator) {
         val label = codeGenerator.curLabel
-        for(expr in exprs) {
+        val exprsRev = exprs.reversed()
+        for(expr in exprsRev) {
             expr.generateCode(codeGenerator)
 
             var inMemory : String
