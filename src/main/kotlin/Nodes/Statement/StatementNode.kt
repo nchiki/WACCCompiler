@@ -15,22 +15,21 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
         get() = stat.weight
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val label = codeGenerator.getNewLabel()
-        codeGenerator.addLabel(label, null)
-        codeGenerator.curLabel = label
-        codeGenerator.curScope = label
+        //val label = codeGenerator.getNewLabel()
+        //codeGenerator.addLabel(label, null)
+        //codeGenerator.curLabel = label
+        //codeGenerator.curScope = label
 
         stat.generateCode(codeGenerator)
 
         symbolTable!!.recoverSp(codeGenerator)
     }
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
-
         var childTable = SymbolTable(table)
+        this.symbolTable = childTable
         stat.semanticCheck(errors, childTable)
     }
 }
