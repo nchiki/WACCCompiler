@@ -101,13 +101,13 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         }
         else if (addSub != null) {
             if (addSub.MINUS() != null) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2, "S"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2))
             } else if (addSub.PLUS() != null) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2, "S"))
+                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2))
             }
-            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.VS))
-            codeGenerator.addHelper("p_throw_overflow_error")
-            codeGenerator.addError(OverflowDef)
+//            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.VS))
+//            codeGenerator.addHelper("p_throw_overflow_error")
+//            codeGenerator.addError(OverflowDef)
         }
         else if (eqOp != null) {
             if (eqOp.GREAT() != null) {
