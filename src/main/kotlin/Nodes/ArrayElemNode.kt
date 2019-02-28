@@ -26,7 +26,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
     fun resolveToAddress(codeGenerator: CodeGenerator){
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
-
         for(i in (0 until exprs.size)){
             val expr = exprs[i]
             expr.generateCode(codeGenerator)
@@ -57,6 +56,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
+            codeGenerator.freeReg(elemReg)
         }
     }
 
