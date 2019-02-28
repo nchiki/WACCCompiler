@@ -61,6 +61,8 @@ class DeclNode(// var name
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         } else if(rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+        } else {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 

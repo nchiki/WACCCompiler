@@ -47,7 +47,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
             var type = symbolTable?.lookupSymbol(expr.id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
                 val label = codeGenerator.curLabel
-                println("print2")
+
                 codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
                 codeGenerator.addHelper("p_print_reference")
             }
@@ -77,20 +77,16 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
         if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
-            /*if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
-                println("print1")
-                codeGenerator.addHelper("p_print_reference")
-                return "p_print_reference"
-            } else {*/
+
                 return checkType(codeGenerator, type!!)
-            //}
+
         }
 
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
-            // Print().addPrintInstrString(codeGenerator, label, str)
+
             return label
         }
         //print Integer
