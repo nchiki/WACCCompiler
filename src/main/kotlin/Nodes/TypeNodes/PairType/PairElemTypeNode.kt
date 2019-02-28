@@ -13,7 +13,7 @@ open class PairElemTypeNode(val type: ExprNode?, val pair : String?, override va
 
     override val size: Int
         get() {
-            if(type != null) { return type.size} else {return  8}
+            if(type != null) { return type.size} else {return  4}
         }
 
     override val weight: Int
