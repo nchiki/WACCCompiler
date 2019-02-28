@@ -42,6 +42,7 @@ fun main(args: Array<String>) {
         }
         val codeGen = CodeGenerator()
         codeGen.initRegs()
+        codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
         //codeGen.writeToFile("print.s")

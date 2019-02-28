@@ -4,6 +4,7 @@ import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 
 class CodeGenerator {
@@ -26,6 +27,8 @@ class CodeGenerator {
 
     private var lastUsedReg: Register = Register.r0
 
+    val functions = LinkedHashMap<String, ArrayList<String>>()
+    var curFunction: String = "main"
 
     fun initRegs() {
         regsNotInUse.addAll(Register.values())
@@ -63,6 +66,14 @@ class CodeGenerator {
         return reg
     }
 
+    fun switchFunctions(function: String) {
+        functions.put(function, ArrayList())
+        addLabel(function, null)
+        curFunction = function
+        curLabel = function
+        curScope = function
+    }
+
     fun addLabel(label : String, scope: String?) {
         if(scope == null){
             scopedLabels.put(label, ArrayList())
@@ -71,6 +82,7 @@ class CodeGenerator {
             scopedLabels.get(scope)?.add(label)
         }
         labels[label] = ArrayList()
+        functions.get(curFunction)?.add(label)
     }
 
     fun getNewLabel() : String {
@@ -82,8 +94,6 @@ class CodeGenerator {
         maxLabelNum++
         return label
     }
-
-
 
     fun addInstruction(label : String, instr : Instruction) {
         labels[label]!!.add(instr)
@@ -124,23 +134,15 @@ class CodeGenerator {
             file.appendText("\t.ascii ${str.getString()}\n")
         }
 
-        //print main
         file.appendText(".text\n")
         file.appendText(".global main\n")
-        for (label in labels.asIterable()) {
-            if (label.key.get(0) == 'L' || label.key.get(0) == 'm') {
-                file.appendText(label.key + ":\n")
-                for (instruction in label.value) {
-                    file.appendText("\t" + instruction.getString() + "\n")
-                }
-            }
-        }
 
-        for (label in labels.asIterable()) {
-            if (label.key.get(0) == 'f') {
-                file.appendText(label.key + ":\n")
-                for (instruction in label.value) {
-                    file.appendText("\t" + instruction.getString() + "\n")
+        for((function: String, funcLabels: ArrayList<String>) in functions){
+            for(funcLabel: String in funcLabels){
+                file.appendText("$funcLabel:\n")
+
+                for(instruction in labels[funcLabel]!!.asIterable()){
+                    file.appendText("\t ${instruction.getString()} \n")
                 }
             }
         }

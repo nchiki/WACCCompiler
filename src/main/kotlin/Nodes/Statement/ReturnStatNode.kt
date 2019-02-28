@@ -5,6 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.PopInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -26,7 +27,10 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
         expr.generateCode(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-        codeGenerator.curScope = "main"
+
+        symbolTable?.recoverSp(codeGenerator)
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
