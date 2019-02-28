@@ -25,83 +25,78 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
 
     /* Puts the address of the variable into a register */
     override fun generateCode(codeGenerator: CodeGenerator) {
-        if (getBaseType() == LitTypes.IdentWacc) {
-            val addressReg = codeGenerator.getFreeRegister()
+        val regRHS = codeGenerator.getLastUsedReg()
 
-            val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
-
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(addressReg, "sp", "#$offset"))
-
-        }
-        if (Nodetype is ArrayElemNode) {
+        if(Nodetype is ArrayElemNode){
+            /* Resolve the address of the array element and put it into a register */
             Nodetype.resolveToAddress(codeGenerator)
+            val addressReg = codeGenerator.getLastUsedReg()
+
+            /* Store RHS value into the address of the array element */
+            if(getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
+            } else {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
+            }
+
+            codeGenerator.freeReg(addressReg)
+            codeGenerator.freeReg(regRHS)
+            return
         }
-        if (Nodetype is PairElemNode) {
+
+        if(Nodetype is PairElemNode) {
+
+            /* Resolve the address of the pair */
             val offset = symbolTable?.getValueOffset((Nodetype.expr as IdentNode).id, codeGenerator)!!
             var inMemory = "[sp]"
             if (offset != 0) {
                 inMemory = "[sp, #${offset}]"
             }
-            val reg = codeGenerator.getFreeRegister()
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+            val addressReg = codeGenerator.getFreeRegister()
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, inMemory, null))
+
+            /* Store the first element of the pair */
             if (Nodetype.elem == 0) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
-            } else {
-                val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))
-            }
-        }
-    }
-
-    fun generateStoreFunc(regRHS : Register, inMemory: Register, codeGenerator: CodeGenerator) {
-        var type = getBaseType()
-        if(type == LitTypes.IdentWacc) {
-            type = symbolTable!!.lookupSymbol(id)!!.getBaseType()
-        }
-        if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
-        } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
-        }
-
-        /*if(RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
-            if (RHS_Node.type == RHS_type.pair_elem) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
-            } else {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
-            }
-        }else if(RHS_Node.type == RHS_type.call && ( RHS_Node.returnIdentType(symbolTable!!) == LitTypes.CharWacc
-                        || RHS_Node.returnIdentType(symbolTable!!) == LitTypes.BoolWacc) ) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
-        } else if (LHS_Node.Nodetype is PairElemNode) {
-            if(RHS_Node.getBaseType() == LitTypes.IdentWacc) {
-                val type = symbolTable!!.lookupSymbol((RHS_Node.expr!! as IdentNode).id)!!.getBaseType()
-                if(type == LitTypes.CharWacc || type == LitTypes.BoolWacc) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
-                }
-            } else {
-                if (RHS_Node.getBaseType() == LitTypes.CharWacc || RHS_Node.getBaseType() == LitTypes.BoolWacc) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$inMemory]"))
+                if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
                 } else {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
+                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
                 }
-            }
-        } else {
-            if(RHS_Node.type == RHS_type.pair_elem && (RHS_Node.PairLit!!.getBaseType() == LitTypes.CharWacc||
-                            RHS_Node.PairLit!!.getBaseType() == LitTypes.BoolWacc)) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[sp]"))
-                /*}else if(RHS_Node.type == RHS_type.pair_elem && RHS_Node.PairLit!!.getBaseType() == LitTypes.IdentWacc) {
-                            symbolTable.*/
-            } else {
 
-                if(LHS_Node.getBaseType() == LitTypes.IdentWacc) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$inMemory]"))
-                } else {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[sp]"))
-                }
+                codeGenerator.freeReg(addressReg)
+                codeGenerator.freeReg(regRHS)
+                return
             }
-        }*/
-        codeGenerator.freeReg(inMemory)
+
+            /* Store the second element of the pair */
+            if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg, #4]"))
+            } else {
+                codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg, #4]"))
+            }
+
+            codeGenerator.freeReg(addressReg)
+            codeGenerator.freeReg(regRHS)
+            return
+        }
+
+        /* LHS can only be an identifier now */
+
+        /* Calculate the position in the stack */
+        val identOffset = symbolTable?.getValueOffset(id, codeGenerator)
+        var inMemory = "[sp]"
+        if(identOffset != 0){
+            inMemory = "[sp, #$identOffset]"
+        }
+
+        /* Store to memory based on correct type */
+        val type = symbolTable!!.lookupSymbol(id)!!.getBaseType()
+        if (type.equals(LitTypes.CharWacc) || type.equals(LitTypes.BoolWacc)) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, inMemory))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, inMemory))
+        }
+
         codeGenerator.freeReg(regRHS)
     }
 
