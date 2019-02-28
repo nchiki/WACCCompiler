@@ -42,9 +42,9 @@ class PairElemNode(val expr : ExprNode, override val ctx: BasicParser.PairElemCo
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         if(elem == 0) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
 
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, reg, null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
         } else {
             val node = symbolTable?.lookupSymbol((expr as IdentNode).id) as PairNode
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #${node.fstNode.size}]", null))

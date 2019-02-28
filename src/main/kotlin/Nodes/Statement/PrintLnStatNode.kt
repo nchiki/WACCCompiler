@@ -33,13 +33,15 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
                 codeGenerator.getLastUsedReg(), null))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
+
+        /*    array checks should be earlier
         if (expr is ArrayElemNode) {
             val label = "p_check_array_bounds"
             codeGenerator.addError(ArrayBoundNegativeDef)
             codeGenerator.addError(ArrayBoundsLargeDef)
             codeGenerator.addHelper(label)
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
-        }
+        }*/
 
         if (expr is IdentNode) {
             var type = symbolTable?.lookupSymbol(expr.id)
