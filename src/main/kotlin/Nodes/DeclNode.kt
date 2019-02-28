@@ -28,7 +28,6 @@ class DeclNode(// var name
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        println("called")
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
