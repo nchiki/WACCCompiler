@@ -41,12 +41,14 @@ class DeclNode(// var name
         rhs.generateCode(codeGenerator) // generates code of rhs and assigns value to last used reg
 
 
+        //get offset of sp of current symboltable
         val offsetSp = -symbolTable!!.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if (offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
 
+        //check if rhs is PairNode
         if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
             if ( type !is ArrayTypeNode && (rhs.getBaseType() == LitTypes.CharWacc
                     || rhs.getBaseType() == LitTypes.BoolWacc)) {
@@ -54,10 +56,15 @@ class DeclNode(// var name
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
             }
-        } else if (rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
+        }
+
+        //check if rhs is a BaseType
+        else if (rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
                         || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
-        } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
+        }
+
+        else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
             if (rhs.type == RHS_type.call) {
                 val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
@@ -67,18 +74,21 @@ class DeclNode(// var name
                 }
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
-
             }
-        } else if (rhs.type == RHS_type.newpair) {
-            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
-        } else {
+        }
+
+        //declaration of newpair
+        else if (rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
-        if (codeGenerator.getLastUsedReg() != Register.r0) {
 
+        else {
+            codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
+        }
+
+        if (codeGenerator.getLastUsedReg() != Register.r0) {
             codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         }
-
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

@@ -18,7 +18,7 @@ class ParamNode(
         get() = type.size
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = type.size //gets size of the data type

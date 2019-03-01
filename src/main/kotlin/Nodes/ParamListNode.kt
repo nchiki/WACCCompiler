@@ -12,7 +12,7 @@ class ParamListNode(// list of parameterNodes
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator : CodeGenerator) {
         for (param in listParamNodes) {

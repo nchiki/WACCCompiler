@@ -26,7 +26,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
         get() = 4
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {

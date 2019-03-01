@@ -35,7 +35,10 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
         }
         val reg = codeGenerator.getFreeRegister()
 
+        //get respective node from symboltable
         val expr = symbolTable!!.lookupSymbol(id)
+
+        //check for every possible type of identNode
         if(expr is ArrayTypeNode) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         } else if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {

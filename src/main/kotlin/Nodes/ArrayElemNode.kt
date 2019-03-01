@@ -26,8 +26,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
     fun resolveToAddress(codeGenerator: CodeGenerator) {
 
-        val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
-
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
