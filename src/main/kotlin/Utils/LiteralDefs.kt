@@ -24,7 +24,6 @@ class PairDef : LiteralDefs {
     override fun getLength(): Int {
         return 3
     }
-
 }
 
 object ArrayBoundsLargeDef : LiteralDefs {

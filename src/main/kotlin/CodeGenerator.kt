@@ -186,6 +186,8 @@ class CodeGenerator {
         }
     }
 
+
+    // Add all the errors to the data section
     private fun checkErrors() {
         for (error in errors) {
             val msg = "msg_${data.size}"
@@ -209,6 +211,8 @@ class CodeGenerator {
         }
     }
 
+
+    //Add all the print helper functions
     private fun checkPrints() {
         if (helperFuncs.containsKey("p_print_reference")) {
             val msg = "msg_${data.size}"
