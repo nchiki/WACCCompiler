@@ -48,8 +48,9 @@ class DeclNode(// var name
         }
 
         if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
-            if (rhs.getBaseType() == LitTypes.CharWacc
-                    || rhs.getBaseType() == LitTypes.BoolWacc) {
+            if ( type !is ArrayTypeNode && (rhs.getBaseType() == LitTypes.CharWacc
+                    || rhs.getBaseType() == LitTypes.BoolWacc)) {
+                println("strb2")
                 codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), "[sp]"))
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
@@ -61,6 +62,7 @@ class DeclNode(// var name
             if (rhs.type == RHS_type.call) {
                 val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
+                    println("strb1")
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))

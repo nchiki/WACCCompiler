@@ -35,7 +35,7 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             val addressReg = codeGenerator.getLastUsedReg()
 
             /* Store RHS value into the address of the array element */
-            if(type.equals(LitTypes.CharWacc) || type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.StringWacc)) {
+            if(Nodetype !is ArrayTypeNode && (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc) || getBaseType().equals(LitTypes.StringWacc))) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
             } else {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
@@ -63,7 +63,8 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             /* Store the first element of the pair */
             if (Nodetype.elem == 0) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, addressReg, null))
-                if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                if (Nodetype !is ArrayTypeNode && (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc))) {
+                    println("strdb")
                     codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
@@ -78,7 +79,8 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
                 val node = symbolTable?.lookupSymbol((Nodetype.expr as IdentNode).id) as PairNode
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, "[$addressReg, #4]", null))
                 /* Store the second element of the pair */
-                if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {
+                if (Nodetype !is ArrayTypeNode && (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc))) {
+                    println("strdb")
                     codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
                 } else {
                     codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))
