@@ -27,8 +27,6 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //load expr into register
-        println(codeGenerator.curLabel)
-        println(symbolTable!!.sp)
         expr.generateCode(codeGenerator)
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
