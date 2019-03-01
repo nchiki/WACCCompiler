@@ -39,7 +39,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         if (expr is PairElemNode || expr is PairNode || expr is PairLitNode || expr is NewPairNode) {
             val label = codeGenerator.curLabel
             codeGenerator.addInstruction(label, BLInstr("p_print_reference"))
-            codeGenerator.addHelper("p_print_reference")
         }
 
         if (expr.getBaseType() == LitTypes.CharWacc) {
@@ -54,7 +53,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
         if(expr is ArrayTypeNode) {
-            codeGenerator.addHelper("p_print_reference")
             return "p_print_reference"
         }
 
@@ -92,7 +90,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
             var type = symbolTable?.lookupSymbol(expr.id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode || type is ArrayTypeNode) {
-                codeGenerator.addHelper("p_print_reference")
                 return "p_print_reference"
             } else {
                 return checkType(codeGenerator, type!!)

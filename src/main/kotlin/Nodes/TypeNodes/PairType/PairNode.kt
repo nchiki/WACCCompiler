@@ -1,12 +1,11 @@
 package Nodes.PairType
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
@@ -20,10 +19,9 @@ class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    override fun generateCode(codeGenerator: CodeGenerator) {
+    override fun generateCode(codeGenerator: CodeGenerator) {}
 
-    }
-    override fun getBaseType() : LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.PairWacc
     }
 
@@ -31,8 +29,8 @@ class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
         this.symbolTable = table
     }
 
-    fun returnElemNode(i: Int): LitTypes {
-        return when(i) {
+    fun returnElemNode(elem: Int): LitTypes {
+        return when (elem) {
             1 -> sndNode.getBaseType()
             else -> fstNode.getBaseType()
         }
