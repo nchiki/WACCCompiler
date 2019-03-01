@@ -1,24 +1,27 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
 import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.*
+import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.system.exitProcess
 
-class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.PrintlnContext) : Node{
+class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -31,7 +34,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         val label = checkType(codeGenerator, expr)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
-        if(codeGenerator.getLastUsedReg() != Register.r0) {
+        if (codeGenerator.getLastUsedReg() != Register.r0) {
             codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         }
 
@@ -48,9 +51,9 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
 
         if (expr.getBaseType() == LitTypes.CharWacc) {
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
         } else {
-            if(label != "" ) {
+            if (label != "") {
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
             }
@@ -60,12 +63,12 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         codeGenerator.addHelper("p_print_ln")
     }
 
-    fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
-        if(expr is ArrayTypeNode) {
+    fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
+        if (expr is ArrayTypeNode) {
             return "p_print_reference"
         }
 
-        if(expr is ParamNode) {
+        if (expr is ParamNode) {
             return checkType(codeGenerator, expr.type)
         }
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
@@ -78,27 +81,27 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
         }
 
         //print String
-        if (expr is StringLitNode || (expr is ArrayTypeNode && expr.getBaseType().equals(LitTypes.CharWacc)) ) {
+        if (expr is StringLitNode || (expr is ArrayTypeNode && expr.getBaseType().equals(LitTypes.CharWacc))) {
             val label = "p_print_string"
             codeGenerator.addHelper(label)
 
             return label
         }
 
-        if(expr is ArrayElemNode){
+        if (expr is ArrayElemNode) {
             val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
-            if(identifierType.equals(LitTypes.IntWacc)){
+            if (identifierType.equals(LitTypes.IntWacc)) {
                 val label = "p_print_int"
                 codeGenerator.addHelper(label)
                 //Print().addPrintInstrString(codeGenerator, label, str)
                 return label
-            }else if(identifierType.equals(LitTypes.CharWacc)){
+            } else if (identifierType.equals(LitTypes.CharWacc)) {
                 return "putchar"
-            }else if(identifierType.equals(LitTypes.BoolWacc)){
+            } else if (identifierType.equals(LitTypes.BoolWacc)) {
                 val label = "p_print_bool"
                 codeGenerator.addHelper(label)
                 return label
-            }else if(identifierType.equals(LitTypes.StringWacc)){
+            } else if (identifierType.equals(LitTypes.StringWacc)) {
                 val label = "p_print_string"
                 codeGenerator.addHelper(label)
 
@@ -124,7 +127,8 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
         return ""
     }
-    fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode) : String {
+
+    fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode): String {
         val type = expr.getBaseType()
         if (type == LitTypes.CharWacc) {
             return "putchar"
@@ -152,7 +156,7 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 
