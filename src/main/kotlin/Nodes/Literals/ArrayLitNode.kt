@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes

@@ -24,7 +24,6 @@ class CodeGenerator {
     private var maxLabelNum: Int = 0
 
     val regsInUse = PriorityQueue<Register>()
-    val idsAddresses = LinkedHashMap<String, Int>()
 
     private var lastUsedReg: Register = Register.r0
 
@@ -104,6 +103,16 @@ class CodeGenerator {
                     addHelper(instr.funcName)
                     addError(OverflowDef)
                 }
+                "p_check_null_pointer" -> {
+                    addHelper(instr.funcName)
+                    addError(NullReferDef)
+                }
+                "p_check_array_bounds" -> {
+                    addHelper(instr.funcName)
+                    addError(ArrayBoundNegativeDef)
+                    addError(ArrayBoundsLargeDef)
+                }
+                "p_print_reference" -> addHelper("p_print_reference")
             }
         }
         labels[label]!!.add(instr)
@@ -231,23 +240,7 @@ class CodeGenerator {
     }
 
     fun compareWeights(weight1: Int, weight2: Int): Int {
-        return (weight1 - weight2)
+        return weight1 - weight2
     }
-
-    fun saveOffset(id: String, address: Int) {
-        idsAddresses[id] = address
-    }
-
-    fun returnOffset(id: String): Int? {
-        return idsAddresses[id]
-    }
-
-    fun restoreLastReg() {
-        while (!regsInUse.isEmpty()) {
-            regsNotInUse.add(getLastUsedReg())
-            regsInUse.remove(getLastUsedReg())
-        }
-    }
-
 
 }

@@ -1,5 +1,6 @@
 package src.main.kotlin.Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -7,11 +8,10 @@ import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
-import main.kotlin.Instructions.MultInstr
 import main.kotlin.Utils.*
 
 
-class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
+class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -21,14 +21,14 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
     override val weight: Int
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    fun resolveToAddress(codeGenerator: CodeGenerator){
+    fun resolveToAddress(codeGenerator: CodeGenerator) {
 
         val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
 
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
-        for(i in (0 until exprs.size)){
+        for (i in (0 until exprs.size)) {
             val expr = exprs[i]
             expr.generateCode(codeGenerator)
             val exprReg = codeGenerator.getLastUsedReg()
@@ -42,17 +42,17 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
                 /* Byte access */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
 
-                if(i < exprs.size - 1) {
+                if (i < exprs.size - 1) {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
                 }
-            }else{
+            } else {
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
                 /* Add index and multiply it by 4 (4 bytes per index) */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
 
-                if(i < exprs.size - 1) {
+                if (i < exprs.size - 1) {
                     codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
                 }
             }
@@ -62,13 +62,10 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         }
     }
 
-    fun addArrayCheck(codeGenerator: CodeGenerator, label : String, exprReg : Register, tempReg : Register) {
+    private fun addArrayCheck(codeGenerator: CodeGenerator, label: String, exprReg: Register, tempReg: Register) {
         codeGenerator.addInstruction(label, MovInstr(Register.r0, tempReg))
         codeGenerator.addInstruction(label, MovInstr(Register.r1, exprReg))
         codeGenerator.addInstruction(label, BLInstr("p_check_array_bounds"))
-        codeGenerator.addHelper("p_check_array_bounds")
-        codeGenerator.addError(ArrayBoundNegativeDef)
-        codeGenerator.addError(ArrayBoundsLargeDef)
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
@@ -79,7 +76,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
 
         /* Load byte into memory */
-        if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc)){
+        if (type == LitTypes.BoolWacc || type == LitTypes.CharWacc) {
 
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
@@ -101,16 +98,16 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
             var realExpr = expr
 
-            if(expr is IdentNode){
+            if (expr is IdentNode) {
                 val exprValue = table.lookupSymbol(expr.id)
-                if(exprValue == null){
+                if (exprValue == null) {
                     errors.addError(UndefinedVariable(ctx, expr.id))
                     return
                 }
                 realExpr = exprValue
             }
 
-            if(!realExpr.getBaseType().equals(LitTypes.IntWacc)){
+            if (realExpr.getBaseType() != LitTypes.IntWacc) {
                 errors.addError(IncompatibleTypes(ctx, "INT", realExpr, table))
             }
         }
