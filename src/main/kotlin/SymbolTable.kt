@@ -78,9 +78,6 @@ class SymbolTable (val parent: SymbolTable?){
         return node
     }
 
-    /*fun isValidKey(key : String) : Boolean {
-        return keywords.contains(key)
-    }*/
 
     fun add(node : ExprNode, id : String) {
         table.put(id, node)
@@ -120,10 +117,4 @@ class SymbolTable (val parent: SymbolTable?){
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, value))
         }
     }
-
-    /* Returns false if declaration failed */
-    /*fun declareVariable (identifier: String, node: Node): Boolean{
-
-    }
-    */
 }

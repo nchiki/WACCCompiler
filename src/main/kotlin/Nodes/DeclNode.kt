@@ -65,6 +65,7 @@ class DeclNode(// var name
         }
 
         else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
+            //if RHS is function call
             if (rhs.type == RHS_type.call) {
                 val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
