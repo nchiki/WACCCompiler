@@ -48,8 +48,8 @@ class DeclNode(// var name
         }
 
         if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
-            if (rhs.getBaseType() == LitTypes.CharWacc
-                    || rhs.getBaseType() == LitTypes.BoolWacc) {
+            if ( type !is ArrayTypeNode && (rhs.getBaseType() == LitTypes.CharWacc
+                    || rhs.getBaseType() == LitTypes.BoolWacc)) {
                 codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), "[sp]"))
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), "[sp]"))
