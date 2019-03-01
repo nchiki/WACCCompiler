@@ -18,7 +18,6 @@ import src.main.kotlin.Nodes.Literals.IntLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.getType
 import java.lang.Exception
 import kotlin.system.exitProcess
 
@@ -88,15 +87,15 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitAssign(@NotNull ctx: BasicParser.AssignContext): Node {
-        val id = visit(ctx.assignLHS()) as LHS_Node
-        val value = visit(ctx.assignRHS()) as RHS_Node
+        val id = visit(ctx.assignLHS()) as LHSNode
+        val value = visit(ctx.assignRHS()) as RHSNode
         return AssignNode(id, value, ctx)
     }
 
     override fun visitAssignL_Array(ctx: BasicParser.AssignL_ArrayContext): Node {
         val arrayElem = visit(ctx.arrayElem()) as ArrayElemNode
 
-        return LHS_Node(arrayElem, arrayElem.identifier.id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        return LHSNode(arrayElem, arrayElem.identifier.id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext): Node {
@@ -107,18 +106,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         } else {
             text = ""
         }
-        return LHS_Node(id, text, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        return LHSNode(id, text, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignL_Pairelem(ctx: BasicParser.AssignL_PairelemContext): Node {
         val pairELem = visit(ctx.pairElem()) as PairElemNode
         val exprId = pairELem.expr as IdentNode
         val id = exprId.id
-        return LHS_Node(pairELem,id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        return LHSNode(pairELem,id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
-        return RHS_Node(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
+        return RHSNode(RHS_type.expr, "", null, ctx?.start!!.line, ctx.start!!.charPositionInLine,
                 visit(ctx.expr()) as ExprNode?, null, null, null, ctx)
     }
 
@@ -134,18 +133,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
                 argList.add(visit(arg) as ExprNode)
             }
         }
-        return RHS_Node(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line,
+        return RHSNode(RHS_type.call, funId, ArgListNode(argList, null), ctx.start!!.line,
                 ctx.start!!.charPositionInLine,
                 null, null, null, null, ctx)
     }
 
     override fun visitAssignR_Pair_Elem(ctx: BasicParser.AssignR_Pair_ElemContext): Node {
-        return RHS_Node(RHS_type.pair_elem, "", null, ctx.start.line, ctx.start.charPositionInLine,
+        return RHSNode(RHS_type.pair_elem, "", null, ctx.start.line, ctx.start.charPositionInLine,
                 null, null, visit(ctx.pairElem()) as PairElemNode, null, ctx)
     }
 
     override fun visitAssignR_ArrayL(ctx: BasicParser.AssignR_ArrayLContext): Node {
-        return RHS_Node(RHS_type.array_lit, "", null, ctx.start.line, ctx.start.charPositionInLine,
+        return RHSNode(RHS_type.array_lit, "", null, ctx.start.line, ctx.start.charPositionInLine,
                 null, null, null, visit(ctx.arrayLiter()) as ArrayLitNode, ctx)
     }
 
@@ -153,7 +152,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val expr1 = visit(ctx.expr(0)) as ExprNode
         val expr2 = visit(ctx.expr(1)) as ExprNode
         val newPair = NewPairNode(ctx, expr1, expr2)
-        return RHS_Node(RHS_type.newpair, "", null, ctx.start!!.line, ctx.start!!.charPositionInLine,
+        return RHSNode(RHS_type.newpair, "", null, ctx.start!!.line, ctx.start!!.charPositionInLine,
                 null, newPair, null, null, ctx)
     }
 
@@ -311,7 +310,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val id = ctx.IDENT()?.text
 
         // assignRHS node that will worry about semantic check of the RHS
-        val RHS = visit(ctx.assignRHS()) as RHS_Node
+        val RHS = visit(ctx.assignRHS()) as RHSNode
 
         return DeclNode(id!!, type, RHS, ctx)
     }
@@ -371,7 +370,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitRead(ctx: BasicParser.ReadContext): Node {
-        val lhs = visit(ctx.assignLHS()) as LHS_Node
+        val lhs = visit(ctx.assignLHS()) as LHSNode
         return ReadStatNode(lhs, ctx)
     }
 

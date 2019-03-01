@@ -96,7 +96,6 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
             //add to data section
             return "p_print_bool"
         }
-
         return ""
     }
 

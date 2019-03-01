@@ -7,7 +7,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
-import main.kotlin.Nodes.LHS_Node
+import main.kotlin.Nodes.LHSNode
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
@@ -17,7 +17,7 @@ import main.kotlin.Utils.Register
 import main.kotlin.Utils.getString
 import kotlin.system.exitProcess
 
-class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.ReadContext): Node {
+class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadContext): Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -26,21 +26,21 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
 
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        if (lhs.Nodetype is IdentNode) {
+        if (lhs.nodeType is IdentNode) {
             lhs.generateCode(codeGenerator)
         }
 
         val label: String
         var type = symbolTable!!.lookupSymbol(lhs.id)
-        if (lhs.Nodetype is PairElemNode) {
+        if (lhs.nodeType is PairElemNode) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.regsNotInUse.peek(), "[sp]", null))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
         }
-        if (lhs.Nodetype is PairElemNode) {
+        if (lhs.nodeType is PairElemNode) {
             type as PairNode
             var elemPair = type.fstNode
-            if (lhs.Nodetype.elem == 1) {
+            if (lhs.nodeType.elem == 1) {
                 elemPair = type.sndNode
             }
             label = "p_read_${getString(elemPair.type?.getBaseType()!!)}"
@@ -96,7 +96,7 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
                 }
                 if (value == null) {
                     errors.addError(UndefinedVariable(ctx, lhs.id))
-                } else if (value.getBaseType() != LitTypes.CharWacc && value.getBaseType() != LitTypes.IntWacc && lhs.Nodetype !is PairElemNode) {
+                } else if (value.getBaseType() != LitTypes.CharWacc && value.getBaseType() != LitTypes.IntWacc && lhs.nodeType !is PairElemNode) {
                     errors.addError(IncompatibleTypes(ctx, "CHAR or INT", value, table))
                 }
             }
