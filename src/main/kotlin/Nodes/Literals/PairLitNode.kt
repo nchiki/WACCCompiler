@@ -1,15 +1,14 @@
 package Nodes.Literals
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
+class PairLitNode(override val ctx: BasicParser.PairLitContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -18,10 +17,12 @@ class PairLitNode(override val ctx : BasicParser.PairLitContext): ExprNode {
 
     override val weight: Int
         get() = 1
-    override fun generateCode(codeGenerator : CodeGenerator) {
-        val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, 0, null))
+
+    override fun generateCode(codeGenerator: CodeGenerator) {
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.getFreeRegister(), 0,
+                null))
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
     }

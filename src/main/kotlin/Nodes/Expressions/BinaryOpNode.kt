@@ -1,7 +1,6 @@
 package main.kotlin.Nodes.Expressions
 
-
-import main.kotlin.Instructions.AddInstr
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -9,7 +8,9 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
-import main.kotlin.Nodes.*
+import main.kotlin.Nodes.ArrayLitNode
+import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
@@ -24,7 +25,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
     override val size: Int
         get() {
-            return when(getBaseType()) {
+            return when (getBaseType()) {
                 LitTypes.BoolWacc -> 1
                 else -> 4
             }
@@ -34,14 +35,13 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         get() = left.weight + right.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        var leftReg : Register
-        var rightReg : Register
+        val leftReg: Register
+        val rightReg: Register
 
-        var lastReg : Register
+        val lastReg: Register
 
-        val comparison = codeGenerator.compareWeights(left.weight, right.weight)
         // evaluates expression that needs more registers first
-        if(comparison >= 0) {
+        if (codeGenerator.compareWeights(left.weight, right.weight) >= 0) {
             left.generateCode(codeGenerator)
             leftReg = codeGenerator.getLastUsedReg()
             right.generateCode(codeGenerator)
@@ -55,62 +55,50 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             lastReg = leftReg
         }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
-        if(getBaseType() == LitTypes.BoolWacc) {
+        if (getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
         }
 
         getInstruction(leftReg, rightReg, codeGenerator)
 
         /* Results are stored in the left register, so we need to move the result into the correct register */
-        if(lastReg == leftReg){
+        if (lastReg == leftReg) {
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(rightReg, leftReg, Condition.AL))
         }
-        if(lastReg != Register.r0) {
+        if (lastReg != Register.r0) {
             codeGenerator.freeReg(lastReg)
         }
     }
 
 
-
-
-    fun getInstruction(reg1: Register, reg2:Register, codeGenerator: CodeGenerator){
+    fun getInstruction(reg1: Register, reg2: Register, codeGenerator: CodeGenerator) {
         val zeroLabel = "p_check_divide_by_zero"
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, SMultInstr(reg1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.NE))
-                codeGenerator.addError(OverflowDef)
-                codeGenerator.addHelper("p_throw_overflow_error")
             } else if (mulDiv.DIV() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addHelper(zeroLabel)
-                codeGenerator.addError(DivZeroDef)
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
             } else if (mulDiv.MOD() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addHelper(zeroLabel)
-                codeGenerator.addError(DivZeroDef)
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r1))
             }
-        }
-        else if (addSub != null) {
+        } else if (addSub != null) {
             if (addSub.MINUS() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2, "S"))
             } else if (addSub.PLUS() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(reg1, reg1, reg2, "S"))
             }
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.VS))
-            codeGenerator.addHelper("p_throw_overflow_error")
-            codeGenerator.addError(OverflowDef)
-        }
-        else if (eqOp != null) {
+        } else if (eqOp != null) {
             if (eqOp.GREAT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.GT))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.LE))
@@ -143,10 +131,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
     //differs between a Boolean expression or calculation of two operands
     override fun getBaseType(): LitTypes {
-        if (mulDiv != null || addSub != null) {
-            return LitTypes.IntWacc
+        return if (mulDiv != null || addSub != null) {
+            LitTypes.IntWacc
         } else {
-            return LitTypes.BoolWacc
+            LitTypes.BoolWacc
         }
     }
 
@@ -175,7 +163,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         if (right is IdentNode) {
             val rightValue = table.lookupSymbol(right.id)
 
-            if(rightValue == null) {
+            if (rightValue == null) {
                 errors.addError(UndefinedVariable(ctx, right.id))
                 return
             }
@@ -183,7 +171,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             realRight = rightValue
         }
 
-        if(realLeft is PairNode || realRight is PairNode){
+        if (realLeft is PairNode || realRight is PairNode) {
             if (eqOp == null || eqOp.EQ() == null && eqOp.NOTEQ() == null) {
                 errors.addError(InvalidOperandTypes(ctx))
                 return
@@ -191,22 +179,22 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             return
         }
 
-        if(realLeft is ArrayTypeNode || realLeft is ArrayLitNode){
+        if (realLeft is ArrayTypeNode || realLeft is ArrayLitNode) {
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
             return
         }
 
-        if(realRight is ArrayTypeNode || realRight is ArrayLitNode){
+        if (realRight is ArrayTypeNode || realRight is ArrayLitNode) {
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
             return
         }
 
-        if(realLeft is BoolLitNode && getBaseType() != LitTypes.BoolWacc) {
+        if (realLeft is BoolLitNode && getBaseType() != LitTypes.BoolWacc) {
             errors.addError(InvalidOperandTypes(ctx))
         }
 
         /* Can only be Integer operator now  */
-        if(realLeft.getBaseType() != realRight.getBaseType()){
+        if (realLeft.getBaseType() != realRight.getBaseType()) {
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realLeft, table))
             errors.addError(IncompatibleTypes(ctx, getBaseType().toString(), realRight, table))
         }

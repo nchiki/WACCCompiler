@@ -1,5 +1,6 @@
 package main.kotlin
 
+import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.Instruction
 import main.kotlin.Utils.*
 import java.io.File
@@ -9,7 +10,7 @@ import kotlin.collections.LinkedHashMap
 
 class CodeGenerator {
 
-    val data= LinkedHashMap<String,LiteralDefs>() //data section to be printed before main
+    val data = LinkedHashMap<String, LiteralDefs>() //data section to be printed before main
     val errors = LinkedList<LiteralDefs>()
 
     val scopedLabels: LinkedHashMap<String, ArrayList<String>> = LinkedHashMap()
@@ -23,7 +24,6 @@ class CodeGenerator {
     private var maxLabelNum: Int = 0
 
     val regsInUse = PriorityQueue<Register>()
-    val idsAddresses = LinkedHashMap<String, Int>()
 
     private var lastUsedReg: Register = Register.r0
 
@@ -43,21 +43,22 @@ class CodeGenerator {
     }
 
     /* Frees the register */
-    fun freeReg(reg : Register) {
+    fun freeReg(reg: Register) {
         regsInUse.remove(reg)
         regsNotInUse.add(reg)
     }
 
     /* Returns the last used register */
-    fun getLastUsedReg() : Register {
-        if (regsInUse.isEmpty()) {
-            return lastUsedReg
+    fun getLastUsedReg(): Register {
+        return if (regsInUse.isEmpty()) {
+            lastUsedReg
+        } else {
+            regsInUse.reversed()[0]
         }
-        return regsInUse.reversed()[0]
     }
 
     /* Returns a free register and marks it as used */
-    fun getFreeRegister() : Register {
+    fun getFreeRegister(): Register {
         var reg = regsNotInUse.poll()
         while (reg == Register.r0 || reg == Register.r1 || reg == Register.r2 || reg == Register.r3) {
             reg = regsNotInUse.poll()
@@ -74,18 +75,18 @@ class CodeGenerator {
         curScope = function
     }
 
-    fun addLabel(label : String, scope: String?) {
-        if(scope == null){
-            scopedLabels.put(label, ArrayList())
-            scopedLabels.get(label)?.add(label)
-        }else{
-            scopedLabels.get(scope)?.add(label)
+    fun addLabel(label: String, scope: String?) {
+        if (scope == null) {
+            scopedLabels[label] = ArrayList()
+            scopedLabels[label]?.add(label)
+        } else {
+            scopedLabels[scope]?.add(label)
         }
         labels[label] = ArrayList()
-        functions.get(curFunction)?.add(label)
+        functions[curFunction]?.add(label)
     }
 
-    fun getNewLabel() : String {
+    fun getNewLabel(): String {
         var label = "L$maxLabelNum"
         while (labels.containsKey(label)) {
             maxLabelNum++
@@ -95,25 +96,55 @@ class CodeGenerator {
         return label
     }
 
-    fun addInstruction(label : String, instr : Instruction) {
+    fun addInstruction(label: String, instr: Instruction) {
+        if (instr is BLInstr) {
+            when (instr.funcName) {
+                "p_throw_overflow_error" -> {
+                    addHelper(instr.funcName)
+                    addError(OverflowDef)
+                }
+                "p_check_null_pointer" -> {
+                    addHelper(instr.funcName)
+                    addError(NullReferDef)
+                }
+                "p_check_array_bounds" -> {
+                    addHelper(instr.funcName)
+                    addError(ArrayBoundNegativeDef)
+                    addError(ArrayBoundsLargeDef)
+                }
+                "p_free_pair" -> {
+                    addHelper(instr.funcName)
+                    addError(NullReferDef)
+                }
+                "p_check_divide_by_zero" -> {
+                    addHelper(instr.funcName)
+                    addError(DivZeroDef)
+                }
+                "p_print_ln" -> addHelper(instr.funcName)
+                "p_print_reference" -> addHelper(instr.funcName)
+                "p_print_int" -> addHelper(instr.funcName)
+                "p_print_string" -> addHelper(instr.funcName)
+                "p_print_bool" -> addHelper(instr.funcName)
+            }
+        }
         labels[label]!!.add(instr)
     }
 
-    fun addHelper(label : String) {
-        helperFuncs.put(label, ArrayList())
+    fun addHelper(label: String) {
+        helperFuncs[label] = ArrayList()
     }
 
-    fun addToHelper(label: String, instr : Instruction) {
-        helperFuncs.get(label)!!.add(instr)
+    fun addToHelper(label: String, instr: Instruction) {
+        helperFuncs[label]!!.add(instr)
     }
 
-    fun addError(error : LiteralDefs) {
+    fun addError(error: LiteralDefs) {
         if (!errors.contains(error)) {
             errors.addLast(error)
         }
     }
 
-    fun writeToFile(fileName : String) {
+    fun writeToFile(fileName: String) {
         var file = File(fileName)
         val created = file.createNewFile()
         if (!created) {
@@ -137,11 +168,11 @@ class CodeGenerator {
         file.appendText(".text\n")
         file.appendText(".global main\n")
 
-        for((function: String, funcLabels: ArrayList<String>) in functions){
-            for(funcLabel: String in funcLabels){
+        for ((function: String, funcLabels: ArrayList<String>) in functions) {
+            for (funcLabel: String in funcLabels) {
                 file.appendText("$funcLabel:\n")
 
-                for(instruction in labels[funcLabel]!!.asIterable()){
+                for (instruction in labels[funcLabel]!!.asIterable()) {
                     file.appendText("\t ${instruction.getString()} \n")
                 }
             }
@@ -164,7 +195,7 @@ class CodeGenerator {
             } else if (error is DivZeroDef) {
                 Print_Read().addDivZeroError(this, "p_check_divide_by_zero", msg)
             } else if (error is NullReferDef) {
-                var label = ""
+                val label: String
                 if (helperFuncs.contains("p_free_pair")) {
                     label = "p_free_pair"
                     Print_Read().addNullDerefPairError(this, label, msg)
@@ -175,7 +206,7 @@ class CodeGenerator {
             } else if (error is ArrayBoundNegativeDef) {
                 Print_Read().addArrayCheck(this, "p_check_array_bounds", data.size)
             }
-            data.put(msg, error)
+            data[msg] = error
         }
     }
 
@@ -220,26 +251,8 @@ class CodeGenerator {
 
     }
 
-    fun compareWeights(weight1 : Int, weight2 : Int) : Int {
-        return (weight1-weight2)
+    fun compareWeights(weight1: Int, weight2: Int): Int {
+        return weight1 - weight2
     }
-
-    fun saveOffset(id : String, address : Int) {
-        idsAddresses.put(id, address)
-    }
-
-    fun returnOffset(id :String) : Int?{
-        return idsAddresses.get(id)
-    }
-
-    fun restoreLastReg() {
-        while(!regsInUse.isEmpty()) {
-            regsNotInUse.add(getLastUsedReg())
-            regsInUse.remove(getLastUsedReg())
-        }
-    }
-
-
-
 
 }

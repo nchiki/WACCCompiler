@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
@@ -7,7 +8,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: ExprNode): ExprNode {
+class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: ExprNode) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -21,7 +22,7 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
         TODO("Function need not be called")
     }
 
-    override fun getBaseType() : LitTypes {
+    override fun getBaseType(): LitTypes {
         return type.getBaseType()
     }
 
@@ -37,8 +38,8 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
     }
 
     override fun equals(other: Any?): Boolean {
-        if(other is ArrayTypeNode){
-            return type.equals(other.type)
+        if (other is ArrayTypeNode) {
+            return type == other.type
         }
         return false
     }

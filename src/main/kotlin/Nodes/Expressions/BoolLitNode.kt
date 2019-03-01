@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Literals
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.MovInstr
@@ -7,9 +8,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-
-
-class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
+class BoolLitNode(val bool_val: String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -23,15 +22,14 @@ class BoolLitNode(val bool_val : String, override val ctx: BasicParser.BoolLitCo
         //add instructions to main
         val reg = codeGenerator.getFreeRegister()
         //add instructions to label
-        if(bool_val == "false") {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#0",
-                    null))
+        if (bool_val == "false") {
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#0", null))
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#1",
-                    null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#1", null))
         }
     }
-    override fun getBaseType() : LitTypes {
+
+    override fun getBaseType(): LitTypes {
         return LitTypes.BoolWacc
     }
 
