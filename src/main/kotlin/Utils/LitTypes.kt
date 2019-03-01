@@ -1,20 +1,13 @@
 package main.kotlin.Utils
 
 enum class LitTypes(s: String) {
-    IntWacc("int")
-    ,
-    BoolWacc("bool")
-    ,
-    PairWacc("pair")
-    ,
-    StringWacc("string")
-    ,
-    CharWacc("char")
-    ,
-    FuncWacc("func")
-    ,
+    IntWacc("int"),
+    BoolWacc("bool"),
+    PairWacc("pair"),
+    StringWacc("string"),
+    CharWacc("char"),
+    FuncWacc("func"),
     IdentWacc("ident"),
-
     NonLitWacc("nonlit"),
     ArrayLit("arrayLit"),
     Null("null")
