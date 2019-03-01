@@ -31,7 +31,7 @@ class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemCon
         }
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = TODO("not needed")
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
@@ -39,24 +39,25 @@ class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemCon
         if (offset != 0) {
             inMemory = "[sp, #$offset]"
         }
+
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
 
+        //load first element of pair
         if (elem == 0) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, Register.r4, null))
-        } else {
-            val node = symbolTable?.lookupSymbol((expr as IdentNode).id) as PairNode
+        }
+        //load second element of pair
+        else {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg, #4]", null))
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[$reg]", null))
         }
-        //val offset = symbolTable?.getValueOffset((expr as IdentNode).id, codeGenerator)!!
-        //expr.generateCode(codeGenerator)
-
     }
 
+    //look up base type of pair in symboltable
     override fun getBaseType(): LitTypes {
         if (expr is IdentNode) {
             val node = symbolTable!!.lookupSymbol(expr.id)

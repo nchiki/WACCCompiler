@@ -56,6 +56,12 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
 
     private fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
         if (expr is ArrayTypeNode) {
+            if(expr.getBaseType().equals(LitTypes.CharWacc)){
+                val label = "p_print_string"
+                codeGenerator.addHelper(label)
+
+                return label
+            }
             return "p_print_reference"
         }
 

@@ -19,7 +19,8 @@ class PairLitNode(override val ctx: BasicParser.PairLitContext) : ExprNode {
         get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.getFreeRegister(), 0, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.getFreeRegister(), 0,
+                null))
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
