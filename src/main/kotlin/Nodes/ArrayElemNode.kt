@@ -10,6 +10,7 @@ import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
 import main.kotlin.Instructions.MultInstr
 import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.StringLitNode
 import main.kotlin.Utils.*
 
@@ -65,9 +66,12 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
         val expr = symbolTable?.lookupSymbol(identifier.id)!!
 
         if(expr is ArrayTypeNode){
+            if(expr.type is BaseNode && expr.type.getBaseType().equals(LitTypes.StringWacc)){
+                return false
+            }
+
             /* Doesn't resolve to base */
             if(expr.getDimensions() < exprs.size){
-                println("no base")
                 return false
             }
 
@@ -76,14 +80,11 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
                 base = base.type
             }
 
-            println("base tpye:  ${base.getBaseType()}")
             return base.getBaseType().equals(LitTypes.BoolWacc) || base.getBaseType().equals(LitTypes.CharWacc) || base.getBaseType().equals(LitTypes.StringWacc)
         }else if(expr is StringLitNode){
-            println("is string lit node")
             return true
         }
-
-        println("exprtype: ${expr.getBaseType()}")
+        
         return expr.getBaseType().equals(LitTypes.BoolWacc) || expr.getBaseType().equals(LitTypes.CharWacc) || expr.getBaseType().equals(LitTypes.StringWacc)
     }
 
