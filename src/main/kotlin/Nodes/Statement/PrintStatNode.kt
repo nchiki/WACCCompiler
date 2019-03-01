@@ -67,7 +67,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         }
 
         if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
-            return checkBaseType(codeGenerator, expr as ExprNode)
+            return checkBaseType(expr as ExprNode)
         }
 
         if(expr is ArrayElemNode){
@@ -113,24 +113,33 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         return ""
     }
 
-    fun checkBaseType(codeGenerator: CodeGenerator, expr: ExprNode) : String {
+    // Returns the print function for the epxr node that is passed in
+    private fun checkBaseType(expr: ExprNode) : String {
         val type = expr.getBaseType()
 
+        // Print Char
         if (type == LitTypes.CharWacc) {
             return "putchar"
         }
+
+        // Print Int
         if (type == LitTypes.IntWacc) {
             val label = "p_print_int"
             return label
         }
+
+        // Print Bool
         if (type == LitTypes.BoolWacc) {
             val label = "p_print_bool"
             return label
         }
+
+        // Print String
         if (type == LitTypes.StringWacc) {
             val label = "p_print_string"
             return label
         }
+
         return ""
     }
 

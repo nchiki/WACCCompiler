@@ -19,7 +19,7 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))

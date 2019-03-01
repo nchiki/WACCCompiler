@@ -20,7 +20,7 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         expr.generateCode(codeGenerator)

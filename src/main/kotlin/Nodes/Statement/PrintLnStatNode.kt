@@ -29,14 +29,18 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        //load expr into register
+        // Load expr into register
         expr.generateCode(codeGenerator)
+
         val label = checkType(codeGenerator, expr)
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
+
+        // Move last used register into argument register
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg()))
         if (codeGenerator.getLastUsedReg() != Register.r0) {
             codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         }
 
+        // Get value from symbol table if it is an identifier
         if (expr is IdentNode) {
             val type = symbolTable?.lookupSymbol(expr.id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
@@ -46,6 +50,7 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_reference"))
         }
 
+        // Branch to putchar if it is a Char
         if (expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
         } else if (label != "") {
@@ -54,25 +59,40 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
     }
 
+    // Returns the print function for the epxr node that is passed in
     private fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
+
+        // Print Array
         if (expr is ArrayTypeNode) {
             if (expr.getBaseType().equals(LitTypes.CharWacc)) {
                 return "p_print_string"
             }
             return "p_print_reference"
-        } else if (expr is ParamNode) {
+        }
+
+        // Print ParamNode
+        else if (expr is ParamNode) {
             return checkType(codeGenerator, expr.type)
-        } else if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
+        }
+
+        // Print Operator nodes
+        else if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(expr as ExprNode)
-        } else if (expr is IdentNode && expr !is BinaryOpNode) {
+        }
+
+        // Print Ident nodes
+        else if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
             return checkType(codeGenerator, type!!)
         }
 
-        //print String
+        // Print String
         else if (expr is StringLitNode || (expr is ArrayTypeNode && expr.getBaseType().equals(LitTypes.CharWacc))) {
             return "p_print_string"
-        } else if (expr is ArrayElemNode) {
+        }
+
+        // Print Array Element
+        else if (expr is ArrayElemNode) {
             val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
             return when (identifierType) {
                 LitTypes.IntWacc -> "p_print_int"

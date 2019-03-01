@@ -16,15 +16,12 @@ class AssignNode(val LHSNode: LHSNode, val RHSNode: RHSNode, override val ctx : 
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        // Call generateCode on RHS and LHS
         RHSNode.generateCode(codeGenerator)
         LHSNode.generateCode(codeGenerator)
-    }
-
-    fun getType() : LitTypes {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
