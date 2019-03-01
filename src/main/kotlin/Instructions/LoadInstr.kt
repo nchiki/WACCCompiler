@@ -4,7 +4,7 @@ import main.kotlin.Utils.Condition
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class LoadInstr(val arg1 : Register, val arg2: Any, val cond : Condition?) : Instruction {
+class LoadInstr(val arg1: Register, val arg2: Any, val cond: Condition?) : Instruction {
 
     override fun getString(): String {
         var ldr = ""
@@ -14,7 +14,7 @@ class LoadInstr(val arg1 : Register, val arg2: Any, val cond : Condition?) : Ins
             ldr = "LDR$cond"
         }
         if (arg2 is Int || arg2 is String) {
-            if(arg2 is String && arg2.startsWith("[")) {
+            if (arg2 is String && arg2.startsWith("[")) {
                 return "$ldr $arg1, $arg2"
             }
             return "$ldr $arg1, =$arg2"
