@@ -19,6 +19,7 @@ class CharLitNode(val char: String, override val ctx: BasicParser.CharLitContext
     override val weight: Int
         get() = 1
 
+    //moves char into a free register
     override fun generateCode(codeGenerator: CodeGenerator) {
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
