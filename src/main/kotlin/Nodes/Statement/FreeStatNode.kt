@@ -24,8 +24,6 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_free_pair"))
-        codeGenerator.addHelper("p_free_pair")
-        codeGenerator.addError(NullReferDef)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

@@ -66,29 +66,18 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
         if(expr is ArrayElemNode){
             val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
-            if(identifierType.equals(LitTypes.IntWacc)){
-                val label = "p_print_int"
-                codeGenerator.addHelper(label)
-                //Print().addPrintInstrString(codeGenerator, label, str)
-                return label
-            }else if(identifierType.equals(LitTypes .CharWacc)){
-                return "putchar"
-            }else if(identifierType.equals(LitTypes.BoolWacc)){
-                val label = "p_print_bool"
-                codeGenerator.addHelper(label)
-                return label
-            }else if(identifierType.equals(LitTypes.StringWacc)){
-                val label = "p_print_string"
-                codeGenerator.addHelper(label)
-
-                return label
+            return when (identifierType) {
+                LitTypes.IntWacc -> "p_print_int"
+                LitTypes.CharWacc -> "putchar"
+                LitTypes.BoolWacc -> "p_print_bool"
+                LitTypes.StringWacc -> "p_print_string"
+                else -> ""
             }
-
         }
 
         if (expr is IdentNode && expr !is BinaryOpNode) {
 
-            var type = symbolTable?.lookupSymbol(expr.id)
+            val type = symbolTable?.lookupSymbol(expr.id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode || type is ArrayTypeNode) {
                 return "p_print_reference"
             } else {
@@ -98,14 +87,12 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         //print String
         if (expr is StringLitNode) {
             val label = "p_print_string"
-            codeGenerator.addHelper(label)
             // Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
         //print Integer
         if (expr is IntLitNode) {
             val label = "p_print_int"
-            codeGenerator.addHelper(label)
             //Print().addPrintInstrString(codeGenerator, label, str)
             return label
         }
@@ -114,7 +101,6 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
                 || expr is BoolOpNode) {
             //add to data section
             val label = "p_print_bool"
-            codeGenerator.addHelper(label)
             return label
         }
 
@@ -126,23 +112,17 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
         if (type == LitTypes.CharWacc) {
             return "putchar"
-            /*val label = "p_print_string"
-            codeGenerator.addHelper(label)
-            return label*/
         }
         if (type == LitTypes.IntWacc) {
             val label = "p_print_int"
-            codeGenerator.addHelper(label)
             return label
         }
         if (type == LitTypes.BoolWacc) {
             val label = "p_print_bool"
-            codeGenerator.addHelper(label)
             return label
         }
         if (type == LitTypes.StringWacc) {
             val label = "p_print_string"
-            codeGenerator.addHelper(label)
             return label
         }
         return ""

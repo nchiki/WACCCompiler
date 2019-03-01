@@ -112,9 +112,19 @@ class CodeGenerator {
                     addError(ArrayBoundNegativeDef)
                     addError(ArrayBoundsLargeDef)
                 }
+                "p_free_pair" -> {
+                    addHelper(instr.funcName)
+                    addError(NullReferDef)
+                }
+                "p_check_divide_by_zero" -> {
+                    addHelper(instr.funcName)
+                    addError(DivZeroDef)
+                }
                 "p_print_ln" -> addHelper(instr.funcName)
                 "p_print_reference" -> addHelper(instr.funcName)
                 "p_print_int" -> addHelper(instr.funcName)
+                "p_print_string" -> addHelper(instr.funcName)
+                "p_print_bool" -> addHelper(instr.funcName)
             }
         }
         labels[label]!!.add(instr)
