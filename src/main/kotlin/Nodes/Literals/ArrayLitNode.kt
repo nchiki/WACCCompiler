@@ -29,9 +29,9 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(Register.sp, "#$size"))
         // Call the malloc function to allocate the necessary memory
         if (exprList.count() != 0) {
-            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size + (exprList[0].size * exprList.count()), null))
+            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size + (exprList[0].size * exprList.count())))
         } else {
-            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size, null))
+            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size))
         }
         codeGenerator.addInstruction(curLabel, BLInstr("malloc"))
         codeGenerator.addInstruction(curLabel, MovInstr(baseReg, Register.r0))
@@ -39,7 +39,7 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         if (exprList.size == 0) {
             /* Store 0 as size of array and be done */
             val tempReg = codeGenerator.getFreeRegister()
-            codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size, null))
+            codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size))
             codeGenerator.addInstruction(curLabel, StoreInstr(tempReg, "[$baseReg]"))
             codeGenerator.freeReg(tempReg)
             return
@@ -60,7 +60,7 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
 
         /* Store the size of the array */
         val tempReg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size, null))
+        codeGenerator.addInstruction(curLabel, LoadInstr(tempReg, exprList.size))
         codeGenerator.addInstruction(curLabel, StoreInstr(tempReg, "[$baseReg]"))
         codeGenerator.freeReg(tempReg)
     }
