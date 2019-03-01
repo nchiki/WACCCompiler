@@ -63,9 +63,11 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
     fun resolvesToByte(): Boolean {
         val expr = symbolTable?.lookupSymbol(identifier.id)!!
+
         if(expr is ArrayTypeNode){
             /* Doesn't resolve to base */
             if(expr.getDimensions() < exprs.size){
+                println("no base")
                 return false
             }
 
@@ -74,12 +76,15 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
                 base = base.type
             }
 
-            return base.getBaseType().equals(LitTypes.BoolWacc) || base.getBaseType().equals(LitTypes.CharWacc)
+            println("base tpye:  ${base.getBaseType()}")
+            return base.getBaseType().equals(LitTypes.BoolWacc) || base.getBaseType().equals(LitTypes.CharWacc) || base.getBaseType().equals(LitTypes.StringWacc)
         }else if(expr is StringLitNode){
+            println("is string lit node")
             return true
         }
 
-        return expr.getBaseType().equals(LitTypes.BoolWacc) || expr.getBaseType().equals(LitTypes.CharWacc)
+        println("exprtype: ${expr.getBaseType()}")
+        return expr.getBaseType().equals(LitTypes.BoolWacc) || expr.getBaseType().equals(LitTypes.CharWacc) || expr.getBaseType().equals(LitTypes.StringWacc)
     }
 
     fun addArrayCheck(codeGenerator: CodeGenerator, label : String, exprReg : Register, tempReg : Register) {
@@ -96,7 +101,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
         val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
 
         /* Load byte into memory */
-        if (type == LitTypes.BoolWacc || type == LitTypes.CharWacc) {
+        if (resolvesToByte()) {
 
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
