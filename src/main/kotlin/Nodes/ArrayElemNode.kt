@@ -41,9 +41,8 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
             /* Resolves to byte sized element */
-            if(i < exprs.size - 1 && resolvesToByte()){
+            if(i == exprs.size - 1 && resolvesToByte()){
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
                 codeGenerator.freeReg(tempReg)
                 codeGenerator.freeReg(exprReg)
                 return
@@ -51,7 +50,11 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
 
             /* Add index and multiply by 4 */
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+
+            if(i < exprs.size - 1){
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+            }
+
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
         }
