@@ -73,7 +73,7 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
                 codeGenerator.addHelper(label)
                 //Print().addPrintInstrString(codeGenerator, label, str)
                 return label
-            }else if(identifierType.equals(LitTypes.CharWacc)){
+            }else if(identifierType.equals(LitTypes .CharWacc)){
                 return "putchar"
             }else if(identifierType.equals(LitTypes.BoolWacc)){
                 val label = "p_print_bool"
