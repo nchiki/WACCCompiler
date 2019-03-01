@@ -1,18 +1,18 @@
 package main.kotlin.Nodes
 
-
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.IncorrectNumParams
-import main.kotlin.Instructions.*
-import main.kotlin.Nodes.Expressions.BinaryOpNode
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
@@ -31,30 +31,26 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {
             RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
-            RHS_type.call -> callGenerateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
             RHS_type.array_lit -> ArrayLit!!.generateCode(codeGenerator)
-            // to be implemented RHS_type.call -> table.lookUp(funId).generateCode(codeGenerator)
-            // RHS_type.newpair -> return LitTypes.PairWacc
             RHS_type.pair_elem -> PairLit!!.generateCode(codeGenerator)
-
+            RHS_type.call -> callGenerateCode(codeGenerator)
             else -> return
         }
     }
 
-    fun callGenerateCode(codeGenerator: CodeGenerator) {
+    private fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val before = symbolTable!!.sp
         args?.generateCode(codeGenerator)
 
         codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
         val after = symbolTable!!.sp
-        if (after-before != 0) {
+        if (after - before != 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
             symbolTable!!.sp -= after - before
         }
         codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
-
     }
 
     override fun getBaseType(): LitTypes {
@@ -69,34 +65,30 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     }
 
     fun returnIdentType(table: SymbolTable): LitTypes? {
-        if (type == RHS_type.expr) {
-            if (expr!!.getBaseType() == LitTypes.IdentWacc) {
-                if (expr is ArrayElemNode) {
-                    return table.lookupSymbol(expr.identifier.id)?.getBaseType()
-                }
-                if (expr is BinaryOpNode) {
-
-                }
-                return (expr as IdentNode).getValueType(table)?.getBaseType()
-            } else {
-                return expr.getBaseType()
-            }
-        } else if (type == RHS_type.pair_elem) {
-            val pairVal = PairLit?.expr
-            if (pairVal?.getBaseType() == LitTypes.IdentWacc) {
-                val exprId = pairVal as IdentNode
-                val value = exprId.getValueType(table)
-                if (value is PairNode) {
-                    return (value.returnElemNode(PairLit!!.elem))
+        when (type) {
+            RHS_type.expr -> {
+                return if (expr!!.getBaseType() == LitTypes.IdentWacc) {
+                    if (expr is ArrayElemNode) {
+                        table.lookupSymbol(expr.identifier.id)?.getBaseType()
+                    } else {
+                        (expr as IdentNode).getValueType(table)?.getBaseType()
+                    }
                 } else {
-                    return pairVal?.getBaseType()
+                    expr.getBaseType()
                 }
-
             }
-        } else if (type == RHS_type.call) {
-            return table.getFunction(funId!!)!!.getBaseType()
+            RHS_type.pair_elem -> {
+                val pairVal = PairLit?.expr
+                val value = (pairVal as IdentNode).getValueType(table)
+                return if (pairVal.getBaseType() == LitTypes.IdentWacc && value is PairNode) {
+                    value.returnElemNode(PairLit!!.elem)
+                } else {
+                    pairVal.getBaseType()
+                }
+            }
+            RHS_type.call -> return table.getFunction(funId!!)!!.getBaseType()
+            else -> return null
         }
-        return null
     }
 
 
@@ -141,21 +133,16 @@ class RHS_Node(val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     fun getSizeOfOffset(): Int {
 
-        if (expr != null) {
-            if (expr.getBaseType() == LitTypes.PairWacc) {
-                return 4
-            }
+        if (expr != null && expr.getBaseType() == LitTypes.PairWacc) {
+            return 4
         }
-        when (type) {
-            RHS_type.expr -> return expr!!.size
-            RHS_type.newpair -> return newPairNode!!.size
-            RHS_type.pair_elem -> return PairLit!!.size
-            RHS_type.call -> return symbolTable!!.getFunction(funId!!)!!.size
-            /*RHS_type.array_lit -> return ArrayLit!!.getBaseType()
 
-            RHS_type.newpair -> return LitTypes.PairWacc
-            else -> return LitTypes.NonLitWacc*/
-            else -> return 4
+        return when (type) {
+            RHS_type.expr -> expr!!.size
+            RHS_type.newpair -> newPairNode!!.size
+            RHS_type.pair_elem -> PairLit!!.size
+            RHS_type.call -> symbolTable!!.getFunction(funId!!)!!.size
+            else -> 4
         }
     }
 }

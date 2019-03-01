@@ -22,10 +22,10 @@ class BoolLitNode(val bool_val: String, override val ctx: BasicParser.BoolLitCon
         //add instructions to main
         val reg = codeGenerator.getFreeRegister()
         //add instructions to label
-        if (bool_val == "false") {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#0", null))
+        if (!bool_val.toBoolean()) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#0"))
         } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#1", null))
+            codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, "#1"))
         }
     }
 

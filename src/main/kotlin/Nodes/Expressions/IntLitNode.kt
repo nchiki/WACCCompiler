@@ -20,10 +20,9 @@ class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext)
         get() = 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-
         //add instructions to main
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this))
     }
 
     override fun getBaseType(): LitTypes {
