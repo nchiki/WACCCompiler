@@ -1,5 +1,6 @@
 package src.main.kotlin.Nodes.Literals
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
@@ -8,7 +9,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class IntLitNode(val int_val : Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
+class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 

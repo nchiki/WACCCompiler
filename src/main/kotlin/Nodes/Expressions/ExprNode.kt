@@ -4,6 +4,6 @@ import main.kotlin.Nodes.Node
 import main.kotlin.Utils.LitTypes
 
 interface ExprNode : Node {
-    fun getBaseType() : LitTypes
+    fun getBaseType(): LitTypes
     val size: Int
 }

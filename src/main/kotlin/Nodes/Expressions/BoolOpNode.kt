@@ -1,17 +1,15 @@
 package main.kotlin.Nodes.Expressions
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.AndInstr
-import main.kotlin.Instructions.CmpInstr
-import main.kotlin.Instructions.MovInstr
 import main.kotlin.Instructions.OrInstr
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import org.antlr.v4.runtime.ParserRuleContext
@@ -28,16 +26,15 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
-        var leftReg: Register? = null
-        var rightReg: Register? = null
+        var leftReg: Register?
+        var rightReg: Register?
 
-
-        if(left.weight > right.weight){
+        if (left.weight > right.weight) {
             left.generateCode(codeGenerator)
             leftReg = codeGenerator.getLastUsedReg()
             right.generateCode(codeGenerator)
             rightReg = codeGenerator.getLastUsedReg()
-        }else{
+        } else {
             right.generateCode(codeGenerator)
             rightReg = codeGenerator.getLastUsedReg()
             left.generateCode(codeGenerator)
@@ -48,14 +45,11 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         //codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
 
-        if(operator.AND() != null){
+        if (operator.AND() != null) {
             codeGenerator.addInstruction(codeGenerator.curLabel, AndInstr(leftReg, rightReg))
-
-        }else if(operator.OR() != null){
+        } else if (operator.OR() != null) {
             codeGenerator.addInstruction(codeGenerator.curLabel, OrInstr(leftReg, rightReg))
-
         }
-
 
         codeGenerator.regsInUse.remove(rightReg)
         codeGenerator.regsNotInUse.add(rightReg)
@@ -63,6 +57,7 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
         codeGenerator.regsInUse.remove(leftReg)
         codeGenerator.regsInUse.add(leftReg)
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         var realLeft = left
@@ -94,11 +89,11 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
         }
 
 
-        if(realLeft is ArrayTypeNode || !realLeft.getBaseType().equals(LitTypes.BoolWacc)){
+        if (realLeft is ArrayTypeNode || !realLeft.getBaseType().equals(LitTypes.BoolWacc)) {
             errors.addError(IncompatibleTypes(ctx, LitTypes.BoolWacc.toString(), realLeft, table))
         }
 
-        if(realRight is ArrayTypeNode || !realRight.getBaseType().equals(LitTypes.BoolWacc)){
+        if (realRight is ArrayTypeNode || !realRight.getBaseType().equals(LitTypes.BoolWacc)) {
             errors.addError(IncompatibleTypes(ctx, LitTypes.BoolWacc.toString(), realRight, table))
         }
 

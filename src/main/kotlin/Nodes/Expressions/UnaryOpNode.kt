@@ -1,5 +1,6 @@
 package main.kotlin.Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.InvalidOperandTypes
@@ -12,23 +13,22 @@ import main.kotlin.Utils.OverflowDef
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
-class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type : Any,
+class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
 
     override val size: Int
         get() {
-            when (operator.text) {
+            return when (operator.text) {
                 //negation not implemented yet
-                "!" -> return 4
-                "ord" -> return 4
-                "len" -> return 4
-                "chr" -> return 1
-                "-" -> return 4
-                else -> return 4
+                "!" -> 4
+                "ord" -> 4
+                "len" -> 4
+                "chr" -> 1
+                "-" -> 4
+                else -> 4
             }
         }
     override var symbolTable: SymbolTable? = null
-
 
 
     override val weight: Int
@@ -46,15 +46,14 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             "chr" -> return //codeGenerator.addInstruction(label,BLInstr("putchar"))
             // A negative number is the same as 0 - positive number. For that, we need to access the register that
             // has just been allocated in lastUsedReg.
-            "-" -> {val reg = codeGenerator.getLastUsedReg()
-                    val otherReg = codeGenerator.getFreeRegister()
-                    codeGenerator.addInstruction(label, MovInstr(otherReg, reg,null))
-                    codeGenerator.addInstruction(label, MovInstr(reg, "#0",null))
-                    codeGenerator.addInstruction(label, SubInstr(reg, otherReg, "S"))
-                    codeGenerator.addInstruction(label, BLInstr("p_throw_overflow_error", Condition.VS))
-                    codeGenerator.addHelper("p_throw_overflow_error")
-                    codeGenerator.addError(OverflowDef)
-                if(otherReg != Register.r0) {
+            "-" -> {
+                val reg = codeGenerator.getLastUsedReg()
+                val otherReg = codeGenerator.getFreeRegister()
+                codeGenerator.addInstruction(label, MovInstr(otherReg, reg, null))
+                codeGenerator.addInstruction(label, MovInstr(reg, "#0", null))
+                codeGenerator.addInstruction(label, SubInstr(reg, otherReg, "S"))
+                codeGenerator.addInstruction(label, BLInstr("p_throw_overflow_error", Condition.VS))
+                if (otherReg != Register.r0) {
                     codeGenerator.freeReg(otherReg)
                 }
             }
@@ -63,7 +62,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
     }
 
-    fun lenOperator(codeGenerator: CodeGenerator){
+    fun lenOperator(codeGenerator: CodeGenerator) {
 
     }
 
@@ -82,7 +81,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
         var op = operand
 
         //get type of operand from Symboltable
-        if(operand is IdentNode) {
+        if (operand is IdentNode) {
             val opValue = table.lookupSymbol(operand.id)
             if (opValue == null) {
                 errors.addError(UndefinedVariable(ctx, operand.id))
@@ -96,8 +95,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
                 || operator.text == "minus" && op.getBaseType() != LitTypes.IntWacc
                 || operator.text == "len" && op !is ArrayTypeNode
                 || operator.text == "ord" && op.getBaseType() != LitTypes.CharWacc
-                || operator.text == "chr" && op.getBaseType() != LitTypes.IntWacc)
-        {
+                || operator.text == "chr" && op.getBaseType() != LitTypes.IntWacc) {
 
             errors.addError(InvalidOperandTypes(ctx))
         }
