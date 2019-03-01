@@ -28,6 +28,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         stats!!.generateCode(codeGenerator)
         this.statTable!!.recoverSp(codeGenerator)
 
+        // Generate each function code
         for (func in funcDefs) {
             func.generateCode(codeGenerator)
         }
@@ -41,6 +42,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()
+
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

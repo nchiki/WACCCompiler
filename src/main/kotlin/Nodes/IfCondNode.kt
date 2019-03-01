@@ -35,7 +35,7 @@ class IfCondNode(// condition (should evaluate to boolean val
 
         val oldScope = codeGenerator.curScope
 
-
+        // Check expression and add branch instruction
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 1, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(elseLabel, Condition.NE))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())

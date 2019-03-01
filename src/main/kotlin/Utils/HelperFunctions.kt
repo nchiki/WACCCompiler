@@ -3,6 +3,7 @@ package main.kotlin.Utils
 import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.*
 
+// Helper function for printing instruction strings
 fun addPrintInstrString(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, LoadInstr(Register.r1, Register.r0))
@@ -15,6 +16,7 @@ fun addPrintInstrString(codeGenerator: CodeGenerator, label: String, msg: String
     codeGenerator.addToHelper(label, PopInstr())
 }
 
+// Helper function for checking the array bounds
 fun addArrayCheck(codeGenerator: CodeGenerator, label: String, msg: Int) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0"))
@@ -28,6 +30,7 @@ fun addArrayCheck(codeGenerator: CodeGenerator, label: String, msg: Int) {
     addRuntimeError(codeGenerator)
 }
 
+// Helper function for checking division by zero
 fun addDivZeroError(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, CmpInstr(Register.r1, "#0"))
@@ -48,6 +51,7 @@ fun addPrintReference(codeGenerator: CodeGenerator, label: String, msg: String) 
     codeGenerator.addToHelper(label, PopInstr())
 }
 
+// Helper function for printing overflow errors
 fun addPrintOverflowError(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, LoadInstr(Register.r0, msg))
     codeGenerator.addToHelper(label, BLInstr("p_throw_runtime_error"))
@@ -63,6 +67,7 @@ fun addRuntimeError(codeGenerator: CodeGenerator) {
     codeGenerator.addToHelper(label, BLInstr("exit"))
 }
 
+// Helper function for dereferencing null values
 fun addNullDerefError(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, CmpInstr(Register.r0, "#0"))
@@ -89,6 +94,7 @@ fun addNullDerefPairError(codeGenerator: CodeGenerator, label: String, msg: Stri
     addRuntimeError(codeGenerator)
 }
 
+// Helper function for printing bools
 fun addPrintInstrBool(codeGenerator: CodeGenerator, label: String, msg: Int) {
     val trueMsg = "msg_$msg"
     val falseMsg = "msg_${msg + 1}"
@@ -103,7 +109,7 @@ fun addPrintInstrBool(codeGenerator: CodeGenerator, label: String, msg: Int) {
     codeGenerator.addToHelper(label, PopInstr())
 }
 
-
+// Helper function for printing Ints
 fun addPrintInstrInt(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, MovInstr(Register.r1, Register.r0))
@@ -125,6 +131,7 @@ fun addPrintLn(codeGen: CodeGenerator, msg: String) {
     codeGen.addToHelper("p_print_ln", PopInstr())
 }
 
+// Helper function to handle reads
 fun addRead(codeGenerator: CodeGenerator, label: String, msg: String) {
     codeGenerator.addToHelper(label, PushInstr())
     codeGenerator.addToHelper(label, MovInstr(Register.r1, Register.r0))
