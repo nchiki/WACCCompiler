@@ -34,7 +34,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
             addArrayCheck(codeGenerator, codeGenerator.curLabel, elemReg, exprReg)
-            if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
+            if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc)){
 
                 /* Skip past array size */
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
