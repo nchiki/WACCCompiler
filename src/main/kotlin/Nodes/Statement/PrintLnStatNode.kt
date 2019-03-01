@@ -98,6 +98,11 @@ class PrintLnStatNode(val expr : ExprNode, override val ctx: BasicParser.Println
                 val label = "p_print_bool"
                 codeGenerator.addHelper(label)
                 return label
+            }else if(identifierType.equals(LitTypes.StringWacc)){
+                val label = "p_print_string"
+                codeGenerator.addHelper(label)
+
+                return label
             }
 
         }
