@@ -79,7 +79,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
         val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
 
         /* Load byte into memory */
-        if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc) || type.equals(LitTypes.StringWacc)){
+        if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc)){
 
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
