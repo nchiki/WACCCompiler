@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
 class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
-        val rhs: RHS_Node, override val ctx: BasicParser.DeclContext) : Node {
+        val rhs: RHSNode, override val ctx: BasicParser.DeclContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
