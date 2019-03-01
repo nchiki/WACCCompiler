@@ -21,16 +21,20 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
         get() = expr.size
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator : CodeGenerator) {
+        // Generate code for expression
         expr.generateCode(codeGenerator)
+
+
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
 
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
         symbolTable?.recoverSp(codeGenerator)
 
+        // Pop last two items from stack
         codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
         codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
 

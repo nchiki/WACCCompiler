@@ -18,11 +18,13 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = 0
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val exprsRev = exprs.reversed()
+
+        // Iterate through reverse expressions and generate each of their code
         for (expr in exprsRev) {
             expr.generateCode(codeGenerator)
             val value = expr.size
@@ -35,14 +37,17 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
                 "[sp, #-$value]"
             }
 
+            // Check if it is an identifier
             if (expr.getBaseType() == LitTypes.IdentWacc) {
                 val type = symbolTable!!.lookupSymbol((expr as IdentNode).id)!!.getBaseType()
+                // Check if the base type is a Char or Bool
                 if ((type == LitTypes.CharWacc || type == LitTypes.BoolWacc)
                         && symbolTable!!.lookupSymbol((expr).id) !is ArrayTypeNode) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 }
+            // Check if it is a Char or Bool
             } else if ((expr.getBaseType() == LitTypes.CharWacc || expr.getBaseType() == LitTypes.BoolWacc) && expr !is ArrayLitNode) {
                 codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
             } else {
