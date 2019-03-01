@@ -39,6 +39,8 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
         }
     }
 
+
+    // Add the instructions for a function call
     private fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
         val before = symbolTable!!.sp
