@@ -74,7 +74,6 @@ class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
                 }
                 return
             } else {
-                val node = symbolTable?.lookupSymbol((nodeType.expr as IdentNode).id) as PairNode
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, "[$addressReg, #4]", null))
                 /* Store the second element of the pair */
                 if (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc)) {

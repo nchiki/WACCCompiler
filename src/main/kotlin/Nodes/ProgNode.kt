@@ -19,9 +19,10 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     var statTable : SymbolTable? = null
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() =0
 
 
+    //triggers generate code for everything inside global main
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction("main", PushInstr())
         stats!!.generateCode(codeGenerator)
@@ -37,7 +38,6 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
         codeGenerator.addInstruction(lastLabel, LoadInstr(Register.r0, 0, null))
         codeGenerator.addInstruction(lastLabel, PopInstr())
-
     }
 
     var children : MutableList<SymbolTable> = mutableListOf()

@@ -31,20 +31,23 @@ class IfCondNode(// condition (should evaluate to boolean val
         expr!!.generateCode(codeGenerator)
 
         val elseLabel = codeGenerator.getNewLabel()
-
         val endLabel = codeGenerator.getNewLabel()
+
         val oldScope = codeGenerator.curScope
+
 
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(codeGenerator.getLastUsedReg(), 1, ""))
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(elseLabel, Condition.NE))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
+        //generate code for then-case
         ifTrueStat!!.generateCode(codeGenerator)
         ifTrueStat.symbolTable?.recoverSp(codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(endLabel))
 
         codeGenerator.addLabel(elseLabel, null)
 
+        //generate code for else-case
         codeGenerator.curScope = elseLabel
         codeGenerator.curLabel = elseLabel
         elseStat!!.generateCode(codeGenerator)
@@ -62,7 +65,6 @@ class IfCondNode(// condition (should evaluate to boolean val
             exitProcess(100)
         }
 
-        //table.boolExprCheck(expr!!, errors, table, ctx)
         var actExpr = expr
         if (actExpr is ParenNode) {
             actExpr = actExpr.expr

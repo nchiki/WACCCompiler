@@ -25,7 +25,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         }
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = TODO("not implemented")
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = "f_$id"
