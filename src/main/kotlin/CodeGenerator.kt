@@ -112,7 +112,9 @@ class CodeGenerator {
                     addError(ArrayBoundNegativeDef)
                     addError(ArrayBoundsLargeDef)
                 }
-                "p_print_reference" -> addHelper("p_print_reference")
+                "p_print_ln" -> addHelper(instr.funcName)
+                "p_print_reference" -> addHelper(instr.funcName)
+                "p_print_int" -> addHelper(instr.funcName)
             }
         }
         labels[label]!!.add(instr)
