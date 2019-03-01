@@ -23,14 +23,14 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
         val label = codeGenerator.curLabel
 
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8))
+
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
 
         //generate code for the first element of the pair
         exprNode1.generateCode(codeGenerator)
-        //load and store first element
-        codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode1.size, null))
+        codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode1.size))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         if (exprNode1.getBaseType() == LitTypes.CharWacc || exprNode1.getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), Register.r0))
@@ -42,8 +42,7 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
 
         //generate code for the second element of the pair
         exprNode2.generateCode(codeGenerator)
-        //load and store second element
-        codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode2.size, null))
+        codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode2.size))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         val lastReg = codeGenerator.getLastUsedReg()
         if (exprNode2.getBaseType() == LitTypes.CharWacc || exprNode2.getBaseType() == LitTypes.BoolWacc) {

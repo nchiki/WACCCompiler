@@ -2,10 +2,13 @@ package main.kotlin.Instructions
 
 import main.kotlin.Utils.Condition
 
-class BranchInstr(val label: String, val cond: Condition = Condition.NULL) : Instruction {
+class BranchInstr(val label: String, val cond: Condition? = null) : Instruction {
 
     override fun getString(): String {
-        return "B${cond.s} $label"
+        if (cond != null) {
+            return "B${cond.s} $label"
+        }
+        return "B $label"
     }
 
 }

@@ -12,11 +12,10 @@ class CodeGenerator {
 
     val data = LinkedHashMap<String, LiteralDefs>() //data section to be printed before main
     val errors = LinkedList<LiteralDefs>()
+    val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
 
     val scopedLabels: LinkedHashMap<String, ArrayList<String>> = LinkedHashMap()
     var curScope: String? = null
-
-    val labels: LinkedHashMap<String, ArrayList<Instruction>> = LinkedHashMap()
 
     val helperFuncs = LinkedHashMap<String, ArrayList<Instruction>>()
     val regsNotInUse = PriorityQueue<Register>() //load all registers in this initially
@@ -168,7 +167,7 @@ class CodeGenerator {
         file.appendText(".text\n")
         file.appendText(".global main\n")
 
-        for ((function: String, funcLabels: ArrayList<String>) in functions) {
+        for ((_, funcLabels: ArrayList<String>) in functions) {
             for (funcLabel: String in funcLabels) {
                 file.appendText("$funcLabel:\n")
 
@@ -187,66 +186,66 @@ class CodeGenerator {
         }
     }
 
-    fun checkErrors() {
+    private fun checkErrors() {
         for (error in errors) {
             val msg = "msg_${data.size}"
             if (error is OverflowDef) {
-                Print_Read().addPrintOverflowError(this, "p_throw_overflow_error", msg)
+                addPrintOverflowError(this, "p_throw_overflow_error", msg)
             } else if (error is DivZeroDef) {
-                Print_Read().addDivZeroError(this, "p_check_divide_by_zero", msg)
+                addDivZeroError(this, "p_check_divide_by_zero", msg)
             } else if (error is NullReferDef) {
                 val label: String
                 if (helperFuncs.contains("p_free_pair")) {
                     label = "p_free_pair"
-                    Print_Read().addNullDerefPairError(this, label, msg)
+                    addNullDerefPairError(this, label, msg)
                 } else if (helperFuncs.contains("p_check_null_pointer")) {
                     label = "p_check_null_pointer"
-                    Print_Read().addNullDerefError(this, label, msg)
+                    addNullDerefError(this, label, msg)
                 }
             } else if (error is ArrayBoundNegativeDef) {
-                Print_Read().addArrayCheck(this, "p_check_array_bounds", data.size)
+                addArrayCheck(this, "p_check_array_bounds", data.size)
             }
             data[msg] = error
         }
     }
 
-    fun checkPrints() {
+    private fun checkPrints() {
         if (helperFuncs.containsKey("p_print_reference")) {
             val msg = "msg_${data.size}"
             data.put(msg, PairDef())
-            Print_Read().addPrintReference(this, "p_print_reference", msg)
+            addPrintReference(this, "p_print_reference", msg)
         }
         if (helperFuncs.containsKey("p_print_string")) {
             val msg = "msg_${data.size}"
             data.put(msg, StringAppendDef())
-            Print_Read().addPrintInstrString(this, "p_print_string", msg)
+            addPrintInstrString(this, "p_print_string", msg)
         }
         if (helperFuncs.containsKey("p_print_int")) {
             val msg = "msg_${data.size}"
             data.put(msg, IntAppendDef())
-            Print_Read().addPrintInstrInt(this, "p_print_int", msg)
+            addPrintInstrInt(this, "p_print_int", msg)
         }
         if (helperFuncs.containsKey("p_print_bool")) {
             val msg = "msg_${data.size}"
             val trueInd = data.size
             data.put(msg, TrueDef())
             data.put("msg_${data.size}", FalseDef())
-            Print_Read().addPrintInstrBool(this, "p_print_bool", trueInd)
+            addPrintInstrBool(this, "p_print_bool", trueInd)
         }
         if (helperFuncs.containsKey("p_print_ln")) {
             val msg = "msg_${data.size}"
             data.put(msg, NewLineDef())
-            Print_Read().addPrintLn(this, msg)
+            addPrintLn(this, msg)
         }
         if (helperFuncs.containsKey("p_read_int")) {
             val msg = "msg_${data.size}"
             data.put(msg, ReadIntApp())
-            Print_Read().addRead(this, "p_read_int", msg)
+            addRead(this, "p_read_int", msg)
         }
         if (helperFuncs.containsKey("p_read_char")) {
             val msg = "msg_${data.size}"
             data.put(msg, ReadCharApp())
-            Print_Read().addRead(this, "p_read_char", msg)
+            addRead(this, "p_read_char", msg)
         }
 
     }

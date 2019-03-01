@@ -1,22 +1,19 @@
 package src.main.kotlin
 
-import main.kotlin.Instructions.PopInstr
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
-import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
-
 
 class IfCondNode(// condition (should evaluate to boolean val
         val expr: ExprNode?, // expr = true -> statement
@@ -44,7 +41,7 @@ class IfCondNode(// condition (should evaluate to boolean val
 
         ifTrueStat!!.generateCode(codeGenerator)
         ifTrueStat.symbolTable?.recoverSp(codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(endLabel, Condition.NULL))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(endLabel))
 
         codeGenerator.addLabel(elseLabel, null)
 
@@ -52,7 +49,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         codeGenerator.curLabel = elseLabel
         elseStat!!.generateCode(codeGenerator)
         elseStat.symbolTable?.recoverSp(codeGenerator)
-        
+
         codeGenerator.addLabel(endLabel, oldScope)
 
         codeGenerator.curLabel = endLabel
@@ -61,13 +58,13 @@ class IfCondNode(// condition (should evaluate to boolean val
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
         var actExpr = expr
-        if(actExpr is ParenNode) {
+        if (actExpr is ParenNode) {
             actExpr = actExpr.expr
         }
         if (actExpr?.getBaseType() == LitTypes.IdentWacc) {
@@ -75,7 +72,7 @@ class IfCondNode(// condition (should evaluate to boolean val
             if (LitTypes.BoolWacc != actType!!.getBaseType()) {
                 errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))
             }
-        } else if(actExpr?.getBaseType() != LitTypes.BoolWacc) {
+        } else if (actExpr?.getBaseType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))
         }
 
@@ -90,7 +87,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         ifTrueStat?.semanticCheck(errors, ifChildTable)
         elseStat?.semanticCheck(errors, elseChildTable)
 
-        if(ifChildTable.currentExecutionPathHasReturn && elseChildTable.currentExecutionPathHasReturn){
+        if (ifChildTable.currentExecutionPathHasReturn && elseChildTable.currentExecutionPathHasReturn) {
             table.currentExecutionPathHasReturn = true
         }
 

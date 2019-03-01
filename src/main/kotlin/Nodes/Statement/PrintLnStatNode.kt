@@ -56,33 +56,23 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
 
     private fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
         if (expr is ArrayTypeNode) {
-            if(expr.getBaseType().equals(LitTypes.CharWacc)){
-                val label = "p_print_string"
-                codeGenerator.addHelper(label)
-
-                return label
+            if (expr.getBaseType().equals(LitTypes.CharWacc)) {
+                return "p_print_string"
             }
             return "p_print_reference"
-        }
-
-        else if (expr is ParamNode) {
+        } else if (expr is ParamNode) {
             return checkType(codeGenerator, expr.type)
-        }
-        else if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
+        } else if (expr is BaseNode || expr is UnaryOpNode || expr is BinaryOpNode) {
             return checkBaseType(expr as ExprNode)
-        }
-        else if (expr is IdentNode && expr !is BinaryOpNode) {
+        } else if (expr is IdentNode && expr !is BinaryOpNode) {
             val type = symbolTable!!.lookupSymbol(expr.id)
             return checkType(codeGenerator, type!!)
-
         }
 
         //print String
         else if (expr is StringLitNode || (expr is ArrayTypeNode && expr.getBaseType().equals(LitTypes.CharWacc))) {
             return "p_print_string"
-        }
-
-        else if (expr is ArrayElemNode) {
+        } else if (expr is ArrayElemNode) {
             val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
             return when (identifierType) {
                 LitTypes.IntWacc -> "p_print_int"
@@ -102,7 +92,6 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
             //add to data section
             return "p_print_bool"
         }
-
         return ""
     }
 

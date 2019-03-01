@@ -3,15 +3,11 @@ package main.kotlin.Instructions
 import main.kotlin.Nodes.CharLitNode
 import main.kotlin.Utils.Condition
 
-class MovInstr(val dest: Any, val val1: Any, val cond: Condition? = Condition.NULL) : Instruction {
+class MovInstr(val dest: Any, val val1: Any, val cond: Condition? = null) : Instruction {
 
     override fun getString(): String {
 
-        val condition = if (cond != null && cond != Condition.NULL) {
-            cond.s
-        } else {
-            ""
-        }
+        val condition = cond?.s ?: ""
 
         return when (val1) {
             is Int -> "MOV$condition $dest, #$val1"

@@ -56,7 +56,7 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
         }
         // if its a boolean operation, we need an extra instruction for comparing both expressions
         if (getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
+            codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg))
         }
 
         getInstruction(leftReg, rightReg, codeGenerator)
@@ -72,24 +72,22 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
 
     fun getInstruction(reg1: Register, reg2: Register, codeGenerator: CodeGenerator) {
-        val zeroLabel = "p_check_divide_by_zero"
         if (mulDiv != null) {
             if (mulDiv.MULT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, SMultInstr(reg1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(reg2, reg1, "ASR #31"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.NE))
-            } else if (mulDiv.DIV() != null) {
+            } else {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
-            } else if (mulDiv.MOD() != null) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
-                codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r1))
+                codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_divide_by_zero"))
+                if (mulDiv.DIV() != null) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
+                    codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
+                } else if (mulDiv.MOD() != null) {
+                    codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
+                    codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r1))
+                }
             }
         } else if (addSub != null) {
             if (addSub.MINUS() != null) {
@@ -102,7 +100,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             if (eqOp.GREAT() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.GT))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.LE))
-                //IDK if maybe we need to add case for notgreater?
             } else if (eqOp.GREAT_EQ() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#1", Condition.GE))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, "#0", Condition.LT))

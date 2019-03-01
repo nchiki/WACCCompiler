@@ -24,11 +24,11 @@ class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext
 
         //entries for data
         val msg = "msg_${codeGenerator.data.size}"
-        codeGenerator.data.put(msg, StringLitDef(str))
+        codeGenerator.data[msg] = StringLitDef(str)
 
         //instructions for main
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg, null))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg))
     }
 
     override fun getBaseType(): LitTypes {
