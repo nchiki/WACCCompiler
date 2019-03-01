@@ -19,7 +19,7 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         get() = 4
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = TODO("not needed")
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val curLabel = codeGenerator.curLabel
@@ -27,9 +27,11 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         /* The register with the address of the array */
         val baseReg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(Register.sp, "#$size"))
+
         // Call the malloc function to allocate the necessary memory
         if (exprList.count() != 0) {
-            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size + (exprList[0].size * exprList.count()), null))
+            codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0,
+                    size + (exprList[0].size * exprList.count()), null))
         } else {
             codeGenerator.addInstruction(curLabel, LoadInstr(Register.r0, size, null))
         }

@@ -17,16 +17,19 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
         get() = 4
 
     override val weight: Int
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = TODO("not needed")
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
+
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(Register.r0, 8, null))
-
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         codeGenerator.addInstruction(label, MovInstr(reg, Register.r0))
+
+        //generate code for the first element of the pair
         exprNode1.generateCode(codeGenerator)
+        //load and store first element
         codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode1.size, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         if (exprNode1.getBaseType() == LitTypes.CharWacc || exprNode1.getBaseType() == LitTypes.BoolWacc) {
@@ -36,7 +39,10 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, reg))
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        //generate code for the second element of the pair
         exprNode2.generateCode(codeGenerator)
+        //load and store second element
         codeGenerator.addInstruction(label, LoadInstr(Register.r0, exprNode2.size, null))
         codeGenerator.addInstruction(label, BLInstr("malloc"))
         val lastReg = codeGenerator.getLastUsedReg()
@@ -47,8 +53,6 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
         codeGenerator.freeReg(lastReg)
-
-        //codeGenerator.addInstruction(label, StoreInstr(reg, "[sp, #4]"))
     }
 
     override fun getBaseType(): LitTypes {
