@@ -29,7 +29,6 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
         var leftReg: Register?
         var rightReg: Register?
 
-        // evaluates expression that needs more registers first
         if (left.weight > right.weight) {
             left.generateCode(codeGenerator)
             leftReg = codeGenerator.getLastUsedReg()
@@ -44,16 +43,19 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         /* Compare the two expression results */
 
+        //codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
+
         if (operator.AND() != null) {
             codeGenerator.addInstruction(codeGenerator.curLabel, AndInstr(leftReg, rightReg))
         } else if (operator.OR() != null) {
             codeGenerator.addInstruction(codeGenerator.curLabel, OrInstr(leftReg, rightReg))
         }
 
-        codeGenerator.freeReg(rightReg)
-
+        codeGenerator.regsInUse.remove(rightReg)
+        codeGenerator.regsNotInUse.add(rightReg)
         //adds leftReg as last reg used in order to get the result of the operation
-        codeGenerator.freeReg(leftReg)
+        codeGenerator.regsInUse.remove(leftReg)
+        codeGenerator.regsInUse.add(leftReg)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

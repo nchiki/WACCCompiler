@@ -36,19 +36,16 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
-
         // Generates the code in the expression that will occupy the first register of regsNotInUse
         operand.generateCode(codeGenerator)
-
         when (operator.text) {
+            //negation not implemented yet
             "!" -> codeGenerator.addInstruction(label, EORInstr(codeGenerator.getLastUsedReg(), 1))
-            "ord" -> return
-            "len" -> codeGenerator.addInstruction(label, LoadInstr(codeGenerator.getLastUsedReg(),
-                    "[${codeGenerator.getLastUsedReg()}]", Condition.AL))
-            "chr" -> return
-
-            /* A negative number is the same as 0 - positive number --> need to access the register that
-             has just been allocated in lastUsedReg */
+            "ord" -> return //codeGenerator.addInstruction(label, BLInstr("putchar"))
+            "len" -> codeGenerator.addInstruction(label, LoadInstr(codeGenerator.getLastUsedReg(), "[${codeGenerator.getLastUsedReg()}]", Condition.AL))
+            "chr" -> return //codeGenerator.addInstruction(label,BLInstr("putchar"))
+            // A negative number is the same as 0 - positive number. For that, we need to access the register that
+            // has just been allocated in lastUsedReg.
             "-" -> {
                 val reg = codeGenerator.getLastUsedReg()
                 val otherReg = codeGenerator.getFreeRegister()
@@ -60,9 +57,12 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
                     codeGenerator.freeReg(otherReg)
                 }
             }
-        //for the add instruction we dont need to do anything since its a positive number
-            else -> return
+            else -> return //for the add instruction we dont need to do anything since its a positive number
         }
+
+    }
+
+    fun lenOperator(codeGenerator: CodeGenerator) {
 
     }
 
@@ -74,6 +74,7 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             else -> return LitTypes.IntWacc
         }
     }
+
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

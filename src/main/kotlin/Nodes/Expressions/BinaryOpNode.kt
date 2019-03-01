@@ -59,7 +59,6 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(leftReg, rightReg, ""))
         }
 
-        //adds all helper instructions for the operator
         getInstruction(leftReg, rightReg, codeGenerator)
 
         /* Results are stored in the left register, so we need to move the result into the correct register */
