@@ -7,6 +7,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
@@ -64,7 +65,12 @@ class IfCondNode(// condition (should evaluate to boolean val
         }
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
-        if(expr?.getBaseType() != LitTypes.BoolWacc) {
+        if (expr?.getBaseType() == LitTypes.IdentWacc) {
+            val actType = table.lookupSymbol((expr as IdentNode).id)
+            if (LitTypes.BoolWacc != actType!!.getBaseType()) {
+                errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
+            }
+        } else if(expr?.getBaseType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
         }
 

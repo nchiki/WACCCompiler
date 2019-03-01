@@ -22,7 +22,6 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        println(codeGenerator.regsInUse)
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_free_pair"))
         codeGenerator.addHelper("p_free_pair")
