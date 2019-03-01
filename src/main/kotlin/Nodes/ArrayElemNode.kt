@@ -8,6 +8,8 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
 import main.kotlin.Instructions.MultInstr
+import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Nodes.StringLitNode
 import main.kotlin.Utils.*
 
 
@@ -34,32 +36,46 @@ class ArrayElemNode(val identifier: IdentNode, var exprs : List<ExprNode>, overr
             val exprReg = codeGenerator.getLastUsedReg()
             val tempReg = codeGenerator.getFreeRegister()
             addArrayCheck(codeGenerator, codeGenerator.curLabel, elemReg, exprReg)
-            if(type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.CharWacc)){
 
-                /* Skip past array size */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
+            /* Skip past array size */
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
-                /* Byte access */
+            /* Resolves to byte sized element */
+            if(i < exprs.size - 1 && resolvesToByte()){
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
-
-                if(i < exprs.size - 1) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
-                }
-            }else{
-                /* Skip past array size */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
-
-                /* Add index and multiply it by 4 (4 bytes per index) */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
-
-                if(i < exprs.size - 1) {
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
-                }
+                codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+                codeGenerator.freeReg(tempReg)
+                codeGenerator.freeReg(exprReg)
+                return
             }
+
+            /* Add index and multiply by 4 */
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
             codeGenerator.freeReg(tempReg)
             codeGenerator.freeReg(exprReg)
-            //codeGenerator.freeReg(elemReg)
         }
+    }
+
+    fun resolvesToByte(): Boolean {
+        val expr = symbolTable?.lookupSymbol(identifier.id)!!
+        if(expr is ArrayTypeNode){
+            /* Doesn't resolve to base */
+            if(expr.getDimensions() < exprs.size){
+                return false
+            }
+
+            var base = expr
+            while(base is ArrayTypeNode){
+                base = base.type
+            }
+
+            return base.getBaseType().equals(LitTypes.BoolWacc) || base.getBaseType().equals(LitTypes.CharWacc)
+        }else if(expr is StringLitNode){
+            return true
+        }
+
+        return expr.getBaseType().equals(LitTypes.BoolWacc) || expr.getBaseType().equals(LitTypes.CharWacc)
     }
 
     fun addArrayCheck(codeGenerator: CodeGenerator, label : String, exprReg : Register, tempReg : Register) {
