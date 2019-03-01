@@ -36,8 +36,6 @@ class ReadStatNode(private val lhs: LHS_Node, override val ctx: BasicParser.Read
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.regsNotInUse.peek(), "[sp]", null))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-            codeGenerator.addHelper("p_check_null_pointer")
-            codeGenerator.addError(NullReferDef)
         }
         if (lhs.Nodetype is PairElemNode) {
             type as PairNode

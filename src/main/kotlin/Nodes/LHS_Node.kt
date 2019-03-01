@@ -60,8 +60,6 @@ class LHS_Node(val Nodetype: Any?, val id: String, val line: Int, val pos : Int,
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, inMemory, null))
             codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, addressReg))
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_check_null_pointer"))
-            codeGenerator.addHelper("p_check_null_pointer")
-            codeGenerator.addError(NullReferDef)
             /* Store the first element of the pair */
             if (Nodetype.elem == 0) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addressReg, addressReg, null))
