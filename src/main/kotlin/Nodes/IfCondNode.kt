@@ -7,6 +7,7 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
@@ -65,13 +66,17 @@ class IfCondNode(// condition (should evaluate to boolean val
         }
 
         //table.boolExprCheck(expr!!, errors, table, ctx)
-        if (expr?.getBaseType() == LitTypes.IdentWacc) {
-            val actType = table.lookupSymbol((expr as IdentNode).id)
+        var actExpr = expr
+        if(actExpr is ParenNode) {
+            actExpr = actExpr.expr
+        }
+        if (actExpr?.getBaseType() == LitTypes.IdentWacc) {
+            val actType = table.lookupSymbol((actExpr as IdentNode).id)
             if (LitTypes.BoolWacc != actType!!.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
+                errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))
             }
-        } else if(expr?.getBaseType() != LitTypes.BoolWacc) {
-            errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", expr!!, table))
+        } else if(actExpr?.getBaseType() != LitTypes.BoolWacc) {
+            errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))
         }
 
         val ifChildTable = SymbolTable(table)
@@ -81,7 +86,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         elseChildTable.currentFunction = table.currentFunction
 
         //checks both statements
-        expr.semanticCheck(errors, table)
+        expr!!.semanticCheck(errors, table)
         ifTrueStat?.semanticCheck(errors, ifChildTable)
         elseStat?.semanticCheck(errors, elseChildTable)
 
