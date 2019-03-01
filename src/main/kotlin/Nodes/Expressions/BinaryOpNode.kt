@@ -82,16 +82,12 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addHelper(zeroLabel)
-                codeGenerator.addError(DivZeroDef)
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idiv"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r0))
             } else if (mulDiv.MOD() != null) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, reg1))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r1, reg2))
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(zeroLabel))
-                codeGenerator.addHelper(zeroLabel)
-                codeGenerator.addError(DivZeroDef)
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("__aeabi_idivmod"))
                 codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg1, Register.r1))
             }
