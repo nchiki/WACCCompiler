@@ -1,0 +1,12 @@
+# basic array declaration and assignment
+
+# Output:
+# #empty#
+
+# Program:
+
+begin
+  char[] a = [['x', 'y', 'z'], ['t']];
+  println a[0][1]
+end
+
