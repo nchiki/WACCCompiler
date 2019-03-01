@@ -1,12 +1,13 @@
 package main.kotlin.Nodes.Expression
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
-class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext): ExprNode {
+class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
