@@ -20,6 +20,7 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
+import main.kotlin.Nodes.Expressions.OctalLit
 import kotlin.system.exitProcess
 
 
@@ -74,6 +75,11 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitBinaryLit(@NotNull ctx: BasicParser.BinaryLitContext): Node {
         return BinaryLit(ctx.BINARY_LIT().toString(), ctx)
+    }
+
+    override fun visitOctalLit(@NotNull ctx: BasicParser.OctalLitContext): Node {
+        val sequence = ctx.OCTAL_LIT().toString()
+        return OctalLit(sequence, ctx)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {

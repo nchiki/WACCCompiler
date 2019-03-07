@@ -103,9 +103,11 @@ fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
 IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
 
+OCTAL_LIT: '0' ('0'..'7')+;
+
 
 fragment BINARY: '0b';
-BINARY_LIT: BINARY ('0' | '1')*;g
+BINARY_LIT: BINARY ('0' | '1')+;
 
 // literals
 INT_LIT: DIGIT+ ;
