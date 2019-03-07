@@ -75,6 +75,7 @@ unaryOper expr                            #UnOp
 | expr boolOp expr                          #BoolOper
 | INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
+| BINARY_LIT                                #BinaryLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
 | pair_Lit                                  #PairLit

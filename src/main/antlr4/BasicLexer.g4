@@ -103,6 +103,10 @@ fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
 IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
 
+
+fragment BINARY: '0b';
+BINARY_LIT: BINARY ('0' | '1')*;g
+
 // literals
 INT_LIT: DIGIT+ ;
 
