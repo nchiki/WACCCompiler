@@ -411,5 +411,27 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return BaseNode(ctx!!.text, ctx)
     }
 
+    // FOR LOOP
+    override fun visitForLoop(ctx: BasicParser.ForLoopContext): Node {
+        val first = visit(ctx.forCond()) as ForCondNode
+        val stat = visit(ctx.stat())
+        return ForLoopNode(first, stat, ctx)
+    }
+
+    override fun visitForCond(ctx: BasicParser.ForCondContext): Node {
+        val first = visit(ctx.stat(0))
+        val second = visit(ctx.expr()) as ExprNode
+        val third = visit(ctx.stat(1))
+        return ForCondNode(first, second, third, ctx)
+    }
+
+    // DO WHILE
+    override fun visitDoWhile(ctx: BasicParser.DoWhileContext): Node {
+        val stat = visit(ctx.stat())
+        val expr = visit(ctx.expr()) as ExprNode
+
+        return DoWhileNode(stat, expr, ctx)
+    }
+
 
 }
