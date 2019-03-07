@@ -22,10 +22,13 @@ stat:
 | PRINT expr                        #Print
 | PRINTLN expr                      #Println
 | IF expr THEN stat ELSE stat FI    #IfCond
+| FOR forCond DO stat DONE          #ForLoop
 | WHILE expr DO stat DONE           #While
 | BEGIN stat END                    #Statement
 | stat SEMICOLON stat               #StatList
 ;
+
+forCond: OPEN_PARENTHESES stat SEMICOLON expr SEMICOLON expr CLOSE_PARENTHESES;
 
 assignLHS:
     IDENT       #AssignL_Iden

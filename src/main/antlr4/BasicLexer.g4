@@ -14,6 +14,7 @@ SKIP_FUNC: 'skip' ;
 BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;
+FOR: 'for';
 DO: 'do' ;
 DONE: 'done' ;
 IS: 'is' ;
