@@ -419,10 +419,18 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitForCond(ctx: BasicParser.ForCondContext): Node {
-        val first = visit(ctx.stat())
-        val second = visit(ctx.expr(0)) as ExprNode
-        val third = visit(ctx.expr(1)) as ExprNode
+        val first = visit(ctx.stat(0))
+        val second = visit(ctx.expr()) as ExprNode
+        val third = visit(ctx.stat(1))
         return ForCondNode(first, second, third, ctx)
+    }
+
+    // DO WHILE
+    override fun visitDoWhile(ctx: BasicParser.DoWhileContext): Node {
+        val stat = visit(ctx.stat())
+        val expr = visit(ctx.expr()) as ExprNode
+
+        return DoWhileNode(stat, expr, ctx)
     }
 
 

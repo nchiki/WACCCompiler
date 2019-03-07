@@ -48,6 +48,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
         cond.third.generateCode(codeGenerator)
 
 
+
         stat.generateCode(codeGenerator)
 
         codeGenerator.addLabel(endLabel, oldScope)
@@ -74,7 +75,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 
 }
 
-class ForCondNode(val first : Node, val second : ExprNode, val third: ExprNode, override val ctx: ParserRuleContext) : Node {
+class ForCondNode(val first : Node, val second : ExprNode, val third: Node, override val ctx: ParserRuleContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
