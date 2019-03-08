@@ -73,7 +73,8 @@ find $DIRECTORY -name "*.wacc" | (
         sh compile $fname
         SHORTENED=$(basename ${fname::$((${#fname} - 5))})
 	    eval $(arm-linux-gnueabi-gcc -o $SHORTENED -mcpu=arm1176jzf-s -mtune=arm1176jzf-s "$SHORTENED.s")
-        if [[ !("$(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)" == "$(eval ruby refCompile $fname -x)") ]]
+	    ACTUAL="$(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)" | xargs
+        if [[ !($ACTUAL == "$(eval ruby refCompile $fname -x)") ]]
         then
             printf "$fname test failed\n\n"
             echo Expected output:
