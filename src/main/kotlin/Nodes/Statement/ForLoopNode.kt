@@ -25,9 +25,11 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
+        codeGenerator.loopLabel = label
 
         val oldScope = codeGenerator.curScope
         val endLabel = codeGenerator.getNewLabel()
+        codeGenerator.endLabel = endLabel
 
         /*codeGenerator.addLabel(label, null)
 
@@ -59,17 +61,19 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
+        codeGenerator.endLabel = ""
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = SymbolTable(table)
-
+        this.symbolTable!!.inLoop = true
         cond.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){
             exitProcess(100)
         }
+        this.symbolTable!!.inLoop = false
 
     }
 

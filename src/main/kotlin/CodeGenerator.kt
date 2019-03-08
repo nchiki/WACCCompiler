@@ -22,6 +22,10 @@ class CodeGenerator {
     var curLabel: String = String()
     private var maxLabelNum: Int = 0
 
+    // for break and continue codeGenerate
+    var endLabel = curLabel
+    var loopLabel = curLabel
+
     val regsInUse = PriorityQueue<Register>()
 
     private var lastUsedReg: Register = Register.r0
