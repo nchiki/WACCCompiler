@@ -433,5 +433,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return DoWhileNode(stat, expr, ctx)
     }
 
+    // BREAK
+    override fun visitBreak(ctx: BasicParser.BreakContext): Node {
+        return BreakNode(ctx)
+    }
+
+    // CONTINUE
+    override fun visitContinue(ctx: BasicParser.ContinueContext): Node {
+        return ContinueNode(ctx)
+    }
 
 }

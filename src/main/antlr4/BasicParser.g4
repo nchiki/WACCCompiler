@@ -13,6 +13,8 @@ param: type IDENT ;
 
 stat:
     SKIP_FUNC                       #Skip
+| BREAK                             #Break
+| CONTINUE                          #Continue
 | type IDENT EQUAL assignRHS        #Decl
 | assignLHS EQUAL assignRHS         #Assign
 | READ assignLHS                    #Read

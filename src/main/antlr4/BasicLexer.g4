@@ -11,6 +11,8 @@ EOL: [\r\n] ;
 
 //commands
 SKIP_FUNC: 'skip' ;
+BREAK: 'break' ;
+CONTINUE: 'continue' ;
 BEGIN: 'begin' ;
 END: 'end' ;
 WHILE: 'while' ;

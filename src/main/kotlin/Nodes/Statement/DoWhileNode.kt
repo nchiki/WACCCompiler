@@ -26,10 +26,11 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
+        codeGenerator.loopLabel = label
 
         val oldScope = codeGenerator.curScope
         val endLabel = codeGenerator.getNewLabel()
-
+        codeGenerator.endLabel = endLabel
         codeGenerator.addLabel(label, null)
 
         codeGenerator.curLabel = label
@@ -52,11 +53,13 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
 
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
+        codeGenerator.endLabel = ""
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = SymbolTable(table)
 
+        this.symbolTable = SymbolTable(table)
+        this.symbolTable!!.inLoop = true
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
@@ -78,6 +81,7 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
         if (!expr.getBaseType().equals(BaseNode("bool", null).getBaseType())) {
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
+        this.symbolTable!!.inLoop = false
     }
 
 }

@@ -26,10 +26,11 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
+        codeGenerator.loopLabel = label
 
         val oldScope = codeGenerator.curScope
         val endLabel = codeGenerator.getNewLabel()
-
+        codeGenerator.endLabel = endLabel
         codeGenerator.addLabel(label, null)
 
         codeGenerator.curLabel = label
@@ -54,11 +55,13 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
+        codeGenerator.endLabel = ""
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = SymbolTable(table)
 
+        this.symbolTable = SymbolTable(table)
+        this.symbolTable!!.inLoop = true
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
@@ -69,7 +72,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
-                errors.addError(UndefinedVariable(ctx.expr(), (expr as IdentNode).id))
+                errors.addError(UndefinedVariable(ctx.expr(), (expr).id))
                 return
             } else {
                 if (value.getBaseType().equals(BaseNode("bool", null).getBaseType())) {
@@ -80,6 +83,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if (!expr.getBaseType().equals(BaseNode("bool", null).getBaseType())) {
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
+        this.symbolTable!!.inLoop = false
     }
 
 }
