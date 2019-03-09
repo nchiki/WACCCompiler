@@ -19,6 +19,7 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
+import main.kotlin.Nodes.Statement.DecrementNode
 import kotlin.system.exitProcess
 
 
@@ -441,6 +442,16 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     // CONTINUE
     override fun visitContinue(ctx: BasicParser.ContinueContext): Node {
         return ContinueNode(ctx)
+    }
+
+    override fun visitIncrement(ctx: BasicParser.IncrementContext): Node {
+        val id = ctx.IDENT().text
+        return IncrementNode(id, ctx)
+    }
+
+    override fun visitDecrement(ctx: BasicParser.DecrementContext): Node {
+        val id = ctx.IDENT().text
+        return DecrementNode(id, ctx)
     }
 
 }

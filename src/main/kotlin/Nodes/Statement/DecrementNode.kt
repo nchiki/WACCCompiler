@@ -1,0 +1,61 @@
+package main.kotlin.Nodes.Statement
+
+import Nodes.PairType.PairNode
+import main.kotlin.CodeGenerator
+import main.kotlin.ErrorLogger
+import main.kotlin.Errors.UndefinedVariable
+import main.kotlin.Instructions.*
+import main.kotlin.Nodes.ArrayLitNode
+import main.kotlin.Nodes.FunctionNode
+import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.PairElemNode
+import main.kotlin.SymbolTable
+import main.kotlin.Utils.Condition
+import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
+import src.main.kotlin.Nodes.ArrayElemNode
+
+class DecrementNode(val id : String, override val ctx: BasicParser.DecrementContext) : Node {
+
+    override var symbolTable: SymbolTable? = null
+
+    override val weight: Int
+        get() = 1
+
+    override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
+        this.symbolTable = table
+        val value = table.lookupSymbol(id)
+
+        if (value == null || value is FunctionNode || value is ArrayElemNode
+                || value is PairElemNode || value is PairNode || value is ArrayLitNode) {
+            errors.addError(UndefinedVariable(ctx, id))
+        }
+    }
+
+    override fun generateCode(codeGenerator: CodeGenerator) {
+        /* Calculate the position in the stack */
+        val identOffset = symbolTable?.getValueOffset(id, codeGenerator)
+        var inMemory = "[sp]"
+        if (identOffset != 0) {
+            inMemory = "[sp, #$identOffset]"
+        }
+        val reg1 = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg1, inMemory, null))
+        val reg2 = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg2, 1))
+        codeGenerator.addInstruction(codeGenerator.curLabel, SubInstr(reg1, reg2, "S"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_throw_overflow_error", Condition.VS))
+
+        /* Store to memory based on correct type */
+        val type = symbolTable!!.lookupSymbol(id)!!.getBaseType()
+        if (type.equals(LitTypes.CharWacc) || type.equals(LitTypes.BoolWacc)) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(reg1, inMemory))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(reg1, inMemory))
+        }
+        codeGenerator.freeReg(reg1)
+        if (reg2 != Register.r0) {
+            codeGenerator.freeReg(reg2)
+        }
+    }
+}
