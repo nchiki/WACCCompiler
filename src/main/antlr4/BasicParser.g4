@@ -15,6 +15,8 @@ stat:
     SKIP_FUNC                       #Skip
 | BREAK                             #Break
 | CONTINUE                          #Continue
+| IDENT PLUS PLUS                   #Increment
+| IDENT MINUS MINUS                 #Decrement
 | type IDENT EQUAL assignRHS        #Decl
 | assignLHS EQUAL assignRHS         #Assign
 | READ assignLHS                    #Read
