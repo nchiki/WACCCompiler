@@ -72,15 +72,19 @@ find $DIRECTORY -name "*.wacc" | (
     while read fname; do
         sh compile $fname
         SHORTENED=$(basename ${fname::$((${#fname} - 5))})
-	    eval $(arm-linux-gnueabi-gcc -o $SHORTENED -mcpu=arm1176jzf-s -mtune=arm1176jzf-s "$SHORTENED.s")
-        if [[ !("$(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)" == "$(eval ruby refCompile $fname -x)") ]]
+	eval $(arm-linux-gnueabi-gcc -o $SHORTENED -mcpu=arm1176jzf-s -mtune=arm1176jzf-s "$SHORTENED.s")
+	ACTUAL="$(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)"
+	ACTUAL_NO_ADDRESSES=$ACTUAL | sed -e 's/0x[0-9]*//g'
+	EXPECTED="$(eval ruby refCompile $fname -x)"
+	EXPECTED_NO_ADDRESSES=$EXPECTED | sed -e 's/0x[0-9]*//g'
+	if [[ !("$ACTUAL_NO_ADDRESSES" = "$EXPECTED_NO_ADDRESSES") ]]
         then
             printf "$fname test failed\n\n"
             echo Expected output:
-            echo $(eval ruby refCompile $fname -x)
+            echo $EXPECTED
             echo ""
             echo Actual output:
-            echo $(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)
+            echo $ACTUAL
             FAILED=$(($FAILED + 1))
         else
             printf "$fname test succeeded\n"
