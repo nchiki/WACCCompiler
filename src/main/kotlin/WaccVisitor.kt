@@ -18,6 +18,7 @@ import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
+import main.kotlin.Nodes.Statement.DecrementNode
 import kotlin.system.exitProcess
 
 
@@ -424,5 +425,46 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return BaseNode(ctx!!.text, ctx)
     }
 
+    // FOR LOOP
+    override fun visitForLoop(ctx: BasicParser.ForLoopContext): Node {
+        val first = visit(ctx.forCond()) as ForCondNode
+        val stat = visit(ctx.stat())
+        return ForLoopNode(first, stat, ctx)
+    }
+
+    override fun visitForCond(ctx: BasicParser.ForCondContext): Node {
+        val first = visit(ctx.stat(0))
+        val second = visit(ctx.expr()) as ExprNode
+        val third = visit(ctx.stat(1))
+        return ForCondNode(first, second, third, ctx)
+    }
+
+    // DO WHILE
+    override fun visitDoWhile(ctx: BasicParser.DoWhileContext): Node {
+        val stat = visit(ctx.stat())
+        val expr = visit(ctx.expr()) as ExprNode
+
+        return DoWhileNode(stat, expr, ctx)
+    }
+
+    // BREAK
+    override fun visitBreak(ctx: BasicParser.BreakContext): Node {
+        return BreakNode(ctx)
+    }
+
+    // CONTINUE
+    override fun visitContinue(ctx: BasicParser.ContinueContext): Node {
+        return ContinueNode(ctx)
+    }
+
+    override fun visitIncrement(ctx: BasicParser.IncrementContext): Node {
+        val id = ctx.IDENT().text
+        return IncrementNode(id, ctx)
+    }
+
+    override fun visitDecrement(ctx: BasicParser.DecrementContext): Node {
+        val id = ctx.IDENT().text
+        return DecrementNode(id, ctx)
+    }
 
 }

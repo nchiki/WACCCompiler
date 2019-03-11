@@ -21,6 +21,9 @@ class SymbolTable (val parent: SymbolTable?){
     var currentExecutionPathHasReturn = false
     var sp = 0
 
+    // useful for break and continue semantic check
+    var inLoop = false
+
     fun addToFunctions(funcs : List<FunctionNode>) {
         for (func in funcs) {
             if (functions.containsKey(func.id)) {

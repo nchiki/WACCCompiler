@@ -4,7 +4,6 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Nodes.BaseNode
@@ -17,12 +16,13 @@ import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParser.WhileContext): Node {
+
+class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicParser.DoWhileContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
-        get() = expr.weight
+        get() = expr.weight + 1
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.getNewLabel()
@@ -35,6 +35,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
 
         codeGenerator.curLabel = label
 
+        stat.generateCode(codeGenerator)
         /* Evaluate the expression */
         expr.generateCode(codeGenerator)
 
@@ -44,9 +45,6 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if(reg != Register.r0) {
             codeGenerator.freeReg(reg)
         }
-
-        stat.generateCode(codeGenerator)
-
         codeGenerator.addLabel(endLabel, oldScope)
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(label, Condition.AL))
 

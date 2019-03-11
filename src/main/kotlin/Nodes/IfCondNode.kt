@@ -79,7 +79,9 @@ class IfCondNode(// condition (should evaluate to boolean val
         }
 
         val ifChildTable = SymbolTable(table)
+        ifChildTable.inLoop = table.inLoop
         val elseChildTable = SymbolTable(table)
+        elseChildTable.inLoop = table.inLoop
 
         ifChildTable.currentFunction = table.currentFunction
         elseChildTable.currentFunction = table.currentFunction
