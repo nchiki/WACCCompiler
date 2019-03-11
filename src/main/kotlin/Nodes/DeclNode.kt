@@ -67,12 +67,18 @@ class DeclNode(// var name
         else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
             //if RHS is function call
             if (rhs.type == RHS_type.call) {
-                val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                var funType : LitTypes? = null
+                if(symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
+                    funType = symbolTable!!.getFunction((rhs.highOrderFunction!!.idNode as IdentNode).id)!!.getBaseType()
+                } else {
+                    funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                }
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
                 }
+
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
             }

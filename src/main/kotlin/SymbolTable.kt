@@ -14,6 +14,7 @@ class SymbolTable (val parent: SymbolTable?){
 
     val addressMap = HashMap<String, Int>()
 
+    var highOrderFunctions = ArrayList<String>()
     var functions = HashMap<String, FunctionNode>()
     var errors = ErrorLogger()
 
@@ -71,6 +72,19 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
         return tab.functions.get(funcId)
+    }
+
+    fun isHigherOrderFunction(funId : String) : Boolean{
+        var tab = this
+        if (highOrderFunctions.isEmpty()) {
+            while(tab.highOrderFunctions.isEmpty()) {
+                tab = tab.parent!!
+            }
+            if (parent == null) {
+                return false
+            }
+        }
+        return tab.highOrderFunctions.contains(funId)
     }
 
     fun evaluateParenNode(node_: Node): Node{

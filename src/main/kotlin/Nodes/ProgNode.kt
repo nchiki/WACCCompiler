@@ -47,6 +47,9 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         table.errors = errors
+        // adding high order functions to library
+        this.symbolTable!!.highOrderFunctions.add("map")
+
         for (func in funcDefs) {
             val id = func.id
             if (table.lookupSymbol(id) != null) {

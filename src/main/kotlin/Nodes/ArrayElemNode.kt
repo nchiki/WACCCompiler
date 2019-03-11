@@ -8,11 +8,11 @@ import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
-import main.kotlin.Instructions.MultInstr
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.StringLitNode
 import main.kotlin.Utils.*
+
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {
@@ -26,7 +26,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     fun resolveToAddress(codeGenerator: CodeGenerator) {
-
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
