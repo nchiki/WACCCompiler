@@ -39,6 +39,7 @@ assignLHS:
     IDENT       #AssignL_Iden
 | arrayElem     #AssignL_Array
 | pairElem      #AssignL_Pairelem
+| structLiter   #AssignL_StructLiter
 ;
 
 assignRHS:
@@ -75,8 +76,8 @@ boolOp: AND | OR ;
 
 
 expr:
-unaryOper expr                            #UnOp
-| expr multDiv expr                       #MultDivOp
+unaryOper expr                              #UnOp
+| expr multDiv expr                         #MultDivOp
 | expr addSub expr                          #AddSubOp
 | expr eq_Op expr                           #EqOp
 | unaryOper expr                            #UnOp
@@ -94,6 +95,10 @@ unaryOper expr                            #UnOp
 ident : IDENT ;
 
 unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
+
+structLiter: IDENT FULL_STOP IDENT ;
+
+structElem: STRUCT IDENT OPEN_CRLY_BRACKET type+ CLOSE_CRLY_BRACKET SEMICOLON ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 
