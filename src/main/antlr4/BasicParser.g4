@@ -31,6 +31,7 @@ stat:
 | DO stat WHILE expr DONE           #DoWhile
 | BEGIN stat END                    #Statement
 | stat SEMICOLON stat               #StatList
+| structElem                        #StructStat
 ;
 
 forCond: OPEN_PARENTHESES stat SEMICOLON expr SEMICOLON stat CLOSE_PARENTHESES;
@@ -98,7 +99,7 @@ unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
 structLiter: IDENT FULL_STOP IDENT ;
 
-structElem: STRUCT IDENT OPEN_CRLY_BRACKET type+ CLOSE_CRLY_BRACKET SEMICOLON ;
+structElem: STRUCT IDENT OPEN_CRLY_BRACKET (type IDENT (EQUAL assignRHS SEMICOLON| SEMICOLON))+ CLOSE_CRLY_BRACKET SEMICOLON ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 

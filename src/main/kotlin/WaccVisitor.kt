@@ -72,6 +72,14 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return IntLitNode(int_val.toLong(), ctx)
     }
 
+    override fun visitStructElem(@NotNull ctx: BasicParser.StructElemContext): Node {
+        val listMembers = arrayListOf<Node>()
+        for (member in ctx.type()) {
+            listMembers.add(visit(member))
+        }
+        val id = ctx.IDENT().text
+        return StructNode(id, listMembers, ctx)
+    }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
         val bool_val = ctx.BOOL_LIT().text
