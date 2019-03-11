@@ -4,7 +4,7 @@ module.exports = ({
 		source_file: $ => seq(
 			'begin',
 			repeat($.function_definition),
-			repeat($.statement)
+			repeat($.statement),
 			'end'
 		),
 
@@ -17,6 +17,12 @@ module.exports = ({
 			'IS',
 			repeat($.statement),
 			'END'
+		),
+
+		type: $ => choice(
+			$.primitive_type,
+			$.array_type,
+			$.pair_type
 		),
 
 		param_list: $ => seq(
@@ -127,21 +133,20 @@ module.exports = ({
 		assign_rhs: $ => choice(
 			$.expr,
 			$.array_lit,
-			$.newpair,
+			seq('newpair', '(', $.expr, ',', $.expr, ')'),
 			$.pair_elem,
-			$.function_call
+			seq('call', $.identifier, '(', $.arg_list, ')')
 		),
+
+		arg_list: $ => optional(seq(
+			$.expr,
+			repeat(',', $.expr)
+		)),
 
 		assign_lhs: $ => choice(
 			$.identifer,
 			$.array_elem,
 			$.pair_elem
-		)
-
-		type: $ => choice(
-			$.primitive_type,
-			$.array_type,
-			$.pair_type
 		),
 
 		primitive_type: $ => choice(
@@ -156,13 +161,25 @@ module.exports = ({
 			repeat1('[]')
 		),
 
+		array_lit: $ => seq(
+			'[',
+			$.expr,
+			repeat(seq(',', $.expr)),
+			']',
+		),
+
 		pair_type: $ => seq(
 			'pair',
-			'('
+			'(',
 			$.pair_elem_type,
 			',',
 			$.pair_elem_type,
 			')'
+		),
+
+		pair_elem: $ => choice(
+			seq('fst', $.expr),
+			seq('snd', $.expr)
 		),
 
 		pair_elem_type: $ => choice(
@@ -198,6 +215,29 @@ module.exports = ({
 		array_elem: $ => seq(
 			$.identifer,
 			repeat1(seq('[', $.expr, ']'))
+		),
+
+		int_lit: $ => /\d+/,
+
+		bool_lit: $ => choice(
+			'true',
+			'false'
+		),
+
+		char_lit: $ => seq(
+			'\'',
+			/[a-z]/,
+			'\''
+		),
+
+		str_lit: $ => seq(
+			'\'',
+			/[a-z]+/,
+			'\''
+		),
+
+		pair_lit: $ => choice(
+			'null',
 		),
 
 		identifier: $ => /[a-z]+/
