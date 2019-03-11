@@ -17,8 +17,8 @@ stat:
 | CONTINUE                          #Continue
 | IDENT PLUS PLUS                   #Increment
 | IDENT MINUS MINUS                 #Decrement
-| type IDENT EQUAL assignRHS        #Decl
 | assignLHS EQUAL assignRHS         #Assign
+| type IDENT EQUAL assignRHS        #Decl
 | READ assignLHS                    #Read
 | FREE expr                         #Free
 | RETURN expr                       #Return
@@ -37,10 +37,10 @@ stat:
 forCond: OPEN_PARENTHESES stat SEMICOLON expr SEMICOLON stat CLOSE_PARENTHESES;
 
 assignLHS:
-    IDENT       #AssignL_Iden
+   IDENT        #AssignL_Iden
+| structLiter   #AssignL_StructLiter
 | arrayElem     #AssignL_Array
 | pairElem      #AssignL_Pairelem
-| structLiter   #AssignL_StructLiter
 ;
 
 assignRHS:
@@ -99,7 +99,8 @@ unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
 structLiter: IDENT FULL_STOP IDENT ;
 
-structElem: STRUCT IDENT OPEN_CRLY_BRACKET (type IDENT (EQUAL assignRHS SEMICOLON| SEMICOLON))+ CLOSE_CRLY_BRACKET SEMICOLON ;
+structElem: STRUCT IDENT OPEN_CRLY_BRACKET (type IDENT (EQUAL assignRHS SEMICOLON| SEMICOLON))+
+            CLOSE_CRLY_BRACKET ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 

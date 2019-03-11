@@ -20,6 +20,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
 import main.kotlin.Nodes.Statement.DecrementNode
+import main.kotlin.Nodes.StructLiterNode
 import kotlin.system.exitProcess
 
 
@@ -72,12 +73,23 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return IntLitNode(int_val.toLong(), ctx)
     }
 
+    override fun visitAssignL_StructLiter(@NotNull ctx: BasicParser.AssignL_StructLiterContext): Node {
+        val structLiter = visit(ctx.structLiter()) as StructLiterNode
+        return LHSNode(structLiter, structLiter.member_id, ctx.start.line, ctx.start.charPositionInLine, ctx)
+    }
+
+    override fun visitStructLiter(@NotNull ctx: BasicParser.StructLiterContext): Node {
+        val struct_id = ctx.IDENT(0).text
+        val member_id = ctx.IDENT(1).text
+        return StructLiterNode(struct_id, member_id, ctx)
+    }
+
     override fun visitStructElem(@NotNull ctx: BasicParser.StructElemContext): Node {
         val listMembers = arrayListOf<Node>()
         for (member in ctx.type()) {
             listMembers.add(visit(member))
         }
-        val id = ctx.IDENT().text
+        val id = ctx.IDENT(0).text
         return StructNode(id, listMembers, ctx)
     }
 

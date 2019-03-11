@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream(
-          "tests/valid/struct/structDecl.wacc"))
+          "tests/valid/struct/basicStructLiter.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
