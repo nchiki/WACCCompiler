@@ -60,6 +60,10 @@ class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadC
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     // Adds necessary Read instructions
     private fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {
         val reg = codeGenerator.getFreeRegister()

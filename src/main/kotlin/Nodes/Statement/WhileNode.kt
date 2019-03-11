@@ -58,6 +58,10 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         codeGenerator.endLabel = ""
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         this.symbolTable = SymbolTable(table)

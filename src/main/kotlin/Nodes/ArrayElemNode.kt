@@ -6,12 +6,9 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
-import main.kotlin.Nodes.IdentNode
 import main.kotlin.SymbolTable
 import main.kotlin.Instructions.MultInstr
-import main.kotlin.Nodes.ArrayTypeNode
-import main.kotlin.Nodes.BaseNode
-import main.kotlin.Nodes.StringLitNode
+import main.kotlin.Nodes.*
 import main.kotlin.Utils.*
 
 
@@ -108,6 +105,11 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
 
+    }
+
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBaseType(): LitTypes {

@@ -3,6 +3,7 @@ package main.kotlin.Nodes.Expressions
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
@@ -25,6 +26,10 @@ class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : E
         //add instructions to main
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, convertToInt()))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBaseType(): LitTypes {

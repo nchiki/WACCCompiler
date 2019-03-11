@@ -40,6 +40,10 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         expr.semanticCheck(errors, table)

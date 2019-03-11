@@ -15,4 +15,5 @@ interface Node {
 
     fun generateCode(codeGenerator : CodeGenerator)
 
+    fun optimise(valueTable: ValueTable): Node
 }

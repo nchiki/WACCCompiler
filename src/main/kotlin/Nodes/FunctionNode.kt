@@ -24,6 +24,10 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
             }
         }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override val weight: Int
         get() = TODO("not implemented")
 

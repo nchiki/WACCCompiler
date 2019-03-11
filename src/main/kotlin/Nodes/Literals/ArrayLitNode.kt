@@ -67,6 +67,10 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         codeGenerator.freeReg(tempReg)
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType(): LitTypes {
         if (exprList.size > 0) {
             return exprList[0].getBaseType()

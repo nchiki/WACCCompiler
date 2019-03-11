@@ -27,6 +27,10 @@ class ParamNode(
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType() : LitTypes{
         var v = type
         while (v is ArrayTypeNode) {

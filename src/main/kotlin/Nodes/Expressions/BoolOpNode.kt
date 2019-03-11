@@ -9,6 +9,7 @@ import main.kotlin.Instructions.AndInstr
 import main.kotlin.Instructions.OrInstr
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
@@ -55,6 +56,10 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
         //adds leftReg as last reg used in order to get the result of the operation
         codeGenerator.regsInUse.remove(leftReg)
         codeGenerator.regsInUse.add(leftReg)
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

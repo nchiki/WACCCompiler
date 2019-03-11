@@ -14,6 +14,10 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
     override val weight: Int
         get() = stat.weight
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun generateCode(codeGenerator: CodeGenerator) {
         //val label = codeGenerator.getNewLabel()
         //codeGenerator.addLabel(label, null)

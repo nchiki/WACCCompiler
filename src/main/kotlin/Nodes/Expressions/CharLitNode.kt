@@ -25,6 +25,10 @@ class CharLitNode(val char: String, override val ctx: BasicParser.CharLitContext
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType(): LitTypes {
         return LitTypes.CharWacc
     }

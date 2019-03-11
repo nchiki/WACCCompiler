@@ -73,4 +73,9 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             stats!!.semanticCheck(errors, statTable!!)
         }
     }
+
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

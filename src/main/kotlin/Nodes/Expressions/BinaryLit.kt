@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.SemanticError
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.StringLitDef
@@ -11,6 +12,10 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class BinaryLit(val sequence : String, override val ctx: ParserRuleContext) : ExprNode {
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override var symbolTable: SymbolTable? = null
 
     override val size: Int

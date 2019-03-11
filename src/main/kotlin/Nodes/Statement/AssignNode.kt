@@ -80,4 +80,8 @@ class AssignNode(val LHSNode: LHSNode, val RHSNode: RHSNode, override val ctx : 
         errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
 
     }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

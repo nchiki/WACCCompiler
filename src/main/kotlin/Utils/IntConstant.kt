@@ -1,0 +1,5 @@
+package kotlin.Utils
+
+class IntConstant(var value: Long) : ConstantValue {
+
+}

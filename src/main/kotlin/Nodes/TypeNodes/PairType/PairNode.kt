@@ -10,6 +10,9 @@ import src.main.kotlin.Nodes.ExprNode
 
 class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
                override val ctx: BasicParser.Pair_typeContext) : ExprNode, Node {
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override var symbolTable: SymbolTable? = null
 

@@ -51,6 +51,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
         }
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
         if(expr is ArrayTypeNode) {
             if(expr.getBaseType().equals(LitTypes.CharWacc)){

@@ -61,6 +61,10 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     // Returns the print function for the epxr node that is passed in
     private fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
 
