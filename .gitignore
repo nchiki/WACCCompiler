@@ -12,3 +12,7 @@ target
 
 .idea
 .DS_Store
+
+#ignore npm project dependencies
+node_modules/
+package-lock.json
