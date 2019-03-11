@@ -65,8 +65,8 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
     // -----------------------UTILS--------------------------------------------------
 
-    fun getElemArray(index: Long, identifier : IdentNode, codeGenerator: CodeGenerator) {
-        resolveToAddress(index, identifier, codeGenerator)
+    fun getElemArray(indexReg : Register, identifier : IdentNode, codeGenerator: CodeGenerator) {
+        resolveToAddress(indexReg, identifier, codeGenerator)
 
         val elemReg = codeGenerator.getLastUsedReg()
 
@@ -80,11 +80,9 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
     }
 
-    fun resolveToAddress(index : Long, identifier: IdentNode, codeGenerator: CodeGenerator) {
+    fun resolveToAddress(exprReg: Register, identifier: IdentNode, codeGenerator: CodeGenerator) {
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
-        val exprReg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(exprReg, index))
 
         val tempReg = codeGenerator.getFreeRegister()
 
@@ -103,7 +101,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
 
         codeGenerator.freeReg(tempReg)
-        codeGenerator.freeReg(exprReg)
+
 
     }
 
@@ -170,38 +168,77 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
 
     fun map(funId : String, args : IdentNode, size : Long, codeGenerator: CodeGenerator) {
-        var i : Long = 0
+        var i: Long = 0
+        val indexReg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(indexReg, i))
+        // evaluate all the arguments of the array in the form of a while loop (iterating through the array)
+        val label = codeGenerator.getNewLabel()
+        val oldScope = codeGenerator.curScope
+        val endLabel = codeGenerator.getNewLabel()
+        codeGenerator.endLabel = endLabel
+        codeGenerator.addLabel(label, null)
 
-        while(i < size) {
-            getElemArray(i, args, codeGenerator)
-            val elemReg = codeGenerator.getLastUsedReg()
+        codeGenerator.curLabel = label
 
-            val type = symbolTable?.lookupSymbol(args.id)?.getBaseType()!!
+        /* Evaluate index < size */
+        val sizeReg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(sizeReg, size))
+        codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(sizeReg, indexReg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(sizeReg, "#1", Condition.GT))
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(sizeReg, "#0", Condition.LE))
+        //adds leftReg as last reg used in order to get the result of the operation
+        codeGenerator.regsInUse.remove(sizeReg)
+        codeGenerator.regsInUse.add(sizeReg)
 
-            /* Load byte into memory */
-            if (resolvesToByte(args)) {
-                codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
-                return
-            }
-
-            generateArgCode(argsNode as ExprNode, codeGenerator)
-            codeGenerator.addInstruction(this.funcLabel!!, BLInstr("f_${funId!!}"))
-            val after = symbolTable!!.sp
-            if (after - this.beforeSp!! != 0) {
-                codeGenerator.addInstruction(this.funcLabel!!, AddInstr(Register.sp, Register.sp, after - this.beforeSp!!))
-                symbolTable!!.sp -= after - this.beforeSp!!
-            }
-            codeGenerator.addInstruction(this.funcLabel!!, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
-            codeGenerator.freeReg(codeGenerator.getLastUsedReg())
-            i++
+        val reg = codeGenerator.getLastUsedReg()
+        codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
+        codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
+        if (reg != Register.r0) {
+            codeGenerator.freeReg(reg)
         }
 
+        getElemArray(indexReg, args, codeGenerator)
+        val elemReg = codeGenerator.getLastUsedReg()
 
+        val type = symbolTable?.lookupSymbol(args.id)?.getBaseType()!!
 
+        /* Load byte into memory */
+        if (resolvesToByte(args)) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
+            return
+        }
+        //we need to save the register that stores the index
+        symbolTable?.declareVariable("index", symbolTable!!.sp, 4) //Save variable location in symbol table
+        symbolTable!!.sp += 4
+        val spValue = symbolTable!!.sp
+        codeGenerator.addInstruction(label, StoreInstr(indexReg, "[sp, #-4]", true))
+
+        generateArgCode(argsNode as ExprNode, codeGenerator)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${funId!!}"))
+        val after = symbolTable!!.sp
+        if (after - this.beforeSp!! != 0) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, after - this.beforeSp!!))
+            symbolTable!!.sp -= after - this.beforeSp!!
+        }
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
+
+        //restore the value of index register
+        val offset = symbolTable!!.getValueOffset("index", codeGenerator)
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(indexReg, "[sp, #$offset]"))
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.getLastUsedReg(), 1))
+        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(indexReg,indexReg, codeGenerator.getLastUsedReg(), "S"))
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        codeGenerator.addLabel(endLabel, oldScope)
+        codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(label, Condition.AL))
+
+        codeGenerator.curLabel = endLabel
+        codeGenerator.curScope = oldScope
+        codeGenerator.freeReg(indexReg)
+        /* Restore stack pointer here */
+        symbolTable!!.recoverSp(codeGenerator)
     }
-
-
-
 
 }
 
