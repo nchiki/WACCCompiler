@@ -12,11 +12,21 @@ module.exports = ({
 			$.type,
 			$.identifier,
 			'(',
-			$.paramList,
+			optional($.param_list),
 			')',
 			'IS',
 			repeat($.statement),
 			'END'
+		),
+
+		param_list: $ => seq(
+			$.param,
+			optional(seq(',', $.param_list))
+		),
+
+		param: $ => seq(
+			$.type,
+			$.identifer
 		),
 
 		statement: $ => choice(
@@ -43,9 +53,9 @@ module.exports = ({
 			$.pair_lit,
 			$.identifier,
 			$.array_elem,
-			$.unary_op,
-			$.binary_op,
-			$.paren
+			$.unary_op_expr,
+			$.binary_op_expr,
+			seq('(', $.expr, ')')
 		),
 
 		decleration: $ => seq(
@@ -100,6 +110,20 @@ module.exports = ({
 			'fi'
 		),
 
+		while_statement: $ => seq(
+			'while',
+			$.expr,
+			'do',
+			$.statement,
+			'done'
+		),
+
+		stat_list: $ => seq(
+			$.statement,
+			',',
+			$.statement
+		),
+
 		assign_rhs: $ => choice(
 			$.expr,
 			$.array_lit,
@@ -108,6 +132,12 @@ module.exports = ({
 			$.function_call
 		),
 
+		assign_lhs: $ => choice(
+			$.identifer,
+			$.array_elem,
+			$.pair_elem
+		)
+
 		type: $ => choice(
 			$.primitive_type,
 			$.array_type,
@@ -115,16 +145,59 @@ module.exports = ({
 		),
 
 		primitive_type: $ => choice(
-
+			'int',
+			'bool',
+			'char',
+			'string'
 		),
 
 		array_type: $ => seq(
 			$.primitive_type,
-			repeat("")
+			repeat1('[]')
 		),
 
 		pair_type: $ => seq(
+			'pair',
+			'('
+			$.pair_elem_type,
+			',',
+			$.pair_elem_type,
+			')'
+		),
 
+		pair_elem_type: $ => choice(
+			$.primitive_type,
+			$.array_type,
+			'pair'
+		),
+
+		unary_op_expr: $ => prec(2, choice(
+			seq('-', $.expr),
+			seq('!', $.expr),
+			seq('len', $.expr),
+			seq('ord', $.expr),
+			seq('chr', $.expr)
+		)),
+
+		binary_op_expr: $ => choice(
+			prec.left(13, seq($.expr, '*', $.expr)),
+			prec.left(12, seq($.expr, '/', $.expr)),
+			prec.left(11, seq($.expr, '%', $.expr)),
+			prec.left(10, seq($.expr, '+', $.expr)),
+			prec.left(9, seq($.expr, '-', $.expr)),
+			prec.left(8, seq($.expr, '>=', $.expr)),
+			prec.left(7, seq($.expr, '<=', $.expr)),
+			prec.left(6, seq($.expr, '>', $.expr)),
+			prec.left(5, seq($.expr, '<', $.expr)),
+			prec.left(4, seq($.expr, '==', $.expr)),
+			prec.left(3, seq($.expr, '!=', $.expr)),
+			prec.left(2, seq($.expr, '&&', $.expr)),
+			prec.left(1, seq($.expr, '||', $.expr)),
+		),
+
+		array_elem: $ => seq(
+			$.identifer,
+			repeat1(seq('[', $.expr, ']'))
 		),
 
 		identifier: $ => /[a-z]+/
