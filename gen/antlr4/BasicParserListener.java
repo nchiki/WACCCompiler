@@ -386,16 +386,6 @@ public interface BasicParserListener extends ParseTreeListener {
 	 */
 	void exitPairElemType(BasicParser.PairElemTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link BasicParser#binaryOper}.
-	 * @param ctx the parse tree
-	 */
-	void enterBinaryOper(BasicParser.BinaryOperContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link BasicParser#binaryOper}.
-	 * @param ctx the parse tree
-	 */
-	void exitBinaryOper(BasicParser.BinaryOperContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link BasicParser#addSub}.
 	 * @param ctx the parse tree
 	 */
@@ -460,6 +450,18 @@ public interface BasicParserListener extends ParseTreeListener {
 	 */
 	void exitMultDivOp(BasicParser.MultDivOpContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code BinaryLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinaryLit(BasicParser.BinaryLitContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BinaryLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinaryLit(BasicParser.BinaryLitContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code CharLit}
 	 * labeled alternative in {@link BasicParser#expr}.
 	 * @param ctx the parse tree
@@ -507,6 +509,18 @@ public interface BasicParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEqOp(BasicParser.EqOpContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code OctalLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterOctalLit(BasicParser.OctalLitContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code OctalLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitOctalLit(BasicParser.OctalLitContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code UnOp}
 	 * labeled alternative in {@link BasicParser#expr}.
