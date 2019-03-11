@@ -103,7 +103,7 @@ fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
 IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
 
-OCTAL_LIT: '0' ('0'..'7')+;
+OCTAL_LIT: '0O' ('0'..'7')+;
 
 fragment HEXADEC: '0x';
 fragment HEX_LETTER: 'A'..'F';
