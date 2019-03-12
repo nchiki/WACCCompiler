@@ -9,7 +9,7 @@ import main.kotlin.Utils.LitTypes
 import src.main.kotlin.Nodes.ExprNode
 
 
-class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
+class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 

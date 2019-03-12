@@ -9,7 +9,10 @@ import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.math.exp
 
 class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsNode : Node, val size : Long, override val ctx: ParserRuleContext?) : Node {
 
@@ -18,7 +21,9 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
     override var symbolTable: SymbolTable? = null
 
     var funcLabel :String? = null
+    var funcScope : String? = null
     var beforeSp :Int? = null
+    val sNode = StringLitNode("\"$highOrder\"", null)
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
@@ -42,15 +47,19 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
         }
         argsNode.semanticCheck(errors, table)
-
+        sNode.semanticCheck(errors, table)
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         this.funcLabel = codeGenerator.curLabel
+        this.funcScope = codeGenerator.curScope
         this.beforeSp = symbolTable!!.sp
-
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${highOrder}"))
         when(highOrder) {
-            "map" -> map((idNode as IdentNode).id, argsNode as IdentNode, size, codeGenerator)
+            "map" -> { val label = "f_map"
+                codeGenerator.switchFunctions(label)
+                map((idNode as IdentNode).id, argsNode as IdentNode, size, codeGenerator)
+            }
         }
 
         /*codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
@@ -165,10 +174,42 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
     }
 
 
+    fun addReturn(expr : Node, codeGenerator: CodeGenerator) {
+        expr.generateCode(codeGenerator)
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
 
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
+        symbolTable?.recoverSp(codeGenerator)
+
+        // Pop last two items from stack
+        codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
+        codeGenerator.addInstruction(codeGenerator.curLabel, PopInstr())
+        codeGenerator.curLabel = funcLabel!!
+        codeGenerator.curScope = funcScope!!
+    }
+
+
+
+
+    // MAP : Applies function (funId) to every element of array (args).
 
     fun map(funId : String, args : IdentNode, size : Long, codeGenerator: CodeGenerator) {
-        var i: Long = 0
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, PushInstr())
+        val i: Long = 0
+
+        val array = createArray(args, size, codeGenerator)
+        array.generateCode(codeGenerator)
+        val offsetSp = -symbolTable!!.getValueOffset(args.id, codeGenerator)
+        var arrayMem = "[sp]"
+        if (offsetSp != 0) {
+            arrayMem = "[sp, #${offsetSp}]"
+        }
+
+        codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), arrayMem))
+        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+
         val indexReg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(indexReg, i))
         // evaluate all the arguments of the array in the form of a while loop (iterating through the array)
@@ -197,6 +238,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
             codeGenerator.freeReg(reg)
         }
 
+        // gets element of the array passed as argument
         getElemArray(indexReg, args, codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
@@ -207,20 +249,25 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
         }
+        this.beforeSp = symbolTable!!.sp
         //we need to save the register that stores the index
         symbolTable?.declareVariable("index", symbolTable!!.sp, 4) //Save variable location in symbol table
         symbolTable!!.sp += 4
         val spValue = symbolTable!!.sp
         codeGenerator.addInstruction(label, StoreInstr(indexReg, "[sp, #-4]", true))
-
+        symbolTable
         generateArgCode(argsNode as ExprNode, codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${funId!!}"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${funId}"))
+
         val after = symbolTable!!.sp
         if (after - this.beforeSp!! != 0) {
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, after - this.beforeSp!!))
             symbolTable!!.sp -= after - this.beforeSp!!
         }
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
+
+        // assign value to elem of result array
+        assignToElem(args, symbolTable!!.getFunction(funId)!!.getBaseType(), indexReg, codeGenerator)
 
         //restore the value of index register
         val offset = symbolTable!!.getValueOffset("index", codeGenerator)
@@ -238,6 +285,53 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.freeReg(indexReg)
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
+
+
+        // add return of the function
+
+        addReturn(array, codeGenerator)
+    }
+
+    private fun assignToElem(arrayNode: IdentNode, type : LitTypes, indexReg : Register, codeGenerator: CodeGenerator) {
+        // need location of "arrayElem" instead of identifier
+        // need to load the value of the index into an expr or find a way of resolving the address using the value in index<reg
+        arrayNode.generateCode(codeGenerator)
+        val elemReg = codeGenerator.getLastUsedReg()
+        val tempReg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(tempReg, indexReg))
+        //skip past array size
+        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
+        /* Resolve the address of the array element and put it into a register */
+        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${tempReg}, LSL #2"))
+
+        /* Store result value into the address of the array element */
+        if((/*nodeType !is ArrayTypeNode && nodeType.resolvesToByte()) ||*/ type.equals(LitTypes.CharWacc) ||type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.StringWacc))) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(Register.r0, "[$elemReg]"))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(Register.r0, "[$elemReg]"))
+        }
+
+        codeGenerator.freeReg(elemReg)
+        codeGenerator.freeReg(tempReg)
+
+
+    }
+
+    private fun createArray(args: IdentNode, size: Long, codeGenerator: CodeGenerator): ArrayLitNode {
+        val exprList  =  ArrayList<ExprNode>()
+        for (i in 0 until size) {
+            exprList.add(IntLitNode(0, null))
+        }
+
+        val id = args.id
+        val label = codeGenerator.curLabel
+        val offset = 4 //gets size of the data type
+        symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
+
+        symbolTable!!.sp += offset // add offset to stack pointer
+
+        return ArrayLitNode(exprList, null)
+
     }
 
 }

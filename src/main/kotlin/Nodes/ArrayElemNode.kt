@@ -48,7 +48,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
             }
 
             /* Add index and multiply by 4 */
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg}, LSL #2"))
 
             if(i < exprs.size - 1){
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))

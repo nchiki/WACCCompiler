@@ -71,7 +71,7 @@ class DeclNode(// var name
                 if(symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
                     funType = symbolTable!!.getFunction((rhs.highOrderFunction!!.idNode as IdentNode).id)!!.getBaseType()
                 } else {
-                    funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                    funType = symbolTable!!.getFunction(rhs.funId)!!.getBaseType()
                 }
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))

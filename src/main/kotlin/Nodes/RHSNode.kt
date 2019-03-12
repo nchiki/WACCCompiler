@@ -10,6 +10,7 @@ import main.kotlin.Errors.UndefinedFunction
 import main.kotlin.Instructions.AddInstr
 import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.StoreInstr
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
@@ -47,14 +48,15 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
 
     // Add the instructions for a function call
     private fun callGenerateCode(codeGenerator: CodeGenerator) {
+        val label = codeGenerator.curLabel
         if(symbolTable!!.isHigherOrderFunction(funId!!)) {
-            this.highOrderFunction!!.generateCode(codeGenerator)
+            generateHighCallCode(codeGenerator, label)
         } else {
             val label = codeGenerator.curLabel
             val before = symbolTable!!.sp
             args?.generateCode(codeGenerator)
 
-            codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
+            codeGenerator.addInstruction(label, BLInstr("f_${this.funId}"))
             val after = symbolTable!!.sp
             if (after - before != 0) {
                 codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
@@ -64,7 +66,39 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
         }
     }
 
+    private fun generateHighCallCode(codeGenerator: CodeGenerator, label: String) {
+        val argsValue = (highOrderFunction!!.argsNode as IdentNode).size
+        val before = symbolTable!!.sp
+        symbolTable!!.sp += argsValue
+        val spValue = symbolTable!!.sp
+
+        var inMemory = "[sp, #-$spValue]"
+        if (argsValue != 0) {
+           inMemory =  "[sp, #-$argsValue]"
+        }
+
+        highOrderFunction!!.argsNode.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+
+        val value = highOrderFunction!!.sNode.size
+        symbolTable!!.sp += value
+
+        inMemory = "[sp, #-${symbolTable!!.sp}]"
+        if (argsValue != 0) {
+           inMemory = "[sp, #-$value]"
+        }
+
+        highOrderFunction!!.sNode.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+        val after = symbolTable!!.sp
+        this.highOrderFunction!!.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
+        symbolTable!!.sp -= after - before
+        codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
+    }
+
     override fun getBaseType(): LitTypes {
+
         return when (type) {
             RHS_type.expr -> expr!!.getBaseType()
             RHS_type.array_lit -> ArrayLit!!.getBaseType()
@@ -123,7 +157,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
                         if (parameters!!.listParamNodes.count() != args.exprs.count()) {
                             errors.addError(IncorrectNumParams(ctx, parameters.listParamNodes.count(), args.exprs.count()))
                         } else {
-                            for (i in 0..args.exprs.size - 1) {
+                            for (i in 0 until args.exprs.size) {
                                 var actual = args.exprs[i]
                                 val expected = parameters.listParamNodes[i]
                                 if (actual.getBaseType() == LitTypes.IdentWacc) {
