@@ -9,6 +9,7 @@ import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Nodes.BaseNode
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
@@ -17,7 +18,7 @@ import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParser.WhileContext): Node {
+class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParser.WhileContext): Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -59,7 +60,21 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr = expr.optimise(valueTable) as ExprNode
+
+        /* If the expression always evaluates to false we skip the while */
+        if(expr is BoolLitNode){
+            if(!(expr as BoolLitNode).bool_val.toBoolean()){
+                return SkipNode(null)
+            }
+        }
+
+        valueTable.markAllAsDynamic()
+        val childValueTable = ValueTable(valueTable)
+
+        stat = stat.optimise(childValueTable)
+
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -76,7 +91,7 @@ class WhileNode(val expr: ExprNode, val stat: Node, override val ctx: BasicParse
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
-                errors.addError(UndefinedVariable(ctx.expr(), (expr).id))
+                errors.addError(UndefinedVariable(ctx.expr(), (expr as IdentNode).id))
                 return
             } else {
                 if (value.getBaseType().equals(BaseNode("bool", null).getBaseType())) {

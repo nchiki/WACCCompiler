@@ -72,14 +72,14 @@ class IfCondNode(// condition (should evaluate to boolean val
         if(expr is BoolLitNode){
             /* If statement always evaluates to if(true) -> put ifTrueStat into a stat-block */
             if((expr as BoolLitNode).bool_val.toBoolean()){
-                val trueStatement = StatementNode(ifTrueStat!!, null)
+                var trueStatement: Node = StatementNode(ifTrueStat!!, null)
                 trueStatement.symbolTable = ifTrueStat.symbolTable
-                trueStatement.optimise(ifTrueValueTable)
+                trueStatement = trueStatement.optimise(ifTrueValueTable)
                 return trueStatement
             }
-            val elseStatement = StatementNode(elseStat!!, null)
+            var elseStatement: Node = StatementNode(elseStat!!, null)
             elseStatement.symbolTable = elseStat.symbolTable
-            elseStatement.optimise(elseValueTable)
+            elseStatement = elseStatement.optimise(elseValueTable)
             return elseStatement
         }
 
