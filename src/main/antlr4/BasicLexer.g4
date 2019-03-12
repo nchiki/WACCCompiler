@@ -27,6 +27,7 @@ RETURN: 'return' ;
 EXIT: 'exit' ;
 PRINTLN: 'println' ;
 CALL: 'call' ;
+DEFINEMACRO: '.define' ;
 
 //if statement
 IF: 'if' ;

@@ -1,6 +1,7 @@
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import main.kotlin.preprocess
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -8,20 +9,26 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
-        if (args.size == 0) {
-                System.setIn(FileInputStream("../wacc_examples/" +
-          "valid/for/forLoopIncrement.wacc"))
+        if (args.isEmpty()) {
+                System.setIn(FileInputStream("tests/valid/macros/exitMacro.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
         val input = CharStreams.fromStream(java.lang.System.`in`)
         //Lexical analysis
         val lexer = BasicLexer(input)
+//        println(lexer.allTokens)
+        val newInput = preprocess(input, lexer.allTokens)
+        println(newInput.toString())
+        val newLexer = BasicLexer(newInput)
+//        println(newLexer.allTokens)
+
         //Create a buffer of tokens
-        val tokens = CommonTokenStream(lexer)
+        val tokens = CommonTokenStream(newLexer)
         //Syntactical analysis
         val parser = BasicParser(tokens)
         val tree = parser.prog()
+        println(tree.childCount)
         //Exit with code 100 if there are any syntax errors
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
@@ -43,8 +50,6 @@ fun main(args: Array<String>) {
         codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
-        //codeGen.writeToFile("print.s")
-        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile("tests/valid/macros/exitMacro.wacc".substring("tests/valid/macros/exitMacro.wacc".lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
-
