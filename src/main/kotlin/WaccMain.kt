@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
         val progNode = visitor.visit(tree)
         //Semantic Check
         progNode.semanticCheck(errorLogger, symbolTable)
-        for (error in errorLogger.errorList) {
+        for (error in errorLogger.errorListgit ) {
                 println(error.printError())
         }
         if (errorLogger.errorList.count() > 0) {
