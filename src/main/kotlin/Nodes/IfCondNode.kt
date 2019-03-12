@@ -1,6 +1,7 @@
 package src.main.kotlin
 
 import BasicParser
+import Nodes.StatementNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -8,6 +9,7 @@ import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
@@ -16,7 +18,7 @@ import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
 class IfCondNode(// condition (should evaluate to boolean val
-        val expr: ExprNode?, // expr = true -> statement
+        var expr: ExprNode?, // expr = true -> statement
         val ifTrueStat: Node?, // expr = false -> statement
 
         val elseStat: Node?, override val ctx: BasicParser.IfCondContext) : Node {
@@ -60,7 +62,31 @@ class IfCondNode(// condition (should evaluate to boolean val
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr = expr!!.optimise(valueTable) as ExprNode
+
+        valueTable.markAllAsDynamic()
+        val ifTrueValueTable = ValueTable(valueTable)
+        val elseValueTable = ValueTable(valueTable)
+
+        /* Remove else statement deadcode if the statement is always going to evaluate to true */
+        if(expr is BoolLitNode){
+            /* If statement always evaluates to if(true) -> put ifTrueStat into a stat-block */
+            if((expr as BoolLitNode).bool_val.toBoolean()){
+                val trueStatement = StatementNode(ifTrueStat!!, null)
+                trueStatement.symbolTable = ifTrueStat.symbolTable
+                trueStatement.optimise(ifTrueValueTable)
+                return trueStatement
+            }
+            val elseStatement = StatementNode(elseStat!!, null)
+            elseStatement.symbolTable = elseStat.symbolTable
+            elseStatement.optimise(elseValueTable)
+            return elseStatement
+        }
+
+        ifTrueStat!!.optimise(ifTrueValueTable)
+        elseStat!!.optimise(elseValueTable)
+
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -70,7 +96,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         }
 
         var actExpr = expr
-        if (actExpr is ParenNode) {
+        while (actExpr is ParenNode) {
             actExpr = actExpr.expr
         }
         if (actExpr?.getBaseType() == LitTypes.IdentWacc) {

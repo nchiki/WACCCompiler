@@ -31,7 +31,7 @@ class ValueTable(val parent: ValueTable?) {
     fun setIntValue(identifier: String, value: Long) {
         if(table.containsKey(identifier)) {
             val newConstant = IntConstant(value)
-            newConstant.dynamic = table.get(identifier)!!.dynamic
+            newConstant.dynamic = false
             table.replace(identifier, newConstant)
             return
         }
@@ -44,7 +44,7 @@ class ValueTable(val parent: ValueTable?) {
     fun setBoolValue(identifier: String, value: Boolean) {
         if(table.containsKey(identifier)) {
             val newConstant = BoolConstant(value)
-            newConstant.dynamic = table.get(identifier)!!.dynamic
+            newConstant.dynamic = false
             table.replace(identifier, newConstant)
             return
         }
@@ -54,14 +54,24 @@ class ValueTable(val parent: ValueTable?) {
         }
     }
 
-    fun setDynamic(identifier: String) {
+    fun markAllAsDynamic() {
+        for((_, value) in table){
+            value.dynamic = true
+        }
+
+        if(parent != null){
+            parent.markAllAsDynamic()
+        }
+    }
+
+    fun setDynamic(identifier: String, dynamic: Boolean) {
         val value = getValue(identifier)
 
         if(value == null){
             return
         }
 
-        value.dynamic = true
+        value.dynamic = dynamic
     }
 
 }

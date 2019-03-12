@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import kotlin.system.exitProcess
 
-class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext): Node {
+class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext?): Node {
 
     override var symbolTable: SymbolTable? = null
 

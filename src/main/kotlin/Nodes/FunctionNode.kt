@@ -10,7 +10,7 @@ import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
+class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, var stat: Node,
                     override val ctx: BasicParser.FuncContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
@@ -25,7 +25,8 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        stat = stat.optimise(valueTable)
+        return this
     }
 
     override val weight: Int
