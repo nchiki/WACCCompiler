@@ -98,7 +98,8 @@ class DeclNode(// var name
     override fun optimise(valueTable: ValueTable): Node {
         rhs = rhs.optimise(valueTable)
 
-        if(!type.getBaseType().equals(LitTypes.IntWacc) && !type.getBaseType().equals(LitTypes.BoolWacc)){
+        /* Optimise only for integer and boolean constants */
+        if(type !is IntLitNode && type !is BoolLitNode){
             return this
         }
 

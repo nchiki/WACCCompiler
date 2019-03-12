@@ -13,7 +13,7 @@ import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
+class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -41,7 +41,9 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr = expr.optimise(valueTable) as ExprNode
+
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -54,9 +56,9 @@ class ReturnStatNode (val expr : ExprNode, override val ctx: BasicParser.ReturnC
 
         var realExpr = expr
         if (expr is IdentNode){
-            val exprVal = table.lookupSymbol(expr.id)
+            val exprVal = table.lookupSymbol((expr as IdentNode).id)
             if(exprVal == null){
-                errors.addError(UndefinedVariable(ctx, expr.id))
+                errors.addError(UndefinedVariable(ctx, (expr as IdentNode).id))
                 return
             }
             realExpr = exprVal

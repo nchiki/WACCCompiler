@@ -7,8 +7,9 @@ import main.kotlin.SymbolTable
 import kotlin.system.exitProcess
 
 class SkipNode(override val ctx: BasicParser.SkipContext?): Node{
+
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override var symbolTable: SymbolTable? = null

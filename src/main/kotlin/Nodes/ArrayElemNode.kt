@@ -109,7 +109,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override fun getBaseType(): LitTypes {

@@ -29,6 +29,6 @@ class ParamListNode(// list of parameterNodes
 
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 }

@@ -82,8 +82,8 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
         stats as StatListNode
 
-        for (stat in stats.listStatNodes){
-            stat.optimise(valueTable)
+        for(i in (0 until stats.listStatNodes.size)){
+            stats.listStatNodes[i] = stats.listStatNodes[i].optimise(valueTable)
         }
 
         return this

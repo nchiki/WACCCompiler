@@ -7,7 +7,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import kotlin.system.exitProcess
 
-class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext?): Node {
+class StatementNode(var stat : Node, override val ctx: BasicParser.StatementContext?): Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -15,7 +15,10 @@ class StatementNode(val stat : Node, override val ctx: BasicParser.StatementCont
         get() = stat.weight
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        valueTable.markAllAsDynamic()
+        val childValueTable = ValueTable(valueTable)
+        stat = stat.optimise(childValueTable)
+        return this
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {

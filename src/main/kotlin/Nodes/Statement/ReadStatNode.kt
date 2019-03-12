@@ -8,6 +8,7 @@ import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.LHSNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
@@ -15,6 +16,7 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import main.kotlin.Utils.getString
+import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 
 class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadContext): Node {
@@ -60,8 +62,19 @@ class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadC
 
     }
 
+    /* If a value is input from standard input then set is as dynamic */
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(!lhs.nodeType!!.equals(LitTypes.IdentWacc)){
+            return this
+        }
+
+        val type = symbolTable?.lookupSymbol(lhs.id)!!
+
+        if(type is IntLitNode || type is BoolLitNode){
+            valueTable.setDynamic(lhs.id, true)
+        }
+
+        return this
     }
 
     // Adds necessary Read instructions

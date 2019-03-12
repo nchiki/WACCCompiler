@@ -31,7 +31,7 @@ class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemCon
         }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override val weight: Int

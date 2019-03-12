@@ -27,8 +27,9 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {}
+
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override fun getBaseType(): LitTypes {

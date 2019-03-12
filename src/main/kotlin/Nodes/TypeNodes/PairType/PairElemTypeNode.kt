@@ -26,7 +26,7 @@ open class PairElemTypeNode(val type: ExprNode?, val pair: String?, override val
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

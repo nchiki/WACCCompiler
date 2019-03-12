@@ -21,7 +21,10 @@ class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: Basic
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for(i in (0 until listStatNodes.size)){
+            listStatNodes[i] = listStatNodes[i].optimise(valueTable)
+        }
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
