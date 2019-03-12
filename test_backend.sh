@@ -64,6 +64,43 @@ else
     exit 127
 fi
 
+get_exit() {
+    EXIT_REGEX='#[[:space:]]Exit:'$'\n''#[[:space:]]([0-9]*)'
+    if [[ "$1" =~ $EXIT_REGEX ]]; then
+        echo ${BASH_REMATCH[1]}
+    else
+        echo EXIT CANNOT BE FOUND
+    fi;
+}
+
+get_output() {
+    emptyRegex='#[[:space:]]Output:'$'\n''#[[:space:]]#empty#'
+    if [[ "$1" =~ $emptyRegex ]]; then
+        echo ""
+    else
+        regex='#[[:space:]]Output:'$'\n''(.*)'$'\n'''$'\n''# Exit'
+        if [[ "$(get_exit "$1")" == "EXIT CANNOT BE FOUND" ]]; then
+            regex='#[[:space:]]Output:'$'\n''(.*)'$'\n'''$'\n''# Program'
+        fi
+        OUTPUT_ARRAY=()
+        if [[ "$1" =~ $regex ]]; then
+            FULL_OUTPUT=${BASH_REMATCH[1]}
+            regex='# (.*)'
+            SAVEIFS=$IFS   # Save current IFS
+            IFS=$'\n'      # Change IFS to new line
+            for aString in ${FULL_OUTPUT[@]}; do
+                if [[ ${aString} =~ $regex ]]; then
+                    OUTPUT_ARRAY+=(${BASH_REMATCH[1]})
+                fi
+            done
+            IFS=$SAVEIFS   # Restore IFS
+        fi;
+        OUTPUT=$( IFS=$'\n'; echo "${OUTPUT_ARRAY[*]}" )
+        IFS=$SAVEIFS   # Restore IFS
+        echo "$OUTPUT" | sed -e 's/#addrs#//g'
+    fi;
+}
+
 TESTS=$(find $DIRECTORY -name "*.wacc" | wc -l)
 echo ""
 echo "-----------------------------------------------------"
@@ -75,7 +112,9 @@ find $DIRECTORY -name "*.wacc" | (
 	eval $(arm-linux-gnueabi-gcc -o $SHORTENED -mcpu=arm1176jzf-s -mtune=arm1176jzf-s "$SHORTENED.s")
 	ACTUAL="$(eval qemu-arm -L /usr/arm-linux-gnueabi/ $SHORTENED)"
 	ACTUAL_NO_ADDRESSES=$ACTUAL | sed -e 's/0x[0-9]*//g'
-	EXPECTED="$(eval ruby refCompile $fname -x)"
+#	EXPECTED="$(eval ruby refCompile $fname -x)"
+    FILE=`cat $fname`
+    EXPECTED=$(get_output "$FILE")
 	EXPECTED_NO_ADDRESSES=$EXPECTED | sed -e 's/0x[0-9]*//g'
 	if [[ !("$ACTUAL_NO_ADDRESSES" = "$EXPECTED_NO_ADDRESSES") ]]
         then

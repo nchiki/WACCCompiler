@@ -18,13 +18,12 @@ fun main(args: Array<String>) {
         //Lexical analysis
         val lexer = BasicLexer(input)
 //        println(lexer.allTokens)
-        val newInput = preprocess(input, lexer.allTokens)
-        println(newInput.toString())
-        val newLexer = BasicLexer(newInput)
-//        println(newLexer.allTokens)
+//        val newInput = preprocess(input, lexer.allTokens)
+//        println(newInput.toString())
+//        val newLexer = BasicLexer(newInput)
 
         //Create a buffer of tokens
-        val tokens = CommonTokenStream(newLexer)
+        val tokens = CommonTokenStream(lexer)
         //Syntactical analysis
         val parser = BasicParser(tokens)
         val tree = parser.prog()
