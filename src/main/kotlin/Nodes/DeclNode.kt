@@ -22,7 +22,7 @@ import kotlin.system.exitProcess
 class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
-        var rhs: RHSNode, override val ctx: BasicParser.DeclContext) : Node {
+        val rhs: RHSNode, override val ctx: BasicParser.DeclContext?) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -33,6 +33,7 @@ class DeclNode(// var name
 
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
+
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
         if (rhs.ArrayLit == null) {
             symbolTable!!.sp += offset // add offset to stack pointer
@@ -69,12 +70,18 @@ class DeclNode(// var name
         else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
             //if RHS is function call
             if (rhs.type == RHS_type.call) {
-                val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                var funType : LitTypes? = null
+                if(symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
+                    funType = symbolTable!!.getFunction((rhs.highOrderFunction!!.idNode as IdentNode).id)!!.getBaseType()
+                } else {
+                    funType = symbolTable!!.getFunction(rhs.funId)!!.getBaseType()
+                }
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
                 }
+
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
             }
@@ -137,7 +144,7 @@ class DeclNode(// var name
         //if it's not there or there is a function with the same name, don't add an error
         if (value != null) {
             // if there is already a variable with that name -> error
-            errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
+            errors.addError(DoubleDeclare(ctx!!, id, value.ctx!!.start.line))
         }
 
         addToTable(table, id)
@@ -148,7 +155,7 @@ class DeclNode(// var name
             val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id, rhs.PairLit!!)
 
             if (nodeT != type.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs.PairLit!!.expr, table))
+                errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs.PairLit.expr, table))
             }
             return
         }
@@ -198,7 +205,7 @@ class DeclNode(// var name
         }
 
         /* Types don't match */
-        errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs, table))
+        errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs, table))
 
     }
 

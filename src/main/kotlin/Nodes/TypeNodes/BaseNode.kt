@@ -33,6 +33,7 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
     }
 
     override fun getBaseType(): LitTypes {
+
         return when (type) {
             "int" -> LitTypes.IntWacc
             "char" -> LitTypes.CharWacc

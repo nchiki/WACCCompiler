@@ -29,9 +29,13 @@ enum class LitTypes(s: String) {
 
     fun getType(s: String): LitTypes {
         var input = s
+        if(s.contains('[')) {
+           input = input.substring(0,input.length-2)
+        }
         if (s.contains("pair")) {
             input = "pair"
         }
+
         return when (input) {
             "bool" -> LitTypes.BoolWacc
             "int" -> LitTypes.IntWacc

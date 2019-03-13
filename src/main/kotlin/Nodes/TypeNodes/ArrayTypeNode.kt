@@ -27,6 +27,7 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
     }
 
     override fun getBaseType(): LitTypes {
+
         return type.getBaseType()
     }
 
