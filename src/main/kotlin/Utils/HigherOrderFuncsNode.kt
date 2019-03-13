@@ -223,7 +223,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
         symbolTable!!.sp = 0
 
-        
+
         // creates the array to be returned
         val array = createArray(size, codeGenerator)
         val arrayRHS = RHSNode(RHS_type.array_lit, null, null, 0,0,

@@ -22,6 +22,7 @@ class SymbolTable (val parent: SymbolTable?){
     var currentExecutionPathHasReturn = false
     var sp = 0
 
+    var inHighOrdfunctions = HashMap<String, String>()
     // useful for break and continue semantic check
     var inLoop = false
 
@@ -133,5 +134,22 @@ class SymbolTable (val parent: SymbolTable?){
             }
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, value))
         }
+    }
+
+    fun addIdentFunc(HighOrdfunc : String, func : String) {
+        inHighOrdfunctions.put(HighOrdfunc, func)
+    }
+
+    fun getIdentFunc(HighOrdfunc: String) : String? {
+        var tab = this
+        if (inHighOrdfunctions.isEmpty()) {
+            while(tab.inHighOrdfunctions.isEmpty()) {
+                tab = tab.parent!!
+            }
+            if (parent == null) {
+                return null
+            }
+        }
+        return tab.inHighOrdfunctions.get(HighOrdfunc)
     }
 }

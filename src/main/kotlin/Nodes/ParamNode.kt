@@ -47,6 +47,7 @@ class ParamNode(
             errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         } else {
             table.add(this, id)
+
         }
 
     }

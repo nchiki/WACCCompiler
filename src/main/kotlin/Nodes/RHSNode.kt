@@ -164,9 +164,12 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
             this.highOrderFunction!!.semanticCheck(errors, table)
         } else {
             if (type == RHS_type.call) {
-
                 val funNode = table.getFunction(funId!!)
                 if (funNode == null) {
+                    // for high order functions we would need the to get the name of the function enclosing this call
+                    // in order to get the real name of the function as highOrder = map, id = s, call = inc
+                    // get(map)->return inc
+
                     errors.addError(UndefinedFunction(ctx, funId))
                 } else {
                     val parameters = funNode.params
@@ -188,8 +191,15 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
                                 } else if (actual.getBaseType() != expected.getBaseType()) {
                                     errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                                 }
+                                if (actual == LitTypes.FuncWacc) {
+                                    table.addIdentFunc(funId, (args.exprs[i] as IdentNode).id)
+                                    println(table.inHighOrdfunctions.toString())
+                                }
+
                             }
+
                         }
+
                     } else {
                         errors.addError(IncorrectNumParams(ctx, parameters!!.listParamNodes.count(), 0))
                     }
