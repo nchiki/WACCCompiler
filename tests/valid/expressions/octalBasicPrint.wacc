@@ -1,0 +1,14 @@
+# evaluating a moderately complex integer expression
+
+# Output:
+# Correct
+
+# Program:
+
+begin
+  int a = 0123; 
+  int b = 10; 
+  int c = a + b; 
+  println a; 
+  println c
+end

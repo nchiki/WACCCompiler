@@ -30,6 +30,10 @@ class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemCon
             return 0
         }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override val weight: Int
         get() = TODO("not needed")
 

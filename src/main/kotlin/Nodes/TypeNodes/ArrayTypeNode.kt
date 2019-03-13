@@ -22,6 +22,10 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
         TODO("Function need not be called")
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType(): LitTypes {
 
         return type.getBaseType()

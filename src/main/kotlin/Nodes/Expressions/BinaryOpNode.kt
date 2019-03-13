@@ -12,6 +12,7 @@ import main.kotlin.Nodes.ArrayLitNode
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
 import org.antlr.v4.runtime.ParserRuleContext
@@ -30,6 +31,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
                 else -> 4
             }
         }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override val weight: Int
         get() = left.weight + right.weight + 1

@@ -31,6 +31,10 @@ class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg))
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType(): LitTypes {
         return LitTypes.StringWacc
     }

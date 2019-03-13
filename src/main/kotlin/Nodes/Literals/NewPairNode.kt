@@ -4,6 +4,7 @@ import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.*
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
@@ -52,6 +53,10 @@ class NewPairNode(override val ctx: BasicParser.AssignR_PairContext, val exprNod
         }
         codeGenerator.addInstruction(label, StoreInstr(Register.r0, "[$reg, #4]"))
         codeGenerator.freeReg(lastReg)
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBaseType(): LitTypes {

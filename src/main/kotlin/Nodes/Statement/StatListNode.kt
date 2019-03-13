@@ -19,6 +19,14 @@ class StatListNode(val listStatNodes: MutableList<Node>, override val ctx: Basic
             stat.generateCode(codeGenerator)
         }
     }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        for(i in (0 until listStatNodes.size)){
+            listStatNodes[i] = listStatNodes[i].optimise(valueTable)
+        }
+        return this
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if(table.currentExecutionPathHasReturn && table.currentFunction != null){

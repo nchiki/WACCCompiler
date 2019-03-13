@@ -55,12 +55,6 @@ class SymbolTable (val parent: SymbolTable?){
         return sp - addressMap[identifier]!!
     }
 
-    fun printFunctions() {
-        for (func in functions) {
-            println(func.key)
-        }
-    }
-
     fun getFunction(funcId : String) : FunctionNode?{
         var tab = this
         if (functions.isEmpty()) {

@@ -11,6 +11,10 @@ import src.main.kotlin.Nodes.ExprNode
 class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
                override val ctx: BasicParser.Pair_typeContext) : ExprNode, Node {
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override var symbolTable: SymbolTable? = null
 
     override val size: Int

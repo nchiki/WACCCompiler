@@ -51,6 +51,10 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType() : LitTypes {
         return LitTypes.IdentWacc
     }

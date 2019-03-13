@@ -22,6 +22,10 @@ class BreakNode(override val ctx: BasicParser.BreakContext) : Node {
         }
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(codeGenerator.endLabel, Condition.AL))
     }

@@ -76,4 +76,19 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
             stats!!.semanticCheck(errors, statTable!!)
         }
     }
+
+
+    override fun optimise(valueTable: ValueTable): Node {
+        for (func in funcDefs){
+            func.optimise(valueTable)
+        }
+
+        stats as StatListNode
+
+        for(i in (0 until stats.listStatNodes.size)){
+            stats.listStatNodes[i] = stats.listStatNodes[i].optimise(valueTable)
+        }
+
+        return this
+    }
 }

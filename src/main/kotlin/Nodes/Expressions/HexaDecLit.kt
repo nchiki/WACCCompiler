@@ -1,28 +1,31 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Expressions
 
-import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.MovInstr
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-
-class CharLitNode(val char: String, override val ctx: BasicParser.CharLitContext) : ExprNode {
-
+class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : ExprNode {
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
-        get() = 1
+        get() = 4
 
     override val weight: Int
         get() = 1
 
-    //moves char into a free register
+    fun convertToInt() : Int{
+        return Integer.parseInt(sequence.substring(2), 16)
+    }
+
     override fun generateCode(codeGenerator: CodeGenerator) {
+        //add instructions to main
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, convertToInt()))
     }
 
     override fun optimise(valueTable: ValueTable): Node {
@@ -30,11 +33,10 @@ class CharLitNode(val char: String, override val ctx: BasicParser.CharLitContext
     }
 
     override fun getBaseType(): LitTypes {
-        return LitTypes.CharWacc
+        return LitTypes.IntWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
     }
-
 }

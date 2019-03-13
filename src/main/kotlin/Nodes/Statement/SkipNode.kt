@@ -6,7 +6,11 @@ import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import kotlin.system.exitProcess
 
-class SkipNode(override val ctx: BasicParser.SkipContext): Node{
+class SkipNode(override val ctx: BasicParser.SkipContext?): Node{
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
 
     override var symbolTable: SymbolTable? = null
 

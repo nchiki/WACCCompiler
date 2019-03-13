@@ -27,6 +27,10 @@ class ParamNode(
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType() : LitTypes{
         var v = type
         while (v is ArrayTypeNode) {

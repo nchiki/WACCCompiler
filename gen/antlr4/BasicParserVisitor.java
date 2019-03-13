@@ -233,12 +233,6 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPairElemType(BasicParser.PairElemTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link BasicParser#binaryOper}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBinaryOper(BasicParser.BinaryOperContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link BasicParser#addSub}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -277,6 +271,13 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultDivOp(BasicParser.MultDivOpContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code BinaryLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinaryLit(BasicParser.BinaryLitContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code CharLit}
 	 * labeled alternative in {@link BasicParser#expr}.
 	 * @param ctx the parse tree
@@ -304,6 +305,13 @@ public interface BasicParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEqOp(BasicParser.EqOpContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code OctalLit}
+	 * labeled alternative in {@link BasicParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOctalLit(BasicParser.OctalLitContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code UnOp}
 	 * labeled alternative in {@link BasicParser#expr}.

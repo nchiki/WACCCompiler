@@ -106,6 +106,15 @@ fragment CHARACTER: ~('\''| '"'| '\\') | ESC_CHAR ;
 IDENT: LETTER (IDENT_TAIL)* ;
 fragment IDENT_TAIL: LETTER|DIGIT ;
 
+OCTAL_LIT: '0O' ('0'..'7')+;
+
+fragment HEXADEC: '0x';
+fragment HEX_LETTER: 'A'..'F';
+HEXADEC_LIT: HEXADEC (DIGIT | HEX_LETTER)+;
+
+fragment BINARY: '0b';
+BINARY_LIT: BINARY ('0' | '1')+;
+
 // literals
 INT_LIT: DIGIT+ ;
 

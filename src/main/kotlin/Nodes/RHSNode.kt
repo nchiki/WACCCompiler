@@ -22,7 +22,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-              val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
+              var expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -131,12 +131,12 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
             RHS_type.expr -> {
                 return if (expr!!.getBaseType() == LitTypes.IdentWacc) {
                     if (expr is ArrayElemNode) {
-                        table.lookupSymbol(expr.identifier.id)?.getBaseType()
+                        table.lookupSymbol((expr as ArrayElemNode).identifier.id)?.getBaseType()
                     } else {
                         (expr as IdentNode).getValueType(table)?.getBaseType()
                     }
                 } else {
-                    expr.getBaseType()
+                    expr!!.getBaseType()
                 }
             }
             RHS_type.pair_elem -> {
@@ -154,6 +154,14 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
                 return table.getFunction(funId)?.getBaseType()}
             else -> return null
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): RHSNode {
+        if(type.equals(RHS_type.expr)){
+            expr = expr!!.optimise(valueTable) as ExprNode
+        }
+
+        return this
     }
 
 
@@ -211,7 +219,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
 
     fun getSizeOfOffset(): Int {
 
-        if (expr != null && expr.getBaseType() == LitTypes.PairWacc) {
+        if (expr != null && expr!!.getBaseType() == LitTypes.PairWacc) {
             return 4
         }
 

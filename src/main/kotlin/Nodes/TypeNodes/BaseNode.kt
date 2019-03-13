@@ -28,6 +28,10 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
 
     override fun generateCode(codeGenerator: CodeGenerator) {}
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType(): LitTypes {
 
         return when (type) {

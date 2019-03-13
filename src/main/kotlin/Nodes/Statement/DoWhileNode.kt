@@ -84,4 +84,8 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
         this.symbolTable!!.inLoop = false
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

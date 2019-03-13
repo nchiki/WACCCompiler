@@ -9,6 +9,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Expressions.BinaryLit
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
@@ -31,6 +32,7 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
     override fun generateCode(codeGenerator: CodeGenerator) {
         // Load expr into register
         expr.generateCode(codeGenerator)
+
 
         val label = checkType(codeGenerator, expr)
 
@@ -57,6 +59,10 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
         }
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_ln"))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     // Returns the print function for the epxr node that is passed in

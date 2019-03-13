@@ -8,11 +8,13 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 import kotlin.system.exitProcess
 
@@ -61,7 +63,7 @@ class DeclNode(// var name
 
         //check if rhs is a BaseType
         else if (rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
-                        || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
+                        || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
 
@@ -99,6 +101,37 @@ class DeclNode(// var name
         }
     }
 
+
+    override fun optimise(valueTable: ValueTable): Node {
+        rhs = rhs.optimise(valueTable)
+
+        /* Optimise only for integer and boolean constants */
+        if(type !is IntLitNode && type !is BoolLitNode){
+            return this
+        }
+
+        if(rhs.type.equals(RHS_type.expr)){
+            val rhsExpr = rhs.expr!!
+            if(rhsExpr is IntLitNode){
+                valueTable.addIntValue(id, rhsExpr.int_val)
+            }else if(rhsExpr is BoolLitNode){
+                valueTable.addBoolValue(id, rhsExpr.bool_val.toBoolean())
+            }else{
+                /* The value of the rhs is dynamic */
+                if(type.getBaseType().equals(LitTypes.IntWacc)){
+                    valueTable.addIntValue(id, 0)
+                    valueTable.setDynamic(id, true)
+                }else if(type.getBaseType().equals(LitTypes.BoolWacc)){
+                    valueTable.addBoolValue(id, true)
+                    valueTable.setDynamic(id, true)
+                }
+            }
+        }
+
+
+        return this
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
@@ -119,7 +152,7 @@ class DeclNode(// var name
 
         /* RHS is a pair assignment*/
         if (rhs.type == RHS_type.pair_elem) {
-            val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id, rhs.PairLit)
+            val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id, rhs.PairLit!!)
 
             if (nodeT != type.getBaseType()) {
                 errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs.PairLit.expr, table))

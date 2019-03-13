@@ -111,6 +111,10 @@ class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
         }
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType(): LitTypes {
         return when (nodeType) {
             is ArrayElemNode -> nodeType.getBaseType()

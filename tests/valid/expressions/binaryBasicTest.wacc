@@ -1,0 +1,11 @@
+# evaluating a moderately complex integer expression
+
+# Output:
+# Correct
+
+# Program:
+
+begin
+  int a = 0b01111;
+  return
+end

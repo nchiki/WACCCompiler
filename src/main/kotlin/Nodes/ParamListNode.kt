@@ -27,4 +27,8 @@ class ParamListNode(// list of parameterNodes
         }
     }
 
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
 }
