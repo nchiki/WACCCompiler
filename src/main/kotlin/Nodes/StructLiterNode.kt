@@ -35,57 +35,22 @@ class StructLiterNode(val struct_id : String, val member_id : String, override v
         symbolTable = table
     }
 
-    fun resolveToAddress(codeGenerator: CodeGenerator) {
-
-        val elemReg = codeGenerator.getLastUsedReg()
-        val structNode = symbolTable!!.lookupSymbol(struct_id)
-
-        if (structNode is StructNode) {
-            for (i in (0 until structNode.exprs.size)) {
-                val expr = structNode.exprs[i]
-                expr.generateCode(codeGenerator)
-                val exprReg = codeGenerator.getLastUsedReg()
-                val tempReg = codeGenerator.getFreeRegister()
-
-                /* Skip past array size */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
-
-                /* Resolves to byte sized element */
-                if(i == structNode.exprs.size - 1 && resolvesToByte()){
-                    codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
-                    codeGenerator.freeReg(tempReg)
-                    codeGenerator.freeReg(exprReg)
-                    return
-                }
-
-                /* Add index and multiply by 4 */
-                codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
-
-                if(i < structNode.exprs.size - 1){
-                    codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
-                }
-
-                codeGenerator.freeReg(tempReg)
-                codeGenerator.freeReg(exprReg)
-            }
-        }
-    }
-
-    fun resolvesToByte(): Boolean {
-        val expr = symbolTable?.lookupLocal(member_id)!!
-
-        return expr.getBaseType().equals(LitTypes.BoolWacc) || expr.getBaseType().equals(LitTypes.CharWacc)
-                || expr.getBaseType().equals(LitTypes.StringWacc)
-    }
-
     override fun generateCode(codeGenerator: CodeGenerator) {
-        resolveToAddress(codeGenerator)
-        val elemReg = codeGenerator.getLastUsedReg()
-        /* Load byte into memory */
-        if (resolvesToByte()) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
-            return
+        val structNode = symbolTable!!.lookupSymbol(struct_id)
+        val offset = symbolTable!!.getValueOffset(member_id, codeGenerator)
+        var inMemory = "[sp]"
+        if(offset != 0) {
+            inMemory = "[sp, #${offset}]"
         }
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
+        val reg = codeGenerator.getFreeRegister()
+        val idNode = symbolTable!!.lookupLocal(member_id)
+
+        if(idNode is ExprNode && idNode.getBaseType() == LitTypes.BoolWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+        }else if (idNode is ExprNode && idNode.getBaseType() == LitTypes.CharWacc) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+        }
     }
 }
