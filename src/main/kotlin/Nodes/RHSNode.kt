@@ -14,11 +14,13 @@ import main.kotlin.Nodes.Statement.ArgListNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
-class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
-              val expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?, val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
+class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
+              var expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?,
+              val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -71,12 +73,12 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
             RHS_type.expr -> {
                 return if (expr!!.getBaseType() == LitTypes.IdentWacc) {
                     if (expr is ArrayElemNode) {
-                        table.lookupSymbol(expr.identifier.id)?.getBaseType()
+                        table.lookupSymbol((expr as ArrayElemNode).identifier.id)?.getBaseType()
                     } else {
                         (expr as IdentNode).getValueType(table)?.getBaseType()
                     }
                 } else {
-                    expr.getBaseType()
+                    expr!!.getBaseType()
                 }
             }
             RHS_type.pair_elem -> {
@@ -91,6 +93,14 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
             RHS_type.call -> return table.getFunction(funId!!)!!.getBaseType()
             else -> return null
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): RHSNode {
+        if(type.equals(RHS_type.expr)){
+            expr = expr!!.optimise(valueTable) as ExprNode
+        }
+
+        return this
     }
 
 
@@ -135,7 +145,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
 
     fun getSizeOfOffset(): Int {
 
-        if (expr != null && expr.getBaseType() == LitTypes.PairWacc) {
+        if (expr != null && expr!!.getBaseType() == LitTypes.PairWacc) {
             return 4
         }
 

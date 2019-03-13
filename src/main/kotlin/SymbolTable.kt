@@ -54,12 +54,6 @@ class SymbolTable (val parent: SymbolTable?){
         return sp - addressMap[identifier]!!
     }
 
-    fun printFunctions() {
-        for (func in functions) {
-            println(func.key)
-        }
-    }
-
     fun getFunction(funcId : String) : FunctionNode?{
         var tab = this
         if (functions.isEmpty()) {
@@ -71,14 +65,6 @@ class SymbolTable (val parent: SymbolTable?){
             }
         }
         return tab.functions.get(funcId)
-    }
-
-    fun evaluateParenNode(node_: Node): Node{
-        var node = node_
-        while(node is ParenNode){
-            node = node.expr
-        }
-        return node
     }
 
 

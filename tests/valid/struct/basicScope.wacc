@@ -6,10 +6,10 @@
 # Program:
 
 begin
+  int x = 10; 
   struct foo {
-   int x = 10; 
+   int x = 'a' ;
    char z = 'a'; 
-  }; 
-  foo.x = 2
+  }
 end
 

@@ -13,6 +13,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 
 class DecrementNode(val id : String, override val ctx: BasicParser.DecrementContext) : Node {
@@ -30,6 +31,10 @@ class DecrementNode(val id : String, override val ctx: BasicParser.DecrementCont
                 || value is PairElemNode || value is PairNode || value is ArrayLitNode) {
             errors.addError(UndefinedVariable(ctx, id))
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {

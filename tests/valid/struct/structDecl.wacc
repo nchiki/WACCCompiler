@@ -8,7 +8,7 @@
 begin
   struct foo {
    int x = 10; 
-   char z; 
+   char z = 'a'; 
   }; 
 end
 

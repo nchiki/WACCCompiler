@@ -6,6 +6,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.MovInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -23,6 +24,10 @@ class CharLitNode(val char: String, override val ctx: BasicParser.CharLitContext
     override fun generateCode(codeGenerator: CodeGenerator) {
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(reg, this))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBaseType(): LitTypes {

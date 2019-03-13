@@ -7,6 +7,7 @@ import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
+import main.kotlin.ValueTable
 
 class BreakNode(override val ctx: BasicParser.BreakContext) : Node {
 
@@ -20,6 +21,10 @@ class BreakNode(override val ctx: BasicParser.BreakContext) : Node {
         if(!table.inLoop) {
             errors.addError(NotInLoop(ctx))
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {

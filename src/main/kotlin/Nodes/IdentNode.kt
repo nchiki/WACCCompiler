@@ -7,6 +7,7 @@ import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
@@ -49,6 +50,10 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         }
 
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
     }
 
     override fun getBaseType() : LitTypes {

@@ -5,8 +5,7 @@ import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.Expressions.BinaryOpNode
-import main.kotlin.Nodes.Expressions.BoolOpNode
+import main.kotlin.Nodes.Expressions.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.AssignNode
 import main.kotlin.Nodes.Statement.*
@@ -78,19 +77,48 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return LHSNode(structLiter, structLiter.member_id, ctx.start.line, ctx.start.charPositionInLine, ctx)
     }
 
+    override fun visitStructMember(@NotNull ctx: BasicParser.StructMemberContext): Node {
+
+        // type node that will worry about checking if its valid type
+        val type = visit(ctx.type()) as ExprNode
+
+        // idNode that will check if there is a variable already declared with the same id
+        val id = ctx.IDENT()?.text
+
+        // assignRHS node that will worry about semantic check of the RHS
+        val RHS = visit(ctx.assignRHS()) as RHSNode
+
+        return DeclNode(id!!, type, RHS, null, ctx)
+    }
+
     override fun visitStructLiter(@NotNull ctx: BasicParser.StructLiterContext): Node {
         val struct_id = ctx.IDENT(0).text
         val member_id = ctx.IDENT(1).text
         return StructLiterNode(struct_id, member_id, ctx)
     }
 
+
     override fun visitStructElem(@NotNull ctx: BasicParser.StructElemContext): Node {
+        val id = ctx.IDENT().text
         val listMembers = arrayListOf<Node>()
-        for (member in ctx.type()) {
+        for (member in ctx.structMember()) {
             listMembers.add(visit(member))
         }
-        val id = ctx.IDENT(0).text
         return StructNode(id, listMembers, ctx)
+    }
+
+    override fun visitBinaryLit(@NotNull ctx: BasicParser.BinaryLitContext): Node {
+        return BinaryLit(ctx.BINARY_LIT().toString(), ctx)
+    }
+
+    override fun visitOctalLit(@NotNull ctx: BasicParser.OctalLitContext): Node {
+        val sequence = ctx.OCTAL_LIT().toString()
+        return OctalLit(sequence, ctx)
+    }
+
+    override fun visitHexadecLit(@NotNull ctx: BasicParser.HexadecLitContext): Node {
+        val sequence = ctx.HEXADEC_LIT().toString()
+        return HexaDecLit(sequence, ctx)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {
@@ -334,7 +362,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // assignRHS node that will worry about semantic check of the RHS
         val RHS = visit(ctx.assignRHS()) as RHSNode
 
-        return DeclNode(id!!, type, RHS, ctx)
+        return DeclNode(id!!, type, RHS, ctx, null)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext): Node {

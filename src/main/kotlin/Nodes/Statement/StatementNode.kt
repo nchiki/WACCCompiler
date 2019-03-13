@@ -5,14 +5,22 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import kotlin.system.exitProcess
 
-class StatementNode(val stat : Node, override val ctx: BasicParser.StatementContext): Node {
+class StatementNode(var stat : Node, override val ctx: BasicParser.StatementContext?): Node {
 
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int
         get() = stat.weight
+
+    override fun optimise(valueTable: ValueTable): Node {
+        valueTable.markAllAsDynamic()
+        val childValueTable = ValueTable(valueTable)
+        stat = stat.optimise(childValueTable)
+        return this
+    }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         //val label = codeGenerator.getNewLabel()

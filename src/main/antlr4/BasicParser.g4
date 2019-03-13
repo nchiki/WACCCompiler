@@ -85,6 +85,9 @@ unaryOper expr                              #UnOp
 | expr boolOp expr                          #BoolOper
 | INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
+| BINARY_LIT                                #BinaryLit
+| OCTAL_LIT                                 #OctalLit
+| HEXADEC_LIT                               #HexadecLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
 | pair_Lit                                  #PairLit
@@ -99,7 +102,10 @@ unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
 
 structLiter: IDENT FULL_STOP IDENT ;
 
-structElem: STRUCT IDENT OPEN_CRLY_BRACKET (type IDENT (EQUAL assignRHS SEMICOLON| SEMICOLON))+
+structMember:
+    type IDENT EQUAL assignRHS SEMICOLON ;
+
+structElem: STRUCT IDENT OPEN_CRLY_BRACKET structMember+
             CLOSE_CRLY_BRACKET ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;

@@ -1,18 +1,16 @@
-package main.kotlin.Nodes
+package main.kotlin.Nodes.Expressions
 
-import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.StringLitDef
 import main.kotlin.ValueTable
+import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-
-class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext) : ExprNode {
-
+class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : ExprNode {
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
@@ -21,15 +19,14 @@ class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext
     override val weight: Int
         get() = 1
 
+    fun convertToInt() : Int{
+        return Integer.parseInt(sequence.substring(2), 16)
+    }
+
     override fun generateCode(codeGenerator: CodeGenerator) {
-
-        //entries for data
-        val msg = "msg_${codeGenerator.data.size}"
-        codeGenerator.data[msg] = StringLitDef(str)
-
-        //instructions for main
+        //add instructions to main
         val reg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg))
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, convertToInt()))
     }
 
     override fun optimise(valueTable: ValueTable): Node {
@@ -37,11 +34,10 @@ class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext
     }
 
     override fun getBaseType(): LitTypes {
-        return LitTypes.StringWacc
+        return LitTypes.IntWacc
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
     }
-
 }

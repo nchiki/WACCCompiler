@@ -11,6 +11,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemContext, val elem: Int) : ExprNode {
@@ -29,6 +30,10 @@ class PairElemNode(val expr: ExprNode, override val ctx: BasicParser.PairElemCon
             }
             return 0
         }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
 
     override val weight: Int
         get() = TODO("not needed")

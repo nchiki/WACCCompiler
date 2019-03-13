@@ -6,6 +6,7 @@ import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class ParamNode(
@@ -25,6 +26,10 @@ class ParamNode(
         symbolTable?.declareVariable(id, 0,-symbolTable!!.sp) //Save variable location in symbol table
         symbolTable!!.sp += offset // add offset to stack pointer
 
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
     }
 
     override fun getBaseType() : LitTypes{

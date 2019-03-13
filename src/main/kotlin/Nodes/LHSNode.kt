@@ -9,6 +9,7 @@ import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
@@ -113,6 +114,10 @@ class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
         if (regRHS != Register.r0) {
             codeGenerator.freeReg(regRHS)
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
     }
 
     override fun getBaseType(): LitTypes {

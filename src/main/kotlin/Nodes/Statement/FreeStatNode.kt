@@ -11,6 +11,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
@@ -24,6 +25,10 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.regsNotInUse.peek()))
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_free_pair"))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

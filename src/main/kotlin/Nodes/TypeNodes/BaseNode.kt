@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
@@ -27,6 +28,10 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun generateCode(codeGenerator: CodeGenerator) {}
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
 
     override fun getBaseType(): LitTypes {
         return when (type) {
