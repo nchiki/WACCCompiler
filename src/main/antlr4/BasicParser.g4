@@ -78,6 +78,7 @@ boolOp: AND | OR ;
 
 expr:
 unaryOper expr                              #UnOp
+| structLiter                               #StructLit
 | expr multDiv expr                         #MultDivOp
 | expr addSub expr                          #AddSubOp
 | expr eq_Op expr                           #EqOp

@@ -7,7 +7,6 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
-import main.kotlin.Instructions.MultInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Utils.*
 import main.kotlin.ValueTable
@@ -92,20 +91,13 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         resolveToAddress(codeGenerator)
-
         val elemReg = codeGenerator.getLastUsedReg()
-
-        val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
-
         /* Load byte into memory */
         if (resolvesToByte()) {
-
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
         }
-
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
-
     }
 
 

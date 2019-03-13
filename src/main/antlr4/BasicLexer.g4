@@ -126,6 +126,8 @@ INT_LIT: DIGIT+ ;
 
 ESC_CHAR: '\\0' | '\\b' | '\\t' | '\\n' | '\\f' | '\\r' | '\\' DBL_QUOTES | '\\' QUOTE | '\\' BACKSLASH ;
 
+//STRUCT_LIT: IDENT FULL_STOP IDENT ;
+
 CHAR_LIT: QUOTE CHARACTER QUOTE ;
 
 STR_LIT: DBL_QUOTES (CHARACTER)* DBL_QUOTES ;
