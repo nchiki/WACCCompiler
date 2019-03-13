@@ -1,5 +1,8 @@
 package main.kotlin.Utils
 
+import BasicParser.LESS
+import BasicParser._decisionToDFA
+import Nodes.DeclNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -7,6 +10,7 @@ import main.kotlin.Errors.UndefinedFunction
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.SymbolTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ArrayElemNode
@@ -26,7 +30,8 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
     val sNode = StringLitNode("\"$highOrder\"", null)
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        this.symbolTable = table
+        this.symbolTable = SymbolTable(table)
+
         val id = (idNode as IdentNode).id
         val args = (argsNode as IdentNode).id
         val funNode = table.getFunction(id)
@@ -54,6 +59,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         this.funcLabel = codeGenerator.curLabel
         this.funcScope = codeGenerator.curScope
         this.beforeSp = symbolTable!!.sp
+
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${highOrder}"))
         when(highOrder) {
             "map" -> { val label = "f_map"
@@ -74,8 +80,8 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
     // -----------------------UTILS--------------------------------------------------
 
-    fun getElemArray(indexReg : Register, identifier : IdentNode, codeGenerator: CodeGenerator) {
-        resolveToAddress(indexReg, identifier, codeGenerator)
+    fun getElemArray(indexIdentNode : IdentNode, identifier : IdentNode, codeGenerator: CodeGenerator) {
+        resolveToAddress(indexIdentNode, identifier, codeGenerator)
 
         val elemReg = codeGenerator.getLastUsedReg()
 
@@ -89,7 +95,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
     }
 
-    fun resolveToAddress(exprReg: Register, identifier: IdentNode, codeGenerator: CodeGenerator) {
+    fun resolveToAddress(indexIdentNode: IdentNode, identifier: IdentNode, codeGenerator: CodeGenerator) {
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
@@ -98,6 +104,8 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         /* Skip past array size */
         codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
 
+        indexIdentNode.generateCode(codeGenerator)
+        val exprReg = codeGenerator.getLastUsedReg()
         /* Resolves to byte sized element */
         if(resolvesToByte(identifier)){
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, exprReg))
@@ -110,6 +118,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
 
         codeGenerator.freeReg(tempReg)
+        codeGenerator.freeReg(exprReg)
 
 
     }
@@ -195,23 +204,48 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
     // MAP : Applies function (funId) to every element of array (args).
 
     fun map(funId : String, args : IdentNode, size : Long, codeGenerator: CodeGenerator) {
-
+        //println(symbolTable!!.sp)
+        symbolTable!!.sp += 4
         codeGenerator.addInstruction(codeGenerator.curLabel, PushInstr())
-        val i: Long = 0
+        val stringLit = StringLitNode(funId, null)
+        var offset = stringLit.size //gets size of the data type
+        symbolTable?.declareVariable(funId, 0,-symbolTable!!.sp) //Save variable location in symbol table
+        symbolTable!!.sp += offset // add offset to stack pointer
 
-        val array = createArray(args, size, codeGenerator)
-        array.generateCode(codeGenerator)
-        val offsetSp = -symbolTable!!.getValueOffset(args.id, codeGenerator)
-        var arrayMem = "[sp]"
-        if (offsetSp != 0) {
-            arrayMem = "[sp, #${offsetSp}]"
-        }
+        offset = args.size //gets size of the data type
+        symbolTable?.declareVariable(args.id, 0,-symbolTable!!.sp) //Save variable location in symbol table
+        symbolTable!!.sp += offset // add offset to stack pointer
 
-        codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(codeGenerator.getLastUsedReg(), arrayMem))
+        val sizeNode = IntLitNode(size, null)
+        offset = sizeNode.size //gets size of the data type
+        symbolTable?.declareVariable("size", 0,-symbolTable!!.sp) //Save variable location in symbol table
+        symbolTable!!.sp += offset // add offset to stack pointer
+
+        symbolTable!!.sp = 0
+
+        
+        // creates the array to be returned
+        val array = createArray(size, codeGenerator)
+        val arrayRHS = RHSNode(RHS_type.array_lit, null, null, 0,0,
+                null, null, null, array, BasicParser.AssignRHSContext())
+        val declArrayNode = DeclNode("map_return", BaseNode("int", null), arrayRHS, null)
+
+        declArrayNode.semanticCheck(ErrorLogger(), symbolTable!!)
+        declArrayNode.generateCode(codeGenerator)
+
+
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
 
-        val indexReg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(indexReg, i))
+
+        //store current index (starting from 0)
+        val intLitNode = IntLitNode(0, null)
+        val indexRHS = RHSNode(RHS_type.expr, null, null, 0,0,
+                intLitNode, null, null, null, BasicParser.AssignRHSContext())
+        val declIndexNode = DeclNode("p", BaseNode("int", null), indexRHS, null)
+
+        declIndexNode.semanticCheck(ErrorLogger(), symbolTable!!)
+        declIndexNode.generateCode(codeGenerator)
+
         // evaluate all the arguments of the array in the form of a while loop (iterating through the array)
         val label = codeGenerator.getNewLabel()
         val oldScope = codeGenerator.curScope
@@ -222,6 +256,10 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.curLabel = label
 
         /* Evaluate index < size */
+        val indexIdentNode = IdentNode("p", null)
+        indexIdentNode.semanticCheck(ErrorLogger(), symbolTable!!)
+        indexIdentNode.generateCode(codeGenerator)
+        var indexReg = codeGenerator.getLastUsedReg()
         val sizeReg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(sizeReg, size))
         codeGenerator.addInstruction(codeGenerator.curLabel, CmpInstr(sizeReg, indexReg))
@@ -230,16 +268,20 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         //adds leftReg as last reg used in order to get the result of the operation
         codeGenerator.regsInUse.remove(sizeReg)
         codeGenerator.regsInUse.add(sizeReg)
+        codeGenerator.freeReg(indexReg)
 
+        //make sure that reg is == sizeReg
         val reg = codeGenerator.getLastUsedReg()
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
         if (reg != Register.r0) {
             codeGenerator.freeReg(reg)
         }
+        codeGenerator.freeReg(sizeReg)
+
 
         // gets element of the array passed as argument
-        getElemArray(indexReg, args, codeGenerator)
+        getElemArray(indexIdentNode, args, codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
         val type = symbolTable?.lookupSymbol(args.id)?.getBaseType()!!
@@ -249,33 +291,36 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
         }
-        this.beforeSp = symbolTable!!.sp
-        //we need to save the register that stores the index
-        symbolTable?.declareVariable("index", symbolTable!!.sp, 4) //Save variable location in symbol table
-        symbolTable!!.sp += 4
-        val spValue = symbolTable!!.sp
-        codeGenerator.addInstruction(label, StoreInstr(indexReg, "[sp, #-4]", true))
-        symbolTable
+        val before = symbolTable!!.sp
+
+        // generate arg code for the function called by map
         generateArgCode(argsNode as ExprNode, codeGenerator)
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("f_${funId}"))
 
         val after = symbolTable!!.sp
         if (after - this.beforeSp!! != 0) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, after - this.beforeSp!!))
-            symbolTable!!.sp -= after - this.beforeSp!!
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, after - before!!))
+            symbolTable!!.sp -= after - before!!
         }
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
 
         // assign value to elem of result array
-        assignToElem(args, symbolTable!!.getFunction(funId)!!.getBaseType(), indexReg, codeGenerator)
+        assignToElem(args, symbolTable!!.getFunction(funId)!!.getBaseType(), indexIdentNode, codeGenerator)
 
-        //restore the value of index register
-        val offset = symbolTable!!.getValueOffset("index", codeGenerator)
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(indexReg, "[sp, #$offset]"))
-
-        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(codeGenerator.getLastUsedReg(), 1))
-        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(indexReg,indexReg, codeGenerator.getLastUsedReg(), "S"))
-        codeGenerator.freeReg(codeGenerator.getLastUsedReg())
+        // adds one to the index
+        val addReg = codeGenerator.getFreeRegister()
+        codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(addReg, 1))
+        indexIdentNode.generateCode(codeGenerator)
+        indexReg = codeGenerator.getLastUsedReg()
+        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(indexReg,indexReg, addReg, "S"))
+        val indexOff = symbolTable!!.getValueOffset(indexIdentNode.id, codeGenerator)
+        if(indexOff != 0) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(indexReg, "[sp, #$indexOff]"))
+        } else {
+            codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(indexReg, "[sp]"))
+        }
+        codeGenerator.freeReg(indexReg)
+        codeGenerator.freeReg(addReg)
 
         codeGenerator.addLabel(endLabel, oldScope)
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(label, Condition.AL))
@@ -283,26 +328,33 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         codeGenerator.curLabel = endLabel
         codeGenerator.curScope = oldScope
         codeGenerator.freeReg(indexReg)
+
         /* Restore stack pointer here */
         symbolTable!!.recoverSp(codeGenerator)
 
 
         // add return of the function
+        val arrayIdentNode = IdentNode("map_return", null)
+        arrayIdentNode.semanticCheck(ErrorLogger(), symbolTable!!)
 
-        addReturn(array, codeGenerator)
+        addReturn(arrayIdentNode, codeGenerator)
+
     }
 
-    private fun assignToElem(arrayNode: IdentNode, type : LitTypes, indexReg : Register, codeGenerator: CodeGenerator) {
+    private fun assignToElem(arrayNode: IdentNode, type : LitTypes, indexIdentNode: IdentNode, codeGenerator: CodeGenerator) {
         // need location of "arrayElem" instead of identifier
         // need to load the value of the index into an expr or find a way of resolving the address using the value in index<reg
         arrayNode.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
-        val tempReg = codeGenerator.getFreeRegister()
-        codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(tempReg, indexReg))
+        codeGenerator.regsInUse.add(elemReg)
+        codeGenerator.regsNotInUse.remove(elemReg)
+        indexIdentNode.generateCode(codeGenerator)
+        val indexReg = codeGenerator.getLastUsedReg()
+
         //skip past array size
         codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, 4))
         /* Resolve the address of the array element and put it into a register */
-        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${tempReg}, LSL #2"))
+        codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${indexReg}, LSL #2"))
 
         /* Store result value into the address of the array element */
         if((/*nodeType !is ArrayTypeNode && nodeType.resolvesToByte()) ||*/ type.equals(LitTypes.CharWacc) ||type.equals(LitTypes.BoolWacc) || type.equals(LitTypes.StringWacc))) {
@@ -312,23 +364,22 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         }
 
         codeGenerator.freeReg(elemReg)
-        codeGenerator.freeReg(tempReg)
+        codeGenerator.freeReg(indexReg)
 
 
     }
 
-    private fun createArray(args: IdentNode, size: Long, codeGenerator: CodeGenerator): ArrayLitNode {
+    private fun createArray(size: Long, codeGenerator: CodeGenerator): ArrayLitNode {
         val exprList  =  ArrayList<ExprNode>()
         for (i in 0 until size) {
             exprList.add(IntLitNode(0, null))
         }
 
-        val id = args.id
-        val label = codeGenerator.curLabel
+        /*val label = codeGenerator.curLabel
         val offset = 4 //gets size of the data type
-        symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
+        symbolTable?.declareVariable("b", symbolTable!!.sp, offset) //Save variable location in symbol table
 
-        symbolTable!!.sp += offset // add offset to stack pointer
+        symbolTable!!.sp += offset // add offset to stack pointer*/
 
         return ArrayLitNode(exprList, null)
 

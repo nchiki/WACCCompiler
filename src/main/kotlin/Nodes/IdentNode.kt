@@ -10,7 +10,7 @@ import main.kotlin.Utils.LitTypes
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
+class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNode {
 
     override val size: Int
         get() {
@@ -62,7 +62,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if(table.lookupSymbol(id) == null){
-            errors.addError(UndefinedVariable(ctx, id))
+            errors.addError(UndefinedVariable(ctx!!, id))
         }
     }
 }

@@ -67,8 +67,24 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
     }
 
     private fun generateHighCallCode(codeGenerator: CodeGenerator, label: String) {
-        val argsValue = (highOrderFunction!!.argsNode as IdentNode).size
         val before = symbolTable!!.sp
+
+        //store size
+        val sizeNode = IntLitNode(highOrderFunction!!.size, null)
+        val sizeOfSize = sizeNode.size
+        symbolTable!!.sp += sizeOfSize
+
+        var sizeInMemory = "[sp, #-${symbolTable!!.sp}]"
+        if (sizeOfSize != 0) {
+            sizeInMemory =  "[sp, #-$sizeOfSize]"
+        }
+
+        sizeNode.generateCode(codeGenerator)
+        codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), sizeInMemory, true))
+
+        //store array
+        val argsValue = (highOrderFunction!!.argsNode as IdentNode).size
+        highOrderFunction!!.argsNode.generateCode(codeGenerator)
         symbolTable!!.sp += argsValue
         val spValue = symbolTable!!.sp
 
@@ -77,7 +93,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
            inMemory =  "[sp, #-$argsValue]"
         }
 
-        highOrderFunction!!.argsNode.generateCode(codeGenerator)
+
         codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
 
         val value = highOrderFunction!!.sNode.size
@@ -88,6 +104,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
            inMemory = "[sp, #-$value]"
         }
 
+        //store name of the function to be called
         highOrderFunction!!.sNode.generateCode(codeGenerator)
         codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
         val after = symbolTable!!.sp
