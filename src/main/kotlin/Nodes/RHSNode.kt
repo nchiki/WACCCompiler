@@ -21,6 +21,7 @@ import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
               var expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?,

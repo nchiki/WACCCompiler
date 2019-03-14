@@ -229,7 +229,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         val array = createArray(size, codeGenerator)
         val arrayRHS = RHSNode(RHS_type.array_lit, null, null, 0,0,
                 null, null, null, array, BasicParser.AssignRHSContext())
-        val declArrayNode = DeclNode("map_return", BaseNode("int", null), arrayRHS, null)
+        val declArrayNode = DeclNode("map_return", BaseNode("int", null), arrayRHS, null, null)
 
         declArrayNode.semanticCheck(ErrorLogger(), symbolTable!!)
         declArrayNode.generateCode(codeGenerator)
@@ -242,7 +242,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
         val intLitNode = IntLitNode(0, null)
         val indexRHS = RHSNode(RHS_type.expr, null, null, 0,0,
                 intLitNode, null, null, null, BasicParser.AssignRHSContext())
-        val declIndexNode = DeclNode("p", BaseNode("int", null), indexRHS, null)
+        val declIndexNode = DeclNode("p", BaseNode("int", null), indexRHS, null, null)
 
         declIndexNode.semanticCheck(ErrorLogger(), symbolTable!!)
         declIndexNode.generateCode(codeGenerator)
