@@ -26,6 +26,6 @@ class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node{
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 }
