@@ -4,12 +4,14 @@ import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 
-class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext) : ExprNode {
+class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -25,6 +27,10 @@ class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext)
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, this))
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType(): LitTypes {
         return LitTypes.IntWacc
     }
@@ -33,3 +39,5 @@ class IntLitNode(val int_val: Long, override val ctx: BasicParser.IntLitContext)
         this.symbolTable = table
     }
 }
+
+

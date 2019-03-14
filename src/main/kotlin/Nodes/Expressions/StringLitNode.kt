@@ -7,10 +7,11 @@ import main.kotlin.Instructions.LoadInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.StringLitDef
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 
-class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext) : ExprNode {
+class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -29,6 +30,10 @@ class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext
         //instructions for main
         val reg = codeGenerator.getFreeRegister()
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, msg))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBaseType(): LitTypes {

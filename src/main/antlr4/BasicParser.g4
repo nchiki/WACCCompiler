@@ -63,12 +63,13 @@ type:
     | pair_type                                     #PairType
 ;
 
-base_type: INT | BOOL | CHAR | STRING;
+base_type: INT | BOOL | CHAR | STRING | FUNC ;
 
 pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES
 | pair_Lit;
 
 pairElemType: base_type | type | PAIR ;
+
 
 addSub: PLUS | MINUS;
 multDiv: MULT | DIV | MOD;
@@ -85,6 +86,9 @@ unaryOper expr                            #UnOp
 | expr boolOp expr                          #BoolOper
 | INT_LIT                                   #IntLit
 | BOOL_LIT                                  #BoolLit
+| BINARY_LIT                                #BinaryLit
+| OCTAL_LIT                                 #OctalLit
+| HEXADEC_LIT                               #HexadecLit
 | CHAR_LIT                                  #CharLit
 | STR_LIT                                   #StrLit
 | pair_Lit                                  #PairLit

@@ -9,9 +9,10 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import main.kotlin.Utils.getTypeSize
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
-class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicParser.ArrayLiterContext) : ExprNode {
+class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicParser.ArrayLiterContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -67,6 +68,10 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         codeGenerator.freeReg(tempReg)
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getBaseType(): LitTypes {
         if (exprList.size > 0) {
             return exprList[0].getBaseType()
@@ -82,7 +87,7 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         val type = exprList[0].getBaseType()
         for (expr in exprList) {
             if (type != expr.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx, type.toString(), expr, table))
+                errors.addError(IncompatibleTypes(ctx!!, type.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }

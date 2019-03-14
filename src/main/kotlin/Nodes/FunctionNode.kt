@@ -7,10 +7,11 @@ import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, val stat: Node,
+class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, var stat: Node,
                     override val ctx: BasicParser.FuncContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
@@ -24,6 +25,11 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
             }
         }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        stat = stat.optimise(valueTable)
+        return this
+    }
+
     override val weight: Int
         get() = TODO("not implemented")
 
@@ -34,6 +40,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     }
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
+        symbolTable!!.inHighOrderFunction = Pair(true, this)
         codeGenerator.addInstruction(label, PushInstr())
         symbolTable!!.sp += 4
         if (params != null) {
@@ -46,6 +53,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         if(difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }
+        symbolTable!!.inHighOrderFunction = Pair(false, null)
     }
 
     override fun getBaseType() : LitTypes {
@@ -69,6 +77,9 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         }
 
         table.currentFunction = null
+        // exiting function or higher order function, we need this
+        // variable set to false even if it was false before as well
+        symbolTable!!.inHighOrderFunction = Pair(false, null)
     }
 
 }

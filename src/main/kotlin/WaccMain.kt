@@ -9,8 +9,9 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
-        if (args.isEmpty()) {
-                System.setIn(FileInputStream("tests/valid/macros/exitMacro.wacc"))
+        if (args.size == 0) {
+                System.setIn(FileInputStream("../wacc_examples/" +
+          "valid/function/high_order/ownHighOrd.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }

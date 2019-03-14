@@ -15,6 +15,8 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 import main.kotlin.Instructions.BLInstr
+import main.kotlin.ValueTable
+
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
 
     override var symbolTable: SymbolTable? = null
@@ -28,6 +30,9 @@ class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitConte
         codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("exit"))
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table

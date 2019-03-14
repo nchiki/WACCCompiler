@@ -11,6 +11,8 @@ import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
+import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 
 class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgListContext?) : Node {
@@ -37,12 +39,22 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
                 "[sp, #-$value]"
             }
 
+            var exprNode = expr
             // Check if it is an identifier
             if (expr.getBaseType() == LitTypes.IdentWacc) {
-                val type = symbolTable!!.lookupSymbol((expr as IdentNode).id)!!.getBaseType()
+
+                if(exprNode is ArrayElemNode) {
+                    exprNode = exprNode.identifier
+                }
+                val node = symbolTable!!.lookupSymbol((exprNode as IdentNode).id)
+                if(node == null) {
+                    codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
+                    return
+                }
+                val type = node!!.getBaseType()
                 // Check if the base type is a Char or Bool
                 if ((type == LitTypes.CharWacc || type == LitTypes.BoolWacc)
-                        && symbolTable!!.lookupSymbol((expr).id) !is ArrayTypeNode) {
+                        && symbolTable!!.lookupSymbol((exprNode).id) !is ArrayTypeNode) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
@@ -55,6 +67,10 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
             }
 
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {

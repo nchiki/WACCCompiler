@@ -6,10 +6,15 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class PairNode(val fstNode: PairElemTypeNode, val sndNode: PairElemTypeNode,
                override val ctx: BasicParser.Pair_typeContext) : ExprNode, Node {
+
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
 
     override var symbolTable: SymbolTable? = null
 

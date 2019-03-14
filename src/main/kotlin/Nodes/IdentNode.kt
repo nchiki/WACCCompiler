@@ -7,17 +7,23 @@ import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode {
+class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNode {
 
     override val size: Int
         get() {
             if (symbolTable == null) {
                 return 0
             }
-            return symbolTable!!.lookupSymbol(id)!!.size
+            val sizeNod = symbolTable!!.lookupSymbol(id)
+            if(sizeNod != null) {
+                return sizeNod.size
+            } else {
+                return 4
+            }
         }
 
     override val weight: Int
@@ -26,8 +32,11 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-
-        var offset = symbolTable?.getValueOffset(id, codeGenerator)!!
+        if(symbolTable!!.getFunction(id) != null) {
+            symbolTable?.declareVariable(id, symbolTable!!.sp, 4)
+            //symbolTable!!.sp += 4// add offset to stack pointer
+        }
+        val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
 
         var inMemory = "[sp]"
         if(offset != 0) {
@@ -51,6 +60,10 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
 
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType() : LitTypes {
         return LitTypes.IdentWacc
     }
@@ -62,7 +75,9 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext) : ExprNode
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if(table.lookupSymbol(id) == null){
-            errors.addError(UndefinedVariable(ctx, id))
+            if(table.getFunction(id) == null) {
+                errors.addError(UndefinedVariable(ctx!!, id))
+            }
         }
     }
 }

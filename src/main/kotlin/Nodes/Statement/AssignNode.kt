@@ -6,12 +6,15 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 
-class AssignNode(val LHSNode: LHSNode, val RHSNode: RHSNode, override val ctx : BasicParser.AssignContext) : Node {
+class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : BasicParser.AssignContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -76,8 +79,33 @@ class AssignNode(val LHSNode: LHSNode, val RHSNode: RHSNode, override val ctx : 
             errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
+        if(!symbolTable!!.inHighOrderFunction.first) {
+            errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+        }
 
-        errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+    }
 
+    /* Optimises the RHS and then checks if it reduces to an INT or BOOL constant */
+    override fun optimise(valueTable: ValueTable): Node {
+        RHSNode = RHSNode.optimise(valueTable)
+
+        val lhsExpr = symbolTable!!.lookupSymbol(LHSNode.id)
+
+        if(!lhsExpr!!.getBaseType().equals(LitTypes.IntWacc) && !lhsExpr.getBaseType().equals(LitTypes.BoolWacc)){
+            return this
+        }
+
+        if(RHSNode.type.equals(RHS_type.expr)){
+            val rhsExpr = RHSNode.expr!!
+            if(rhsExpr is IntLitNode){
+                valueTable.setIntValue(LHSNode.id, rhsExpr.int_val)
+            }else if(rhsExpr is BoolLitNode){
+                valueTable.setBoolValue(LHSNode.id, rhsExpr.bool_val.toBoolean())
+            }else{
+                valueTable.setDynamic(LHSNode.id, true)
+            }
+        }
+
+        return this
     }
 }

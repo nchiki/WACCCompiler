@@ -7,6 +7,7 @@ import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
+import main.kotlin.ValueTable
 
 class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node{
     override var symbolTable: SymbolTable? = null
@@ -22,5 +23,9 @@ class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node{
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         codeGenerator.addInstruction(codeGenerator.curLabel, BranchInstr(codeGenerator.loopLabel, Condition.AL))
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

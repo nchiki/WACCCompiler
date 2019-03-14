@@ -1,0 +1,30 @@
+# a simple increment function definition and usage
+
+# Output:
+
+# before calling map
+# 0
+# 0
+# 0
+# 0
+# 0
+# 0
+# 0
+# 0
+# 0
+# 0
+# after calling map
+
+# Program:
+
+begin
+  int inc(int x) is
+    println x ;
+    return x + 1
+  end
+  int[] a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ;
+  println "before calling map" ;
+  int[] b = call map(inc, a, 10) ;
+  println "after calling map"
+ 
+end

@@ -5,6 +5,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 
@@ -22,7 +23,12 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
         TODO("Function need not be called")
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        return this
+    }
+
     override fun getBaseType(): LitTypes {
+
         return type.getBaseType()
     }
 

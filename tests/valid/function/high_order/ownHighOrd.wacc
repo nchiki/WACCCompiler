@@ -1,0 +1,30 @@
+# a simple increment function definition and usage
+
+# Output:
+# 3
+# 0
+# finished
+
+# Program:
+
+begin
+  
+  int inc2(int x) is
+       return x + 1
+  end
+  int[] inc(func s, int[] a, int i) is
+       int[] b = [0,0,0,0,0,0,0,0,0,0] ;
+       int p = 0;
+       while p<i do
+	 b[0] = call s(2) ;
+         p = p + 1 
+       done ; 
+       return b
+  end
+  int[] a = [0,0,0,0,0,0,0,0,0,0] ; 
+  int[] c = call inc(inc2, a, 10) ;
+  println c[0] ;
+  println a[0] ;
+  println "finished"
+ 
+end
