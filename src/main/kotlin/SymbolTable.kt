@@ -44,7 +44,6 @@ class SymbolTable (val parent: SymbolTable?){
             return
         }
         addressMap[identifier] = offset + size
-
     }
 
     /* Returns the address of the value,
@@ -54,7 +53,6 @@ class SymbolTable (val parent: SymbolTable?){
         if(!addressMap.containsKey(identifier)){
             return sp + parent!!.getValueOffset(identifier, codeGenerator)
         }
-
         return sp - addressMap[identifier]!!
     }
 

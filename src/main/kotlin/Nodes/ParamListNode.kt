@@ -4,6 +4,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 
 class ParamListNode(// list of parameterNodes

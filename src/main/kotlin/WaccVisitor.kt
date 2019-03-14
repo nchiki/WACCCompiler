@@ -19,6 +19,7 @@ import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.Utils.LitTypes
 import java.lang.Exception
 import main.kotlin.Nodes.Statement.DecrementNode
+import main.kotlin.Nodes.StructLiterNode
 import kotlin.system.exitProcess
 
 
@@ -69,6 +70,41 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             exitProcess(100)
         }
         return IntLitNode(int_val.toLong(), ctx)
+    }
+
+    override fun visitAssignL_StructLiter(@NotNull ctx: BasicParser.AssignL_StructLiterContext): Node {
+        val structLiter = visit(ctx.structLiter()) as StructLiterNode
+        return LHSNode(structLiter, structLiter.member_id, ctx.start.line, ctx.start.charPositionInLine, ctx)
+    }
+
+    override fun visitStructMember(@NotNull ctx: BasicParser.StructMemberContext): Node {
+
+        // type node that will worry about checking if its valid type
+        val type = visit(ctx.type()) as ExprNode
+
+        // idNode that will check if there is a variable already declared with the same id
+        val id = ctx.IDENT()?.text
+
+        // assignRHS node that will worry about semantic check of the RHS
+        val RHS = visit(ctx.assignRHS()) as RHSNode
+
+        return DeclNode(id!!, type, RHS, null, ctx)
+    }
+
+    override fun visitStructLiter(@NotNull ctx: BasicParser.StructLiterContext): Node {
+        val struct_id = ctx.IDENT(0).text
+        val member_id = ctx.IDENT(1).text
+        return StructLiterNode(struct_id, member_id, ctx)
+    }
+
+
+    override fun visitStructElem(@NotNull ctx: BasicParser.StructElemContext): Node {
+        val id = ctx.IDENT().text
+        val listMembers = arrayListOf<Node>()
+        for (member in ctx.structMember()) {
+            listMembers.add(visit(member))
+        }
+        return StructNode(id, listMembers, ctx)
     }
 
     override fun visitBinaryLit(@NotNull ctx: BasicParser.BinaryLitContext): Node {
@@ -326,7 +362,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         // assignRHS node that will worry about semantic check of the RHS
         val RHS = visit(ctx.assignRHS()) as RHSNode
 
-        return DeclNode(id!!, type, RHS, ctx)
+        return DeclNode(id!!, type, RHS, ctx, null)
     }
 
     override fun visitIfCond(ctx: BasicParser.IfCondContext): Node {

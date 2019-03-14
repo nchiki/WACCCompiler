@@ -94,20 +94,13 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         resolveToAddress(codeGenerator)
-
         val elemReg = codeGenerator.getLastUsedReg()
-
-        val type = symbolTable?.lookupSymbol(identifier.id)?.getBaseType()!!
-
         /* Load byte into memory */
         if (resolvesToByte()) {
-
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadBInstr(elemReg, "[$elemReg]"))
             return
         }
-
         codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))
-
     }
 
 

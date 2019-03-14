@@ -9,8 +9,8 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
         if (args.size == 0) {
-                System.setIn(FileInputStream("../wacc_examples/" +
-          "valid/function/high_order/ownHighOrd.wacc"))
+                System.setIn(FileInputStream(
+          "tests/valid/struct/printStructMember.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
@@ -38,6 +38,7 @@ fun main(args: Array<String>) {
         if (errorLogger.errorList.count() > 0) {
                 exitProcess(200)
         }
+
         val codeGen = CodeGenerator()
         codeGen.initRegs()
         codeGen.switchFunctions("main")

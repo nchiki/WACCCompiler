@@ -1,12 +1,13 @@
 # evaluating a moderately complex integer expression
 
 # Output:
-# Correct
+# 83
+# 93
 
 # Program:
 
 begin
-  int a = 0123; 
+  int a = 0O123; 
   int b = 10; 
   int c = a + b; 
   println a; 

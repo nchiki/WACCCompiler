@@ -17,8 +17,8 @@ stat:
 | CONTINUE                          #Continue
 | IDENT PLUS PLUS                   #Increment
 | IDENT MINUS MINUS                 #Decrement
-| type IDENT EQUAL assignRHS        #Decl
 | assignLHS EQUAL assignRHS         #Assign
+| type IDENT EQUAL assignRHS        #Decl
 | READ assignLHS                    #Read
 | FREE expr                         #Free
 | RETURN expr                       #Return
@@ -31,12 +31,14 @@ stat:
 | DO stat WHILE expr DONE           #DoWhile
 | BEGIN stat END                    #Statement
 | stat SEMICOLON stat               #StatList
+| structElem                        #StructStat
 ;
 
 forCond: OPEN_PARENTHESES stat SEMICOLON expr SEMICOLON stat CLOSE_PARENTHESES;
 
 assignLHS:
-    IDENT       #AssignL_Iden
+   IDENT        #AssignL_Iden
+| structLiter   #AssignL_StructLiter
 | arrayElem     #AssignL_Array
 | pairElem      #AssignL_Pairelem
 ;
@@ -76,8 +78,9 @@ boolOp: AND | OR ;
 
 
 expr:
-unaryOper expr                            #UnOp
-| expr multDiv expr                       #MultDivOp
+unaryOper expr                              #UnOp
+| structLiter                               #StructLit
+| expr multDiv expr                         #MultDivOp
 | expr addSub expr                          #AddSubOp
 | expr eq_Op expr                           #EqOp
 | unaryOper expr                            #UnOp
@@ -98,6 +101,14 @@ unaryOper expr                            #UnOp
 ident : IDENT ;
 
 unaryOper: NOT | MINUS | PLUS | LEN | ORD | CHR ;
+
+structLiter: IDENT FULL_STOP IDENT ;
+
+structMember:
+    type IDENT EQUAL assignRHS SEMICOLON ;
+
+structElem: STRUCT IDENT OPEN_CRLY_BRACKET structMember+
+            CLOSE_CRLY_BRACKET ;
 
 arrayElem: IDENT (OPEN_SQR_BRACKET expr CLOSE_SQR_BRACKET)+ ;
 

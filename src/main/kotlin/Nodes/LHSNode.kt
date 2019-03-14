@@ -49,6 +49,10 @@ class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
             return
         }
 
+        if (nodeType is StructNode) {
+            //TODO
+        }
+
         if (nodeType is PairElemNode) {
 
             /* Resolve the address of the pair */

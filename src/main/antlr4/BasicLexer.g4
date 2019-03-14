@@ -53,6 +53,8 @@ BOOL_LIT: TRUE | FALSE ;
 TRUE: 'true' ;
 FALSE: 'false' ;
 
+//struct keyword
+STRUCT: 'struct' ;
 
 //unary operators
 NOT: '!' ;
@@ -80,10 +82,14 @@ OPEN_PARENTHESES: '(' ;
 CLOSE_PARENTHESES: ')' ;
 OPEN_SQR_BRACKET: '[' ;
 CLOSE_SQR_BRACKET: ']' ;
+OPEN_CRLY_BRACKET: '{' ;
+CLOSE_CRLY_BRACKET: '}' ;
+
 
 
 SEMICOLON: ';' ;
 EQUAL: '=' ;
+FULL_STOP: '.' ;
 
 fragment DBL_QUOTES: '"' ;
 fragment QUOTE: '\'';
@@ -120,6 +126,8 @@ BINARY_LIT: BINARY ('0' | '1')+;
 INT_LIT: DIGIT+ ;
 
 ESC_CHAR: '\\0' | '\\b' | '\\t' | '\\n' | '\\f' | '\\r' | '\\' DBL_QUOTES | '\\' QUOTE | '\\' BACKSLASH ;
+
+//STRUCT_LIT: IDENT FULL_STOP IDENT ;
 
 CHAR_LIT: QUOTE CHARACTER QUOTE ;
 

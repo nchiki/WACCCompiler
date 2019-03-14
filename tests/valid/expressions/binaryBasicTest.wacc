@@ -1,11 +1,12 @@
 # evaluating a moderately complex integer expression
 
 # Output:
-# Correct
+# 15
 
 # Program:
 
 begin
   int a = 0b01111;
+  print a; 
   return
 end
