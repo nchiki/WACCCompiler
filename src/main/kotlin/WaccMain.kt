@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
         //Syntactical analysis
         val parser = BasicParser(tokens)
         val tree = parser.prog()
-        println(tree.childCount)
+        // println(tree.childCount)
         //Exit with code 100 if there are any syntax errors
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
@@ -49,6 +49,6 @@ fun main(args: Array<String>) {
         codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
-        codeGen.writeToFile("tests/valid/macros/exitMacro.wacc".substring("tests/valid/macros/exitMacro.wacc".lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
