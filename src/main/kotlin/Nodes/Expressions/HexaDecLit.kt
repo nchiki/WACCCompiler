@@ -9,6 +9,7 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : ExprNode {
     override var symbolTable: SymbolTable? = null
@@ -30,7 +31,7 @@ class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : E
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return IntLitNode(convertToInt().toLong(), null)
     }
 
     override fun getBaseType(): LitTypes {
