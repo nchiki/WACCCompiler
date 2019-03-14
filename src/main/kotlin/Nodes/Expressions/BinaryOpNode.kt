@@ -18,8 +18,9 @@ import main.kotlin.Utils.*
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicParser.AddSubContext?,
+class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicParser.AddSubContext?,
                    val mulDiv: BasicParser.MultDivContext?, val eqOp: BasicParser.Eq_OpContext?,
                    override val ctx: ParserRuleContext) : ExprNode {
 
@@ -33,9 +34,81 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
             }
         }
 
+
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        left = left.optimise(valueTable) as ExprNode
+        right = right.optimise(valueTable) as ExprNode
+
+
+        /* If the left is not a constant then we can't optimize the expression */
+        if(left !is IntLitNode || left !is BoolLitNode){
+            return this
+        }
+
+        /* If the right is not a constant then we can't optimize the expression */
+        if(right !is IntLitNode || right !is BoolLitNode){
+            return this
+        }
+
+        /* (Int, Int) -> Int operators*/
+        if(eqOp == null){
+            val newVal = getIntOperator()((left as IntLitNode).int_val, (right as IntLitNode).int_val)
+
+            /* Ensure the overflow error occurs at runtime */
+            if(overFlowCheck(newVal)){
+                return this
+            }
+
+            return IntLitNode(newVal, null)
+        }
+
+        /* (Int, Int) -> Boolean operators */
+        val boolVal = getCompOperator()((left as IntLitNode).int_val, (right as IntLitNode).int_val)
+
+        return BoolLitNode(boolVal.toString(), null)
     }
+
+    private fun getCompOperator(): (Long, Long)-> (Boolean) {
+        if(eqOp!!.GREAT() != null){
+            return { a: Long, b: Long -> a > b }
+        }
+        if(eqOp.GREAT_EQ() != null){
+            return { a: Long, b: Long -> a >= b }
+        }
+        if(eqOp.LESS() != null){
+            return { a: Long, b: Long -> a < b }
+        }
+        if(eqOp.LESS_EQ() != null){
+            return { a: Long, b: Long -> a <= b }
+        }
+        if(eqOp.EQ() != null){
+            return { a: Long, b: Long -> a == b }
+        }
+
+        return { a: Long, b: Long -> a != b }
+    }
+
+    private fun getIntOperator(): Long.(Long) -> (Long) {
+        if(mulDiv != null){
+            if(mulDiv.MULT() != null){
+                return Long::times
+            }
+            if(mulDiv.DIV() != null){
+                return Long::div
+            }
+            return Long::rem
+        }
+        if(addSub!!.PLUS() != null){
+            return Long::plus
+        }
+        return Long::minus
+    }
+
+    private fun overFlowCheck(value: Long): Boolean{
+        return value >= Integer.MAX_VALUE
+    }
+
 
     override val weight: Int
         get() = left.weight + right.weight + 1
@@ -150,10 +223,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
         /* Get left value from symbol table */
         if (left is IdentNode) {
-            val leftValue = table.lookupSymbol(left.id)
+            val leftValue = table.lookupSymbol((left as IdentNode).id)
 
             if (leftValue == null) {
-                errors.addError(UndefinedVariable(ctx, left.id))
+                errors.addError(UndefinedVariable(ctx, (left as IdentNode).id))
                 return
             }
 
@@ -162,10 +235,10 @@ class BinaryOpNode(val left: ExprNode, val right: ExprNode, val addSub: BasicPar
 
         var realRight = right
         if (right is IdentNode) {
-            val rightValue = table.lookupSymbol(right.id)
+            val rightValue = table.lookupSymbol((right as IdentNode).id)
 
             if (rightValue == null) {
-                errors.addError(UndefinedVariable(ctx, right.id))
+                errors.addError(UndefinedVariable(ctx, (right as IdentNode).id))
                 return
             }
 
