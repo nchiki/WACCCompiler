@@ -119,11 +119,12 @@ find $DIRECTORY -name "*.wacc" | (
     while read fname; do
         sh compile $fname
         SHORTENED=$(basename ${fname::$((${#fname} - 5))})
-
+        echo 1
         # Extract expected output from file
         if [ "$USE_REF_COMPILER" = "YES" ]; then
             EXPECTED="$(eval ruby refCompile $fname -x)"
 	        EXPECTED="$(echo "$EXPECTED" | sed -r 's/0x[0-9a-z]+/#addrs#/g')"
+	        EXPECTED="$(echo -e "${EXPECTED}" | sed -e 's/[[:space:]]*$//')"
         else
             FILE=`cat $fname`
             EXPECTED=$(get_output "$FILE")
