@@ -79,8 +79,9 @@ class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : 
             errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
-
-        errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+        if(!symbolTable!!.inHighOrderFunction.first) {
+            errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+        }
 
     }
 

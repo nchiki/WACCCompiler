@@ -23,7 +23,9 @@ import kotlin.system.exitProcess
 class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
-        var rhs: RHSNode, override val ctx: BasicParser.DeclContext?, val ctxStruct : BasicParser.StructMemberContext?) : Node {
+
+        var rhs: RHSNode, override val ctx: BasicParser.DeclContext?) : Node {
+
 
     override var symbolTable: SymbolTable? = null
 
@@ -71,12 +73,18 @@ class DeclNode(// var name
         else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
             //if RHS is function call
             if (rhs.type == RHS_type.call) {
-                val funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                var funType : LitTypes? = null
+                if(symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
+                    funType = symbolTable!!.getFunction((rhs.highOrderFunction!!.idNode as IdentNode).id)!!.getBaseType()
+                } else {
+                    funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
+                }
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
                 }
+
             } else {
                 codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
             }
@@ -144,6 +152,7 @@ class DeclNode(// var name
             } else {
                 errors.addError(DoubleDeclare(ctxStruct!!, id, value.ctx!!.start.line))
             }
+
         }
 
         addToTable(table, id)
@@ -204,10 +213,15 @@ class DeclNode(// var name
         }
 
         /* Types don't match */
+
         if (ctx != null) {
             errors.addError(IncompatibleTypes(ctx, type.getBaseType().toString(), rhs, table))
         } else {
             errors.addError(IncompatibleTypes(ctxStruct!!, type.getBaseType().toString(), rhs, table))
+
+        if(!symbolTable!!.inHighOrderFunction.first) {
+            errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs, table))
+
         }
 
     }

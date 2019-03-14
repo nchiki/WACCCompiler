@@ -12,7 +12,7 @@ import main.kotlin.Utils.getTypeSize
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
-class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicParser.ArrayLiterContext) : ExprNode {
+class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicParser.ArrayLiterContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -87,7 +87,7 @@ class ArrayLitNode(val exprList: MutableList<ExprNode>, override val ctx: BasicP
         val type = exprList[0].getBaseType()
         for (expr in exprList) {
             if (type != expr.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx, type.toString(), expr, table))
+                errors.addError(IncompatibleTypes(ctx!!, type.toString(), expr, table))
             }
             expr.semanticCheck(errors, table)
         }

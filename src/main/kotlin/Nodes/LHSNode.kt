@@ -16,6 +16,7 @@ import src.main.kotlin.Nodes.ExprNode
 class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
               override val ctx: BasicParser.AssignLHSContext) : ExprNode {
 
+
     override val size: Int
         get() = 4
     override val weight: Int

@@ -20,6 +20,7 @@ import src.main.kotlin.Nodes.ExprNode
 class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext,
                  override val ctx: ParserRuleContext) : ExprNode {
 
+
     override var symbolTable: SymbolTable? = null
 
     override val size = 1

@@ -14,12 +14,16 @@ class SymbolTable (val parent: SymbolTable?){
 
     val addressMap = HashMap<String, Int>()
 
+    var highOrderFunctions = ArrayList<String>()
     var functions = HashMap<String, FunctionNode>()
+    var functionsToHO = HashMap<String, String>() // maps high order functions to its function parameter
     var errors = ErrorLogger()
 
     var currentFunction: FunctionNode? = null
     var currentExecutionPathHasReturn = false
     var sp = 0
+
+    var inHighOrderFunction : Pair<Boolean, FunctionNode?> = Pair(false, null)
 
     // useful for break and continue semantic check
     var inLoop = false
@@ -56,13 +60,38 @@ class SymbolTable (val parent: SymbolTable?){
         var tab = this
         if (functions.isEmpty()) {
             while(tab.functions.isEmpty()) {
-                tab = tab.parent!!
+                if(tab.parent != null) {
+                    tab = tab.parent!!
+                } else {
+                    break
+                }
             }
             if (parent == null) {
                 return null
             }
         }
         return tab.functions.get(funcId)
+    }
+
+    fun isHigherOrderFunction(funId : String) : Boolean{
+        var tab = this
+        if (highOrderFunctions.isEmpty()) {
+            while(tab.highOrderFunctions.isEmpty()) {
+                tab = tab.parent!!
+            }
+            if (parent == null) {
+                return false
+            }
+        }
+        return tab.highOrderFunctions.contains(funId)
+    }
+
+    fun evaluateParenNode(node_: Node): Node{
+        var node = node_
+        while(node is ParenNode){
+            node = node.expr
+        }
+        return node
     }
 
 
@@ -103,5 +132,27 @@ class SymbolTable (val parent: SymbolTable?){
             }
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, value))
         }
+    }
+
+    fun addMatchFunctions(highOrder : String, functionParam : String) {
+        functionsToHO.put(highOrder, functionParam)
+        var tab = parent
+        while(tab != null) {
+            tab.functionsToHO.put(highOrder, functionParam)
+            tab = tab.parent
+        }
+    }
+
+    fun lookForFunctionParam(highOrder : String) : String? {
+
+        if(functionsToHO.containsKey(highOrder)){
+            return functionsToHO[highOrder]
+        }
+
+        if(parent == null){
+            return null
+        }
+
+        return parent.lookForFunctionParam(highOrder)
     }
 }

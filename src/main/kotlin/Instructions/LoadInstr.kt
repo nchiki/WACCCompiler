@@ -10,7 +10,7 @@ class LoadInstr(val arg1: Register, val arg2: Any, val cond: Condition? = null) 
 
         val ldr = if (cond == null) "LDR" else "LDR$cond"
 
-        if (arg2 is Int || arg2 is String) {
+        if (arg2 is Int || arg2 is String || arg2 is Long) {
             return if (arg2 is String && arg2.startsWith("[")) {
                 "$ldr $arg1, $arg2"
             } else {

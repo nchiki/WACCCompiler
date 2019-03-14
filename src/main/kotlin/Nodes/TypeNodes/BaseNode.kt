@@ -20,6 +20,7 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
                 "bool" -> 1
                 "string" -> 4
                 "pair" -> 4
+                "func"-> 4
                 else -> 0
             }
         }
@@ -34,12 +35,14 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
     }
 
     override fun getBaseType(): LitTypes {
+
         return when (type) {
             "int" -> LitTypes.IntWacc
             "char" -> LitTypes.CharWacc
             "bool" -> LitTypes.BoolWacc
             "string" -> LitTypes.StringWacc
             "pair" -> LitTypes.PairWacc
+            "func" -> LitTypes.FuncWacc
             else -> LitTypes.NonLitWacc
         }
     }

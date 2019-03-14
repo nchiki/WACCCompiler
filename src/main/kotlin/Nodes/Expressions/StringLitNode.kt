@@ -11,7 +11,7 @@ import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 
-class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext) : ExprNode {
+class StringLitNode(val str: String, override val ctx: BasicParser.StrLitContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 

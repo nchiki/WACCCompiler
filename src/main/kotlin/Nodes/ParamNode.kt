@@ -51,7 +51,11 @@ class ParamNode(
             // if there is already a variable with that name -> error
             errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         } else {
+            if(type.getBaseType() == LitTypes.FuncWacc) {
+                symbolTable!!.inHighOrderFunction = Pair(true, symbolTable!!.currentFunction)
+            }
             table.add(this, id)
+
         }
 
     }

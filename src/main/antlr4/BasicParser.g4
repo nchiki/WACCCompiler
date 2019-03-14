@@ -63,12 +63,13 @@ type:
     | pair_type                                     #PairType
 ;
 
-base_type: INT | BOOL | CHAR | STRING;
+base_type: INT | BOOL | CHAR | STRING | FUNC ;
 
 pair_type: PAIR OPEN_PARENTHESES pairElemType COMMA pairElemType CLOSE_PARENTHESES
 | pair_Lit;
 
 pairElemType: base_type | type | PAIR ;
+
 
 addSub: PLUS | MINUS;
 multDiv: MULT | DIV | MOD;

@@ -81,6 +81,7 @@ class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParse
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
 
         this.symbolTable = SymbolTable(table)
+        this.symbolTable!!.inHighOrderFunction = table.inHighOrderFunction
         this.symbolTable!!.inLoop = true
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
@@ -92,6 +93,9 @@ class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParse
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
+                if(symbolTable!!.getFunction((expr as IdentNode).id) != null && symbolTable!!.inHighOrderFunction.first){
+                    return
+                }
                 errors.addError(UndefinedVariable(ctx.expr(), (expr as IdentNode).id))
                 return
             } else {

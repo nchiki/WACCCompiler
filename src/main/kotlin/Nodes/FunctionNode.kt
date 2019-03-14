@@ -40,6 +40,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
     }
 
     fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
+        symbolTable!!.inHighOrderFunction = Pair(true, this)
         codeGenerator.addInstruction(label, PushInstr())
         symbolTable!!.sp += 4
         if (params != null) {
@@ -52,6 +53,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         if(difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }
+        symbolTable!!.inHighOrderFunction = Pair(false, null)
     }
 
     override fun getBaseType() : LitTypes {
@@ -75,6 +77,9 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         }
 
         table.currentFunction = null
+        // exiting function or higher order function, we need this
+        // variable set to false even if it was false before as well
+        symbolTable!!.inHighOrderFunction = Pair(false, null)
     }
 
 }

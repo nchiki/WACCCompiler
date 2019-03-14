@@ -7,6 +7,10 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
+import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Nodes.BaseNode
+import main.kotlin.Nodes.StringLitNode
+import main.kotlin.Instructions.MultInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Utils.*
 import main.kotlin.ValueTable
@@ -23,7 +27,6 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     fun resolveToAddress(codeGenerator: CodeGenerator) {
-
         identifier.generateCode(codeGenerator)
         val elemReg = codeGenerator.getLastUsedReg()
 
@@ -46,7 +49,7 @@ class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, overri
             }
 
             /* Add index and multiply by 4 */
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg.toString()}, LSL #2"))
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(elemReg, elemReg, "${exprReg}, LSL #2"))
 
             if(i < exprs.size - 1){
                 codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(elemReg, "[$elemReg]", Condition.AL))

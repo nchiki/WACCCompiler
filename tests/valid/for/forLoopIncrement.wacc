@@ -1,0 +1,15 @@
+# Use an int as a loop condition. Enter the loop once only, then exit the loop.
+
+# Output:
+# Increment i
+# Should print "Increment i" once before.
+
+# Program:
+
+begin
+	int i = 2;
+	for (i=0;i<1;i++) do
+		println "Increment i"
+	done ;
+	println "Should print \"Increment i\" once before."
+end
