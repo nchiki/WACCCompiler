@@ -15,6 +15,8 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 import main.kotlin.Instructions.BLInstr
+import main.kotlin.ValueTable
+
 class ExitStatNode(val expr : ExprNode, override val ctx : BasicParser.ExitContext) : Node {
 
     override var symbolTable: SymbolTable? = null

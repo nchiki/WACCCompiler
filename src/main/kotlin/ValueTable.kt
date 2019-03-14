@@ -1,8 +1,8 @@
-package kotlin
+package main.kotlin
 
-import kotlin.Utils.BoolConstant
-import kotlin.Utils.ConstantValue
-import kotlin.Utils.IntConstant
+import main.kotlin.Utils.BoolConstant
+import main.kotlin.Utils.ConstantValue
+import main.kotlin.Utils.IntConstant
 
 class ValueTable(val parent: ValueTable?) {
 

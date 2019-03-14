@@ -1,7 +1,5 @@
 package main.kotlin.Utils
 
-import BasicParser.LESS
-import BasicParser._decisionToDFA
 import Nodes.DeclNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -10,15 +8,18 @@ import main.kotlin.Errors.UndefinedFunction
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.SymbolTable
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
-import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import kotlin.math.exp
+
 
 class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsNode : Node, val size : Long, override val ctx: ParserRuleContext?) : Node {
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override val weight: Int
         get() = 1
@@ -223,7 +224,7 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
 
         symbolTable!!.sp = 0
 
-        
+
         // creates the array to be returned
         val array = createArray(size, codeGenerator)
         val arrayRHS = RHSNode(RHS_type.array_lit, null, null, 0,0,

@@ -11,6 +11,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.PopInstr
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {

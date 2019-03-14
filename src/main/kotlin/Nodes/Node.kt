@@ -3,6 +3,7 @@ package main.kotlin.Nodes
 import main.kotlin.CodeGenerator
 import main.kotlin.SymbolTable
 import main.kotlin.ErrorLogger
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 
 interface Node {

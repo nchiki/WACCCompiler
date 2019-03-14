@@ -7,6 +7,7 @@ import main.kotlin.Instructions.LoadInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.StringLitDef
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 

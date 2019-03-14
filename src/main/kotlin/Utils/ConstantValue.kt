@@ -1,4 +1,4 @@
-package kotlin.Utils
+package main.kotlin.Utils
 
 interface ConstantValue {
 

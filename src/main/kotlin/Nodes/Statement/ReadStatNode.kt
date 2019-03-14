@@ -16,6 +16,7 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import main.kotlin.Utils.getString
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 

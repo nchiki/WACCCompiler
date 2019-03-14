@@ -11,6 +11,7 @@ import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.OverflowDef
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any,

@@ -2,6 +2,7 @@ package main.kotlin.Nodes
 
 import BasicParser
 import Nodes.PairType.PairNode
+import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -17,6 +18,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.HigherOrderFuncsNode
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
@@ -51,6 +53,19 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
         val label = codeGenerator.curLabel
         if(symbolTable!!.isHigherOrderFunction(funId!!)) {
             generateHighCallCode(codeGenerator, label)
+        } else if(symbolTable!!.inHighOrderFunction.first) {
+            val label = codeGenerator.curLabel
+            val before = symbolTable!!.sp
+            args?.generateCode(codeGenerator)
+            val innerFunId = symbolTable!!.lookForFunctionParam(symbolTable!!.inHighOrderFunction.second!!.id)
+            codeGenerator.addInstruction(label, BLInstr("f_${innerFunId}"))
+            val after = symbolTable!!.sp
+            if (after - before != 0) {
+                codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
+                //subtracting four because we need to declare the variable = inner funcId
+                symbolTable!!.sp -= after - before
+            }
+            codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))
         } else {
             val label = codeGenerator.curLabel
             val before = symbolTable!!.sp
@@ -172,10 +187,16 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
             this.highOrderFunction!!.semanticCheck(errors, table)
         } else {
             if (type == RHS_type.call) {
-
                 val funNode = table.getFunction(funId!!)
                 if (funNode == null) {
+                    if(symbolTable!!.inHighOrderFunction.first) {
+                        val valueHelper =  (symbolTable!!.inHighOrderFunction.second as FunctionNode)
+                        if(symbolTable!!.getFunction(valueHelper.id) == null) {
+                            errors.addError(UndefinedFunction(ctx, funId))
+                        }
+                    } else {
                     errors.addError(UndefinedFunction(ctx, funId))
+                    }
                 } else {
                     val parameters = funNode.params
                     if (args != null) {
@@ -190,14 +211,24 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
                                         actual = actual.identifier
                                     }
                                     val actType = table.lookupSymbol((actual as IdentNode).id)
-                                    if (expected.getBaseType() != actType!!.getBaseType()) {
+                                    if(actType == null) {
+                                        val func = table.getFunction((actual).id)
+                                        if(func == null) {
+                                            errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
+                                        } else {
+                                            symbolTable!!.addMatchFunctions(funId, actual.id)
+                                        }
+                                    } else if (expected.getBaseType() != actType!!.getBaseType()) {
                                         errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                                     }
                                 } else if (actual.getBaseType() != expected.getBaseType()) {
                                     errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                                 }
+
                             }
+
                         }
+
                     } else {
                         errors.addError(IncorrectNumParams(ctx, parameters!!.listParamNodes.count(), 0))
                     }

@@ -13,7 +13,7 @@ import main.kotlin.Nodes.StringLitNode
 import main.kotlin.Instructions.MultInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Utils.*
-
+import main.kotlin.ValueTable
 
 
 class ArrayElemNode(val identifier: IdentNode, var exprs: List<ExprNode>, override val ctx: BasicParser.ArrayElemContext) : ExprNode {

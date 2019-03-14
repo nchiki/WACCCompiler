@@ -9,6 +9,7 @@ import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
@@ -78,8 +79,9 @@ class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : 
             errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
-
-        errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+        if(!symbolTable!!.inHighOrderFunction.first) {
+            errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
+        }
 
     }
 

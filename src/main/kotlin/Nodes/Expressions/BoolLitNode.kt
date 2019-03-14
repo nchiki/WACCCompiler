@@ -7,6 +7,7 @@ import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class BoolLitNode(val bool_val: String, override val ctx: BasicParser.BoolLitContext) : ExprNode {

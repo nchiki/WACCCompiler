@@ -5,6 +5,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import kotlin.system.exitProcess
 
 class StatementNode(var stat : Node, override val ctx: BasicParser.StatementContext?): Node {

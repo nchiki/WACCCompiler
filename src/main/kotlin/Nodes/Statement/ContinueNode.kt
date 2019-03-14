@@ -7,6 +7,7 @@ import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
+import main.kotlin.ValueTable
 
 class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node{
     override var symbolTable: SymbolTable? = null

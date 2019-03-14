@@ -13,6 +13,7 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess

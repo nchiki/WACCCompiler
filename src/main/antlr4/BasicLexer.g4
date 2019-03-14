@@ -39,6 +39,7 @@ NEWPAIR: 'newpair' ;
 FST: 'fst' ;
 SND: 'snd' ;
 PAIR: 'pair' ;
+FUNC: 'func' ;
 
 //base types
 INT: 'int' ;

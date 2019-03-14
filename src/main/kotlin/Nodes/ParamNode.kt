@@ -6,6 +6,7 @@ import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Nodes.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class ParamNode(
@@ -50,7 +51,11 @@ class ParamNode(
             // if there is already a variable with that name -> error
             errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         } else {
+            if(type.getBaseType() == LitTypes.FuncWacc) {
+                symbolTable!!.inHighOrderFunction = Pair(true, symbolTable!!.currentFunction)
+            }
             table.add(this, id)
+
         }
 
     }
