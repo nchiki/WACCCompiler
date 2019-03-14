@@ -49,7 +49,6 @@ class SymbolTable (val parent: SymbolTable?){
         if(!addressMap.containsKey(identifier)){
             return sp + parent!!.getValueOffset(identifier, codeGenerator)
         }
-
         return sp - addressMap[identifier]!!
     }
 

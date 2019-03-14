@@ -12,6 +12,9 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
 class StructNode(val id : String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode{
+
+    val data = HashMap<String, ExprNode>() //data section to be printed before main
+
     override fun getBaseType(): LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -35,11 +38,21 @@ class StructNode(val id : String, var exprs: List<Node>, override val ctx: Parse
         this.symbolTable = childTable
         symbolTable!!.add(this, id)
         for (expr in exprs) {
+            expr as DeclNode
+            val value = expr.rhs.expr
+            data.put(expr.id, value!!)
             expr.semanticCheck(errors, childTable)
         }
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        for (expr in exprs) {
+            expr.generateCode(codeGenerator)
+        }
 
+        val difference = symbolTable!!.sp //- afterParams
+        if(difference > 0) {
+            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, difference))
+        }
     }
 }

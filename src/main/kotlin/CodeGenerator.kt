@@ -31,6 +31,7 @@ class CodeGenerator {
     private var lastUsedReg: Register = Register.r0
 
     val functions = LinkedHashMap<String, ArrayList<String>>()
+    val structs = LinkedHashMap<String, ArrayList<String>>()
     var curFunction: String = "main"
 
     fun initRegs() {
@@ -76,6 +77,15 @@ class CodeGenerator {
         curFunction = function
         curLabel = function
         curScope = function
+    }
+
+    fun addStruct(struct_id : String) {
+        val label = "s_$struct_id"
+        structs.put(label, ArrayList())
+        addLabel(label, null)
+        curFunction = label
+        curLabel = label
+        curScope = label
     }
 
     fun addLabel(label: String, scope: String?) {

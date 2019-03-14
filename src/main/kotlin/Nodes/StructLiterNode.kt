@@ -36,21 +36,15 @@ class StructLiterNode(val struct_id : String, val member_id : String, override v
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val structNode = symbolTable!!.lookupSymbol(struct_id)
-        val offset = symbolTable!!.getValueOffset(member_id, codeGenerator)
-        var inMemory = "[sp]"
-        if(offset != 0) {
-            inMemory = "[sp, #${offset}]"
-        }
-        val reg = codeGenerator.getFreeRegister()
-        val idNode = symbolTable!!.lookupLocal(member_id)
+        val structNode = symbolTable?.lookupLocal(struct_id) as StructNode
 
-        if(idNode is ExprNode && idNode.getBaseType() == LitTypes.BoolWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-        }else if (idNode is ExprNode && idNode.getBaseType() == LitTypes.CharWacc) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-        } else {
-            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
+        val reg = codeGenerator.getFreeRegister()
+        val value = structNode.data.get(member_id)
+
+        if (value!!.getBaseType() == LitTypes.BoolWacc || value.getBaseType() == LitTypes.CharWacc
+                || value.getBaseType() == LitTypes.IntWacc) {
+            val offset = symbolTable!!.getValueOffset(member_id, codeGenerator)
+            codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]"))
         }
     }
 }
