@@ -13,6 +13,7 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.*
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
@@ -49,6 +50,10 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
 
             }
         }
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {

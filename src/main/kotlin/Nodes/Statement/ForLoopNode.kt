@@ -12,6 +12,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
@@ -64,6 +65,10 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
         codeGenerator.endLabel = ""
     }
 
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = SymbolTable(table)
         this.symbolTable!!.inLoop = true
@@ -82,6 +87,9 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 class ForCondNode(val first : Node, val second : ExprNode, val third: Node, override val ctx: ParserRuleContext) : Node {
 
     override var symbolTable: SymbolTable? = null
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override val weight: Int
         get() = first.weight + second.weight + third.weight

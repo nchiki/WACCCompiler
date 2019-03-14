@@ -412,18 +412,6 @@ public class BasicParserBaseListener implements BasicParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinaryOper(BasicParser.BinaryOperContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBinaryOper(BasicParser.BinaryOperContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterAddSub(BasicParser.AddSubContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -496,6 +484,18 @@ public class BasicParserBaseListener implements BasicParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBinaryLit(BasicParser.BinaryLitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBinaryLit(BasicParser.BinaryLitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCharLit(BasicParser.CharLitContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -539,6 +539,18 @@ public class BasicParserBaseListener implements BasicParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEqOp(BasicParser.EqOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOctalLit(BasicParser.OctalLitContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOctalLit(BasicParser.OctalLitContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

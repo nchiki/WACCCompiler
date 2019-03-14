@@ -5,8 +5,7 @@ import Nodes.PairType.PairNode
 import org.jetbrains.annotations.NotNull
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
-import main.kotlin.Nodes.Expressions.BinaryOpNode
-import main.kotlin.Nodes.Expressions.BoolOpNode
+import main.kotlin.Nodes.Expressions.*
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Statement.AssignNode
 import main.kotlin.Nodes.Statement.*
@@ -70,6 +69,20 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
             exitProcess(100)
         }
         return IntLitNode(int_val.toLong(), ctx)
+    }
+
+    override fun visitBinaryLit(@NotNull ctx: BasicParser.BinaryLitContext): Node {
+        return BinaryLit(ctx.BINARY_LIT().toString(), ctx)
+    }
+
+    override fun visitOctalLit(@NotNull ctx: BasicParser.OctalLitContext): Node {
+        val sequence = ctx.OCTAL_LIT().toString()
+        return OctalLit(sequence, ctx)
+    }
+
+    override fun visitHexadecLit(@NotNull ctx: BasicParser.HexadecLitContext): Node {
+        val sequence = ctx.HEXADEC_LIT().toString()
+        return HexaDecLit(sequence, ctx)
     }
 
     override fun visitBoolLit(@NotNull ctx: BasicParser.BoolLitContext): Node {

@@ -8,11 +8,14 @@ import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
 import main.kotlin.Nodes.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 import kotlin.system.exitProcess
 
@@ -20,7 +23,7 @@ import kotlin.system.exitProcess
 class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
-        val rhs: RHSNode, override val ctx: BasicParser.DeclContext?) : Node {
+        var rhs: RHSNode, override val ctx: BasicParser.DeclContext?) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -72,7 +75,7 @@ class DeclNode(// var name
                 if(symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
                     funType = symbolTable!!.getFunction((rhs.highOrderFunction!!.idNode as IdentNode).id)!!.getBaseType()
                 } else {
-                    funType = symbolTable!!.getFunction(rhs.funId)!!.getBaseType()
+                    funType = symbolTable!!.getFunction(rhs.funId!!)!!.getBaseType()
                 }
                 if (funType == LitTypes.BoolWacc || funType == LitTypes.CharWacc) {
                     codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
@@ -99,6 +102,37 @@ class DeclNode(// var name
         }
     }
 
+
+    override fun optimise(valueTable: ValueTable): Node {
+        rhs = rhs.optimise(valueTable)
+
+        /* Optimise only for integer and boolean constants */
+        if(type !is IntLitNode && type !is BoolLitNode){
+            return this
+        }
+
+        if(rhs.type.equals(RHS_type.expr)){
+            val rhsExpr = rhs.expr!!
+            if(rhsExpr is IntLitNode){
+                valueTable.addIntValue(id, rhsExpr.int_val)
+            }else if(rhsExpr is BoolLitNode){
+                valueTable.addBoolValue(id, rhsExpr.bool_val.toBoolean())
+            }else{
+                /* The value of the rhs is dynamic */
+                if(type.getBaseType().equals(LitTypes.IntWacc)){
+                    valueTable.addIntValue(id, 0)
+                    valueTable.setDynamic(id, true)
+                }else if(type.getBaseType().equals(LitTypes.BoolWacc)){
+                    valueTable.addBoolValue(id, true)
+                    valueTable.setDynamic(id, true)
+                }
+            }
+        }
+
+
+        return this
+    }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
@@ -119,10 +153,10 @@ class DeclNode(// var name
 
         /* RHS is a pair assignment*/
         if (rhs.type == RHS_type.pair_elem) {
-            val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id, rhs.PairLit)
+            val nodeT = checkType(table, (rhs.PairLit!!.expr as IdentNode).id, rhs.PairLit!!)
 
             if (nodeT != type.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs.PairLit.expr, table))
+                errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs.PairLit!!.expr, table))
             }
             return
         }
@@ -172,7 +206,9 @@ class DeclNode(// var name
         }
 
         /* Types don't match */
-        errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs, table))
+        if(!symbolTable!!.inHighOrderFunction.first) {
+            errors.addError(IncompatibleTypes(ctx!!, type.getBaseType().toString(), rhs, table))
+        }
 
     }
 

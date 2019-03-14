@@ -16,13 +16,15 @@ class SymbolTable (val parent: SymbolTable?){
 
     var highOrderFunctions = ArrayList<String>()
     var functions = HashMap<String, FunctionNode>()
+    var functionsToHO = HashMap<String, String>() // maps high order functions to its function parameter
     var errors = ErrorLogger()
 
     var currentFunction: FunctionNode? = null
     var currentExecutionPathHasReturn = false
     var sp = 0
 
-    var inHighOrdfunctions = HashMap<String, String>()
+    var inHighOrderFunction : Pair<Boolean, FunctionNode?> = Pair(false, null)
+
     // useful for break and continue semantic check
     var inLoop = false
 
@@ -54,12 +56,6 @@ class SymbolTable (val parent: SymbolTable?){
         }
 
         return sp - addressMap[identifier]!!
-    }
-
-    fun printFunctions() {
-        for (func in functions) {
-            println(func.key)
-        }
     }
 
     fun getFunction(funcId : String) : FunctionNode?{
@@ -136,20 +132,25 @@ class SymbolTable (val parent: SymbolTable?){
         }
     }
 
-    fun addIdentFunc(HighOrdfunc : String, func : String) {
-        inHighOrdfunctions.put(HighOrdfunc, func)
+    fun addMatchFunctions(highOrder : String, functionParam : String) {
+        functionsToHO.put(highOrder, functionParam)
+        var tab = parent
+        while(tab != null) {
+            tab.functionsToHO.put(highOrder, functionParam)
+            tab = tab.parent
+        }
     }
 
-    fun getIdentFunc(HighOrdfunc: String) : String? {
-        var tab = this
-        if (inHighOrdfunctions.isEmpty()) {
-            while(tab.inHighOrdfunctions.isEmpty()) {
-                tab = tab.parent!!
-            }
-            if (parent == null) {
-                return null
-            }
+    fun lookForFunctionParam(highOrder : String) : String? {
+
+        if(functionsToHO.containsKey(highOrder)){
+            return functionsToHO[highOrder]
         }
-        return tab.inHighOrdfunctions.get(HighOrdfunc)
+
+        if(parent == null){
+            return null
+        }
+
+        return parent.lookForFunctionParam(highOrder)
     }
 }

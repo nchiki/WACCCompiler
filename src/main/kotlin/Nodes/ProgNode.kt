@@ -11,6 +11,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.PopInstr
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 
 
 class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
@@ -75,5 +76,20 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         if (errors.errorList.size == 0) {
             stats!!.semanticCheck(errors, statTable!!)
         }
+    }
+
+
+    override fun optimise(valueTable: ValueTable): Node {
+        for (func in funcDefs){
+            func.optimise(valueTable)
+        }
+
+        stats as StatListNode
+
+        for(i in (0 until stats.listStatNodes.size)){
+            stats.listStatNodes[i] = stats.listStatNodes[i].optimise(valueTable)
+        }
+
+        return this
     }
 }

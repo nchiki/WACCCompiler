@@ -11,6 +11,7 @@ import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.OverflowDef
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
 class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any,
@@ -29,7 +30,9 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             }
         }
     override var symbolTable: SymbolTable? = null
-
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override val weight: Int
         get() = 1 + operand.weight

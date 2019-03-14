@@ -13,6 +13,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
+import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
@@ -82,6 +83,10 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
             errors.addError(IncompatibleTypes(ctx, "BOOL", expr, table))
         }
         this.symbolTable!!.inLoop = false
+    }
+
+    override fun optimise(valueTable: ValueTable): Node {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
