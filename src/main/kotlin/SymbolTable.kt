@@ -62,7 +62,11 @@ class SymbolTable (val parent: SymbolTable?){
         var tab = this
         if (functions.isEmpty()) {
             while(tab.functions.isEmpty()) {
-                tab = tab.parent!!
+                if(tab.parent != null) {
+                    tab = tab.parent!!
+                } else {
+                    break
+                }
             }
             if (parent == null) {
                 return null
