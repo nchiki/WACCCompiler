@@ -9,6 +9,7 @@ import main.kotlin.Instructions.AndInstr
 import main.kotlin.Instructions.OrInstr
 import main.kotlin.Nodes.ArrayTypeNode
 import main.kotlin.Nodes.IdentNode
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
@@ -17,7 +18,7 @@ import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicParser.BoolOpContext,
+class BoolOpNode(var left: ExprNode, var right: ExprNode, val operator: BasicParser.BoolOpContext,
                  override val ctx: ParserRuleContext) : ExprNode {
 
 
@@ -61,7 +62,22 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        left = left.optimise(valueTable) as ExprNode
+        right = right.optimise(valueTable) as ExprNode
+
+        /* If the left and right value aren't constant then we can't optimise this */
+        if(left !is BoolLitNode || right !is BoolLitNode){
+            return this
+        }
+
+        var opFunc = { a: Boolean, b: Boolean -> a && b }
+        if(operator.OR() != null){
+            opFunc = { a: Boolean, b: Boolean -> a || b }
+        }
+
+        val boolVal = opFunc((left as BoolLitNode).bool_val.toBoolean(), (right as BoolLitNode).bool_val.toBoolean())
+
+        return BoolLitNode(boolVal.toString(), null)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -70,10 +86,10 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         /* Get left value from symbol table */
         if (left is IdentNode) {
-            val leftValue = table.lookupSymbol(left.id)
+            val leftValue = table.lookupSymbol((left as IdentNode).id)
 
             if (leftValue == null) {
-                errors.addError(UndefinedVariable(ctx, left.id))
+                errors.addError(UndefinedVariable(ctx, (left as IdentNode).id))
                 return
             }
 
@@ -84,10 +100,10 @@ class BoolOpNode(val left: ExprNode, val right: ExprNode, val operator: BasicPar
 
         /* Get left value from symbol table */
         if (right is IdentNode) {
-            val rightValue = table.lookupSymbol(right.id)
+            val rightValue = table.lookupSymbol((right as IdentNode).id)
 
             if (rightValue == null) {
-                errors.addError(UndefinedVariable(ctx, right.id))
+                errors.addError(UndefinedVariable(ctx, (right as IdentNode).id))
                 return
             }
 

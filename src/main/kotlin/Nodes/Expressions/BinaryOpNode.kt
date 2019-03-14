@@ -2,6 +2,7 @@ package main.kotlin.Nodes.Expressions
 
 import BasicParser
 import Nodes.PairType.PairNode
+import com.sun.org.apache.xpath.internal.operations.Bool
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -41,13 +42,8 @@ class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicPar
         right = right.optimise(valueTable) as ExprNode
 
 
-        /* If the left is not a constant then we can't optimize the expression */
-        if(left !is IntLitNode || left !is BoolLitNode){
-            return this
-        }
-
-        /* If the right is not a constant then we can't optimize the expression */
-        if(right !is IntLitNode || right !is BoolLitNode){
+        /* If the values are not constant then we can't optimize the expression */
+        if(left !is IntLitNode && right !is IntLitNode){
             return this
         }
 
