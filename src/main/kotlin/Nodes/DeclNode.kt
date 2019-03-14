@@ -61,7 +61,7 @@ class DeclNode(// var name
 
         //check if rhs is a BaseType
         else if (rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
-                        || rhs.expr.getBaseType() == LitTypes.BoolWacc)) {
+                        || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
 
