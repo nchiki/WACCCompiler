@@ -34,8 +34,7 @@ class DeclNode(// var name
 
         val label = codeGenerator.curLabel
         val offset = rhs.getSizeOfOffset() //gets size of the data type
-        println(offset)
-        println(symbolTable!!.sp)
+
         symbolTable?.declareVariable(id, symbolTable!!.sp, offset) //Save variable location in symbol table
         if (rhs.ArrayLit == null) {
             symbolTable!!.sp += offset // add offset to stack pointer
@@ -52,7 +51,6 @@ class DeclNode(// var name
         if (offsetSp != 0) {
             inMemory = "[sp, #${offsetSp}]"
         }
-        println(inMemory)
 
         //check if rhs is PairNode
         if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {

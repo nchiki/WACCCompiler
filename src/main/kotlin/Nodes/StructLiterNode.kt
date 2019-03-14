@@ -43,7 +43,10 @@ class StructLiterNode(val struct_id : String, val member_id : String, override v
 
         if (value!!.getBaseType() == LitTypes.BoolWacc || value.getBaseType() == LitTypes.CharWacc
                 || value.getBaseType() == LitTypes.IntWacc) {
-            val offset = symbolTable!!.getValueOffset(member_id, codeGenerator)
+            var offset = structNode.symbolTable!!.getValueOffset(member_id, codeGenerator)
+            //val offset = structNode.getOffsetMember(structNode.symbolTable!!.sp, member_id)
+            offset += symbolTable!!.sp
+            println(offset)
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, "[sp, #$offset]"))
         }
     }

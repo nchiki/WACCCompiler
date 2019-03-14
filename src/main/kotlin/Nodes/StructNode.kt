@@ -14,6 +14,7 @@ import src.main.kotlin.Nodes.ExprNode
 class StructNode(val id : String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode{
 
     val data = HashMap<String, ExprNode>() //data section to be printed before main
+    val offsets = HashMap<String, Int>()
 
     override fun getBaseType(): LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -47,12 +48,20 @@ class StructNode(val id : String, var exprs: List<Node>, override val ctx: Parse
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         for (expr in exprs) {
+            offsets.put((expr as DeclNode).id, symbolTable!!.sp +(expr).rhs.expr!!.size)
             expr.generateCode(codeGenerator)
+
         }
 
-        val difference = symbolTable!!.sp //- afterParams
+        val difference = symbolTable!!.sp
         if(difference > 0) {
             codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, difference))
-        }
+       }
+    }
+
+    fun getOffsetMember(sp : Int,id: String) : Int {
+        println(offsets[id])
+        println(sp)
+        return sp - offsets[id]!!
     }
 }
