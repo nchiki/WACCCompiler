@@ -2,7 +2,6 @@ package main.kotlin.Nodes.Expressions
 
 import BasicParser
 import Nodes.PairType.PairNode
-import com.sun.org.apache.xpath.internal.operations.Bool
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
