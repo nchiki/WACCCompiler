@@ -119,7 +119,6 @@ find $DIRECTORY -name "*.wacc" | (
     while read fname; do
         sh compile $fname
         SHORTENED=$(basename ${fname::$((${#fname} - 5))})
-        echo 1
         # Extract expected output from file
         if [ "$USE_REF_COMPILER" = "YES" ]; then
             EXPECTED="$(eval ruby refCompile $fname -x)"
