@@ -11,10 +11,10 @@ import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class StructNode(val id : String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode{
+class StructNode(val id : String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode {
 
     val data = HashMap<String, ExprNode>() //data section to be printed before main
-    val offsets = HashMap<String, Int>()
+
 
     override fun getBaseType(): LitTypes {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -32,9 +32,11 @@ class StructNode(val id : String, var exprs: List<Node>, override val ctx: Parse
 
     override var symbolTable: SymbolTable? = null
 
+    var parentTable: SymbolTable? = null
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         val childTable = SymbolTable(table)
+        this.parentTable = table
         table.add(this, id)
         this.symbolTable = childTable
         symbolTable!!.add(this, id)
@@ -47,21 +49,14 @@ class StructNode(val id : String, var exprs: List<Node>, override val ctx: Parse
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+
         for (expr in exprs) {
-            offsets.put((expr as DeclNode).id, symbolTable!!.sp +(expr).rhs.expr!!.size)
             expr.generateCode(codeGenerator)
 
         }
 
-        val difference = symbolTable!!.sp
-        if(difference > 0) {
-            codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, difference))
-       }
+        parentTable!!.sp += symbolTable!!.sp
+        parentTable!!.declareVariable(id, parentTable!!.sp, 0)
     }
 
-    fun getOffsetMember(sp : Int,id: String) : Int {
-        println(offsets[id])
-        println(sp)
-        return sp - offsets[id]!!
-    }
 }
