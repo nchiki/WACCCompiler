@@ -176,10 +176,7 @@ class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, va
 
     override fun optimise(valueTable: ValueTable): RHSNode {
         if (type.equals(RHS_type.expr)) {
-            println("rhs: optimising expr")
-            println("replacing $expr")
             expr = expr!!.optimise(valueTable) as ExprNode
-            println("with $expr")
         }
 
         return this
