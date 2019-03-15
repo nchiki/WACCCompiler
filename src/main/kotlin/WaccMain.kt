@@ -1,6 +1,7 @@
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
+import main.kotlin.preprocess
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -17,11 +18,17 @@ fun main(args: Array<String>) {
         val input = CharStreams.fromStream(java.lang.System.`in`)
         //Lexical analysis
         val lexer = BasicLexer(input)
+//        println(lexer.allTokens)
+//        val newInput = preprocess(input, lexer.allTokens)
+//        println(newInput.toString())
+//        val newLexer = BasicLexer(newInput)
+
         //Create a buffer of tokens
         val tokens = CommonTokenStream(lexer)
         //Syntactical analysis
         val parser = BasicParser(tokens)
         val tree = parser.prog()
+        // println(tree.childCount)
         //Exit with code 100 if there are any syntax errors
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
@@ -47,4 +54,3 @@ fun main(args: Array<String>) {
         codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
-

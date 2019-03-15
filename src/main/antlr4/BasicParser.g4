@@ -5,6 +5,8 @@ options {
 }
 prog: BEGIN func* stat END EOF ;
 
+define: DEFINEMACRO IDENT INT_LIT ;
+
 func: type IDENT OPEN_PARENTHESES paramList? CLOSE_PARENTHESES IS stat END ;
 
 paramList: param (COMMA param)* ;

@@ -1,7 +1,8 @@
 # tests whether the compiler can handle long expressions with several variables
 
 # Output:
-# #empty#
+# 362880
+# 128
 
 # Exit:
 # 128
