@@ -1,8 +1,7 @@
 # Use an int as a loop condition. Enter the loop once only, then exit the loop.
 
 # Output:
-# Increment i
-# Should print "Increment i" once before.
+# Should not print "Increment i" once before.
 
 # Program:
 
@@ -12,5 +11,5 @@ begin
 		break;
 		println "Increment i"
 	done ;
-	println "Should print \"Increment i\" once before."
+	println "Should not print \"Increment i\" once before."
 end
