@@ -1,7 +1,7 @@
 # Use an int as a loop condition. Enter the loop once only, then exit the loop.
 
 # Output:
-# Should print "Increment i" once before.
+# Should not print "Increment i" once before.
 
 # Program:
 
