@@ -40,7 +40,11 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
 
         var inMemory = "[sp]"
         if(offset != 0) {
-            inMemory = "[sp, #${offset}]"
+           /* if (offset < 0) {
+                inMemory = "[sp, #${-offset}]"
+            } else { */
+                inMemory = "[sp, #${offset}]"
+            //}
         }
         val reg = codeGenerator.getFreeRegister()
 
