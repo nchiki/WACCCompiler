@@ -6,6 +6,7 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.InvalidOperandTypes
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
@@ -14,7 +15,7 @@ import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
-class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any,
+class UnaryOpNode(var operand: ExprNode, val operator: BasicParser.UnaryOperContext, type: Any,
                   override val ctx: BasicParser.UnOpContext) : ExprNode {
 
     override val size: Int
@@ -30,8 +31,16 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
             }
         }
     override var symbolTable: SymbolTable? = null
+
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        operand = operand.optimise(valueTable) as ExprNode
+
+        /* Can only optimise !true or !false */
+        if(operand !is BoolLitNode || operator.NOT() == null){
+            return this
+        }
+
+        return BoolLitNode((!(operand as BoolLitNode).bool_val.toBoolean()).toString(), null)
     }
 
     override val weight: Int
@@ -85,9 +94,9 @@ class UnaryOpNode(val operand: ExprNode, val operator: BasicParser.UnaryOperCont
 
         //get type of operand from Symboltable
         if (operand is IdentNode) {
-            val opValue = table.lookupSymbol(operand.id)
+            val opValue = table.lookupSymbol((operand as IdentNode).id)
             if (opValue == null) {
-                errors.addError(UndefinedVariable(ctx, operand.id))
+                errors.addError(UndefinedVariable(ctx, (operand as IdentNode).id))
                 return
             }
             op = opValue

@@ -26,7 +26,7 @@ class ParenNode(val expr: ExprNode, override val ctx: BasicParser.ParenContext) 
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return expr.optimise(valueTable)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
