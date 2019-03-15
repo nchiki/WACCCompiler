@@ -70,9 +70,9 @@ class IfCondNode(// condition (should evaluate to boolean val
         val elseValueTable = ValueTable(valueTable)
 
         /* Remove else statement deadcode if the statement is always going to evaluate to true */
-        if(expr is BoolLitNode){
+        if (expr is BoolLitNode) {
             /* If statement always evaluates to if(true) -> put ifTrueStat into a stat-block */
-            if((expr as BoolLitNode).bool_val.toBoolean()){
+            if ((expr as BoolLitNode).bool_val.toBoolean()) {
                 var trueStatement: Node = StatementNode(ifTrueStat!!, null)
                 trueStatement.symbolTable = ifTrueStat.symbolTable
                 trueStatement = trueStatement.optimise(ifTrueValueTable)
@@ -103,7 +103,7 @@ class IfCondNode(// condition (should evaluate to boolean val
         if (actExpr?.getBaseType() == LitTypes.IdentWacc) {
             val actType = table.lookupSymbol((actExpr as IdentNode).id)
             if (LitTypes.BoolWacc != actType!!.getBaseType()) {
-                errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))
+                errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr, table))
             }
         } else if (actExpr?.getBaseType() != LitTypes.BoolWacc) {
             errors.addError(IncompatibleTypes(ctx.expr(), "BOOL", actExpr!!, table))

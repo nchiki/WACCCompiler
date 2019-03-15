@@ -6,11 +6,11 @@ class ErrorLogger {
     var errorList: ArrayList<ErrorNode> = arrayListOf()
 
 
-    fun addError(error: ErrorNode) : Boolean{
+    fun addError(error: ErrorNode): Boolean {
         return errorList.add(error)
     }
 
-    fun printErrors(){
+    fun printErrors() {
         for (error in errorList) {
             error.printError()
         }

@@ -43,15 +43,15 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
             // Check if it is an identifier
             if (expr.getBaseType() == LitTypes.IdentWacc) {
 
-                if(exprNode is ArrayElemNode) {
+                if (exprNode is ArrayElemNode) {
                     exprNode = exprNode.identifier
                 }
                 val node = symbolTable!!.lookupSymbol((exprNode as IdentNode).id)
-                if(node == null) {
+                if (node == null) {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                     return
                 }
-                val type = node!!.getBaseType()
+                val type = node.getBaseType()
                 // Check if the base type is a Char or Bool
                 if ((type == LitTypes.CharWacc || type == LitTypes.BoolWacc)
                         && symbolTable!!.lookupSymbol((exprNode).id) !is ArrayTypeNode) {
@@ -59,7 +59,7 @@ class ArgListNode(val exprs: List<ExprNode>, override val ctx: BasicParser.ArgLi
                 } else {
                     codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory, true))
                 }
-            // Check if it is a Char or Bool
+                // Check if it is a Char or Bool
             } else if ((expr.getBaseType() == LitTypes.CharWacc || expr.getBaseType() == LitTypes.BoolWacc) && expr !is ArrayLitNode) {
                 codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory, true))
             } else {

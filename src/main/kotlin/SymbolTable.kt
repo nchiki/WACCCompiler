@@ -1,14 +1,15 @@
 package main.kotlin
 
-import main.kotlin.Nodes.*
-import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Errors.GenericError
 import main.kotlin.Instructions.AddInstr
+import main.kotlin.Nodes.Expression.ParenNode
+import main.kotlin.Nodes.FunctionNode
+import main.kotlin.Nodes.Node
 import main.kotlin.Utils.Register
 import src.main.kotlin.Nodes.ExprNode
 
 
-class SymbolTable (val parent: SymbolTable?){
+class SymbolTable(val parent: SymbolTable?) {
 
     var table = HashMap<String, ExprNode>()
 
@@ -23,12 +24,12 @@ class SymbolTable (val parent: SymbolTable?){
     var currentExecutionPathHasReturn = false
     var sp = 0
 
-    var inHighOrderFunction : Pair<Boolean, FunctionNode?> = Pair(false, null)
+    var inHighOrderFunction: Pair<Boolean, FunctionNode?> = Pair(false, null)
 
     // useful for break and continue semantic check
     var inLoop = false
 
-    fun addToFunctions(funcs : List<FunctionNode>) {
+    fun addToFunctions(funcs: List<FunctionNode>) {
         for (func in funcs) {
             if (functions.containsKey(func.id)) {
                 errors.addError(GenericError("Function already declared"))
@@ -39,8 +40,8 @@ class SymbolTable (val parent: SymbolTable?){
 
     /* Declares variable at the address */
     fun declareVariable(identifier: String, offset: Int, size: Int) {
-        if(!table.containsKey(identifier) && parent != null){
-            parent!!.declareVariable(identifier, offset, size)
+        if (!table.containsKey(identifier) && parent != null) {
+            parent.declareVariable(identifier, offset, size)
             return
         }
         addressMap[identifier] = offset + size
@@ -49,18 +50,18 @@ class SymbolTable (val parent: SymbolTable?){
     /* Returns the address of the value,
      if the (address <= sp) then value is in stack, otherwise it's in the heap
      */
-    fun getValueOffset(identifier: String, codeGenerator: CodeGenerator) : Int {
-        if(!addressMap.containsKey(identifier)){
+    fun getValueOffset(identifier: String, codeGenerator: CodeGenerator): Int {
+        if (!addressMap.containsKey(identifier)) {
             return sp + parent!!.getValueOffset(identifier, codeGenerator)
         }
         return sp - addressMap[identifier]!!
     }
 
-    fun getFunction(funcId : String) : FunctionNode?{
+    fun getFunction(funcId: String): FunctionNode? {
         var tab = this
         if (functions.isEmpty()) {
-            while(tab.functions.isEmpty()) {
-                if(tab.parent != null) {
+            while (tab.functions.isEmpty()) {
+                if (tab.parent != null) {
                     tab = tab.parent!!
                 } else {
                     break
@@ -73,10 +74,10 @@ class SymbolTable (val parent: SymbolTable?){
         return tab.functions.get(funcId)
     }
 
-    fun isHigherOrderFunction(funId : String) : Boolean{
+    fun isHigherOrderFunction(funId: String): Boolean {
         var tab = this
         if (highOrderFunctions.isEmpty()) {
-            while(tab.highOrderFunctions.isEmpty()) {
+            while (tab.highOrderFunctions.isEmpty()) {
                 tab = tab.parent!!
             }
             if (parent == null) {
@@ -86,21 +87,21 @@ class SymbolTable (val parent: SymbolTable?){
         return tab.highOrderFunctions.contains(funId)
     }
 
-    fun evaluateParenNode(node_: Node): Node{
+    fun evaluateParenNode(node_: Node): Node {
         var node = node_
-        while(node is ParenNode){
+        while (node is ParenNode) {
             node = node.expr
         }
         return node
     }
 
 
-    fun add(node : ExprNode, id : String) {
+    fun add(node: ExprNode, id: String) {
         table.put(id, node)
     }
 
-    fun lookupLocal(identifier:String) : ExprNode?{
-        if(table.containsKey(identifier)){
+    fun lookupLocal(identifier: String): ExprNode? {
+        if (table.containsKey(identifier)) {
             return table[identifier]
         }
         return null
@@ -108,11 +109,11 @@ class SymbolTable (val parent: SymbolTable?){
 
     fun lookupSymbol(identifier: String): ExprNode? {
 
-        if(table.containsKey(identifier)){
+        if (table.containsKey(identifier)) {
             return table[identifier]
         }
 
-        if(parent == null){
+        if (parent == null) {
             return null
         }
 
@@ -122,11 +123,11 @@ class SymbolTable (val parent: SymbolTable?){
     fun recoverSp(codeGenerator: CodeGenerator) {
         //checks if we have loaded any variable to memory in current scope so
         // sp has decreased, and adds the offset to the sp
-        if(sp > 0) {
+        if (sp > 0) {
 
             var value = sp
             sp -= value
-            while(value > 1024) {
+            while (value > 1024) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, AddInstr(Register.sp, Register.sp, 1024))
                 value -= 1024
             }
@@ -134,22 +135,22 @@ class SymbolTable (val parent: SymbolTable?){
         }
     }
 
-    fun addMatchFunctions(highOrder : String, functionParam : String) {
+    fun addMatchFunctions(highOrder: String, functionParam: String) {
         functionsToHO.put(highOrder, functionParam)
         var tab = parent
-        while(tab != null) {
+        while (tab != null) {
             tab.functionsToHO.put(highOrder, functionParam)
             tab = tab.parent
         }
     }
 
-    fun lookForFunctionParam(highOrder : String) : String? {
+    fun lookForFunctionParam(highOrder: String): String? {
 
-        if(functionsToHO.containsKey(highOrder)){
+        if (functionsToHO.containsKey(highOrder)) {
             return functionsToHO[highOrder]
         }
 
-        if(parent == null){
+        if (parent == null) {
             return null
         }
 

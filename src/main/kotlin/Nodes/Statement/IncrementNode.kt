@@ -1,12 +1,16 @@
 package main.kotlin.Nodes.Statement
 
 
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.*
-import main.kotlin.Nodes.*
+import main.kotlin.Nodes.ArrayLitNode
+import main.kotlin.Nodes.FunctionNode
+import main.kotlin.Nodes.Node
+import main.kotlin.Nodes.PairElemNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
@@ -14,7 +18,7 @@ import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 
-class IncrementNode(val id : String, override val ctx: BasicParser.IncrementContext) : Node {
+class IncrementNode(val id: String, override val ctx: BasicParser.IncrementContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -37,7 +41,7 @@ class IncrementNode(val id : String, override val ctx: BasicParser.IncrementCont
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
-         /* Calculate the position in the stack */
+        /* Calculate the position in the stack */
         val identOffset = symbolTable?.getValueOffset(id, codeGenerator)
         var inMemory = "[sp]"
         if (identOffset != 0) {

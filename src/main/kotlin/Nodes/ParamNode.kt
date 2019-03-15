@@ -1,9 +1,12 @@
 package Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.DoubleDeclare
-import main.kotlin.Nodes.*
+import main.kotlin.Nodes.ArrayTypeNode
+import main.kotlin.Nodes.FunctionNode
+import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
@@ -23,7 +26,7 @@ class ParamNode(
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         val offset = type.size //gets size of the data type
-        symbolTable?.declareVariable(id, 0,-symbolTable!!.sp) //Save variable location in symbol table
+        symbolTable?.declareVariable(id, 0, -symbolTable!!.sp) //Save variable location in symbol table
 
         symbolTable!!.sp += offset // add offset to stack pointer
     }
@@ -32,7 +35,7 @@ class ParamNode(
         return this
     }
 
-    override fun getBaseType() : LitTypes{
+    override fun getBaseType(): LitTypes {
         var v = type
         while (v is ArrayTypeNode) {
             v = v.type
@@ -51,7 +54,7 @@ class ParamNode(
             // if there is already a variable with that name -> error
             errors.addError(DoubleDeclare(ctx, id, value.ctx!!.start.line))
         } else {
-            if(type.getBaseType() == LitTypes.FuncWacc) {
+            if (type.getBaseType() == LitTypes.FuncWacc) {
                 symbolTable!!.inHighOrderFunction = Pair(true, symbolTable!!.currentFunction)
             }
             table.add(this, id)

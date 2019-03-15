@@ -14,7 +14,9 @@ import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.*
+import main.kotlin.Utils.Condition
+import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
@@ -42,16 +44,16 @@ class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicPar
 
 
         /* If the values are not constant then we can't optimize the expression */
-        if(left !is IntLitNode && right !is IntLitNode){
+        if (left !is IntLitNode && right !is IntLitNode) {
             return this
         }
 
         /* (Int, Int) -> Int operators*/
-        if(eqOp == null){
+        if (eqOp == null) {
             val newVal = getIntOperator()((left as IntLitNode).int_val, (right as IntLitNode).int_val)
 
             /* Ensure the overflow error occurs at runtime */
-            if(overFlowCheck(newVal)){
+            if (overFlowCheck(newVal)) {
                 return this
             }
 
@@ -64,20 +66,20 @@ class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicPar
         return BoolLitNode(boolVal.toString(), null)
     }
 
-    private fun getCompOperator(): (Long, Long)-> (Boolean) {
-        if(eqOp!!.GREAT() != null){
+    private fun getCompOperator(): (Long, Long) -> (Boolean) {
+        if (eqOp!!.GREAT() != null) {
             return { a: Long, b: Long -> a > b }
         }
-        if(eqOp.GREAT_EQ() != null){
+        if (eqOp.GREAT_EQ() != null) {
             return { a: Long, b: Long -> a >= b }
         }
-        if(eqOp.LESS() != null){
+        if (eqOp.LESS() != null) {
             return { a: Long, b: Long -> a < b }
         }
-        if(eqOp.LESS_EQ() != null){
+        if (eqOp.LESS_EQ() != null) {
             return { a: Long, b: Long -> a <= b }
         }
-        if(eqOp.EQ() != null){
+        if (eqOp.EQ() != null) {
             return { a: Long, b: Long -> a == b }
         }
 
@@ -85,22 +87,22 @@ class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicPar
     }
 
     private fun getIntOperator(): Long.(Long) -> (Long) {
-        if(mulDiv != null){
-            if(mulDiv.MULT() != null){
+        if (mulDiv != null) {
+            if (mulDiv.MULT() != null) {
                 return Long::times
             }
-            if(mulDiv.DIV() != null){
+            if (mulDiv.DIV() != null) {
                 return Long::div
             }
             return Long::rem
         }
-        if(addSub!!.PLUS() != null){
+        if (addSub!!.PLUS() != null) {
             return Long::plus
         }
         return Long::minus
     }
 
-    private fun overFlowCheck(value: Long): Boolean{
+    private fun overFlowCheck(value: Long): Boolean {
         return value >= Integer.MAX_VALUE
     }
 

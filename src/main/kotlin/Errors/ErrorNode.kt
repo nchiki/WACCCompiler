@@ -1,5 +1,5 @@
 package main.kotlin.Errors
 
 interface ErrorNode {
-    fun printError() : String
+    fun printError(): String
 }

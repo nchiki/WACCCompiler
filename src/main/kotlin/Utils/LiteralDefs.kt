@@ -2,16 +2,17 @@ package main.kotlin.Utils
 
 
 interface LiteralDefs {
-    fun getString() : String
-    fun getLength() : Int
+    fun getString(): String
+    fun getLength(): Int
 }
 
 //type of a literal string to be printed in data section
-class StringLitDef(val str : String) : LiteralDefs{
-    override fun getLength() : Int{
+class StringLitDef(val str: String) : LiteralDefs {
+    override fun getLength(): Int {
         return str.replace("\"", "").replace("\'", "").length
     }
-    override fun getString() : String{
+
+    override fun getString(): String {
         return str
     }
 }
@@ -133,17 +134,19 @@ class IntAppendDef : LiteralDefs {
     override fun getString(): String {
         return "\"%d\\0\""
     }
+
     override fun getLength(): Int {
         return 3
     }
 }
 
 //classifier of string to be printed in data section
-class StringAppendDef : LiteralDefs{
-    override fun getLength() : Int{
+class StringAppendDef : LiteralDefs {
+    override fun getLength(): Int {
         return 5
     }
-    override fun getString() : String{
+
+    override fun getString(): String {
         return "\"%.*s\\0\""
     }
 }

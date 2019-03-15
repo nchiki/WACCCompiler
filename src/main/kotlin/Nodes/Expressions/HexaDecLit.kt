@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : ExprNode {
+class HexaDecLit(val sequence: String, override val ctx: ParserRuleContext) : ExprNode {
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
@@ -20,7 +20,7 @@ class HexaDecLit(val sequence : String, override val ctx: ParserRuleContext) : E
     override val weight: Int
         get() = 1
 
-    fun convertToInt() : Int{
+    fun convertToInt(): Int {
         return Integer.parseInt(sequence.substring(2), 16)
     }
 

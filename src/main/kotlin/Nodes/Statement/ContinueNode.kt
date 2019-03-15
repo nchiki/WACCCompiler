@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.NotInLoop
@@ -9,7 +10,7 @@ import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.ValueTable
 
-class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node{
+class ContinueNode(override val ctx: BasicParser.ContinueContext) : Node {
     override var symbolTable: SymbolTable? = null
 
     override val weight: Int

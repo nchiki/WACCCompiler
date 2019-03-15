@@ -1,25 +1,28 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairNode
 import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expressions.BinaryOpNode
 import main.kotlin.Nodes.Expressions.BoolOpNode
 import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.*
+import main.kotlin.Utils.LitTypes
+import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
-import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
+import kotlin.system.exitProcess
 
-class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
+class PrintStatNode(var expr: ExprNode, override val ctx: BasicParser.PrintContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -33,7 +36,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0,
                 codeGenerator.getLastUsedReg(), null))
 
-        if(codeGenerator.getLastUsedReg() != Register.r0) {
+        if (codeGenerator.getLastUsedReg() != Register.r0) {
             codeGenerator.freeReg(codeGenerator.getLastUsedReg())
         }
 
@@ -45,7 +48,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
         if (expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))
         } else {
-            if(label != "") {
+            if (label != "") {
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr(label))
 
             }
@@ -57,9 +60,9 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
         return this
     }
 
-    fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {
-        if(expr is ArrayTypeNode) {
-            if(expr.getBaseType().equals(LitTypes.CharWacc)){
+    fun checkType(codeGenerator: CodeGenerator, expr: Node): String {
+        if (expr is ArrayTypeNode) {
+            if (expr.getBaseType().equals(LitTypes.CharWacc)) {
                 val label = "p_print_string"
                 codeGenerator.addHelper(label)
 
@@ -68,7 +71,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
             return "p_print_reference"
         }
 
-        if(expr is ParamNode) {
+        if (expr is ParamNode) {
             return checkType(codeGenerator, expr.type)
         }
 
@@ -76,7 +79,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
             return checkBaseType(expr as ExprNode)
         }
 
-        if(expr is ArrayElemNode){
+        if (expr is ArrayElemNode) {
             val identifierType = symbolTable?.lookupSymbol(expr.identifier.id)?.getBaseType()!!
             return when (identifierType) {
                 LitTypes.IntWacc -> "p_print_int"
@@ -120,7 +123,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
     }
 
     // Returns the print function for the epxr node that is passed in
-    private fun checkBaseType(expr: ExprNode) : String {
+    private fun checkBaseType(expr: ExprNode): String {
         val type = expr.getBaseType()
 
         // Print Char
@@ -152,7 +155,7 @@ class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintCon
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
         expr.semanticCheck(errors, table)

@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class OctalLit(val sequence : String, override val ctx: ParserRuleContext?) : ExprNode {
+class OctalLit(val sequence: String, override val ctx: ParserRuleContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
@@ -21,7 +21,7 @@ class OctalLit(val sequence : String, override val ctx: ParserRuleContext?) : Ex
     override val weight: Int
         get() = 1
 
-    fun convertToInt() : Int{
+    fun convertToInt(): Int {
         var octal = sequence.substring(2).toInt()
         var result = 0
         var i = 0.0

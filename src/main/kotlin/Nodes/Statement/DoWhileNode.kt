@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -18,7 +19,7 @@ import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
 
-class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicParser.DoWhileContext) : Node {
+class DoWhileNode(val stat: Node, val expr: ExprNode, override val ctx: BasicParser.DoWhileContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -43,7 +44,7 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
         val reg = codeGenerator.getLastUsedReg()
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
-        if(reg != Register.r0) {
+        if (reg != Register.r0) {
             codeGenerator.freeReg(reg)
         }
         codeGenerator.addLabel(endLabel, oldScope)
@@ -64,7 +65,7 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 

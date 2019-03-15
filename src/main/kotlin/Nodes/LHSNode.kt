@@ -1,7 +1,6 @@
 package main.kotlin.Nodes
 
 import BasicParser
-import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
@@ -36,7 +35,7 @@ class LHSNode(val nodeType: Any?, val id: String, val line: Int, val pos: Int,
             val addressReg = codeGenerator.getLastUsedReg()
 
             /* Store RHS value into the address of the array element */
-            if((nodeType !is ArrayTypeNode && nodeType.resolvesToByte()) || (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc) || getBaseType().equals(LitTypes.StringWacc))) {
+            if ((nodeType !is ArrayTypeNode && nodeType.resolvesToByte()) || (getBaseType().equals(LitTypes.CharWacc) || getBaseType().equals(LitTypes.BoolWacc) || getBaseType().equals(LitTypes.StringWacc))) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StrBInstr(regRHS, "[$addressReg]"))
             } else {
                 codeGenerator.addInstruction(codeGenerator.curLabel, StoreInstr(regRHS, "[$addressReg]"))

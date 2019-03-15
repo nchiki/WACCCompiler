@@ -66,12 +66,12 @@ class BoolOpNode(var left: ExprNode, var right: ExprNode, val operator: BasicPar
         right = right.optimise(valueTable) as ExprNode
 
         /* If the left and right value aren't constant then we can't optimise this */
-        if(left !is BoolLitNode || right !is BoolLitNode){
+        if (left !is BoolLitNode || right !is BoolLitNode) {
             return this
         }
 
         var opFunc = { a: Boolean, b: Boolean -> a && b }
-        if(operator.OR() != null){
+        if (operator.OR() != null) {
             opFunc = { a: Boolean, b: Boolean -> a || b }
         }
 

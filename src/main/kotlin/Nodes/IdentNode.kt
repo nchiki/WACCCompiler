@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNode {
+class IdentNode(val id: String, override val ctx: ParserRuleContext?) : ExprNode {
 
     override val size: Int
         get() {
@@ -23,7 +23,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
                 return 0
             }
             val sizeNod = symbolTable!!.lookupSymbol(id)
-            if(sizeNod != null) {
+            if (sizeNod != null) {
                 return sizeNod.size
             } else {
                 return 4
@@ -31,23 +31,23 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
         }
 
     override val weight: Int
-        get() =  1
+        get() = 1
 
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        if(symbolTable!!.getFunction(id) != null) {
+        if(symbolTable!!.getFunction(id) != null && symbolTable!!.lookupSymbol(id) == null) {
             symbolTable?.declareVariable(id, symbolTable!!.sp, 4)
             //symbolTable!!.sp += 4// add offset to stack pointer
         }
         val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
 
         var inMemory = "[sp]"
-        if(offset != 0) {
-           /* if (offset < 0) {
-                inMemory = "[sp, #${-offset}]"
-            } else { */
-                inMemory = "[sp, #${offset}]"
+        if (offset != 0) {
+            /* if (offset < 0) {
+                 inMemory = "[sp, #${-offset}]"
+             } else { */
+            inMemory = "[sp, #${offset}]"
             //}
         }
         val reg = codeGenerator.getFreeRegister()
@@ -56,11 +56,11 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
         val expr = symbolTable!!.lookupSymbol(id)
 
         //check for every possible type of identNode
-        if(expr is ArrayTypeNode) {
+        if (expr is ArrayTypeNode) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
-        } else if(expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
+        } else if (expr is ExprNode && expr.getBaseType() == LitTypes.BoolWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
-        }else if (expr is ExprNode && expr.getBaseType() == LitTypes.CharWacc) {
+        } else if (expr is ExprNode && expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadSBInstr(reg, inMemory))
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
@@ -71,33 +71,33 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
     override fun optimise(valueTable: ValueTable): Node {
         val value = valueTable.getValue(id)
 
-        if(value == null){
+        if (value == null) {
             return this
         }
 
-        if(value.dynamic){
+        if (value.dynamic) {
             return this
         }
 
-        if(value is BoolConstant){
+        if (value is BoolConstant) {
             return BoolLitNode(value.value.toString(), null)
         }
 
         return IntLitNode((value as IntConstant).value, null)
     }
 
-    override fun getBaseType() : LitTypes {
+    override fun getBaseType(): LitTypes {
         return LitTypes.IdentWacc
     }
 
-    fun getValueType(table: SymbolTable) : ExprNode? {
+    fun getValueType(table: SymbolTable): ExprNode? {
         return table.lookupSymbol(id)
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.lookupSymbol(id) == null){
-            if(table.getFunction(id) == null) {
+        if (table.lookupSymbol(id) == null) {
+            if (table.getFunction(id) == null) {
                 errors.addError(UndefinedVariable(ctx!!, id))
             }
         }

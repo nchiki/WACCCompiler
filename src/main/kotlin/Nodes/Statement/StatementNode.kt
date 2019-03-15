@@ -1,14 +1,14 @@
 package Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 import kotlin.system.exitProcess
 
-class StatementNode(var stat : Node, override val ctx: BasicParser.StatementContext?): Node {
+class StatementNode(var stat: Node, override val ctx: BasicParser.StatementContext?) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -26,8 +26,9 @@ class StatementNode(var stat : Node, override val ctx: BasicParser.StatementCont
         stat.generateCode(codeGenerator)
         symbolTable!!.recoverSp(codeGenerator)
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
         var childTable = SymbolTable(table)

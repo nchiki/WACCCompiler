@@ -1,25 +1,23 @@
-import Nodes.*
+import Nodes.DeclNode
 import Nodes.Literals.PairLitNode
 import Nodes.PairType.PairElemTypeNode
 import Nodes.PairType.PairNode
-import org.jetbrains.annotations.NotNull
+import Nodes.ParamListNode
+import Nodes.ParamNode
+import Nodes.StatementNode
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Expression.ParenNode
 import main.kotlin.Nodes.Expressions.*
 import main.kotlin.Nodes.Literals.BoolLitNode
-import main.kotlin.Nodes.Statement.AssignNode
+import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Statement.*
+import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.getType
+import org.jetbrains.annotations.NotNull
 import src.main.kotlin.IfCondNode
 import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-import main.kotlin.Nodes.Literals.NewPairNode
-import main.kotlin.Nodes.Statement.StatListNode
-import main.kotlin.Utils.LitTypes
-import java.lang.Exception
-import main.kotlin.Nodes.Statement.DecrementNode
-import main.kotlin.Nodes.StructLiterNode
 import kotlin.system.exitProcess
 
 
@@ -57,13 +55,13 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitIntLit(@NotNull ctx: BasicParser.IntLitContext): Node {
-        val int_val : Int
+        val int_val: Int
         try {
             int_val = ctx.INT_LIT().text.toInt()
-        } catch (e : Exception) {
-            if(ctx.getParent() is BasicParser.UnOpContext){
+        } catch (e: Exception) {
+            if (ctx.getParent() is BasicParser.UnOpContext) {
                 val parent = ctx.getParent() as BasicParser.UnOpContext
-                if(parent.unaryOper().text == "-" && ctx.INT_LIT().text.toLong().equals(2147483648)){
+                if (parent.unaryOper().text == "-" && ctx.INT_LIT().text.toLong().equals(2147483648)) {
                     return IntLitNode(ctx.INT_LIT().text.toLong(), ctx)
                 }
             }
@@ -150,8 +148,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
     override fun visitAssignL_Iden(ctx: BasicParser.AssignL_IdenContext): Node {
         val id = ctx.IDENT()
-        val text : String
-        if(id != null) {
+        val text: String
+        if (id != null) {
             text = id.text
         } else {
             text = ""
@@ -163,7 +161,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val pairELem = visit(ctx.pairElem()) as PairElemNode
         val exprId = pairELem.expr as IdentNode
         val id = exprId.id
-        return LHSNode(pairELem,id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
+        return LHSNode(pairELem, id, ctx.start!!.line, ctx.start.charPositionInLine, ctx)
     }
 
     override fun visitAssignR_Exp(ctx: BasicParser.AssignR_ExpContext?): Node {
@@ -174,6 +172,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     override fun visitParen(ctx: BasicParser.ParenContext): Node {
         return ParenNode(visit(ctx.expr()) as ExprNode, ctx)
     }
+
     override fun visitAssignR_Call(ctx: BasicParser.AssignR_CallContext?): Node {
         val funId = ctx?.IDENT()!!.text
         var argList = arrayListOf<ExprNode>()
@@ -219,10 +218,10 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairElemType(ctx: BasicParser.PairElemTypeContext): Node {
-        if(ctx.PAIR() != null) {
+        if (ctx.PAIR() != null) {
             return PairElemTypeNode(null, "pair", ctx)
         } else {
-            if(ctx.base_type() != null) {
+            if (ctx.base_type() != null) {
                 return PairElemTypeNode(visit(ctx.getChild(0)) as ExprNode, "", ctx)
             } else {
                 return PairElemTypeNode(visit(ctx.getChild(0)) as ExprNode, "", ctx)
@@ -234,7 +233,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val id = ctx.IDENT().text
         var exprs = arrayListOf<ExprNode>()
         var i = 0
-        while(ctx.expr(i) != null) {
+        while (ctx.expr(i) != null) {
             exprs.add(visit(ctx.expr(i)) as ExprNode)
             i++
         }
@@ -263,7 +262,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val operator = ctx.addSub()
 
-        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+        if (left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)) {
             println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
                     "position ${ctx.start.charPositionInLine}")
             exitProcess(100)
@@ -278,7 +277,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val operator = ctx.multDiv()
 
-        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+        if (left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)) {
             println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
                     "position ${ctx.start.charPositionInLine}")
             exitProcess(100)
@@ -293,7 +292,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
 
         val operator = ctx.eq_Op()
 
-        if(left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)){
+        if (left.getBaseType().equals(LitTypes.StringWacc) || right.getBaseType().equals(LitTypes.StringWacc)) {
             println("Invalid Syntax using ${operator} on line ${ctx.start.line} at " +
                     "position ${ctx.start.charPositionInLine}")
             exitProcess(100)
@@ -328,7 +327,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val listStatNodes = mutableListOf<Node>()
 
         // iterates through the parameters adding them to the list
-        if(stats != null) {
+        if (stats != null) {
             for (stat in stats) {
                 listStatNodes.add(visit(stat))
             }
@@ -341,7 +340,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         return StatementNode(stat, ctx)
     }
 
-    override fun visitArgList(ctx: BasicParser.ArgListContext) : Node {
+    override fun visitArgList(ctx: BasicParser.ArgListContext): Node {
         val exprs = ctx.expr()
         val exprList = ArrayList<ExprNode>()
         for (expr in exprs) {
@@ -390,7 +389,7 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
         val listParamNodes = mutableListOf<ParamNode>()
 
         // iterates through the parameters adding them to the list
-        if(params != null) {
+        if (params != null) {
             for (param in params) {
                 listParamNodes.add(visit(param) as ParamNode)
             }
@@ -429,8 +428,8 @@ class WaccVisitor : BasicParserBaseVisitor<Node>() {
     }
 
     override fun visitPairElem(ctx: BasicParser.PairElemContext?): Node {
-        val pos :Int
-        if(ctx?.SND() != null) {
+        val pos: Int
+        if (ctx?.SND() != null) {
             pos = 1
         } else {
             pos = 0

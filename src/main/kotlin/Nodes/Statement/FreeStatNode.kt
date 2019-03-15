@@ -3,19 +3,19 @@ import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.Literals.NewPairNode
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.NullReferDef
 import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContext) : Node {
+class FreeStatNode(val expr: ExprNode, override val ctx: BasicParser.FreeContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -33,7 +33,7 @@ class FreeStatNode(val expr : ExprNode, override val ctx: BasicParser.FreeContex
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 

@@ -9,11 +9,11 @@ class ValueTable(val parent: ValueTable?) {
     val table = HashMap<String, ConstantValue>()
 
     fun getValue(identifier: String): ConstantValue? {
-        if(table.containsKey(identifier)){
+        if (table.containsKey(identifier)) {
             return table.get(identifier)
         }
 
-        if(parent == null){
+        if (parent == null) {
             return null
         }
 
@@ -29,37 +29,37 @@ class ValueTable(val parent: ValueTable?) {
     }
 
     fun setIntValue(identifier: String, value: Long) {
-        if(table.containsKey(identifier)) {
+        if (table.containsKey(identifier)) {
             val newConstant = IntConstant(value)
             newConstant.dynamic = false
             table.replace(identifier, newConstant)
             return
         }
 
-        if(parent != null){
+        if (parent != null) {
             parent.setIntValue(identifier, value)
         }
     }
 
     fun setBoolValue(identifier: String, value: Boolean) {
-        if(table.containsKey(identifier)) {
+        if (table.containsKey(identifier)) {
             val newConstant = BoolConstant(value)
             newConstant.dynamic = false
             table.replace(identifier, newConstant)
             return
         }
 
-        if(parent != null){
+        if (parent != null) {
             parent.setBoolValue(identifier, value)
         }
     }
 
     fun markAllAsDynamic() {
-        for((_, value) in table){
+        for ((_, value) in table) {
             value.dynamic = true
         }
 
-        if(parent != null){
+        if (parent != null) {
             parent.markAllAsDynamic()
         }
     }
@@ -67,7 +67,7 @@ class ValueTable(val parent: ValueTable?) {
     fun setDynamic(identifier: String, dynamic: Boolean) {
         val value = getValue(identifier)
 
-        if(value == null){
+        if (value == null) {
             return
         }
 

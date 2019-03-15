@@ -10,7 +10,6 @@ import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.OverflowDef
 import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
@@ -36,7 +35,7 @@ class UnaryOpNode(var operand: ExprNode, val operator: BasicParser.UnaryOperCont
         operand = operand.optimise(valueTable) as ExprNode
 
         /* Can only optimise !true or !false */
-        if(operand !is BoolLitNode || operator.NOT() == null){
+        if (operand !is BoolLitNode || operator.NOT() == null) {
             return this
         }
 
@@ -72,7 +71,7 @@ class UnaryOpNode(var operand: ExprNode, val operator: BasicParser.UnaryOperCont
                     codeGenerator.freeReg(otherReg)
                 }
             }
-        //for the add instruction we dont need to do anything since its a positive number
+            //for the add instruction we dont need to do anything since its a positive number
             else -> return
         }
 
