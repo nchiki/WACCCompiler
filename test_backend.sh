@@ -16,6 +16,7 @@ BREAKCONTINUE="tests/valid/breakContinue"
 SCOPE="tests/valid/scope"
 SIMPLE_FUNCTIONS="tests/valid/function/simple_functions"
 NESTED_FUNCTIONS="tests/valid/function/nested_functions"
+HIGHERORDER="tests/valid/function/higher_order"
 RUNTIME_ERROR="tests/valid/runtimeErr"
 MACRO="tests/valid/macros"
 STRUCT="tests/valid/struct"
@@ -65,6 +66,9 @@ elif [[ $1 == "nested-function" ]]
 then
     DIRECTORY=$NESTED_FUNCTIONS
     USE_REF_COMPILER="YES"
+elif [[ $1 == "higher-order-function" ]]
+then
+    DIRECTORY=$HIGHERORDER
 elif [[ $1 == "runtime-error" ]]
 then
     DIRECTORY=$RUNTIME_ERROR
