@@ -15,10 +15,8 @@ fun main(args: Array<String>) {
 
         if (args.size > 1) {
             if (args[0].equals("-o")) {
-                    println("optimising")
                     optimise = true
             }
-                println("reading from ${args[1]} ")
                 inputFile = args[1]
         }
 

@@ -38,7 +38,6 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     var highOrderFunction : HigherOrderFuncsNode? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        println("generating code on $expr")
         when (type) {
             RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
