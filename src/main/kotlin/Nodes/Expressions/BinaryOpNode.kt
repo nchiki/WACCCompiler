@@ -42,7 +42,7 @@ class BinaryOpNode(var left: ExprNode, var right: ExprNode, val addSub: BasicPar
 
 
         /* If the values are not constant then we can't optimize the expression */
-        if(left !is IntLitNode && right !is IntLitNode){
+        if(left !is IntLitNode || right !is IntLitNode){
             return this
         }
 
