@@ -36,7 +36,7 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
     override var symbolTable: SymbolTable? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        if(symbolTable!!.getFunction(id) != null) {
+        if(symbolTable!!.getFunction(id) != null && symbolTable!!.lookupSymbol(id) == null) {
             symbolTable?.declareVariable(id, symbolTable!!.sp, 4)
             //symbolTable!!.sp += 4// add offset to stack pointer
         }
