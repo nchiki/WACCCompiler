@@ -1,10 +1,10 @@
 package Nodes
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Nodes.Node
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 
 class ParamListNode(// list of parameterNodes
@@ -15,11 +15,12 @@ class ParamListNode(// list of parameterNodes
     override val weight: Int
         get() = 0
 
-    override fun generateCode(codeGenerator : CodeGenerator) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
         for (param in listParamNodes) {
             param.generateCode(codeGenerator)
         }
     }
+
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         // iterates through the list of parameters, checking semantics of each of them

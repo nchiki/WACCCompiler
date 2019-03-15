@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.DeclNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -17,7 +18,7 @@ import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: BasicParser.ForLoopContext): Node {
+class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: BasicParser.ForLoopContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -45,7 +46,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
         val reg = codeGenerator.getLastUsedReg()
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
-        if(reg != Register.r0) {
+        if (reg != Register.r0) {
             codeGenerator.freeReg(reg)
         }
         cond.third.generateCode(codeGenerator)
@@ -75,7 +76,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
         cond.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
         this.symbolTable!!.inLoop = false
@@ -84,7 +85,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 
 }
 
-class ForCondNode(val first : Node, val second : ExprNode, val third: Node, override val ctx: ParserRuleContext) : Node {
+class ForCondNode(val first: Node, val second: ExprNode, val third: Node, override val ctx: ParserRuleContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -109,16 +110,16 @@ class ForCondNode(val first : Node, val second : ExprNode, val third: Node, over
         // - infinite loop?
 
         //checking the three different expressions of a loop cond
-        if(first !is DeclNode && first !is AssignNode) {
+        if (first !is DeclNode && first !is AssignNode) {
             errors.addError(WrongNode(ctx, "Declaration or Assignment", first, table))
         } else {
             // semantic check of either AssignNode or DeclNode
             first.semanticCheck(errors, table)
         }
 
-        if(second.getBaseType() != LitTypes.BoolWacc) {
+        if (second.getBaseType() != LitTypes.BoolWacc) {
             //expecting a boolean expression
-            errors.addError(IncompatibleTypes(ctx,"BOOL", second, table))
+            errors.addError(IncompatibleTypes(ctx, "BOOL", second, table))
         } else {
             second.semanticCheck(errors, table)
         }

@@ -1,29 +1,30 @@
 package Nodes
 
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.DoubleDeclare
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.StoreInstr
+import main.kotlin.Instructions.StrBInstr
+import main.kotlin.Instructions.SubInstr
 import main.kotlin.Nodes.*
 import main.kotlin.Nodes.Literals.BoolLitNode
-
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
-
 import kotlin.system.exitProcess
 
 
 class DeclNode(// var name
         val id: String, // type of var
         val type: ExprNode, // assigned rhs
-        var rhs: RHSNode, override val ctx: BasicParser.DeclContext?, val ctxStruct : BasicParser.StructMemberContext?) : Node {
+        var rhs: RHSNode, override val ctx: BasicParser.DeclContext?, val ctxStruct: BasicParser.StructMemberContext?) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -54,7 +55,7 @@ class DeclNode(// var name
 
         //check if rhs is PairNode
         if (rhs.PairLit != null || rhs.getBaseType() == LitTypes.PairWacc) {
-            if ( type !is ArrayTypeNode && (rhs.getBaseType() == LitTypes.CharWacc
+            if (type !is ArrayTypeNode && (rhs.getBaseType() == LitTypes.CharWacc
                             || rhs.getBaseType() == LitTypes.BoolWacc)) {
                 codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), "[sp]"))
             } else {
@@ -66,9 +67,7 @@ class DeclNode(// var name
         else if (rhs.type == RHS_type.expr && (rhs.expr!!.getBaseType() == LitTypes.CharWacc
                         || rhs.expr!!.getBaseType() == LitTypes.BoolWacc)) {
             codeGenerator.addInstruction(label, StrBInstr(codeGenerator.getLastUsedReg(), inMemory))
-        }
-
-        else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
+        } else if (rhs.getBaseType() != LitTypes.IdentWacc && rhs.getBaseType() != LitTypes.PairWacc) {
             //if RHS is function call
             if (rhs.type == RHS_type.call) {
                 if (!symbolTable!!.isHigherOrderFunction(rhs.funId!!)) {
@@ -87,9 +86,7 @@ class DeclNode(// var name
         //declaration of newpair
         else if (rhs.type == RHS_type.newpair) {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
-        }
-
-        else {
+        } else {
             codeGenerator.addInstruction(label, StoreInstr(codeGenerator.getLastUsedReg(), inMemory))
         }
 
@@ -103,26 +100,26 @@ class DeclNode(// var name
         rhs = rhs.optimise(valueTable)
 
         /* Optimise only for integer and boolean constants */
-        if(type !is IntLitNode && type !is BoolLitNode && type !is BaseNode){
+        if (type !is IntLitNode && type !is BoolLitNode && type !is BaseNode) {
             return this
         }
 
-        if(type is BaseNode && type.getBaseType() != LitTypes.IntWacc && type.getBaseType() != LitTypes.BoolWacc){
+        if (type is BaseNode && type.getBaseType() != LitTypes.IntWacc && type.getBaseType() != LitTypes.BoolWacc) {
             return this
         }
 
-        if(rhs.type.equals(RHS_type.expr)){
+        if (rhs.type.equals(RHS_type.expr)) {
             val rhsExpr = rhs.expr!!
-            if(rhsExpr is IntLitNode){
+            if (rhsExpr is IntLitNode) {
                 valueTable.addIntValue(id, rhsExpr.int_val)
-            }else if(rhsExpr is BoolLitNode){
+            } else if (rhsExpr is BoolLitNode) {
                 valueTable.addBoolValue(id, rhsExpr.bool_val.toBoolean())
-            }else{
+            } else {
                 /* The value of the rhs is dynamic */
-                if(type.getBaseType().equals(LitTypes.IntWacc)){
+                if (type.getBaseType().equals(LitTypes.IntWacc)) {
                     valueTable.addIntValue(id, 0)
                     valueTable.setDynamic(id, true)
-                }else if(type.getBaseType().equals(LitTypes.BoolWacc)){
+                } else if (type.getBaseType().equals(LitTypes.BoolWacc)) {
                     valueTable.addBoolValue(id, true)
                     valueTable.setDynamic(id, true)
                 }

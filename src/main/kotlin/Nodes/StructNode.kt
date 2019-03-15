@@ -9,7 +9,7 @@ import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class StructNode(val id : String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode {
+class StructNode(val id: String, var exprs: List<Node>, override val ctx: ParserRuleContext?) : ExprNode {
 
     val data = HashMap<String, ExprNode>() //data section to be printed before main
 

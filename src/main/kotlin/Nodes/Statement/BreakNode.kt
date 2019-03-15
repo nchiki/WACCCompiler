@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.NotInLoop
@@ -18,7 +19,7 @@ class BreakNode(override val ctx: BasicParser.BreakContext) : Node {
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
-        if(!table.inLoop) {
+        if (!table.inLoop) {
             errors.addError(NotInLoop(ctx))
         }
     }

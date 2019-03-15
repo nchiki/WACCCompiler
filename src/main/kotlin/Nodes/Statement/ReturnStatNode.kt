@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -14,7 +15,7 @@ import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnContext): Node {
+class ReturnStatNode(var expr: ExprNode, override val ctx: BasicParser.ReturnContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -24,7 +25,7 @@ class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnC
     override val weight: Int
         get() = 0
 
-    override fun generateCode(codeGenerator : CodeGenerator) {
+    override fun generateCode(codeGenerator: CodeGenerator) {
         // Generate code for expression
         expr.generateCode(codeGenerator)
 
@@ -49,25 +50,25 @@ class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnC
         this.symbolTable = table
         expr.semanticCheck(errors, table)
 
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 
         var realExpr = expr
-        if (expr is IdentNode){
+        if (expr is IdentNode) {
             val exprVal = table.lookupSymbol((expr as IdentNode).id)
-            if(exprVal == null){
+            if (exprVal == null) {
                 errors.addError(UndefinedVariable(ctx, (expr as IdentNode).id))
                 return
             }
             realExpr = exprVal
         }
 
-        if(table.currentFunction == null){
+        if (table.currentFunction == null) {
             exitProcess(100)
         }
 
-        if(realExpr.getBaseType() != table.currentFunction?.getBaseType()){
+        if (realExpr.getBaseType() != table.currentFunction?.getBaseType()) {
             errors.addError(IncompatibleTypes(ctx, table.currentFunction?.getBaseType().toString(), realExpr, table))
         }
 

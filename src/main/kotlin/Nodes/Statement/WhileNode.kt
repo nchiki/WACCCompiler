@@ -1,10 +1,10 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.BLInstr
 import main.kotlin.Instructions.BranchInstr
 import main.kotlin.Instructions.CmpInstr
 import main.kotlin.Nodes.BaseNode
@@ -19,7 +19,7 @@ import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParser.WhileContext): Node {
+class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParser.WhileContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -43,7 +43,7 @@ class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParse
         val reg = codeGenerator.getLastUsedReg()
         codeGenerator.addInstruction(label, CmpInstr(reg, 1, ""))
         codeGenerator.addInstruction(label, BranchInstr(endLabel, Condition.NE))
-        if(reg != Register.r0) {
+        if (reg != Register.r0) {
             codeGenerator.freeReg(reg)
         }
 
@@ -64,8 +64,8 @@ class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParse
         expr = expr.optimise(valueTable) as ExprNode
 
         /* If the expression always evaluates to false we skip the while */
-        if(expr is BoolLitNode){
-            if(!(expr as BoolLitNode).bool_val.toBoolean()){
+        if (expr is BoolLitNode) {
+            if (!(expr as BoolLitNode).bool_val.toBoolean()) {
                 return SkipNode(null)
             }
         }
@@ -86,14 +86,14 @@ class WhileNode(var expr: ExprNode, var stat: Node, override val ctx: BasicParse
         expr.semanticCheck(errors, table)
         stat.semanticCheck(errors, this.symbolTable!!)
 
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 
         if (expr.getBaseType() == LitTypes.IdentWacc) {
             val value = table.lookupSymbol((expr as IdentNode).id)
             if (value == null) {
-                if(symbolTable!!.getFunction((expr as IdentNode).id) != null && symbolTable!!.inHighOrderFunction.first){
+                if (symbolTable!!.getFunction((expr as IdentNode).id) != null && symbolTable!!.inHighOrderFunction.first) {
                     return
                 }
                 errors.addError(UndefinedVariable(ctx.expr(), (expr as IdentNode).id))

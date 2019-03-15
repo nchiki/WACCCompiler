@@ -79,7 +79,7 @@ class CodeGenerator {
         curScope = function
     }
 
-    fun addStruct(struct_id : String) {
+    fun addStruct(struct_id: String) {
         val label = "s_$struct_id"
         structs.put(label, ArrayList())
         addLabel(label, null)

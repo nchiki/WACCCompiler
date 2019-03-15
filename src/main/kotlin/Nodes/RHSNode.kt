@@ -2,7 +2,6 @@ package main.kotlin.Nodes
 
 import BasicParser
 import Nodes.PairType.PairNode
-import Nodes.ParamNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
@@ -23,7 +22,7 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
+class RHSNode(val type: RHS_type, val funId: String?, val args: ArgListNode?, val line: Int, val pos: Int,
               var expr: ExprNode?, val newPairNode: NewPairNode?, val PairLit: PairElemNode?,
               val ArrayLit: ArrayLitNode?, override val ctx: BasicParser.AssignRHSContext) : ExprNode {
 
@@ -35,7 +34,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     override val weight: Int
         get() = 0
 
-    var highOrderFunction : HigherOrderFuncsNode? = null
+    var highOrderFunction: HigherOrderFuncsNode? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         when (type) {
@@ -52,10 +51,10 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     // Add the instructions for a function call
     private fun callGenerateCode(codeGenerator: CodeGenerator) {
         val label = codeGenerator.curLabel
-        if(symbolTable!!.isHigherOrderFunction(funId!!)) {
+        if (symbolTable!!.isHigherOrderFunction(funId!!)) {
             generateHighCallCode(codeGenerator, label)
-        } else if(symbolTable!!.inHighOrderFunction.first  &&
-                symbolTable!!.lookForFunctionParam(symbolTable!!.inHighOrderFunction.second!!.id)!= null) {
+        } else if (symbolTable!!.inHighOrderFunction.first &&
+                symbolTable!!.lookForFunctionParam(symbolTable!!.inHighOrderFunction.second!!.id) != null) {
             val label = codeGenerator.curLabel
             val before = symbolTable!!.sp
             args?.generateCode(codeGenerator)
@@ -93,7 +92,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
         var sizeInMemory = "[sp, #-${symbolTable!!.sp}]"
         if (sizeOfSize != 0) {
-            sizeInMemory =  "[sp, #-$sizeOfSize]"
+            sizeInMemory = "[sp, #-$sizeOfSize]"
         }
 
         sizeNode.generateCode(codeGenerator)
@@ -107,7 +106,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
         var inMemory = "[sp, #-$spValue]"
         if (argsValue != 0) {
-           inMemory =  "[sp, #-$argsValue]"
+            inMemory = "[sp, #-$argsValue]"
         }
 
 
@@ -118,7 +117,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
         inMemory = "[sp, #-${symbolTable!!.sp}]"
         if (argsValue != 0) {
-           inMemory = "[sp, #-$value]"
+            inMemory = "[sp, #-$value]"
         }
 
         //store name of the function to be called
@@ -165,16 +164,18 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                     pairVal.getBaseType()
                 }
             }
-            RHS_type.call -> { if(table.isHigherOrderFunction(funId!!)) {
-                return table.getFunction((args!!.exprs[0] as IdentNode).id)!!.getBaseType()
+            RHS_type.call -> {
+                if (table.isHigherOrderFunction(funId!!)) {
+                    return table.getFunction((args!!.exprs[0] as IdentNode).id)!!.getBaseType()
                 }
-                return table.getFunction(funId)?.getBaseType()}
+                return table.getFunction(funId)?.getBaseType()
+            }
             else -> return null
         }
     }
 
     override fun optimise(valueTable: ValueTable): RHSNode {
-        if(type.equals(RHS_type.expr)){
+        if (type.equals(RHS_type.expr)) {
             println("rhs: optimising expr")
             println("replacing $expr")
             expr = expr!!.optimise(valueTable) as ExprNode
@@ -194,13 +195,13 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             if (type == RHS_type.call) {
                 val funNode = table.getFunction(funId!!)
                 if (funNode == null) {
-                    if(symbolTable!!.inHighOrderFunction.first) {
-                        val valueHelper =  (symbolTable!!.inHighOrderFunction.second as FunctionNode)
-                        if(symbolTable!!.getFunction(valueHelper.id) == null) {
+                    if (symbolTable!!.inHighOrderFunction.first) {
+                        val valueHelper = (symbolTable!!.inHighOrderFunction.second as FunctionNode)
+                        if (symbolTable!!.getFunction(valueHelper.id) == null) {
                             errors.addError(UndefinedFunction(ctx, funId))
                         }
                     } else {
-                    errors.addError(UndefinedFunction(ctx, funId))
+                        errors.addError(UndefinedFunction(ctx, funId))
                     }
                 } else {
                     val parameters = funNode.params
@@ -212,18 +213,18 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                                 var actual = args.exprs[i]
                                 val expected = parameters.listParamNodes[i]
                                 if (actual.getBaseType() == LitTypes.IdentWacc) {
-                                    if(actual is ArrayElemNode) {
+                                    if (actual is ArrayElemNode) {
                                         actual = actual.identifier
                                     }
                                     val actType = table.lookupSymbol((actual as IdentNode).id)
-                                    if(actType == null) {
+                                    if (actType == null) {
                                         val func = table.getFunction((actual).id)
-                                        if(func == null) {
+                                        if (func == null) {
                                             errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                                         } else {
                                             symbolTable!!.addMatchFunctions(funId, actual.id)
                                         }
-                                    } else if (expected.getBaseType() != actType!!.getBaseType()) {
+                                    } else if (expected.getBaseType() != actType.getBaseType()) {
                                         errors.addError(IncompatibleTypes(ctx, expected.getBaseType().toString(), actual, table))
                                     }
                                 } else if (actual.getBaseType() != expected.getBaseType()) {
@@ -240,17 +241,17 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
                 }
 
 
-        } else if (type == RHS_type.expr) {
-            expr!!.semanticCheck(errors, table)
-        } else if (type == RHS_type.array_lit) {
-            ArrayLit!!.semanticCheck(errors, table)
-        } else if (type == RHS_type.pair_elem) {
-            PairLit!!.semanticCheck(errors, table)
-        } else if (type == RHS_type.newpair) {
-            newPairNode!!.semanticCheck(errors, table)
+            } else if (type == RHS_type.expr) {
+                expr!!.semanticCheck(errors, table)
+            } else if (type == RHS_type.array_lit) {
+                ArrayLit!!.semanticCheck(errors, table)
+            } else if (type == RHS_type.pair_elem) {
+                PairLit!!.semanticCheck(errors, table)
+            } else if (type == RHS_type.newpair) {
+                newPairNode!!.semanticCheck(errors, table)
+            }
+            args?.semanticCheck(errors, table)
         }
-        args?.semanticCheck(errors, table)
-    }
     }
 
     fun getSizeOfOffset(): Int {
@@ -263,9 +264,10 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             RHS_type.expr -> expr!!.size
             RHS_type.newpair -> newPairNode!!.size
             RHS_type.pair_elem -> PairLit!!.size
-            RHS_type.call -> { if(symbolTable!!.isHigherOrderFunction(funId!!)) {
-                return symbolTable!!.getFunction((args!!.exprs[0] as IdentNode).id)!!.size
-            }
+            RHS_type.call -> {
+                if (symbolTable!!.isHigherOrderFunction(funId!!)) {
+                    return symbolTable!!.getFunction((args!!.exprs[0] as IdentNode).id)!!.size
+                }
                 symbolTable!!.getFunction(funId)!!.size
             }
             else -> 4

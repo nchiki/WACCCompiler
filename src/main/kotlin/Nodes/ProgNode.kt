@@ -1,26 +1,27 @@
 package main.kotlin.Nodes
 
-import main.kotlin.Instructions.PushInstr
+import BasicParser
+import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.FunctionDoubleDeclare
 import main.kotlin.Errors.GlobalReturn
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.PopInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.Nodes.Statement.ReturnStatNode
 import main.kotlin.Nodes.Statement.StatListNode
 import main.kotlin.SymbolTable
-import main.kotlin.CodeGenerator
-import main.kotlin.Instructions.LoadInstr
-import main.kotlin.Instructions.PopInstr
 import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 
 
-class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override val ctx: BasicParser.ProgContext) : Node {
+class ProgNode(var funcDefs: List<FunctionNode>, val stats: Node?, override val ctx: BasicParser.ProgContext) : Node {
 
     override var symbolTable: SymbolTable? = null
-    var statTable : SymbolTable? = null
+    var statTable: SymbolTable? = null
 
     override val weight: Int
-        get() =0
+        get() = 0
 
 
     //triggers generate code for everything inside global main
@@ -42,7 +43,7 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
         codeGenerator.addInstruction(lastLabel, PopInstr())
     }
 
-    var children : MutableList<SymbolTable> = mutableListOf()
+    var children: MutableList<SymbolTable> = mutableListOf()
 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -80,13 +81,13 @@ class ProgNode (var funcDefs: List<FunctionNode>, val stats : Node?, override va
 
 
     override fun optimise(valueTable: ValueTable): Node {
-        for (func in funcDefs){
+        for (func in funcDefs) {
             func.optimise(valueTable)
         }
 
         stats as StatListNode
 
-        for(i in (0 until stats.listStatNodes.size)){
+        for (i in (0 until stats.listStatNodes.size)) {
             stats.listStatNodes[i] = stats.listStatNodes[i].optimise(valueTable)
         }
 

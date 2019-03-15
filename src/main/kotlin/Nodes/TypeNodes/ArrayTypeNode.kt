@@ -36,8 +36,8 @@ class ArrayTypeNode(override val ctx: BasicParser.ArrayTypeContext, val type: Ex
         this.symbolTable = table
     }
 
-    fun getDimensions(): Int{
-        if(type is ArrayTypeNode){
+    fun getDimensions(): Int {
+        if (type is ArrayTypeNode) {
             return 1 + type.getDimensions()
         }
         return 1

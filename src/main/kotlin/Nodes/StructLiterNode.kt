@@ -2,17 +2,14 @@ package main.kotlin.Nodes
 
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.LoadInstr
 import main.kotlin.SymbolTable
-import main.kotlin.Utils.Condition
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
-import main.kotlin.Utils.getTypeSize
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
 
-class StructLiterNode(val struct_id : String, val member_id : String, override val ctx: ParserRuleContext?) : ExprNode {
+class StructLiterNode(val struct_id: String, val member_id: String, override val ctx: ParserRuleContext?) : ExprNode {
 
     override fun getBaseType(): LitTypes {
         val node = symbolTable?.lookupLocal(member_id)

@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -16,7 +17,7 @@ import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ArrayElemNode
 
-class DecrementNode(val id : String, override val ctx: BasicParser.DecrementContext) : Node {
+class DecrementNode(val id: String, override val ctx: BasicParser.DecrementContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 

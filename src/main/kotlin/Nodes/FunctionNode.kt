@@ -1,9 +1,11 @@
 package main.kotlin.Nodes
 
+import BasicParser
 import Nodes.ParamListNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.PushInstr
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
 import main.kotlin.Utils.Register
@@ -11,14 +13,14 @@ import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 
-class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamListNode?, var stat: Node,
-                    override val ctx: BasicParser.FuncContext) : ExprNode {
+class FunctionNode(val id: String, val fun_type: LitTypes, val params: ParamListNode?, var stat: Node,
+                   override val ctx: BasicParser.FuncContext) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 
     override val size: Int
         get() {
-            when(fun_type) {
+            when (fun_type) {
                 LitTypes.CharWacc -> return 1
                 LitTypes.BoolWacc -> return 1
                 else -> return 4
@@ -39,7 +41,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         addFunInstructions(codeGenerator, label)
     }
 
-    fun addFunInstructions(codeGenerator: CodeGenerator, label : String) {
+    fun addFunInstructions(codeGenerator: CodeGenerator, label: String) {
         symbolTable!!.inHighOrderFunction = Pair(true, this)
         codeGenerator.addInstruction(label, PushInstr())
         symbolTable!!.sp += 4
@@ -50,13 +52,13 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         stat.generateCode(codeGenerator)
 
         val difference = symbolTable!!.sp //- afterParams
-        if(difference > 0) {
+        if (difference > 0) {
             codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, difference))
         }
         symbolTable!!.inHighOrderFunction = Pair(false, null)
     }
 
-    override fun getBaseType() : LitTypes {
+    override fun getBaseType(): LitTypes {
         return fun_type
     }
 
@@ -72,7 +74,7 @@ class FunctionNode (val id: String, val fun_type: LitTypes, val params: ParamLis
         stat.semanticCheck(errors, table)
 
         /* Check if the function doesn't return */
-        if(!table.currentExecutionPathHasReturn){
+        if (!table.currentExecutionPathHasReturn) {
             exitProcess(100)
         }
 

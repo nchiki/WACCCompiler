@@ -1,11 +1,15 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.Errors.IncompatibleTypes
 import main.kotlin.Errors.UndefinedVariable
-import main.kotlin.Instructions.*
+import main.kotlin.Instructions.AddInstr
+import main.kotlin.Instructions.BLInstr
+import main.kotlin.Instructions.LoadInstr
+import main.kotlin.Instructions.MovInstr
 import main.kotlin.Nodes.IdentNode
 import main.kotlin.Nodes.LHSNode
 import main.kotlin.Nodes.Literals.BoolLitNode
@@ -20,7 +24,7 @@ import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 
-class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadContext): Node {
+class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -65,13 +69,13 @@ class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadC
 
     /* If a value is input from standard input then set is as dynamic */
     override fun optimise(valueTable: ValueTable): Node {
-        if(!lhs.nodeType!!.equals(LitTypes.IdentWacc)){
+        if (!lhs.nodeType!!.equals(LitTypes.IdentWacc)) {
             return this
         }
 
         val type = symbolTable?.lookupSymbol(lhs.id)!!
 
-        if(type is IntLitNode || type is BoolLitNode){
+        if (type is IntLitNode || type is BoolLitNode) {
             valueTable.setDynamic(lhs.id, true)
         }
 
@@ -79,11 +83,11 @@ class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadC
     }
 
     // Adds necessary Read instructions
-    private fun addInstructions(codeGenerator: CodeGenerator, type : LitTypes, printLabel : String) {
+    private fun addInstructions(codeGenerator: CodeGenerator, type: LitTypes, printLabel: String) {
         val reg = codeGenerator.getFreeRegister()
         val label = codeGenerator.curLabel
         var offset = 0
-        if(lhs.getBaseType() == LitTypes.IdentWacc) {
+        if (lhs.getBaseType() == LitTypes.IdentWacc) {
             offset = symbolTable!!.getValueOffset(lhs.id, codeGenerator)
         }
         codeGenerator.addInstruction(label, AddInstr(codeGenerator.getLastUsedReg(), "sp", offset))
@@ -95,7 +99,7 @@ class ReadStatNode(private val lhs: LHSNode, override val ctx: BasicParser.ReadC
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
         lhs.semanticCheck(errors, table)
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 

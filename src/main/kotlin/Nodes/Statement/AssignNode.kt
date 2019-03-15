@@ -1,5 +1,6 @@
 package main.kotlin.Nodes.Statement
 
+import BasicParser
 import Nodes.PairType.PairNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
@@ -14,7 +15,7 @@ import src.main.kotlin.Nodes.ArrayElemNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 
-class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : BasicParser.AssignContext) : Node {
+class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx: BasicParser.AssignContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -29,7 +30,7 @@ class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : 
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
         this.symbolTable = table
-        if(table.currentExecutionPathHasReturn && table.currentFunction != null){
+        if (table.currentExecutionPathHasReturn && table.currentFunction != null) {
             exitProcess(100)
         }
 
@@ -70,16 +71,16 @@ class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : 
         }
 
         val idType = RHSNode.returnIdentType(table)
-        if(idType != null){
+        if (idType != null) {
 
-            if(idType == node.getBaseType()){
+            if (idType == node.getBaseType()) {
                 return
             }
 
             errors.addError(IncompatibleTypes(ctx, idType.toString(), node, table))
             return
         }
-        if(!symbolTable!!.inHighOrderFunction.first) {
+        if (!symbolTable!!.inHighOrderFunction.first) {
             errors.addError(IncompatibleTypes(ctx, node.getBaseType().toString(), RHSNode, table))
         }
 
@@ -91,17 +92,17 @@ class AssignNode(val LHSNode: LHSNode, var RHSNode: RHSNode, override val ctx : 
 
         val lhsExpr = symbolTable!!.lookupSymbol(LHSNode.id)
 
-        if(!lhsExpr!!.getBaseType().equals(LitTypes.IntWacc) && !lhsExpr.getBaseType().equals(LitTypes.BoolWacc)){
+        if (!lhsExpr!!.getBaseType().equals(LitTypes.IntWacc) && !lhsExpr.getBaseType().equals(LitTypes.BoolWacc)) {
             return this
         }
 
-        if(RHSNode.type.equals(RHS_type.expr)){
+        if (RHSNode.type.equals(RHS_type.expr)) {
             val rhsExpr = RHSNode.expr!!
-            if(rhsExpr is IntLitNode){
+            if (rhsExpr is IntLitNode) {
                 valueTable.setIntValue(LHSNode.id, rhsExpr.int_val)
-            }else if(rhsExpr is BoolLitNode){
+            } else if (rhsExpr is BoolLitNode) {
                 valueTable.setBoolValue(LHSNode.id, rhsExpr.bool_val.toBoolean())
-            }else{
+            } else {
                 valueTable.setDynamic(LHSNode.id, true)
             }
         }

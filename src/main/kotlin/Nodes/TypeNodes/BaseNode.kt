@@ -20,7 +20,7 @@ class BaseNode(val type: String, override val ctx: ParserRuleContext?) : ExprNod
                 "bool" -> 1
                 "string" -> 4
                 "pair" -> 4
-                "func"-> 4
+                "func" -> 4
                 else -> 0
             }
         }
