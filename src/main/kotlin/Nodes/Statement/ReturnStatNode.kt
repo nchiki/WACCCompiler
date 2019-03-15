@@ -28,7 +28,6 @@ class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnC
         // Generate code for expression
         expr.generateCode(codeGenerator)
 
-
         codeGenerator.addInstruction(codeGenerator.curLabel, MovInstr(Register.r0, codeGenerator.getLastUsedReg(), null))
 
         codeGenerator.freeReg(codeGenerator.getLastUsedReg())
