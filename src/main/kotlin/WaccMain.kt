@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
         if (args.size == 0) {
                 System.setIn(FileInputStream(
-          "tests/valid/function/higher_order/incHighOrd.wacc"))
+          "tests/valid/breakContinue/incHighOrd.wacc"))
         } else {
                 System.setIn(FileInputStream(args[0]))
         }
