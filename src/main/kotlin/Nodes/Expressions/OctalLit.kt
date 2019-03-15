@@ -22,7 +22,7 @@ class OctalLit(val sequence : String, override val ctx: ParserRuleContext?) : Ex
         get() = 1
 
     fun convertToInt() : Int{
-        var octal = sequence.substring(1).toInt()
+        var octal = sequence.substring(2).toInt()
         var result = 0
         var i = 0.0
 
