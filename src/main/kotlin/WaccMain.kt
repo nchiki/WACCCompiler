@@ -2,6 +2,7 @@ import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
 import main.kotlin.SymbolTable
 import main.kotlin.preprocess
+import main.kotlin.ValueTable
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.FileInputStream
@@ -9,12 +10,17 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
-        if (args.size == 0) {
-                System.setIn(FileInputStream(
-          "tests/valid/function/nested_functions/mutualRecursion.wacc"))
-        } else {
-                System.setIn(FileInputStream(args[0]))
+        var optimise = false
+
+        if (args.size > 1) {
+            if (args[0].equals("-o")) {
+                optimise = true
+            }
+            System.setIn(FileInputStream(args[1]))
+        }else{
+            System.setIn(FileInputStream(args[0]))
         }
+        
         val input = CharStreams.fromStream(java.lang.System.`in`)
         //Lexical analysis
         val lexer = BasicLexer(input)
@@ -44,6 +50,11 @@ fun main(args: Array<String>) {
         }
         if (errorLogger.errorList.count() > 0) {
                 exitProcess(200)
+        }
+
+        if(optimise){
+            val valueTable = ValueTable(null)
+            progNode.optimise(valueTable)
         }
 
         val codeGen = CodeGenerator()

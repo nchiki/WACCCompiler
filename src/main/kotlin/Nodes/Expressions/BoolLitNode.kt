@@ -10,7 +10,7 @@ import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 import src.main.kotlin.Nodes.ExprNode
 
-class BoolLitNode(val bool_val: String, override val ctx: BasicParser.BoolLitContext) : ExprNode {
+class BoolLitNode(val bool_val: String, override val ctx: BasicParser.BoolLitContext?) : ExprNode {
 
     override var symbolTable: SymbolTable? = null
 

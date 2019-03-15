@@ -42,7 +42,6 @@ class ReturnStatNode (var expr : ExprNode, override val ctx: BasicParser.ReturnC
 
     override fun optimise(valueTable: ValueTable): Node {
         expr = expr.optimise(valueTable) as ExprNode
-
         return this
     }
 
