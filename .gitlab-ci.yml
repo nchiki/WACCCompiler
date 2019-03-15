@@ -1,29 +1,29 @@
 stages:
-    - build
-    - frontend-test
-    - backend-test
-    - optimisation-test
+  - build
+  - frontend-test
+  - backend-test
+  - optimisation-test
 build:
   stage: build
   script: 'make'
   artifacts:
     paths:
-    - 'target/'
+      - 'target/'
 syntax-tests:
   stage: frontend-test
   script: 'bash test.sh syntax_err'
   dependencies:
-  - 'build'
+    - 'build'
 semantic-tests:
   stage: frontend-test
   script: 'bash test.sh semantic_err'
   dependencies:
-  - 'build'
+    - 'build'
 basic-tests:
   stage: backend-test
   script: 'bash test_backend.sh basic'
   dependencies:
-  - 'build'
+    - 'build'
 seqeuence-tests:
   stage: backend-test
   script: 'bash test_backend.sh sequence'
@@ -54,9 +54,19 @@ conditional-tests:
   script: 'bash test_backend.sh conditional'
   dependencies:
     - 'build'
-loop-tests:
+while-tests:
   stage: backend-test
-  script: 'bash test_backend.sh loop'
+  script: 'bash test_backend.sh while'
+  dependencies:
+    - 'build'
+doWhile-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh doWhile'
+  dependencies:
+    - 'build'
+breakContinue-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh breakContinue'
   dependencies:
     - 'build'
 scope-tests:
@@ -74,6 +84,11 @@ nested-function-tests:
   script: 'bash test_backend.sh nested-function'
   dependencies:
     - 'build'
+higher-order-function-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh higher-order-function'
+  dependencies:
+    - 'build'
 runtime-error-tests:
   stage: backend-test
   script: 'bash test_backend.sh runtime-error'
@@ -84,6 +99,7 @@ pair-tests:
   script: 'bash test_backend.sh pair'
   dependencies:
     - 'build'
+<<<<<<< .gitlab-ci.yml
 opt-basic-tests:
   stage: optimisation-test
   script: 'bash test_optimisation.sh basic'
@@ -147,5 +163,15 @@ opt-runtime-error-tests:
 opt-pair-tests:
   stage: optimisation-test
   script: 'bash test_optimisation.sh pair'
+  dependencies:
+    - 'build'
+macro-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh macro'
+  dependencies:
+    - 'build'
+struct-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh struct'
   dependencies:
     - 'build'

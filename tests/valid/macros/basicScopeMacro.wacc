@@ -1,16 +1,17 @@
 # basic array declaration and assignment
 
 # Output:
-# 10
+# #empty#
 
 # Program:
 
+.define CHAR 'a'
+
 begin
+  int x = 10; 
   struct foo {
-   int x = 10; 
-   char z = 'a'; 
-  }; 
-  int x = 2; 
-  println foo.x
+   int x = ord CHAR ;
+   char z = CHAR;
+  }
 end
 

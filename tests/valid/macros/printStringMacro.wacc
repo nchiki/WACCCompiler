@@ -1,0 +1,16 @@
+# exit with wrapped int 
+
+# Output:
+# This is a macro
+
+# Exit:
+# 1
+
+# Program:
+
+.define STRING "This is a macro"
+
+begin
+  println STRING ;
+  exit 0
+end

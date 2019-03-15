@@ -10,11 +10,16 @@ VARIABLE="tests/valid/variables"
 EXPRESSION="tests/valid/expressions"
 ARRAY="tests/valid/array"
 CONDITIONAL="tests/valid/if"
-LOOP="tests/valid/while"
+WHILE="tests/valid/while"
+DOWHILE="tests/valid/doWhile"
+BREAKCONTINUE="tests/valid/breakContinue"
 SCOPE="tests/valid/scope"
 SIMPLE_FUNCTIONS="tests/valid/function/simple_functions"
 NESTED_FUNCTIONS="tests/valid/function/nested_functions"
+HIGHERORDER="tests/valid/function/higher_order"
 RUNTIME_ERROR="tests/valid/runtimeErr"
+MACRO="tests/valid/macros"
+STRUCT="tests/valid/struct"
 PAIR="tests/valid/pairs"
 ADVANCED="tests/valid/advanced"
 
@@ -41,13 +46,19 @@ then
 elif [[ $1 == "conditional" ]]
 then
     DIRECTORY=$CONDITIONAL
-elif [[ $1 == "loop" ]]
+elif [[ $1 == "while" ]]
 then
-    DIRECTORY=$LOOP
+    DIRECTORY=$WHILE
     USE_REF_COMPILER="YES"
 elif [[ $1 == "scope" ]]
 then
     DIRECTORY=$SCOPE
+elif [[ $1 == "doWhile" ]]
+then
+    DIRECTORY=$DOWHILE
+elif [[ $1 == "breakContinue" ]]
+then
+    DIRECTORY=$BREAKCONTINUE
 elif [[ $1 == "simple-function" ]]
 then
     DIRECTORY=$SIMPLE_FUNCTIONS
@@ -55,6 +66,9 @@ elif [[ $1 == "nested-function" ]]
 then
     DIRECTORY=$NESTED_FUNCTIONS
     USE_REF_COMPILER="YES"
+elif [[ $1 == "higher-order-function" ]]
+then
+    DIRECTORY=$HIGHERORDER
 elif [[ $1 == "runtime-error" ]]
 then
     DIRECTORY=$RUNTIME_ERROR
@@ -63,6 +77,12 @@ elif [[ $1 == "pair" ]]
 then
     DIRECTORY=$PAIR
     USE_REF_COMPILER="YES"
+elif [[ $1 == "macro" ]]
+then
+    DIRECTORY=$MACRO
+elif [[ $1 == "struct" ]]
+then
+    DIRECTORY=$STRUCT
 elif [[ $1 == "advanced" ]]
 then
     DIRECTORY=$ADVANCED
