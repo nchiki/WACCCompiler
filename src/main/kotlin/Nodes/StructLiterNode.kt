@@ -36,11 +36,14 @@ class StructLiterNode(val struct_id : String, val member_id : String, override v
     }
 
     override fun generateCode(codeGenerator: CodeGenerator) {
-        val structNode = symbolTable?.lookupLocal(struct_id) as StructNode
 
-        val reg = codeGenerator.getFreeRegister()
+        //getting the struct and member node
+        val structNode = symbolTable?.lookupLocal(struct_id) as StructNode
         val value = structNode.data.get(member_id)
 
+        val reg = codeGenerator.getFreeRegister()
+
+        //check the size of the declared member and add it to offset of sp
         if (value!!.getBaseType() == LitTypes.BoolWacc || value.getBaseType() == LitTypes.CharWacc
                 || value.getBaseType() == LitTypes.IntWacc) {
             var offset = structNode.symbolTable!!.getValueOffset(member_id, codeGenerator)

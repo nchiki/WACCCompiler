@@ -7,6 +7,5 @@
 
 begin
   int a = 0b01111;
-  print a; 
-  return
+  print a
 end
