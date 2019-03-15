@@ -66,7 +66,7 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override fun semanticCheck(errors: ErrorLogger, table: SymbolTable) {
@@ -87,8 +87,9 @@ class ForLoopNode(val cond: ForCondNode, val stat: Node, override val ctx: Basic
 class ForCondNode(val first : Node, val second : ExprNode, val third: Node, override val ctx: ParserRuleContext) : Node {
 
     override var symbolTable: SymbolTable? = null
+
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
     override val weight: Int

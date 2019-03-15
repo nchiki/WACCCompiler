@@ -23,7 +23,7 @@ import src.main.kotlin.Nodes.ExprNode
 import src.main.kotlin.Nodes.Literals.IntLitNode
 import kotlin.system.exitProcess
 
-class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnContext) : Node {
+class PrintLnStatNode(var expr: ExprNode, override val ctx: BasicParser.PrintlnContext) : Node {
 
     override var symbolTable: SymbolTable? = null
 
@@ -44,7 +44,7 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
 
         // Get value from symbol table if it is an identifier
         if (expr is IdentNode) {
-            val type = symbolTable?.lookupSymbol(expr.id)
+            val type = symbolTable?.lookupSymbol((expr as IdentNode).id)
             if (type is PairElemNode || type is PairNode || type is PairLitNode || type is NewPairNode) {
                 codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_reference"))
             }
@@ -61,7 +61,8 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr = expr.optimise(valueTable) as ExprNode
+        return this
     }
 
     // Returns the print function for the epxr node that is passed in

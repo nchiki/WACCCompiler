@@ -19,7 +19,7 @@ import src.main.kotlin.Nodes.ExprNode
 import kotlin.system.exitProcess
 import src.main.kotlin.Nodes.Literals.IntLitNode
 
-class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
+class PrintStatNode(var expr : ExprNode, override val ctx : BasicParser.PrintContext) : Node{
 
     override var symbolTable: SymbolTable? = null
 
@@ -53,7 +53,8 @@ class PrintStatNode(val expr : ExprNode, override val ctx : BasicParser.PrintCon
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expr = expr.optimise(valueTable) as ExprNode
+        return this
     }
 
     fun checkType(codeGenerator: CodeGenerator, expr : Node) : String {

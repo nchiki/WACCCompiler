@@ -86,7 +86,7 @@ class DoWhileNode(val stat: Node, val expr : ExprNode, override val ctx: BasicPa
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return this
     }
 
 }
