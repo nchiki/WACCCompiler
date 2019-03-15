@@ -2,6 +2,7 @@ stages:
   - build
   - frontend-test
   - backend-test
+  - optimisation-test
 build:
   stage: build
   script: 'make'
@@ -96,6 +97,72 @@ runtime-error-tests:
 pair-tests:
   stage: backend-test
   script: 'bash test_backend.sh pair'
+  dependencies:
+    - 'build'
+<<<<<<< .gitlab-ci.yml
+opt-basic-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh basic'
+  dependencies:
+  - 'build'
+opt-seqeuence-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh sequence'
+  dependencies:
+    - 'build'
+opt-print-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh print'
+  dependencies:
+    - 'build'
+opt-variable-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh variable'
+  dependencies:
+    - 'build'
+opt-expression-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh expression'
+  dependencies:
+    - 'build'
+opt-array-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh array'
+  dependencies:
+    - 'build'
+opt-conditional-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh conditional'
+  dependencies:
+    - 'build'
+opt-loop-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh loop'
+  dependencies:
+    - 'build'
+opt-scope-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh scope'
+  dependencies:
+    - 'build'
+opt-simple-function-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh simple-function'
+  dependencies:
+    - 'build'
+opt-nested-function-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh nested-function'
+  dependencies:
+    - 'build'
+opt-runtime-error-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh runtime-error'
+  dependencies:
+    - 'build'
+opt-pair-tests:
+  stage: optimisation-test
+  script: 'bash test_optimisation.sh pair'
   dependencies:
     - 'build'
 macro-tests:

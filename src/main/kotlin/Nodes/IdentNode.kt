@@ -5,11 +5,15 @@ import main.kotlin.ErrorLogger
 import main.kotlin.Errors.UndefinedVariable
 import main.kotlin.Instructions.LoadInstr
 import main.kotlin.Instructions.LoadSBInstr
+import main.kotlin.Nodes.Literals.BoolLitNode
 import main.kotlin.SymbolTable
+import main.kotlin.Utils.BoolConstant
+import main.kotlin.Utils.IntConstant
 import main.kotlin.Utils.LitTypes
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
+import src.main.kotlin.Nodes.Literals.IntLitNode
 
 class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNode {
 
@@ -65,7 +69,21 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
     }
 
     override fun optimise(valueTable: ValueTable): Node {
-        return this
+        val value = valueTable.getValue(id)
+
+        if(value == null){
+            return this
+        }
+
+        if(value.dynamic){
+            return this
+        }
+
+        if(value is BoolConstant){
+            return BoolLitNode(value.value.toString(), null)
+        }
+
+        return IntLitNode((value as IntConstant).value, null)
     }
 
     override fun getBaseType() : LitTypes {

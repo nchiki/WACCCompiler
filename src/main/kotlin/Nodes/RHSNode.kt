@@ -38,6 +38,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
     var highOrderFunction : HigherOrderFuncsNode? = null
 
     override fun generateCode(codeGenerator: CodeGenerator) {
+        println("generating code on $expr")
         when (type) {
             RHS_type.newpair -> newPairNode!!.generateCode(codeGenerator)
             RHS_type.expr -> expr!!.generateCode(codeGenerator)
@@ -175,7 +176,10 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
 
     override fun optimise(valueTable: ValueTable): RHSNode {
         if(type.equals(RHS_type.expr)){
+            println("rhs: optimising expr")
+            println("replacing $expr")
             expr = expr!!.optimise(valueTable) as ExprNode
+            println("with $expr")
         }
 
         return this

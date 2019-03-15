@@ -103,7 +103,11 @@ class DeclNode(// var name
         rhs = rhs.optimise(valueTable)
 
         /* Optimise only for integer and boolean constants */
-        if(type !is IntLitNode && type !is BoolLitNode){
+        if(type !is IntLitNode && type !is BoolLitNode && type !is BaseNode){
+            return this
+        }
+
+        if(type is BaseNode && type.getBaseType() != LitTypes.IntWacc && type.getBaseType() != LitTypes.BoolWacc){
             return this
         }
 
