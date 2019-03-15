@@ -50,7 +50,7 @@ then
     DIRECTORY=$WHILE
     USE_REF_COMPILER="YES"
 elif [[ $1 == "scope" ]]
-then
+then 
     DIRECTORY=$SCOPE
 elif [[ $1 == "doWhile" ]]
 then
