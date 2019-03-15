@@ -15,6 +15,7 @@ SCOPE="tests/valid/scope"
 SIMPLE_FUNCTIONS="tests/valid/function/simple_functions"
 NESTED_FUNCTIONS="tests/valid/function/nested_functions"
 RUNTIME_ERROR="tests/valid/runtimeErr"
+MACRO="tests/valid/macros"
 PAIR="tests/valid/pairs"
 ADVANCED="tests/valid/advanced"
 
@@ -66,6 +67,9 @@ then
 elif [[ $1 == "advanced" ]]
 then
     DIRECTORY=$ADVANCED
+elif [[ $1 == "macros" ]]
+then
+    DIRECTORY=$MACRO
 elif [[ $1 == "all" ]]
 then
     DIRECTORY=$ADVANCED

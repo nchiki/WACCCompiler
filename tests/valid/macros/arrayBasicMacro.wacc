@@ -1,0 +1,13 @@
+# basic array declaration and assignment
+
+# Output:
+# #empty#
+
+# Program:
+
+.define ELEMENT 0
+
+begin
+  int[] a = [ELEMENT]
+end
+

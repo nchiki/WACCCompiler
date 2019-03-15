@@ -1,0 +1,23 @@
+# Simple conditional statement with int comparison test
+
+# Output:
+# 13
+# 14
+# correct
+
+# Program:
+
+.define FIRST 13
+.define SECOND 14
+
+begin
+  int a = 13;
+  println FIRST ;
+  println SECOND ;
+  if FIRST + 1 == SECOND
+  then 
+    println "correct"
+  else 
+    println "incorrect"
+  fi
+end

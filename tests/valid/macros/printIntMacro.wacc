@@ -1,0 +1,16 @@
+# exit with wrapped int 
+
+# Output:
+# 6
+
+# Exit:
+# 1
+
+# Program:
+
+.define INT 6
+
+begin
+  println INT ;
+  exit 0
+end
