@@ -62,6 +62,7 @@ fun main(args: Array<String>) {
         codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
+        //codeGen.writeToFile("print.s")
         codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
