@@ -11,16 +11,19 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
         var optimise = false
+        var inputFile = args[0]
 
         if (args.size > 1) {
             if (args[0].equals("-o")) {
-                optimise = true
+                    println("optimising")
+                    optimise = true
             }
-            System.setIn(FileInputStream(args[1]))
-        }else{
-            System.setIn(FileInputStream(args[0]))
+                println("reading from ${args[1]} ")
+                inputFile = args[1]
         }
-        
+
+        System.setIn(FileInputStream(inputFile))
+
         val input = CharStreams.fromStream(java.lang.System.`in`)
         //Lexical analysis
         val lexer = BasicLexer(input)
@@ -62,6 +65,6 @@ fun main(args: Array<String>) {
         codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
-        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile(inputFile.substring(inputFile.lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
