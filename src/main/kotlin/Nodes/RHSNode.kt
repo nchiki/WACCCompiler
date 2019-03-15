@@ -73,7 +73,6 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             val before = symbolTable!!.sp
             args?.generateCode(codeGenerator)
 
-            println(this.funId)
             codeGenerator.addInstruction(label, BLInstr("f_${this.funId}"))
             val after = symbolTable!!.sp
             if (after - before != 0) {
