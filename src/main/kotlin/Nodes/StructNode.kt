@@ -3,10 +3,8 @@ package main.kotlin.Nodes
 import Nodes.DeclNode
 import main.kotlin.CodeGenerator
 import main.kotlin.ErrorLogger
-import main.kotlin.Instructions.*
 import main.kotlin.SymbolTable
 import main.kotlin.Utils.LitTypes
-import main.kotlin.Utils.Register
 import main.kotlin.ValueTable
 import org.antlr.v4.runtime.ParserRuleContext
 import src.main.kotlin.Nodes.ExprNode
@@ -50,11 +48,12 @@ class StructNode(val id : String, var exprs: List<Node>, override val ctx: Parse
 
     override fun generateCode(codeGenerator: CodeGenerator) {
 
+        //generate code for each declared member
         for (expr in exprs) {
             expr.generateCode(codeGenerator)
-
         }
 
+        //add struct id and its offset and sp to the parent symboltable
         parentTable!!.sp += symbolTable!!.sp
         parentTable!!.declareVariable(id, parentTable!!.sp, 0)
     }
