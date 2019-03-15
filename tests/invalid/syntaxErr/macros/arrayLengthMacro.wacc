@@ -1,0 +1,13 @@
+# check length of array
+
+# Output:
+# 4
+
+# Program:
+
+.defin ARRAY [43, 2, 18, 1]
+
+begin
+  int[] a = ARRAY ;
+  println len a
+end

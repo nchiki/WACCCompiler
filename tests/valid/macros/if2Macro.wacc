@@ -1,0 +1,17 @@
+# simple if statement
+
+# Output:
+# 1
+
+# Program:
+.define BOOL true
+
+begin
+  if BOOL
+  then
+    print 1
+  else
+    print 0
+  fi
+end
+

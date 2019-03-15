@@ -1,0 +1,18 @@
+# Simple conditional statement with int comparison test
+
+# Output:
+# correct
+
+# Program:
+
+.define INT 13
+
+begin
+  int a = 13;	
+  if a == INT
+  then 
+    println "correct"
+  else 
+    println "incorrect"
+  fi
+end

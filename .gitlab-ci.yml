@@ -1,28 +1,28 @@
 stages:
-    - build
-    - frontend-test
-    - backend-test
+  - build
+  - frontend-test
+  - backend-test
 build:
   stage: build
   script: 'make'
   artifacts:
     paths:
-    - 'target/'
+      - 'target/'
 syntax-tests:
   stage: frontend-test
   script: 'bash test.sh syntax_err'
   dependencies:
-  - 'build'
+    - 'build'
 semantic-tests:
   stage: frontend-test
   script: 'bash test.sh semantic_err'
   dependencies:
-  - 'build'
+    - 'build'
 basic-tests:
   stage: backend-test
   script: 'bash test_backend.sh basic'
   dependencies:
-  - 'build'
+    - 'build'
 seqeuence-tests:
   stage: backend-test
   script: 'bash test_backend.sh sequence'
@@ -53,9 +53,19 @@ conditional-tests:
   script: 'bash test_backend.sh conditional'
   dependencies:
     - 'build'
-loop-tests:
+while-tests:
   stage: backend-test
-  script: 'bash test_backend.sh loop'
+  script: 'bash test_backend.sh while'
+  dependencies:
+    - 'build'
+doWhile-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh doWhile'
+  dependencies:
+    - 'build'
+breakContinue-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh breakContinue'
   dependencies:
     - 'build'
 scope-tests:
@@ -81,5 +91,15 @@ runtime-error-tests:
 pair-tests:
   stage: backend-test
   script: 'bash test_backend.sh pair'
+  dependencies:
+    - 'build'
+macro-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh macro'
+  dependencies:
+    - 'build'
+struct-tests:
+  stage: backend-test
+  script: 'bash test_backend.sh struct'
   dependencies:
     - 'build'
