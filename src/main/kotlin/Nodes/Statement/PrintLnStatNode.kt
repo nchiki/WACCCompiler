@@ -34,6 +34,7 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
         // Load expr into register
         expr.generateCode(codeGenerator)
 
+
         val label = checkType(codeGenerator, expr)
 
         // Move last used register into argument register
