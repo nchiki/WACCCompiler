@@ -9,26 +9,27 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
-        if (args.size == 0) {
-                System.setIn(FileInputStream(
-          "tests/valid/breakContinue/incHighOrd.wacc"))
+        val path = if (args.isEmpty()) {
+                "tests/valid/macros/arrayLengthMacro.wacc"
         } else {
-                System.setIn(FileInputStream(args[0]))
+                args[0]
         }
+        System.setIn(FileInputStream(path))
         val input = CharStreams.fromStream(java.lang.System.`in`)
         //Lexical analysis
         val lexer = BasicLexer(input)
 //        println(lexer.allTokens)
-//        val newInput = preprocess(input, lexer.allTokens)
+        val newInput = preprocess(input, lexer.allTokens)
 //        println(newInput.toString())
-//        val newLexer = BasicLexer(newInput)
+        val newLexer = BasicLexer(newInput)
 
         //Create a buffer of tokens
-        val tokens = CommonTokenStream(lexer)
+        val tokens = CommonTokenStream(newLexer)
         //Syntactical analysis
         val parser = BasicParser(tokens)
         val tree = parser.prog()
-        // println(tree.childCount)
+//        println(tree.childCount)
+//        println(tree.toStringTree())
         //Exit with code 100 if there are any syntax errors
         if (parser.numberOfSyntaxErrors > 0) {
                 exitProcess(100)
@@ -51,6 +52,6 @@ fun main(args: Array<String>) {
         codeGen.switchFunctions("main")
         progNode.generateCode(codeGen)
 
-        codeGen.writeToFile(args[0].substring(args[0].lastIndexOf("/") + 1).replace(".wacc", ".s"))
+        codeGen.writeToFile(path.substring(path.lastIndexOf("/") + 1).replace(".wacc", ".s"))
 
 }
