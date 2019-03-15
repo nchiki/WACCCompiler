@@ -54,7 +54,8 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
         val label = codeGenerator.curLabel
         if(symbolTable!!.isHigherOrderFunction(funId!!)) {
             generateHighCallCode(codeGenerator, label)
-        } else if(symbolTable!!.inHighOrderFunction.first) {
+        } else if(symbolTable!!.inHighOrderFunction.first &&
+                symbolTable!!.lookForFunctionParam(symbolTable!!.inHighOrderFunction.second!!.id)!= null) {
             val label = codeGenerator.curLabel
             val before = symbolTable!!.sp
             args?.generateCode(codeGenerator)
@@ -72,6 +73,7 @@ class RHSNode (val type: RHS_type, val funId: String?, val args: ArgListNode?, v
             val before = symbolTable!!.sp
             args?.generateCode(codeGenerator)
 
+            println(this.funId)
             codeGenerator.addInstruction(label, BLInstr("f_${this.funId}"))
             val after = symbolTable!!.sp
             if (after - before != 0) {

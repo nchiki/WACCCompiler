@@ -40,16 +40,17 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
 
         var inMemory = "[sp]"
         if(offset != 0) {
-            if (offset < 0) {
+           /* if (offset < 0) {
                 inMemory = "[sp, #${-offset}]"
-            } else {
+            } else { */
                 inMemory = "[sp, #${offset}]"
-            }
+            //}
         }
         val reg = codeGenerator.getFreeRegister()
 
         //get respective node from symboltable
         val expr = symbolTable!!.lookupSymbol(id)
+        println(expr)
 
         //check for every possible type of identNode
         if(expr is ArrayTypeNode) {
