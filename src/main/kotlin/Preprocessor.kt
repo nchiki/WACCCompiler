@@ -10,7 +10,7 @@ fun preprocess(file: CharStream, tokens: MutableList<out Token>): CodePointCharS
     val first = tokens[0].startIndex
     var last = 0
     var cur = 0
-    while (tokens[cur].text != "begin") {
+    while (cur < tokens.size && tokens[cur].text != "begin") {
         last = tokens[cur].stopIndex + 2
         cur += 1
     }
@@ -30,6 +30,7 @@ fun preprocess(file: CharStream, tokens: MutableList<out Token>): CodePointCharS
     if (macros.size > 0) {
         string = StringBuilder(string.removeRange(first, last).toString())
     }
+
     return CharStreams.fromString(string.toString())
 }
 
