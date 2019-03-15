@@ -1,0 +1,15 @@
+# basic array declaration and assignment
+
+# Output:
+# #empty#
+
+# Program:
+
+begin
+  int x = 10; 
+  struct foo {
+   int x = 'a' ;
+   char z = 'a'; 
+  }
+end
+

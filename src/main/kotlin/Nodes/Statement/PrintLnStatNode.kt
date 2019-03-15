@@ -34,7 +34,6 @@ class PrintLnStatNode(var expr: ExprNode, override val ctx: BasicParser.PrintlnC
         // Load expr into register
         expr.generateCode(codeGenerator)
 
-
         val label = checkType(codeGenerator, expr)
 
         // Move last used register into argument register
@@ -52,7 +51,6 @@ class PrintLnStatNode(var expr: ExprNode, override val ctx: BasicParser.PrintlnC
         } else if (expr is PairElemNode || expr is PairNode || expr is PairLitNode) {
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("p_print_reference"))
         }
-
         // Branch to putchar if it is a Char
         if (expr.getBaseType() == LitTypes.CharWacc) {
             codeGenerator.addInstruction(codeGenerator.curLabel, BLInstr("putchar"))

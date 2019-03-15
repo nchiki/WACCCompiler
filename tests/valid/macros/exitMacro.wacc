@@ -1,0 +1,15 @@
+# exit with wrapped int 
+
+# Output:
+# #empty#
+
+# Exit:
+# 1
+
+# Program:
+
+.define EXIT_CODE 7
+
+begin
+  exit EXIT_CODE
+end
