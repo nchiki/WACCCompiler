@@ -68,14 +68,6 @@ class HigherOrderFuncsNode(val idNode : Node, val highOrder : String , val argsN
                 map((idNode as IdentNode).id, argsNode as IdentNode, size, codeGenerator)
             }
         }
-
-        /*codeGenerator.addInstruction(label, BLInstr("f_${this.funId!!}"))
-        val after = symbolTable!!.sp
-        if (after - before != 0) {
-            codeGenerator.addInstruction(label, AddInstr(Register.sp, Register.sp, after - before))
-            symbolTable!!.sp -= after - before
-        }
-        codeGenerator.addInstruction(label, MovInstr(codeGenerator.getLastUsedReg(), Register.r0))*/
     }
 
 

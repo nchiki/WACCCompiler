@@ -34,17 +34,14 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
     override fun generateCode(codeGenerator: CodeGenerator) {
         if(symbolTable!!.getFunction(id) != null) {
             symbolTable?.declareVariable(id, symbolTable!!.sp, 4)
-            //symbolTable!!.sp += 4// add offset to stack pointer
         }
+
+        println(symbolTable!!.sp)
         val offset = symbolTable?.getValueOffset(id, codeGenerator)!!
 
         var inMemory = "[sp]"
         if(offset != 0) {
-           /* if (offset < 0) {
-                inMemory = "[sp, #${-offset}]"
-            } else { */
-                inMemory = "[sp, #${offset}]"
-            //}
+            inMemory = "[sp, #${offset}]"
         }
         val reg = codeGenerator.getFreeRegister()
 
@@ -61,7 +58,6 @@ class IdentNode(val id : String, override val ctx: ParserRuleContext?) : ExprNod
         } else {
             codeGenerator.addInstruction(codeGenerator.curLabel, LoadInstr(reg, inMemory, null))
         }
-
     }
 
     override fun optimise(valueTable: ValueTable): Node {

@@ -32,6 +32,7 @@ class PrintLnStatNode(val expr: ExprNode, override val ctx: BasicParser.PrintlnC
 
     override fun generateCode(codeGenerator: CodeGenerator) {
         // Load expr into register
+        println(expr)
         expr.generateCode(codeGenerator)
 
 
