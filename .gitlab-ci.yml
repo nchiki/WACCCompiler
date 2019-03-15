@@ -99,7 +99,6 @@ pair-tests:
   script: 'bash test_backend.sh pair'
   dependencies:
     - 'build'
-<<<<<<< .gitlab-ci.yml
 opt-basic-tests:
   stage: optimisation-test
   script: 'bash test_optimisation.sh basic'
